@@ -1,0 +1,27 @@
+volumes:
+  postgresql_data:
+  grafana_data:
+
+networks:
+  app-network:
+
+services:
+  couply_db:
+    container_name: couply_db
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d ldb" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      - app-network

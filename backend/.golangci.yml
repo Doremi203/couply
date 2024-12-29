@@ -1,0 +1,25 @@
+linters:
+  disable-all: true
+  enable:
+    - errcheck
+    - goconst
+    - goimports
+    - gosec
+    - govet
+    - ineffassign
+    - staticcheck
+    - revive
+    - typecheck
+    - unused
+    - gocyclo
+    - gocognit
+
+linters-settings:
+  gocyclo:
+    min-complexity: 10
+  gocognit:
+    min-complexity: 10
+
+run:
+  timeout: 5m
+  go: '1.23'
