@@ -59,7 +59,6 @@ run:
 lint:
 	$(GO_LINT)
 	$(SQUAWK) --exclude=$(SQUAWK_RULES) ./migrations/*.sql
-	$(SQUAWK) --exclude=$(SQUAWK_RULES) ./test/migrations/*.sql
 	$(PROTOLINT) lint $(PROTO_DIR)
 
 test:
@@ -73,19 +72,19 @@ clean:
 
 # Database launch in Docker
 compose-up:
-	$(DOCKER_COMPOSE) up -d route256_db
+	$(DOCKER_COMPOSE) up -d couply_db
 
 compose-down:
 	$(DOCKER_COMPOSE) down
 
 compose-stop:
-	$(DOCKER_COMPOSE) stop route256_db
+	$(DOCKER_COMPOSE) stop couply_db
 
 compose-start:
-	$(DOCKER_COMPOSE) start route256_db
+	$(DOCKER_COMPOSE) start couply_db
 
 compose-ps:
-	$(DOCKER_COMPOSE) ps route256_db
+	$(DOCKER_COMPOSE) ps couply_db
 
 # Migrations launch via Goose
 goose-add:
