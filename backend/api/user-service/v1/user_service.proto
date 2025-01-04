@@ -278,10 +278,10 @@ enum Art {
   ART_MUSIC = 3;
   ART_SINGING = 4;
   ART_WRITING = 5;
-  ART_SCULPTURE = 7;
-  ART_THEATER = 8;
-  ART_CINEMA = 9;
-  ART_NEEDLEWORK = 10;
+  ART_SCULPTURE = 6;
+  ART_THEATER = 7;
+  ART_CINEMA = 8;
+  ART_NEEDLEWORK = 9;
 }
 
 enum Social {
