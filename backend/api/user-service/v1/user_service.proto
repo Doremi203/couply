@@ -221,22 +221,22 @@ enum Goal {
 
 message Interest {
   repeated Sport sport = 1 [
-    (validate.rules).enum.defined_only = true
+    (validate.rules).repeated.items.enum.defined_only = true
   ];
   repeated Selfdevelopment selfdevelopment = 2 [
-    (validate.rules).enum.defined_only = true
+    (validate.rules).repeated.items.enum.defined_only = true
   ];
   repeated Art art = 3 [
-    (validate.rules).enum.defined_only = true
+    (validate.rules).repeated.items.enum.defined_only = true
   ];
   repeated Social social = 4 [
-    (validate.rules).enum.defined_only = true
+    (validate.rules).repeated.items.enum.defined_only = true
   ];
   repeated Hobby hobby = 5 [
-    (validate.rules).enum.defined_only = true
+    (validate.rules).repeated.items.enum.defined_only = true
   ];
   repeated Gastronomy gastronomy = 6 [
-    (validate.rules).enum.defined_only = true
+    (validate.rules).repeated.items.enum.defined_only = true
   ];
 }
 
