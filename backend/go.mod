@@ -4,6 +4,8 @@ go 1.23.0
 
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.1.0
+	github.com/go-chi/chi/v5 v5.2.0
+	github.com/go-chi/cors v1.2.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.25.1
 	github.com/jackc/pgconn v1.14.3
 	github.com/jackc/pgx/v4 v4.18.3
