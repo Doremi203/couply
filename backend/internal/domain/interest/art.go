@@ -1,4 +1,4 @@
-package domain
+package interest
 
 import desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
 

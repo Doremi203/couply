@@ -1,4 +1,4 @@
-package domain
+package interest
 
 type Interest struct {
 	Sport           []Sport
