@@ -65,3 +65,23 @@ func GastronomyToPB(gastronomy Gastronomy) desc.Gastronomy {
 		return desc.Gastronomy(0)
 	}
 }
+
+func GastronomySliceToPB(gastronomies []Gastronomy) []desc.Gastronomy {
+	gastronomiesPB := make([]desc.Gastronomy, 0, len(gastronomies))
+
+	for _, gastronomy := range gastronomies {
+		gastronomiesPB = append(gastronomiesPB, GastronomyToPB(gastronomy))
+	}
+
+	return gastronomiesPB
+}
+
+func PBToGastronomySlice(gastronomies []desc.Gastronomy) []Gastronomy {
+	gastronomiesDomain := make([]Gastronomy, 0, len(gastronomies))
+
+	for _, gastronomy := range gastronomies {
+		gastronomiesDomain = append(gastronomiesDomain, PBToGastronomy(gastronomy))
+	}
+
+	return gastronomiesDomain
+}

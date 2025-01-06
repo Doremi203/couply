@@ -1,8 +1,13 @@
 package user_service
 
-import desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
+import (
+	"context"
+	"github.com/Doremi203/Couply/backend/internal/dto"
+	desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
+)
 
 type userServiceUseCase interface {
+	CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (*dto.CreateUserV1Response, error)
 }
 
 type Implementation struct {

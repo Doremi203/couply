@@ -70,3 +70,23 @@ func ArtToPB(art Art) desc.Art {
 		return desc.Art(0)
 	}
 }
+
+func ArtSliceToPB(arts []Art) []desc.Art {
+	artsPB := make([]desc.Art, 0, len(arts))
+
+	for _, art := range arts {
+		artsPB = append(artsPB, ArtToPB(art))
+	}
+
+	return artsPB
+}
+
+func PBToArtSlice(arts []desc.Art) []Art {
+	artsDomain := make([]Art, 0, len(arts))
+
+	for _, art := range arts {
+		artsDomain = append(artsDomain, PBToArt(art))
+	}
+
+	return artsDomain
+}

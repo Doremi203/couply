@@ -90,3 +90,23 @@ func SportToPB(sport Sport) desc.Sport {
 		return desc.Sport(0)
 	}
 }
+
+func SportSliceToPB(sports []Sport) []desc.Sport {
+	sportsPB := make([]desc.Sport, 0, len(sports))
+
+	for _, sport := range sports {
+		sportsPB = append(sportsPB, SportToPB(sport))
+	}
+
+	return sportsPB
+}
+
+func PBToSportSlice(sports []desc.Sport) []Sport {
+	sportsDomain := make([]Sport, 0, len(sports))
+
+	for _, sport := range sports {
+		sportsDomain = append(sportsDomain, PBToSport(sport))
+	}
+
+	return sportsDomain
+}

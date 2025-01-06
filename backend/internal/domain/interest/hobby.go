@@ -75,3 +75,23 @@ func HobbyToPB(hobby Hobby) desc.Hobby {
 		return desc.Hobby(0)
 	}
 }
+
+func HobbySliceToPB(hobbies []Hobby) []desc.Hobby {
+	hobbiesPB := make([]desc.Hobby, 0, len(hobbies))
+
+	for _, hobby := range hobbies {
+		hobbiesPB = append(hobbiesPB, HobbyToPB(hobby))
+	}
+
+	return hobbiesPB
+}
+
+func PBToHobbySlice(hobbies []desc.Hobby) []Hobby {
+	hobbiesDomain := make([]Hobby, 0, len(hobbies))
+
+	for _, hobby := range hobbies {
+		hobbiesDomain = append(hobbiesDomain, PBToHobby(hobby))
+	}
+
+	return hobbiesDomain
+}

@@ -75,3 +75,23 @@ func SelfDevelopmentToPB(selfDevelopment SelfDevelopment) desc.Selfdevelopment {
 		return desc.Selfdevelopment(0)
 	}
 }
+
+func SelfDevelopmentSliceToPB(sds []SelfDevelopment) []desc.Selfdevelopment {
+	sdsPB := make([]desc.Selfdevelopment, 0, len(sds))
+
+	for _, sd := range sds {
+		sdsPB = append(sdsPB, SelfDevelopmentToPB(sd))
+	}
+
+	return sdsPB
+}
+
+func PBToSelfDevelopmentSlice(sds []desc.Selfdevelopment) []SelfDevelopment {
+	sdsDomain := make([]SelfDevelopment, 0, len(sds))
+
+	for _, sd := range sds {
+		sdsDomain = append(sdsDomain, PBToSelfDevelopment(sd))
+	}
+
+	return sdsDomain
+}

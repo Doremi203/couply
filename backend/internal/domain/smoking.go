@@ -26,7 +26,7 @@ func PBToSmoking(smoking desc.Smoking) Smoking {
 	}
 }
 
-func SmokingToPb(smoking Smoking) desc.Smoking {
+func SmokingToPB(smoking Smoking) desc.Smoking {
 	switch smoking {
 	case SmokingUnspecified:
 		return desc.Smoking_SMOKING_UNSPECIFIED

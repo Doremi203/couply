@@ -55,3 +55,23 @@ func SocialToPB(social Social) desc.Social {
 		return desc.Social(0)
 	}
 }
+
+func SocialSliceToPB(socials []Social) []desc.Social {
+	socialsPB := make([]desc.Social, 0, len(socials))
+
+	for _, social := range socials {
+		socialsPB = append(socialsPB, SocialToPB(social))
+	}
+
+	return socialsPB
+}
+
+func PBToSocialSlice(socials []desc.Social) []Social {
+	socialsDomain := make([]Social, 0, len(socials))
+
+	for _, social := range socials {
+		socialsDomain = append(socialsDomain, PBToSocial(social))
+	}
+
+	return socialsDomain
+}
