@@ -9,7 +9,6 @@ import (
 
 type Photo struct {
 	ID         int64     `db:"id"`
-	UserID     int64     `db:"user_id"`
 	URL        string    `db:"url"`
 	MimeType   string    `db:"mime_type"`
 	UploadedAt time.Time `db:"uploaded_at"`

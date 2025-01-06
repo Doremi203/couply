@@ -10,9 +10,9 @@ import (
 )
 
 const (
-	adminHost = ":7002"
-	grpcHost  = ":7001"
-	httpHost  = ":7000"
+	adminHost = ":7003"
+	grpcHost  = ":7002"
+	httpHost  = ":7001"
 )
 
 func startGRPCServer(ctx context.Context, grpcServer *grpc.Server, lis net.Listener) {

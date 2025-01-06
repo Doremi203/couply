@@ -10,7 +10,7 @@
       "name": "UserService"
     }
   ],
-  "host": "127.0.0.1:8000",
+  "host": "127.0.0.1:7001",
   "schemes": [
     "http",
     "https"
@@ -22,7 +22,7 @@
     "application/json"
   ],
   "paths": {
-    "/v1/CreateUser": {
+    "/v1/CreateUserV1": {
       "post": {
         "summary": "Создание пользователя",
         "description": "Принимает важные поля для создания пользователя",
@@ -61,7 +61,7 @@
         ]
       }
     },
-    "/v1/UpdateUser": {
+    "/v1/UpdateUserV1": {
       "post": {
         "summary": "Обновление пользователя",
         "description": "Принимает важные поля для обновления пользователя",

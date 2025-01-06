@@ -1,6 +1,6 @@
 -- +goose Up
 create table if not exists Photos (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     user_id BIGINT,
     url VARCHAR(255) NOT NULL,
     mime_type VARCHAR(255) NOT NULL,

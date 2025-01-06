@@ -1,6 +1,6 @@
 -- +goose Up
 create table if not exists Users (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     age INT CHECK (age > 18),
     gender INT NOT NULL,

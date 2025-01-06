@@ -135,7 +135,7 @@ func setupAdminServer(ctx context.Context, adminHost string) *http.Server {
 	adminServer := chi.NewRouter()
 
 	adminServer.HandleFunc("/swagger.json", func(w http.ResponseWriter, _ *http.Request) {
-		b, _ := os.ReadFile("./pkg/order-service/v1/order_service.swagger.json")
+		b, _ := os.ReadFile("./pkg/user-service/v1/user_service.swagger.json")
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write(b)
 	})
