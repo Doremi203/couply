@@ -39,6 +39,3 @@ jobs:
         with:
           name: coverage-report
           path: coverage.out
-
-      - name: Build
-        run: go build -o app ./...
