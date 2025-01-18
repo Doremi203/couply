@@ -1,0 +1,6 @@
+# ignore vendor
+*/vendor/
+
+# ignore proto build artifacts
+*.pb.go
+*.grpc.pb.go
