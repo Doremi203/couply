@@ -1,7 +1,6 @@
-package app
+package webapp
 
 import (
-	"errors"
 	"strings"
 )
 
@@ -13,12 +12,12 @@ const (
 	TestingEnvironment Environment = "testing"
 )
 
-func parseEnvironment(s string) (Environment, error) {
+func parseEnvironment(s string) Environment {
 	switch env := Environment(strings.ToLower(s)); env {
 	case DevEnvironment, ProdEnvironment, TestingEnvironment:
-		return env, nil
+		return env
 	default:
-		return "", errors.New("unknown environment")
+		return ProdEnvironment
 	}
 }
 

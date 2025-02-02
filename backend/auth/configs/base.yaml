@@ -4,5 +4,9 @@ grpc:
 http:
   port: 9090
 
-app:
+logging:
+  level: debug
+  format: console
+
+test:
   test: "test"

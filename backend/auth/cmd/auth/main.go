@@ -2,17 +2,16 @@ package main
 
 import (
 	"auth/internal/userauth"
-	"auth/pkg/app"
-	"context"
+	"auth/pkg/webapp"
 )
 
-var Config struct {
-	Test string
-}
-
 func main() {
-	app.Run(func(ctx context.Context, appCtx *app.Context) error {
-		appCtx.GRPCServer().Register(userauth.NewGRPCService())
-		return nil
-	}, &Config)
+	app, _ := webapp.New()
+
+	app.RegisterGRPCService(userauth.NewGRPCService())
+	app.AddReadinessCheck(func() bool {
+		return true
+	})
+
+	app.Run()
 }

@@ -19,10 +19,6 @@ func (s *gRPCService) Register(gRPC *grpc.Server) {
 	userauth.RegisterUserAuthServer(gRPC, s)
 }
 
-func (s *gRPCService) Name() string {
-	return "userauth"
-}
-
 func (s *gRPCService) RegisterUser(
 	ctx context.Context,
 	req *userauth.RegisterRequest,
