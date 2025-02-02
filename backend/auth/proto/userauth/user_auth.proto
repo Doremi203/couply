@@ -5,7 +5,7 @@ package userauth;
 option go_package = "userauth/proto;userauth";
 
 service UserAuth {
-    rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc RegisterUser (RegisterRequest) returns (RegisterResponse);
 }
 
 message RegisterRequest {
