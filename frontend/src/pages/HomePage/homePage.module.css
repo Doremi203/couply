@@ -1,0 +1,21 @@
+/* .body {
+    background-color: white;
+} */
+
+.personCard {
+   margin-top: 100px
+}
+
+
+.likeCircle {
+position: absolute;
+width: 62px;
+height: 62px;
+left: 64px;
+top: 693px;
+
+background: #FF2DA1;
+border-radius: 50%;
+
+
+}
