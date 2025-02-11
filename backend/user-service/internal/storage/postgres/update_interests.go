@@ -1,0 +1,42 @@
+package postgres
+
+import (
+	"context"
+	"fmt"
+	"github.com/Doremi203/Couply/backend/internal/domain/interest"
+)
+
+func (s *PgStorage) UpdateInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
+	const op = "UpdateInterests"
+
+	deleteSQL := `DELETE FROM Interests WHERE user_id = $1`
+	_, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, deleteSQL, userID)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	interestSQL := `
+        INSERT INTO Interests (user_id, type, value)
+        VALUES ($1, $2, $3)
+    `
+
+	interestMap := map[string][]int{
+		"social":           toIntSlice(interests.Social),
+		"sport":            toIntSlice(interests.Sport),
+		"self_development": toIntSlice(interests.SelfDevelopment),
+		"art":              toIntSlice(interests.Art),
+		"hobby":            toIntSlice(interests.Hobby),
+		"gastronomy":       toIntSlice(interests.Gastronomy),
+	}
+
+	for interestType, values := range interestMap {
+		for _, value := range values {
+			_, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, interestSQL, userID, interestType, value)
+			if err != nil {
+				return fmt.Errorf("%s: %w", op, err)
+			}
+		}
+	}
+
+	return nil
+}
