@@ -1,21 +1,26 @@
-/* .body {
-    background-color: white;
-} */
-
 .personCard {
-   margin-top: 100px
+  margin-top: 100px;
+}
+
+.header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.appName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #202c83;
+  font-size: 40px;
+  font-family: "Jost", sans-serif;
+  font-weight: medium;
+  margin-left: 125px;
 }
 
 
-.likeCircle {
-position: absolute;
-width: 62px;
-height: 62px;
-left: 64px;
-top: 693px;
-
-background: #FF2DA1;
-border-radius: 50%;
-
-
+.filtersIcon {
+  margin-right: 25px;
+  margin-top: 7px;
 }

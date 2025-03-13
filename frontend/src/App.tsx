@@ -1,11 +1,9 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AuthPage from './pages/AuthPage/AuthPage'
 import SplashPage from './pages/SplashPage/SplashPage'
 import HomePage from './pages/HomePage/HomePage'
+import ProfilePage from './pages/ProfilePage/ProfilePage'
 
 
 const router = createBrowserRouter([
@@ -20,7 +18,11 @@ const router = createBrowserRouter([
   {
     path: "home",
     element: <HomePage />,
-},
+  },
+  {
+    path: "profile",
+    element: <ProfilePage />,
+  },
 ])
 
 
