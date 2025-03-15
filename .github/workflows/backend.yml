@@ -21,11 +21,15 @@ jobs:
           go-version: '1.23.5'
       - name: Install golangci-lint
         run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+      - name: Run go generate
+        working-directory: backend/auth
+        run: go generate ./...
       - name: Run golangci-lint
         run: golangci-lint run
         working-directory: backend/auth
 
   build:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,6 +46,9 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
+      - name: Run go generate
+        working-directory: backend/auth
+        run: go generate ./...
       - name: Build
         working-directory: backend/auth
         run: go build -v ./...
