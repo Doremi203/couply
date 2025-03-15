@@ -51,9 +51,8 @@ type App struct {
 	backgroundCtx        context.Context
 	backgroundCancelFunc context.CancelCauseFunc
 
-	readinessRegistered bool
-	Env                 Environment
-	Config              Config
+	Env    Environment
+	Config Config
 }
 
 func new() *App {
