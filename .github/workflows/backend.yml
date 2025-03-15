@@ -23,6 +23,12 @@ jobs:
         with:
           go-version: '1.23.5'
 
+      - name: Cache Go tools
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.GOPATH }}/bin
+          key: ${{ runner.os }}-go-tools-${{ hashFiles('backend/auth/go.sum') }}
+
       - name: Install buf
         run: go install github.com/bufbuild/buf/cmd/buf@latest
 
@@ -40,6 +46,12 @@ jobs:
 
       - name: Install protoc-gen-validate
         run: go install github.com/envoyproxy/protoc-gen-validate/cmd/protoc-gen-validate-go@latest
+
+      - name: Cache common proto files
+        uses: actions/cache@v4
+        with:
+          path: backend/common/proto
+          key: ${{ runner.os }}-proto-cache
 
       - name: Pull common proto files
         working-directory: backend
@@ -60,7 +72,7 @@ jobs:
           path: |
             ~/go/pkg/mod
             ~/.cache/go-build
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('backend/auth/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
 
