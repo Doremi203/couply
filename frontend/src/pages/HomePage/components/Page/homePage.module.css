@@ -1,0 +1,26 @@
+.personCard {
+  margin-top: 140px;
+}
+
+.header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+}
+
+.appName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #202c83;
+  font-size: 40px;
+  font-family: "Jost", sans-serif;
+  font-weight: medium;
+  margin-left: 135px;
+}
+
+
+.filtersIcon {
+  margin-right: 25px;
+  margin-top: 7px;
+}
