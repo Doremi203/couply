@@ -11,32 +11,30 @@ on:
       - 'backend/auth/**'
 
 jobs:
-  lint:
+  build_and_checks:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v5.3.0
-        with:
-          go-version: '1.23.5'
-      - name: Install golangci-lint
-        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-      - name: Run go generate
+    defaults:
+      run:
         working-directory: backend/auth
-        run: go generate ./...
-      - name: Run golangci-lint
-        run: golangci-lint run
-        working-directory: backend/auth
-
-  build:
-    needs: lint
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
         uses: actions/setup-go@v5.1.0
         with:
           go-version: '1.23.5'
+
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+      - name: Install buf
+        run: go install github.com/bufbuild/buf/cmd/buf@latest
+
+      - name: Run go generate
+        run: go generate ./...
+
+      - name: Run golangci-lint
+        run: golangci-lint run
+
       - name: Cache Go modules
         uses: actions/cache@v4
         with:
@@ -46,12 +44,9 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - name: Run go generate
-        working-directory: backend/auth
-        run: go generate ./...
+
       - name: Build
-        working-directory: backend/auth
         run: go build -v ./...
-      - name: Test
-        working-directory: backend/auth
+
+      - name: Unit-Tests
         run: go test -v ./...
