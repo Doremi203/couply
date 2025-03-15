@@ -27,6 +27,7 @@ jobs:
         run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
       - name: Install buf
+        working-directory: backend
         run: go install github.com/bufbuild/buf/cmd/buf@latest
 
       - name: Pull common proto files
