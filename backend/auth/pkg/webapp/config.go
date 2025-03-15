@@ -1,8 +1,8 @@
 package webapp
 
 import (
-	"auth/pkg/errors"
 	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/spf13/viper"
 	"os"
 	"path/filepath"

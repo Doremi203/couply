@@ -10,7 +10,7 @@ var Is = errors.Is
 var As = errors.As
 
 func Wrap(err error, msg string) error {
-	return fmt.Errorf("%s: %v", msg, err)
+	return fmt.Errorf("%s: %w", msg, err)
 }
 
 func Wrapf(err error, format string, args ...interface{}) error {

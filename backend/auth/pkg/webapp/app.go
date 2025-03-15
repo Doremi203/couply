@@ -1,10 +1,11 @@
 package webapp
 
 import (
-	"auth/pkg/errors"
 	"context"
 	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/gin-gonic/gin"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 	"log/slog"
@@ -13,13 +14,14 @@ import (
 	"os"
 	"os/signal"
 	"reflect"
+	"runtime/debug"
 	"sync"
 	"syscall"
 	"time"
 )
 
 type grpcService interface {
-	Register(gRPC *grpc.Server)
+	RegisterToServer(gRPC *grpc.Server)
 }
 
 // ResourceCloser представляет функцию для закрытия или освобождения ресурса.
@@ -36,9 +38,7 @@ type BackgroundProcess func(ctx context.Context) error
 // логирование, HTTP и gRPC серверы, а также управление фоновыми процессами
 // и ресурсами.
 type App struct {
-	ctx    context.Context
-	cancel context.CancelFunc
-	wg     sync.WaitGroup
+	wg sync.WaitGroup
 
 	Log     *slog.Logger
 	closers []ResourceCloser
@@ -56,7 +56,7 @@ type App struct {
 	Config              Config
 }
 
-func New() (*App, context.Context) {
+func new() *App {
 	envStr := os.Getenv("APP_ENV")
 	env := parseEnvironment(envStr)
 
@@ -69,8 +69,6 @@ func New() (*App, context.Context) {
 
 	router := newGinRouter(log)
 
-	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
-
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
 
 	grpcServer := grpc.NewServer()
@@ -80,8 +78,6 @@ func New() (*App, context.Context) {
 		Env:                  env,
 		Config:               cfg,
 		Log:                  log,
-		ctx:                  ctx,
-		cancel:               cancel,
 		backgroundCtx:        backgroundCtx,
 		backgroundCancelFunc: backgroundCancelFunc,
 		grpcServer:           grpcServer,
@@ -90,18 +86,42 @@ func New() (*App, context.Context) {
 			Addr:    fmt.Sprintf(":%d", cfg.http.Port),
 			Handler: router,
 		},
-	}, ctx
+	}
 }
 
 // Run запускает приложение. Вызов функции блокируется до получения сигнала от OS о завершении приложения.
-func (a *App) Run() {
+//
+// Для запуска необходимо выставить переменную окружения APP_ENV, которая определяет окружение приложения. Возможные значения: (dev, testing, prod).
+//
+// Также необходимо указать переменную окружения CONFIGS_PATH, которая указывает путь к директории с конфигурационными файлами.
+func Run(setupFunc func(ctx context.Context, app *App) error) {
+	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
+	defer cancel()
+
+	a := new()
+
+	defer func() {
+		if err := recover(); err != nil {
+			a.Log.Error("app crashed with panic", "error", err, "stack", string(debug.Stack()))
+			os.Exit(1)
+		}
+	}()
+
+	err := setupFunc(ctx, a)
+	if err != nil {
+		a.Log.Error("app setup failed", "error", err)
+		os.Exit(1)
+	}
+
+	grpcmux := runtime.NewServeMux()
+
 	a.initGRPCServer()
 	a.initHTTPServer()
 
 	a.startBackgroundProcesses()
 
-	<-a.ctx.Done()
-	a.cancel()
+	<-ctx.Done()
+	cancel()
 
 	a.Log.Info("shutting down app")
 	a.Log.Info("shutting down servers")
@@ -140,7 +160,7 @@ func (a *App) RegisterGRPCService(service grpcService) {
 	}
 	serviceName := t.Name()
 	a.Log.Info("grpc service registered", "service", serviceName)
-	service.Register(a.grpcServer)
+	service.RegisterToServer(a.grpcServer)
 }
 
 // HTTPRouter возвращает объект роутера Gin, используемый для обработки HTTP запросов.

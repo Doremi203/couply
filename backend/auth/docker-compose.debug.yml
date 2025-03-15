@@ -1,0 +1,7 @@
+services:
+  auth:
+    entrypoint: ["dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/app/app"]
+    ports:
+      - "40000:40000"
+    security_opt:
+      - seccomp=unconfined

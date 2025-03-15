@@ -8,5 +8,10 @@ logging:
   level: debug
   format: console
 
-test:
-  test: "test"
+database:
+  host: localhost
+  port: 5432
+  user: user
+  password: pass
+  database: auth
+  options: sslmode=disable
