@@ -15,8 +15,7 @@ plugins:
       - paths=source_relative
   - local: protoc-gen-openapiv2
     out: swagger
-  - local: protoc-gen-validate
+  - local: protoc-gen-validate-go
     out: gen
     opt:
-      - lang=go
       - paths=source_relative
