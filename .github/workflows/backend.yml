@@ -29,6 +29,9 @@ jobs:
       - name: Install buf
         run: go install github.com/bufbuild/buf/cmd/buf@latest
 
+      - name: Pull common proto files
+        run: buf export buf.build/googleapis/googleapis --output common/proto/
+
       - name: Run go generate
         run: go generate ./...
 
