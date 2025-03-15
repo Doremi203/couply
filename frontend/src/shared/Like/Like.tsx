@@ -1,6 +1,4 @@
-import React from "react";
-
-export default function Like() {
+export const Like = () => {
   return (
     <div>
       <svg
@@ -34,4 +32,6 @@ export default function Like() {
       </svg>
     </div>
   );
-}
+};
+
+export default Like;

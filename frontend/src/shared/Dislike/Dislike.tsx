@@ -1,6 +1,4 @@
-import React from "react";
-
-export default function Dislike() {
+export const Dislike = () => {
   return (
     <div>
       <svg
@@ -17,4 +15,6 @@ export default function Dislike() {
       </svg>
     </div>
   );
-}
+};
+
+export default Dislike;
