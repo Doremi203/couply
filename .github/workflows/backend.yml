@@ -41,6 +41,9 @@ jobs:
       - name: Install protoc-gen-openapiv2
         run: go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 
+      - name: Install protoc-gen-validate
+        run: go install github.com/envoyproxy/protoc-gen-validate/cmd/protoc-gen-validate@latest
+
       - name: Pull common proto files
         working-directory: backend
         run: buf export buf.build/googleapis/googleapis --output common/proto/
