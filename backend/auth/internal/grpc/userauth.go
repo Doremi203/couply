@@ -33,7 +33,7 @@ func (s *userAuthService) RegisterToServer(gRPC *grpc.Server) {
 	registration.RegisterRegistrationServer(gRPC, s)
 }
 
-func (s *userAuthService) Register(
+func (s *userAuthService) BasicRegister(
 	ctx context.Context,
 	req *registration.BasicRegisterRequest,
 ) (*registration.BasicRegisterResponse, error) {

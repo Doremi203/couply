@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/gin-gonic/gin"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 	"log/slog"
 	"net"
@@ -44,8 +44,8 @@ type App struct {
 	closers []ResourceCloser
 
 	grpcServer *grpc.Server
+	grpcMux    *runtime.ServeMux
 	httpServer *http.Server
-	router     *gin.Engine
 
 	backgroundProcesses  []BackgroundProcess
 	backgroundCtx        context.Context
@@ -67,8 +67,6 @@ func new() *App {
 
 	log := newLogger(cfg.logging)
 
-	router := newGinRouter(log)
-
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
 
 	grpcServer := grpc.NewServer()
@@ -81,10 +79,9 @@ func new() *App {
 		backgroundCtx:        backgroundCtx,
 		backgroundCancelFunc: backgroundCancelFunc,
 		grpcServer:           grpcServer,
-		router:               router,
+		grpcMux:              runtime.NewServeMux(),
 		httpServer: &http.Server{
-			Addr:    fmt.Sprintf(":%d", cfg.http.Port),
-			Handler: router,
+			Addr: fmt.Sprintf(":%d", cfg.http.Port),
 		},
 	}
 }
@@ -113,10 +110,8 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 		os.Exit(1)
 	}
 
-	grpcmux := runtime.NewServeMux()
-
 	a.initGRPCServer()
-	a.initHTTPServer()
+	a.initHTTPServer(a.grpcMux)
 
 	a.startBackgroundProcesses()
 
@@ -163,35 +158,16 @@ func (a *App) RegisterGRPCService(service grpcService) {
 	service.RegisterToServer(a.grpcServer)
 }
 
-// HTTPRouter возвращает объект роутера Gin, используемый для обработки HTTP запросов.
-// Это позволяет добавлять собственные маршруты, middleware или изменять поведение HTTP сервера.
-func (a *App) HTTPRouter() *gin.Engine {
-	return a.router
-}
-
-// AddReadinessCheck регистрирует функцию проверки готовности (readiness check) приложения.
-// Функция должна возвращать true, если приложение готово обрабатывать запросы, и false — если нет.
-// При обращении к эндпоинту "/readiness" возвращается статус 200 OK (при готовности)
-// или 503 Service Unavailable (если приложение не готово).
-// Регистрировать проверку можно только один раз; если функция равна nil или попытаться
-// зарегистрировать проверку повторно, происходит паника.
-func (a *App) AddReadinessCheck(readiness func() bool) {
-	if readiness == nil {
-		panic(errors.New("readiness function is required"))
+func (a *App) RegisterGatewayHandler(
+	f func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error,
+) error {
+	err := f(a.backgroundCtx, a.grpcMux, fmt.Sprintf("localhost:%d", a.Config.grpc.Port), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+	if err != nil {
+		return errors.Wrap(err, "failed to register gateway handler")
 	}
-	if a.readinessRegistered {
-		panic(errors.New("readiness check is already registered"))
-	}
+	a.Log.Info("gateway handler registered successfully")
 
-	a.readinessRegistered = true
-	a.router.GET("/readiness", func(c *gin.Context) {
-		if !readiness() {
-			c.AbortWithStatus(http.StatusServiceUnavailable)
-			return
-		}
-
-		c.Status(http.StatusOK)
-	})
+	return nil
 }
 
 func (a *App) initGRPCServer() {
@@ -212,7 +188,8 @@ func (a *App) initGRPCServer() {
 	})
 }
 
-func (a *App) initHTTPServer() {
+func (a *App) initHTTPServer(grpcMux *runtime.ServeMux) {
+	a.httpServer.Handler = grpcMux
 	a.AddBackgroundProcess(func(ctx context.Context) error {
 		a.Log.Info("starting http server on", "address", a.httpServer.Addr)
 		if err := a.httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {

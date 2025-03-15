@@ -13,6 +13,12 @@ services/deploy:
 	docker-compose up
 
 ### Auth service targets
+auth/build:
+	cd auth && go build -o bin/auth ./cmd/auth
+
+auth/run: auth/build
+	APP_ENV=dev CONFIGS_PATH=auth/configs ./auth/bin/auth
+
 auth/generate:
 	cd auth && go generate ./...
 

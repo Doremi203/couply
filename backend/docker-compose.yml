@@ -9,6 +9,14 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui
+    ports:
+      - "10100:8080"
+    volumes:
+      - ./auth/swagger:/usr/share/nginx/html/auth/swagger
+      - ./swagger/index.html:/usr/share/nginx/html/index.html:ro
   auth:
     build:
       context: ./auth
