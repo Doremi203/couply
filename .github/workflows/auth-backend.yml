@@ -1,0 +1,97 @@
+name: Auth Service CI/CD
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'backend/auth/**'
+      - '.github/workflows/backend.yml'
+      - '.github/actions/codegen/**'  # Include changes to composite action
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'backend/auth/**'
+      - '.github/workflows/backend.yml'
+      - '.github/actions/codegen/**'  # Include changes to composite action
+  workflow_dispatch: # Allow manual triggering
+
+# Cancel any in-progress job or run for the same branch/PR to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Job for linting the code
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version: '1.23.5'
+          cache: true
+
+      # Use the official golangci-lint GitHub Action
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.7
+          working-directory: backend/auth
+          args: --timeout=3m
+
+  # Job for running tests with coverage
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      # Run tests with coverage
+      - name: Run tests with coverage
+        run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./backend/auth/coverage.txt
+          fail_ci_if_error: false
+          verbose: true
+
+  # Job for building the application
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      # Build with optimized flags
+      - name: Build
+        run: go build -v -ldflags="-s -w" -o auth_service ./cmd/auth
+
+      # Upload build artifacts
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: auth-service
+          path: backend/auth/auth_service
+          retention-days: 7

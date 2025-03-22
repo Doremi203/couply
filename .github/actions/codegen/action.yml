@@ -1,0 +1,62 @@
+name: 'Setup Protoc Environment'
+description: 'Sets up Buf and protoc generators for Go services'
+
+inputs:
+  go-version:
+    description: 'Go version to use'
+    required: false
+    default: '1.23.5'
+  working-directory:
+    description: 'Working directory for commands'
+    required: false
+    default: 'backend/auth'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v5.1.0
+      with:
+        go-version: ${{ inputs.go-version }}
+        cache: true
+
+    - name: Cache tools
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cache/go-build
+          /tmp/buf-cache
+        key: ${{ runner.os }}-tools-${{ hashFiles(format('{0}/go.mod', inputs.working-directory), format('{0}/go.sum', inputs.working-directory), 'backend/buf.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-tools-
+
+    # Install required tools for code generation
+    - name: Setup Buf
+      uses: bufbuild/buf-setup-action@v1
+      with:
+        github_token: ${{ github.token }}
+
+    - name: Install protoc generators
+      shell: bash
+      run: |
+        go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+        go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
+        go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
+        go install github.com/envoyproxy/protoc-gen-validate/cmd/protoc-gen-validate-go@latest
+
+    - name: Cache common proto files
+      uses: actions/cache@v4
+      with:
+        path: backend/common/proto
+        key: ${{ runner.os }}-proto-${{ hashFiles('backend/buf.yaml') }}
+
+    - name: Pull common proto files
+      shell: bash
+      working-directory: backend
+      run: buf export buf.build/googleapis/googleapis --output common/proto/
+
+    - name: Run go generate
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: go generate ./...
