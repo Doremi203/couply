@@ -1,28 +1,27 @@
-package user
+package userpostgres
 
 import (
 	"context"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/Doremi203/couply/backend/auth/pkg/repo"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func NewPostgresRepo(
+func NewRepo(
 	db *pgxpool.Pool,
-) *postgresRepo {
-	return &postgresRepo{
+) *repo {
+	return &repo{
 		db: db,
 	}
 }
 
-type postgresRepo struct {
+type repo struct {
 	db *pgxpool.Pool
 }
 
-func (p *postgresRepo) Save(ctx context.Context, u user.User) error {
+func (p *repo) Save(ctx context.Context, u user.User) error {
 	query := `
 		INSERT INTO users (uid, email, password)
 		VALUES ($1, $2, $3)
@@ -31,7 +30,7 @@ func (p *postgresRepo) Save(ctx context.Context, u user.User) error {
 	var pgErr pgconn.PgError
 	switch {
 	case errors.As(err, &pgErr) && pgErr.Code == "23505":
-		return errors.Wrapf(repo.ErrAlreadyExists, "user with email %s", u.Email)
+		return errors.Wrapf(user.ErrAlreadyExists, "user with email %s", u.Email)
 	case err != nil:
 		return errors.Wrap(err, "failed to save user")
 	}
@@ -39,7 +38,7 @@ func (p *postgresRepo) Save(ctx context.Context, u user.User) error {
 	return nil
 }
 
-func (p *postgresRepo) GetByEmail(ctx context.Context, email user.Email) (user.User, error) {
+func (p *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, error) {
 	query := `
 		SELECT uid, email, password
 		FROM users
@@ -51,7 +50,7 @@ func (p *postgresRepo) GetByEmail(ctx context.Context, email user.Email) (user.U
 	err := row.Scan(&u.UID, &u.Email, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return user.User{}, errors.Wrapf(repo.ErrNotFound, "user with email %s", email)
+		return user.User{}, errors.Wrapf(user.ErrNotFound, "with email %s", email)
 	case err != nil:
 		return user.User{}, errors.Wrap(err, "failed to fetch user by email")
 	}

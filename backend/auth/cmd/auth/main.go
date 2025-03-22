@@ -5,7 +5,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/gen/api/registration"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
-	userrepo "github.com/Doremi203/couply/backend/auth/internal/repo/user"
+	"github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
 	"github.com/Doremi203/couply/backend/auth/internal/services/hash"
 	registrationUC "github.com/Doremi203/couply/backend/auth/internal/usecase/registration"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -28,13 +28,13 @@ func main() {
 			return errors.Wrap(err, "could create connection pool for db")
 		}
 
-		userRepo := userrepo.NewPostgresRepo(pgPool)
+		userRepo := userpostgres.NewRepo(pgPool)
 
-		registerWithCredentialsUsecase := registrationUC.Basic{
-			UserRepository: userRepo,
-			Hasher:         hash.NewArgon(app.Log),
-			UIDGenerator:   &user.UUIDV7BasedUIDGenerator{},
-		}
+		registerWithCredentialsUsecase := registrationUC.NewUseCase(
+			userRepo,
+			hash.NewArgon(app.Log),
+			&user.UUIDV7BasedUIDGenerator{},
+		)
 
 		registrationService := grpc.NewRegistrationService(
 			registerWithCredentialsUsecase,

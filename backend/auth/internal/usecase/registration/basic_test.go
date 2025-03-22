@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestBasic_Run(t *testing.T) {
+func TestUseCase_BasicRegister(t *testing.T) {
 	type mocks struct {
 		UserRepository *mock_user.MockRepo
 		Hasher         *mock_password.MockHasher
@@ -29,7 +29,7 @@ func TestBasic_Run(t *testing.T) {
 		{
 			name: "hashing password error then error",
 			setup: func(m mocks) {
-				m.Hasher.EXPECT().Hash(gomock.Any()).Return(user.HashedPassword{}, assert.AnError)
+				m.Hasher.EXPECT().Hash(user.Password("password")).Return(user.HashedPassword{}, assert.AnError)
 			},
 			args: args{
 				email:    "email",
@@ -48,12 +48,16 @@ func TestBasic_Run(t *testing.T) {
 				UIDGenerator:   mock_user.NewMockUIDGenerator(ctrl),
 			}
 
-			r := Basic{
-				UserRepository: mocks.UserRepository,
-				Hasher:         mocks.Hasher,
-				UIDGenerator:   mocks.UIDGenerator,
+			if tt.setup != nil {
+				tt.setup(mocks)
 			}
-			err := r.Run(context.Background(), tt.args.email, tt.args.password)
+
+			r := UseCase{
+				userRepository: mocks.UserRepository,
+				hasher:         mocks.Hasher,
+				uidGenerator:   mocks.UIDGenerator,
+			}
+			err := r.BasicRegister(context.Background(), tt.args.email, tt.args.password)
 			tt.wantErr(t, err)
 		})
 	}
