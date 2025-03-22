@@ -31,6 +31,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
       - name: Set up Go
         uses: actions/setup-go@v5.1.0
         with:
@@ -87,11 +91,3 @@ jobs:
       # Build with optimized flags
       - name: Build
         run: go build -v -ldflags="-s -w" -o auth_service ./cmd/auth
-
-      # Upload build artifacts
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: auth-service
-          path: backend/auth/auth_service
-          retention-days: 7
