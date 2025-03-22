@@ -4,6 +4,8 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 )
 
+//go:generate mockgen -source=hash.go -destination=../../mocks/password/hash_mock.go -typed
+
 type Hasher interface {
 	Hash(password user.Password) (user.HashedPassword, error)
 

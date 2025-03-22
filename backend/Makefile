@@ -4,6 +4,12 @@ DB_PARAMS = ?sslmode=disable
 
 MIGRATE_CREATE = migrate create -ext sql -dir
 
+deps/buf:
+	go install github.com/bufbuild/buf/cmd/buf@latest
+
+deps/mockgen:
+	go install go.uber.org/mock/mockgen@latest
+
 deps/protoc:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest

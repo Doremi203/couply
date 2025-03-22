@@ -5,6 +5,8 @@ import (
 	"github.com/google/uuid"
 )
 
+//go:generate mockgen -source=uid.go -destination=../../mocks/user/uid_mock.go -typed
+
 type UID uuid.UUID
 
 type UIDGenerator interface {

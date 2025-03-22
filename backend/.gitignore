@@ -4,6 +4,7 @@ common/proto/*
 
 # ignore proto build artifacts
 *gen/*
+*_mock.go
 *.pb.go
 *.grpc.pb.go
 *.pb.gw.go

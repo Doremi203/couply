@@ -9,7 +9,7 @@ import (
 )
 
 type Basic struct {
-	UserRepository user.Repository
+	UserRepository user.Repo
 	Hasher         password.Hasher
 	UIDGenerator   user.UIDGenerator
 }
