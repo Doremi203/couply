@@ -75,6 +75,7 @@ jobs:
           workflow_conclusion: success
           name: main.breakdown.backend.auth
           if_no_artifact_found: warn
+          github_token: '${{ github.token }}'
 
       - name: Check test coverage
         uses: vladopajic/go-test-coverage@v2.13.0
