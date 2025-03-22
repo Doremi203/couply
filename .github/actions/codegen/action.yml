@@ -1,5 +1,5 @@
-name: 'Setup Protoc Environment'
-description: 'Sets up Buf and protoc generators for Go services'
+name: 'Codegen'
+description: 'Generate code for service'
 
 inputs:
   go-version:
@@ -8,18 +8,11 @@ inputs:
     default: '1.23.5'
   working-directory:
     description: 'Working directory for commands'
-    required: false
-    default: 'backend/auth'
+    required: true
 
 runs:
   using: "composite"
   steps:
-    - name: Set up Go
-      uses: actions/setup-go@v5.1.0
-      with:
-        go-version: ${{ inputs.go-version }}
-        cache: true
-
     - name: Cache tools
       uses: actions/cache@v4
       with:
@@ -29,6 +22,11 @@ runs:
         key: ${{ runner.os }}-tools-${{ hashFiles(format('{0}/go.mod', inputs.working-directory), format('{0}/go.sum', inputs.working-directory), 'backend/buf.yaml') }}
         restore-keys: |
           ${{ runner.os }}-tools-
+
+    - name: Set up Go
+      uses: actions/setup-go@v5.1.0
+      with:
+        go-version: ${{ inputs.go-version }}
 
     # Install required tools for code generation
     - name: Setup Buf
