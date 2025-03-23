@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"github.com/Doremi203/couply/backend/auth/gen/api/registration"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -37,15 +38,13 @@ func (s *userAuthService) BasicRegister(
 	ctx context.Context,
 	req *registration.BasicRegisterRequest,
 ) (*registration.BasicRegisterResponse, error) {
-	err := s.useCase.BasicRegister(ctx, user.Email(req.GetEmail()), user.Password(req.GetPassword()))
+	err := s.useCase.BasicRegister(ctx, user.Email(req.GetEmail()), pswrd.Password(req.GetPassword()))
 	switch {
 	case errors.Is(err, usecase.ErrAlreadyRegistered):
 		return nil, status.Errorf(codes.AlreadyExists, "user with email %s %v", req.GetEmail(), err)
 	case err != nil:
 		s.log.Error("failed to register user", "error", err)
 		return nil, status.Error(codes.Internal, "internal server error")
-	default:
-		// continue
 	}
 
 	return &registration.BasicRegisterResponse{}, nil

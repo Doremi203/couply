@@ -9,7 +9,7 @@ logging:
   format: console
 
 database:
-  host: localhost
+  host: db
   port: 5432
   user: user
   password: pass

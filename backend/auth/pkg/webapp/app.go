@@ -58,6 +58,7 @@ type App struct {
 func new() *App {
 	envStr := os.Getenv("APP_ENV")
 	env := parseEnvironment(envStr)
+	fmt.Println("APP_ENV", env)
 
 	cfg, err := loadConfig(env)
 	if err != nil {
@@ -65,6 +66,9 @@ func new() *App {
 	}
 
 	log := newLogger(cfg.logging)
+	log.Info("starting service with", "env", env)
+	log.Info("loaded app config", "grpc_cfg", cfg.grpc, "http_cfg", cfg.http, "logging_cfg", cfg.logging)
+	cfg.logger = log
 
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
 
@@ -188,6 +192,7 @@ func (a *App) initGRPCServer() {
 }
 
 func (a *App) initHTTPServer(grpcMux *runtime.ServeMux) {
+
 	a.httpServer.Handler = grpcMux
 	a.AddBackgroundProcess(func(ctx context.Context) error {
 		a.Log.Info("starting http server on", "address", a.httpServer.Addr)

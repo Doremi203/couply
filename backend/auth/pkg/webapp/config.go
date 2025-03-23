@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/spf13/viper"
+	"log/slog"
 	"os"
 	"path/filepath"
 )
@@ -27,6 +28,7 @@ type Config struct {
 	logging loggingConfig
 
 	viperLoader *viper.Viper
+	logger      *slog.Logger
 }
 
 func (c *Config) ReadSection(name string, cfg any) error {
@@ -34,6 +36,7 @@ func (c *Config) ReadSection(name string, cfg any) error {
 	if err != nil {
 		return errors.Wrapf(err, "failed to read section %s into %v", name, cfg)
 	}
+	c.logger.Info("loaded custom config", "section", name, "config", cfg)
 
 	return nil
 }
@@ -42,6 +45,7 @@ func loadConfig(
 	env Environment,
 ) (Config, error) {
 	configsPath := os.Getenv("CONFIGS_PATH")
+	fmt.Println("CONFIGS_PATH", configsPath)
 
 	v := viper.New()
 

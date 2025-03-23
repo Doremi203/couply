@@ -1,4 +1,4 @@
-package user
+package pswrd
 
 type Password string
 

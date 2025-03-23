@@ -4,6 +4,9 @@ DB_PARAMS = ?sslmode=disable
 
 MIGRATE_CREATE = migrate create -ext sql -dir
 
+deps/go-test-coverage:
+	go install github.com/vladopajic/go-test-coverage/v2@latest
+
 deps/buf:
 	go install github.com/bufbuild/buf/cmd/buf@latest
 
@@ -29,6 +32,11 @@ services/deploy:
 	docker-compose up
 
 ### Auth service targets
+auth/check-coverage:
+	-cd auth && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd auth && go-test-coverage --config=.local.testcoverage.yml
+	@rm auth/cover.out
+
 auth/lint:
 	cd auth && golangci-lint run
 

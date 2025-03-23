@@ -3,6 +3,7 @@ vendor/*
 common/proto/*
 
 # ignore proto build artifacts
+*cover.out
 *gen/*
 *_mock.go
 *.pb.go

@@ -84,8 +84,7 @@ jobs:
       - name: Check test coverage
         uses: vladopajic/go-test-coverage@v2.13.0
         with:
-          profile: ./backend/auth/coverage.txt
-          threshold-total: 15
+          config: ./backend/auth/.testcoverage.yml
           breakdown-file-name: ${{ github.ref_name == 'main' && 'main.breakdown.backend.auth' || '' }}
           diff-base-breakdown-file-name: ${{ steps.download-main-breakdown.outputs.found_artifact == 'true' && 'main.breakdown.backend.auth' || '' }}
 
