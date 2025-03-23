@@ -1,0 +1,29 @@
+.customInput {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 15px;
+  background-color: #f5f7fa;
+  font-size: 16px;
+  color: #333;
+  outline: none;
+  transition: background-color 0.3s;
+  height: 30px;
+  width: 320px;
+  /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400; */
+}
+
+.customInput::placeholder {
+  color: #999;
+}
+
+.customInput:focus {
+  background-color: #e0e4eb;
+}
+
+.customInputWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

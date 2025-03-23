@@ -1,0 +1,23 @@
+
+.toggleButtons {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #f0f0f0;
+  color: #555; 
+  transition: background-color 0.3s, color 0.3s;
+  min-width: 100px;
+  text-align: center;
+}
+
+.active {
+  background-color: #202c83; 
+  color: white;
+}
