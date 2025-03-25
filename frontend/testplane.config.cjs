@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
     gridUrl: "local",
     baseUrl: "http://localhost",
     pageLoadTimeout: 0,
@@ -11,8 +11,7 @@ const config = {
                 "testplane-tests/**/*.testplane.(t|j)s"
             ],
             browsers: [
-                "chrome",
-                "firefox"
+                "chrome"
             ]
         }
     },
@@ -21,12 +20,6 @@ const config = {
             headless: true,
             desiredCapabilities: {
                 browserName: "chrome"
-            }
-        },
-        firefox: {
-            headless: true,
-            desiredCapabilities: {
-                browserName: "firefox"
             }
         }
     },
@@ -40,5 +33,3 @@ const config = {
         }
     }
 };
-
-export default config;
