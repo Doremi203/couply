@@ -1,122 +1,69 @@
-/* .profile {
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  } */
-
-.page {
+/* Page container */
+.pageContainer {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin-top: 200px;
-  /* //background-color: #202C83; */
-  background-color: #202c83;
-  min-width: 100%;
-  min-height: 100%;
-  margin: 0;
-  padding: 0;
-  width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding-bottom: 70px; /* Space for navbar */
 }
 
-/* .profileHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  
-  .backButton {
-    font-size: 20px;
-  }
-  
-  .profileInfo {
-    display: flex;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .profilePic {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-right: 20px;
-  } */
-
-/* .profileNameEdit {
-    display: flex;
-    align-items: center;
-  } */
-
-/* .editButton {
-    margin-left: 10px;
-  } */
-
-.settings {
-  margin-top: 30px;
-}
-
-.section {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
-}
-
-.field,
-.slider-field {
-  margin-top: 10px;
-}
-
-.sliderField input[type="range"] {
-  width: 100%;
-}
-
-.logoutButton,
-.deleteAccountButton {
-  margin-top: 20px;
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background-color: #f0f0f0;
-  cursor: pointer;
-}
-
-.deleteAccountButton {
-  background-color: #ff4c4c;
-  color: white;
-}
-
-.navbar {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 30px;
-}
-
+/* Profile header */
 .profileHeader {
-  background-color: #283593;
+  background-color: #6c5ce7;
   color: white;
   text-align: center;
-  padding: 40px;
+  padding: 20px;
   position: relative;
-  border-bottom-left-radius: 50% 20px;
-  border-bottom-right-radius: 50% 20px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profileHeader h5 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .backButton {
   position: absolute;
-  left: 10px;
-  top: 10px;
+  left: 15px;
+  top: 20px;
   background: none;
   color: white;
   border: none;
   font-size: 24px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.profileActions {
+  display: flex;
+  position: absolute;
+  right: 15px;
+  top: 20px;
+}
+
+.actionIcon {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+/* Profile info */
 .profileInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: -30px;
+  position: relative;
+}
+
+.profileImageContainer {
+  position: relative;
 }
 
 .profilePic {
@@ -124,18 +71,401 @@
   height: 100px;
   border-radius: 50%;
   border: 3px solid white;
-  margin-bottom: 10px;
+  object-fit: cover;
+  background-color: #f0f0f0;
 }
 
-.profileNameEdit {
+.verificationBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #4cd137;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+.verificationBadge svg {
+  font-size: 16px;
+}
+
+.profileInfo h2 {
+  margin: 10px 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.verifyButton {
+  margin-top: 10px;
+  background-color: #4cd137;
+  color: white;
+}
+
+.editProfileButton {
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .editButton {
-  margin-left: 10px;
-  background-color: white;
-  border-radius: 50%;
-  padding: 5px;
+  background-color: #6c5ce7;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+/* Content sections */
+.profileContent,
+.editContent,
+.activityContent,
+.previewContent {
+  padding: 0 15px 20px;
+}
+
+/* Section headers with edit links */
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.editLink {
+  color: #6c5ce7;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+}
+
+.editLink:hover {
+  text-decoration: underline;
+}
+
+/* Photo gallery */
+.photoGallery,
+.photoGalleryEdit {
+  margin-top: 20px;
+}
+
+.photosGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.photoItem {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.photoItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoItemEdit {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.photoItemEdit img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removePhotoIcon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.addPhotoItem {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f8f9fa;
+}
+
+.addPhotoItem svg {
+  font-size: 30px;
+  color: #6c5ce7;
+}
+
+/* Profile sections */
+.profileSection {
+  margin-top: 25px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.profileSection h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.profileSection p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Info grid */
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoLabel {
+  font-weight: 500;
+  color: #666;
+}
+
+/* Tags list */
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background-color: #f0f0f0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+  position: relative;
+}
+
+.commonInterest {
+  background-color: #d6e4ff;
+  border: 1px solid #6c5ce7;
+  color: #6c5ce7;
+}
+
+.commonBadge {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  background-color: #6c5ce7;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+/* Edit mode */
+.photoEditSection {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profileImageEdit {
+  position: relative;
+  margin-top: 10px;
+}
+
+.photoEditIcon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #6c5ce7;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.editSection {
+  margin-top: 25px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.editSection h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.editField {
+  margin-bottom: 15px;
+}
+
+.editField label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #666;
+}
+
+.textareaInput {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.toggleOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.saveButtonContainer {
+  margin-top: 30px;
+  padding-bottom: 20px;
+}
+
+.saveButton {
+  background-color: #6c5ce7;
+  color: white;
+}
+
+/* Activity history */
+.activityList {
+  margin-top: 20px;
+}
+
+.activityItem {
+  display: flex;
+  padding: 15px;
+  background-color: white;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.activityIcon {
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}
+
+.activityDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.activityUser {
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.activityType {
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.activityDate {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Preview mode */
+.previewBadge {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  background-color: #ff9f43;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+/* Profile actions */
+.profileActions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.previewButton {
+  background-color: #6c5ce7;
+  color: white;
+}
+
+/* Logout and delete buttons */
+.logoutButton,
+.deleteAccountButton {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.logoutButton {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.deleteAccountButton {
+  background-color: #ff4757;
+  color: white;
 }

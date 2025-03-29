@@ -18,6 +18,14 @@
   border-radius: 35px;
 }
 
+.controls {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
 .controls button {
   margin: 5px;
   padding: 10px 20px;
@@ -25,14 +33,22 @@
   cursor: pointer;
 }
 
-.dislikeCircle {
+/* .sliderLikeButton {
+  margin: 10px;
+}
+
+.sliderDislikeButton {
+  margin: 10px;
+} */
+
+.likeButton {
   position: absolute;
   width: 62px;
   height: 62px;
   left: 250px;
   top: 693px;
 
-  background: #202c83;
+  /* background: #202c83; */
   border-radius: 50%;
 
   display: flex;
@@ -40,14 +56,14 @@
   align-items: center;
 }
 
-.likeCircle {
+.dislikeButton {
   position: absolute;
   width: 62px;
   height: 62px;
   left: 64px;
   top: 693px;
 
-  background: #ff2da1;
+  /* //background: #ff2da1; */
   border-radius: 50%;
 
   display: flex;

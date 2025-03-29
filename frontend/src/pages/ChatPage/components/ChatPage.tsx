@@ -1,5 +1,5 @@
 
-import { NavBar } from '../../../shared/NavBar'
+import { NavBar } from '../../../shared/components/NavBar'
 
 
 export default function ChatPage() {

@@ -1,3 +1,12 @@
+/*
+ * ProfileView Component Styles
+ *
+ * This stylesheet defines the layout and appearance of the ProfileView component,
+ * which displays a user profile with a full-screen photo view initially and
+ * detailed information that can be accessed by scrolling.
+ */
+
+/* Main container - fixed position to cover the entire screen */
 .profileViewContainer {
   position: fixed;
   top: 0;
@@ -6,11 +15,16 @@
   bottom: 0;
   background-color: white;
   z-index: 1000;
-  overflow: hidden; /* Prevent scrolling of the container */
+  overflow-y: auto; /* Allow scrolling of the container */
   display: flex;
   flex-direction: column;
+  scroll-behavior: smooth; /* Smooth scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  height: 100%;
+  touch-action: pan-y; /* Allow vertical touch scrolling */
 }
 
+/* Header with navigation elements - fixed at the top */
 .header {
   position: fixed;
   top: 0;
@@ -24,6 +38,7 @@
   transition: all 0.3s ease;
 }
 
+/* Back button styling */
 .backButton {
   width: 40px;
   height: 40px;
@@ -36,32 +51,132 @@
   cursor: pointer;
 }
 
+/* Profile image container - takes full screen height initially */
 .profileImageContainer {
   position: relative;
   width: 100%;
-  height: 70vh; /* Larger initial height */
-  transition: height 0.5s ease; /* Smooth transition for height changes */
+  height: 100vh; /* Full height initially to show photo view first */
+  transition: height 0.3s ease; /* Smooth transition for height changes */
 }
 
+/* Expanded state for the image container */
 .profileImageContainer.expanded {
   height: 100vh; /* Full height when expanded */
 }
 
+/* Profile image styling */
 .profileImage {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
 }
 
+/* Gradient overlay for better text visibility on the photo */
 .profileGradient {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 100px;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+  height: 200px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
 }
 
+/* Content displayed on top of the profile photo */
+.photoContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  color: white;
+  z-index: 2;
+}
+
+/* User name styling on the photo */
+.photoName {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Shadow for better readability */
+}
+
+/* User info (age, location) styling on the photo */
+.photoInfo {
+  font-size: 16px;
+  margin: 5px 0 15px;
+  opacity: 0.9;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Shadow for better readability */
+}
+
+/* Container for interest tags on the photo */
+.photoTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+/* Individual interest tag on the photo */
+.photoTag {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: white;
+}
+
+/* Scroll indicator at the bottom of the photo */
+.photoScrollIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  opacity: 0.9;
+  margin-top: 10px;
+}
+
+/* Container for action buttons (close, like) on the photo */
+.photoButtons {
+  position: absolute;
+  bottom: 80px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Individual action button on the photo */
+.photoButton {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Back button in the top-left corner of the photo */
+.photoBackButton {
+  position: absolute;
+  top: 20px;
+  left: -10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+}
+
+/* Profile information section - initially positioned below the screen */
 .profileInfo {
   padding: 20px;
   background-color: white;
@@ -72,16 +187,29 @@
   left: 0;
   right: 0;
   z-index: 5;
-  max-height: 50vh; /* Limit height in collapsed state */
+  max-height: 80vh; /* Allow more content to be visible when scrolled */
   overflow-y: auto; /* Allow scrolling within the info section */
-  transition: transform 0.5s ease, max-height 0.5s ease; /* Smooth transitions */
+  transition: transform 0.3s ease, max-height 0.3s ease; /* Smooth transitions */
+  overscroll-behavior: contain; /* Prevent scroll chaining */
+  touch-action: pan-y; /* Allow vertical touch scrolling */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  user-select: none; /* Prevent text selection during drag */
+  transform: translateY(100vh); /* Initially positioned below the screen */
 }
 
+/* Expanded state - keeps the profile info below the screen */
 .profileInfo.expanded {
-  transform: translateY(70vh); /* Move down when expanded */
-  max-height: 30vh; /* Smaller height when expanded */
+  transform: translateY(100vh); /* Keep below the screen when expanded */
+  max-height: 80vh; /* Allow more content to be visible when scrolled */
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
 }
 
+/* Collapsed state - moves the profile info up to show details */
+.profileInfo.collapsed {
+  transform: translateY(50vh); /* Move up to show when collapsed */
+}
+
+/* Scroll indicator button in the profile info section */
 .scrollIndicator {
   display: flex;
   flex-direction: column;
@@ -89,23 +217,40 @@
   margin-bottom: 15px;
   color: #666;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   padding: 12px 0;
-  background-color: rgba(240, 240, 240, 0.8);
+  background-color: rgba(240, 240, 240, 0.9);
   border-radius: 20px;
   margin-top: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  position: sticky; /* Stays at the top when scrolling */
+  top: 0;
+  z-index: 10;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
+/* Hover effect for the scroll indicator */
 .scrollIndicator:hover {
   background-color: rgba(230, 230, 230, 1);
+  transform: translateY(2px);
 }
 
+/* Active (pressed) state for the scroll indicator */
+.scrollIndicator:active {
+  background-color: rgba(220, 220, 220, 1);
+  transform: translateY(3px);
+}
+
+/* Arrow icon in the scroll indicator */
 .scrollIndicator svg {
   margin-top: 5px;
-  animation: bounce 1.5s infinite;
+  animation: bounce 1.5s infinite; /* Bouncing animation to draw attention */
   transition: transform 0.3s ease;
+  color: #6c5ce7;
 }
 
 @keyframes bounce {
@@ -145,7 +290,7 @@
   gap: 10px;
 }
 
-.closeButton, .likeButton {
+.closeButton {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -157,7 +302,7 @@
   transition: transform 0.2s ease;
 }
 
-.closeButton:hover, .likeButton:hover {
+.closeButton:hover, .likeButton:hover, .dislikeButton:hover {
   transform: scale(1.1);
 }
 
@@ -165,10 +310,28 @@
   background-color: #f0f0f0;
 }
 
-.likeButton {
-  background-color: #FFE4F3;
+.dislikeButton {
+  background-color: grey;
+  position: absolute;
+  left: 210px;
+  top: 620px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* opacity: 0.5; */
 }
 
+.likeButton {
+  position: absolute;
+  left: 300px;
+  top: 620px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* opacity: 0.5; */
+}
+
+/* Container for interest tags */
 .interestTags {
   display: flex;
   flex-wrap: wrap;
@@ -176,52 +339,91 @@
   margin-bottom: 10px; /* Reduced margin */
 }
 
+/* Individual interest tag */
 .interestTag {
   background-color: #f0f0f0;
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
   color: #333;
+  position: relative;
 }
 
+/* Styling for common interests - highlighted with different color and badge */
+.commonInterest {
+  background-color: #d6e4ff;
+  border: 1px solid #6c5ce7;
+  color: #6c5ce7;
+  padding-top: 20px; /* Extra padding at top for the "Common" badge */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* "Common" badge that appears at the top of common interest tags */
+.commonBadge {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #6c5ce7;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Container for detailed profile information sections */
 .detailedInfo {
-  margin-top: 10px; /* Reduced margin */
+  margin-top: 10px; /* Reduced margin for compact layout */
 }
 
+/* Individual information section (bio, lifestyle, etc.) */
 .infoSection {
-  margin-bottom: 15px; /* Reduced margin */
+  margin-bottom: 15px; /* Reduced margin for compact layout */
 }
 
+/* Section headings */
 .infoSection h3 {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 5px; /* Reduced margin */
-  color: #161F65;
+  margin-bottom: 5px; /* Reduced margin for compact layout */
+  color: #161F65; /* Brand color for headings */
 }
 
+/* Paragraph text in info sections */
 .infoSection p {
   margin: 0;
-  margin-bottom: 5px; /* Reduced margin */
+  margin-bottom: 5px; /* Reduced margin for compact layout */
   color: #333;
-  line-height: 1.3; /* Reduced line height */
+  line-height: 1.3; /* Reduced line height for compact layout */
 }
 
+/* Grid layout for photos */
 .photosGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 columns of equal width */
   gap: 8px;
   margin-top: 10px;
 }
 
+/* Individual photo item */
 .photoItem {
-  aspect-ratio: 1;
+  aspect-ratio: 1; /* Square aspect ratio */
   overflow: hidden;
   border-radius: 8px;
   height: 80px; /* Fixed height */
 }
 
+/* Photo styling */
 .photoItem img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
 }
+
+/* .like {
+  width: 10px;
+  height: 10px;
+} */

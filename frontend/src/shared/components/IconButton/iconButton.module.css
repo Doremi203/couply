@@ -1,0 +1,21 @@
+.iconCircle {
+  /* width: 62px;
+  height: 62px; */
+  /* background: #202c83;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s; */
+}
+
+.iconCircle:hover {
+  background-color: #1a2570;
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

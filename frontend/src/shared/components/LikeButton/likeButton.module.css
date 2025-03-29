@@ -1,0 +1,20 @@
+.likeCircle {
+  /* position: absolute; */
+  width: 62px;
+  height: 62px;
+  /* left: 64px;
+  top: 693px; */
+
+  background: #202c83;
+  border-radius: 50%;
+
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+/* .likeIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */

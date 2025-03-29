@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./matchModal.module.css";
-import { CustomButton } from "../../../../shared/CustomButton";
+import { CustomButton } from "../../../../shared/components/CustomButton";
 
 interface MatchModalProps {
   userImage: string;

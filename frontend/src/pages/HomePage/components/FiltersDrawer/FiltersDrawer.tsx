@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Drawer, Box, Slider, styled } from "@mui/material";
 import styles from "./filtersDrawer.module.css";
-import ToggleButtons from "../../../../shared/ToggleButtons/ToggleButtons";
-import CustomInput from "../../../../shared/CustomInput/CustomInput";
-import CustomButton from "../../../../shared/CustomButton/CustomButton";
+import ToggleButtons from "../../../../shared/components/ToggleButtons/ToggleButtons";
+import CustomInput from "../../../../shared/components/CustomInput/CustomInput";
+import CustomButton from "../../../../shared/components/CustomButton/CustomButton";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 

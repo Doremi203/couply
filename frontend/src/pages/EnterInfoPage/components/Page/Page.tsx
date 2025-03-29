@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styles from "./enterInfo.module.css";
-import { CustomInput } from "../../../../shared/CustomInput";
-import { CustomButton } from "../../../../shared/CustomButton";
+import { CustomInput } from "../../../../shared/components/CustomInput";
+import { CustomButton } from "../../../../shared/components/CustomButton";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import { ToggleButtons } from "../../../../shared/ToggleButtons";
+import { ToggleButtons } from "../../../../shared/components/ToggleButtons";
 import { useNavigate } from "react-router-dom";
 
 export const EnterInfoPage = () => {

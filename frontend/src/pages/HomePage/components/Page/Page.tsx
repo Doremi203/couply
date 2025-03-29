@@ -1,6 +1,6 @@
 import styles from "./homePage.module.css";
-import { FiltersIcon } from "../../../../shared/FiltersIcon";
-import { NavBar } from "../../../../shared/NavBar";
+import { FiltersIcon } from "../../../../shared/components/FiltersIcon";
+import { NavBar } from "../../../../shared/components/NavBar";
 import { ProfileSlider } from "../../../../features/ProfileSlider";
 import FiltersDrawer from "../FiltersDrawer/FiltersDrawer";
 import { useState } from "react";

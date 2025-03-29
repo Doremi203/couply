@@ -1,0 +1,20 @@
+.dislikeCircle {
+  /* position: absolute; */
+  width: 62px;
+  height: 62px;
+  /* left: 250px;
+  top: 693px; */
+
+  background: #ff2da1;
+  border-radius: 50%;
+
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+/* .dislikeIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */

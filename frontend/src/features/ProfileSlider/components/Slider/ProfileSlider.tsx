@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useSwipeable } from "react-swipeable";
 import styles from "./profileSlider.module.css";
-import { Dislike } from "../../../../shared/Dislike";
-import { Like } from "../../../../shared/Like";
+import { DislikeButton } from "../../../../shared/components/DislikeButton";
+import { LikeButton } from "../../../../shared/components/LikeButton";
 
 
 const profiles = [
@@ -65,13 +65,16 @@ export const ProfileSlider = () => {
         {/* <p>{currentProfile.bio}</p> */}
       </div>
       <div className={styles.controls}>
-        <div className={styles.likeCircle} onClick={handlePrev}>
+        {/* <div className={styles.likeCircle} onClick={handlePrev}>
           <Like />
         </div>
 
         <div className={styles.dislikeCircle} onClick={handleNext}>
           <Dislike />
-        </div>
+        </div> */}
+
+        <LikeButton onClick={handlePrev} className={styles.likeButton} />
+        <DislikeButton onClick={handleNext} className={styles.dislikeButton} />
       </div>
     </div>
   );
