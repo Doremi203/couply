@@ -13,6 +13,7 @@ const meta: Meta<ToggleButtonsStoryProps> = {
   argTypes: {
     onSelect: { action: 'selected' },
   },
+  tags: ['autodocs'],
 };
 
 export default meta;

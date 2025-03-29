@@ -39,11 +39,6 @@ export const NavBar = () => {
           to="/likes"
         />
         <BottomNavigationAction
-          icon={<QuestionAnswerOutlinedIcon />}
-          component={Link}
-          to="/chat"
-        />
-        <BottomNavigationAction
           icon={<PermIdentityOutlinedIcon />}
           component={Link}
           to="/profile"

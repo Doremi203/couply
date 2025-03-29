@@ -14,6 +14,7 @@ const meta: Meta<CustomButtonStoryProps> = {
   argTypes: {
     onClick: { action: 'clicked' },
   },
+  tags: ['autodocs'],
 };
 
 export default meta;

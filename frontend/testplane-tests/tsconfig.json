@@ -3,5 +3,10 @@
         "types": [
             "testplane"
         ],
-}
+        "module": "commonjs",
+        "target": "es2020",
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true
+    }
 }

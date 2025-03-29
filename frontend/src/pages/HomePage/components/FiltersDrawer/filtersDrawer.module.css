@@ -1,5 +1,207 @@
+/* Container */
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  /* max-height: 600px; */
+}
+
+/* Header */
 .header {
-   display: flex;
-   justify-self: center;
-   align-self: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  padding: 5px 10px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+  color: #000;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #202C83;
+  font-weight: 500;
+}
+
+/* Section */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
+}
+
+/* Slider Header */
+.sliderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sliderValue {
+  font-size: 16px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Location */
+.locationContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.locationInput {
+  border-radius: 15px;
+  background-color: #f5f7fa;
+  padding-right: 40px;
+}
+
+.locationArrow {
+  position: absolute;
+  right: 15px;
+  color: #666;
+}
+
+/* Chips */
+.chipContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.chip {
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.chip:hover {
+  background-color: #e0e0e0;
+}
+
+.chipSelected {
+  background-color: #202C83;
+  color: white;
+}
+
+.chipSelected:hover {
+  background-color: #1a2570;
+}
+
+/* Toggle Switch */
+.toggleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #202C83;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #202C83;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.verificationText {
+  font-size: 14px;
+  color: #666;
+  margin: 5px 0 0 0;
+}
+
+/* Button Container */
+.buttonContainer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+  
+  .chip {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
 }

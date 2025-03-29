@@ -5,6 +5,7 @@ import ToggleButtons from "../../../../shared/ToggleButtons/ToggleButtons";
 import CustomInput from "../../../../shared/CustomInput/CustomInput";
 import CustomButton from "../../../../shared/CustomButton/CustomButton";
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 type Props = {
   open: boolean;
@@ -48,10 +49,12 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [ageRange, setAgeRange] = useState<number[]>([20, 28]);
   
   // Interests (new)
-  const [interests, setInterests] = useState<string[]>([]);
+  const interestOptions = ["Sports", "Travel", "Music", "Art", "Food"];
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   
   // Music preferences (new)
-  const [musicPreferences, setMusicPreferences] = useState<string[]>([]);
+  const musicOptions = ["Rock", "Pop", "Hip Hop", "Jazz", "Classical"];
+  const [selectedMusicPreferences, setSelectedMusicPreferences] = useState<string[]>([]);
   
   // Verification status (new)
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
@@ -72,13 +75,29 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     setVerificationStatus(!verificationStatus);
   };
 
+  const toggleInterest = (interest: string) => {
+    if (selectedInterests.includes(interest)) {
+      setSelectedInterests(selectedInterests.filter(item => item !== interest));
+    } else {
+      setSelectedInterests([...selectedInterests, interest]);
+    }
+  };
+
+  const toggleMusicPreference = (music: string) => {
+    if (selectedMusicPreferences.includes(music)) {
+      setSelectedMusicPreferences(selectedMusicPreferences.filter(item => item !== music));
+    } else {
+      setSelectedMusicPreferences([...selectedMusicPreferences, music]);
+    }
+  };
+
   const handleClearFilters = () => {
     setInterestedIn("Both");
     setLocation("Chicago, USA");
     setDistance(40);
     setAgeRange([20, 28]);
-    setInterests([]);
-    setMusicPreferences([]);
+    setSelectedInterests([]);
+    setSelectedMusicPreferences([]);
     setVerificationStatus(false);
   };
 
@@ -90,16 +109,20 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
 
   return (
     <Drawer
-      anchor="bottom"
+      anchor="top"
       open={open}
       onClose={onClose}
       PaperProps={{
         sx: {
-          borderTopLeftRadius: '20px',
-          borderTopRightRadius: '20px',
+          borderBottomLeftRadius: '20px',
+          borderBottomRightRadius: '20px',
           height: 'auto',
           maxHeight: '90vh',
-          overflow: 'auto'
+          overflow: 'auto',
+          width: '100%',
+          maxWidth: '430px',
+          margin: '0 auto',
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
         }
       }}
     >
@@ -107,7 +130,7 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
         {/* Header */}
         <div className={styles.header}>
           <button className={styles.backButton} onClick={onClose}>
-            ←
+            <KeyboardBackspaceIcon />
           </button>
           <h2 className={styles.title}>Filters</h2>
           <button className={styles.clearButton} onClick={handleClearFilters}>
@@ -126,7 +149,7 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
         </div>
 
         {/* Location */}
-        <div className={styles.section}>
+        {/* <div className={styles.section}>
           <h3 className={styles.sectionTitle}>Location</h3>
           <div className={styles.locationContainer}>
             <CustomInput
@@ -138,7 +161,7 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             />
             <KeyboardArrowRightIcon className={styles.locationArrow} />
           </div>
-        </div>
+        </div> */}
 
         {/* Distance */}
         <div className={styles.section}>
@@ -175,12 +198,15 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>Interests</h3>
           <div className={styles.chipContainer}>
-            {/* Placeholder for interests selection */}
-            <div className={styles.chip}>Sports</div>
-            <div className={styles.chip}>Travel</div>
-            <div className={styles.chip}>Music</div>
-            <div className={styles.chip}>Art</div>
-            <div className={styles.chip}>Food</div>
+            {interestOptions.map((interest, index) => (
+              <div 
+                key={index} 
+                className={`${styles.chip} ${selectedInterests.includes(interest) ? styles.chipSelected : ''}`}
+                onClick={() => toggleInterest(interest)}
+              >
+                {interest}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -188,12 +214,15 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
         <div className={styles.section}>
           <h3 className={styles.sectionTitle}>Music Preferences</h3>
           <div className={styles.chipContainer}>
-            {/* Placeholder for music preferences selection */}
-            <div className={styles.chip}>Rock</div>
-            <div className={styles.chip}>Pop</div>
-            <div className={styles.chip}>Hip Hop</div>
-            <div className={styles.chip}>Jazz</div>
-            <div className={styles.chip}>Classical</div>
+            {musicOptions.map((music, index) => (
+              <div 
+                key={index} 
+                className={`${styles.chip} ${selectedMusicPreferences.includes(music) ? styles.chipSelected : ''}`}
+                onClick={() => toggleMusicPreference(music)}
+              >
+                {music}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -202,8 +231,8 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
           <div className={styles.toggleContainer}>
             <h3 className={styles.sectionTitle}>Verification Status</h3>
             <label className={styles.switch}>
-              <input
-                type="checkbox"
+              <input 
+                type="checkbox" 
                 checked={verificationStatus}
                 onChange={handleVerificationToggle}
               />
@@ -216,12 +245,12 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
         </div>
 
         {/* Continue Button */}
-        <div className={styles.buttonContainer}>
+        {/* <div className={styles.buttonContainer}> */}
           <CustomButton
             text="Continue"
             onClick={onClose}
           />
-        </div>
+        {/* </div> */}
       </Box>
     </Drawer>
   );

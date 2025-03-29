@@ -1,8 +1,7 @@
 /**
- * Страница создания/редактирования эксперимента
- *
- * 
+ * Стартовая страница приложения (сплэш-скрин)
+ * @module
+ * @block Страница
  */
 
-
-export { SplashPage } from './components/Page/Page'
+export { SplashPage } from './components/Page/Page';
