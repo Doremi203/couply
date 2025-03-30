@@ -6,6 +6,8 @@
    display: flex;
    justify-content: space-between;
    align-items: center;
+   position: relative;
+   margin-top: 10px;
 }
 
 .appName {
@@ -16,7 +18,9 @@
   font-size: 40px;
   font-family: "Jost", sans-serif;
   font-weight: medium;
-  flex: 1;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
 }
 
@@ -27,8 +31,14 @@
 }
 
 
+.spacer {
+  width: 40px; /* Match the approximate width of the filtersIcon */
+}
+
 .filtersIcon {
-  margin-right: 5px;
+  margin-right: 15px;
+  margin-top: 10px;
   display: flex;
   align-items: center;
+  width: 40px;
 }

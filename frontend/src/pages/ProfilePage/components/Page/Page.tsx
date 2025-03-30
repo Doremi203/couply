@@ -92,20 +92,45 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     });
   };
 
-  const handlePhotoAdd = (file?: File) => {
+  const handlePhotoAdd = (file?: File, isAvatar: boolean = false) => {
     if (file) {
       // Create a URL for the selected file
       const fileUrl = URL.createObjectURL(file);
-      setProfileData({
-        ...profileData,
-        photos: [...profileData.photos, fileUrl]
-      });
+      
+      if (isAvatar) {
+        // If this is an avatar upload, set it as the first photo
+        const updatedPhotos = [...profileData.photos];
+        updatedPhotos.unshift(fileUrl); // Add to the beginning of the array
+        setProfileData({
+          ...profileData,
+          photos: updatedPhotos
+        });
+      } else {
+        // Otherwise, add it to the end of the photos array
+        setProfileData({
+          ...profileData,
+          photos: [...profileData.photos, fileUrl]
+        });
+      }
     } else {
       // Fallback to placeholder if no file is provided
-      setProfileData({
-        ...profileData,
-        photos: [...profileData.photos, "/man1.jpg"]
-      });
+      const placeholderUrl = "/man1.jpg";
+      
+      if (isAvatar) {
+        // If this is an avatar upload, set it as the first photo
+        const updatedPhotos = [...profileData.photos];
+        updatedPhotos.unshift(placeholderUrl); // Add to the beginning of the array
+        setProfileData({
+          ...profileData,
+          photos: updatedPhotos
+        });
+      } else {
+        // Otherwise, add it to the end of the photos array
+        setProfileData({
+          ...profileData,
+          photos: [...profileData.photos, placeholderUrl]
+        });
+      }
     }
   };
 

@@ -18,11 +18,11 @@ export const HomePage = () => {
   return (
     <div>
       <div className={styles.header}>
+        <div className={styles.spacer}></div>
         <div className={styles.appName}> couply</div>
         <div className={styles.filtersIcon}>
           <div onClick={handleFiltersOpen}>
-            {" "}
-            <FiltersIcon />{" "}
+            <FiltersIcon />
           </div>
           <FiltersDrawer open={isFiltersOpen} onClose={handleFiltersClose} />
         </div>

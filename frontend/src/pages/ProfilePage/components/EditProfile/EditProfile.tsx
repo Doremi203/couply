@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styles from "./editProfile.module.css";
 import { CustomInput } from "../../../../shared/components/CustomInput";
 import { CustomButton } from "../../../../shared/components/CustomButton";
@@ -31,7 +31,7 @@ interface EditProfileProps {
   onSave: () => void;
   onInputChange: (field: string, value: string) => void;
   onArrayInputChange: (field: string, value: string) => void;
-  onPhotoAdd: (file?: File) => void;
+  onPhotoAdd: (file?: File, isAvatar?: boolean) => void;
   onPhotoRemove: (index: number) => void;
 }
 
@@ -46,7 +46,11 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleCameraClick = () => {
+  const [isAvatarUpload, setIsAvatarUpload] = useState(false);
+
+  const handleCameraClick = (isAvatar: boolean = false) => {
+    // Set flag to indicate if this is an avatar upload
+    setIsAvatarUpload(isAvatar);
     // Trigger the hidden file input click
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -56,8 +60,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      // Call the onPhotoAdd function with the selected file
-      onPhotoAdd(files[0]);
+      // Call the onPhotoAdd function with the selected file and isAvatar flag
+      onPhotoAdd(files[0], isAvatarUpload);
       // Reset the file input value so the same file can be selected again
       event.target.value = '';
     }
@@ -89,7 +93,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             alt="Profile"
             className={styles.profilePic}
           />
-          <div className={styles.photoEditIcon} onClick={handleCameraClick}>
+          <div className={styles.photoEditIcon} onClick={() => handleCameraClick(true)}>
             <PhotoCameraIcon />
           </div>
         </div>
@@ -109,7 +113,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
               </div>
             </div>
           ))}
-          <div className={styles.addPhotoItem} onClick={handleCameraClick}>
+          <div className={styles.addPhotoItem} onClick={() => handleCameraClick(false)}>
             <AddIcon />
           </div>
         </div>
