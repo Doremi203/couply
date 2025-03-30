@@ -67,6 +67,7 @@ export const EnterInfoPage = () => {
         onClick={nextStep}
         text={"Дальше"}
         disabled={!isCurrentStepValid()}
+        className={styles.nextButton}
       />
     </div>,
     <div key="birthDateSection">

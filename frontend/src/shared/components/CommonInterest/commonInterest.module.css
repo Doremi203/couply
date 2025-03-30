@@ -1,0 +1,25 @@
+.tag {
+  background-color: #f0f0f0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: #333;
+  position: relative;
+}
+
+.commonInterest {
+  background-color: #d6e4ff;
+  border: 1px solid #202C83;
+  color: #6c5ce7;
+}
+
+.commonBadge {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  background-color: #202C83;
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+}

@@ -1,21 +1,43 @@
 .iconCircle {
-  /* width: 62px;
-  height: 62px; */
-  /* background: #202c83;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  transition: background-color 0.3s; */
+  transition: background-color 0.3s;
+  /* Add padding to increase the clickable area */
+  padding: 8px;
+  border-radius: 50%;
+}
+
+/* Special class for touch-friendly buttons with larger hit area */
+.touchFriendly {
+  width: 44px;
+  height: 44px;
+  /* Add a larger invisible touch area around the button */
+  position: relative;
+}
+
+/* Create a pseudo-element with a larger clickable area */
+.touchFriendly::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 50%;
 }
 
 .iconCircle:hover {
-  background-color: #1a2570;
+  background-color: rgba(26, 37, 112, 0.2);
 }
 
 .iconContainer {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
 }

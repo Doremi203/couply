@@ -134,6 +134,35 @@
   font-size: 14px;
   opacity: 0.9;
   margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+/* Style for scroll back indicator when info panel is visible */
+.photoScrollIndicator.showScrollBack {
+  position: fixed;
+  bottom: 85vh;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  /* background-color: rgba(0, 0, 0, 0.7); */
+  padding: 10px 15px;
+  /* border-radius: 20px; */
+  /* margin: 0 auto;
+  width: fit-content; */
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  animation: pulse 2s infinite; */
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Container for action buttons (close, like) on the photo */
@@ -159,7 +188,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Back button in the top-left corner of the photo */
+/* Back button in the top-left corner of the photo
 .photoBackButton {
   position: absolute;
   top: 20px;
@@ -174,7 +203,7 @@
   border: none;
   cursor: pointer;
   z-index: 2;
-}
+} */
 
 /* Profile information section - initially positioned below the screen */
 .profileInfo {
@@ -189,7 +218,7 @@
   z-index: 5;
   max-height: 80vh; /* Allow more content to be visible when scrolled */
   overflow-y: auto; /* Allow scrolling within the info section */
-  transition: transform 0.3s ease, max-height 0.3s ease; /* Smooth transitions */
+  transition: transform 0.3s ease, max-height 0.3s ease, visibility 0.3s, opacity 0.3s; /* Smooth transitions including visibility and opacity */
   overscroll-behavior: contain; /* Prevent scroll chaining */
   touch-action: pan-y; /* Allow vertical touch scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
@@ -197,16 +226,22 @@
   transform: translateY(100vh); /* Initially positioned below the screen */
 }
 
-/* Expanded state - keeps the profile info below the screen */
+/* Expanded state - keeps the profile info completely hidden below the screen */
 .profileInfo.expanded {
   transform: translateY(100vh); /* Keep below the screen when expanded */
   max-height: 80vh; /* Allow more content to be visible when scrolled */
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
+  visibility: hidden; /* Hide completely when expanded */
+  opacity: 0; /* Fade out for smoother transition */
+  transition: transform 0.3s ease, max-height 0.3s ease, visibility 0.3s, opacity 0.3s; /* Add transition for visibility and opacity */
 }
 
 /* Collapsed state - moves the profile info up to show details */
 .profileInfo.collapsed {
   transform: translateY(50vh); /* Move up to show when collapsed */
+  visibility: visible; /* Ensure visibility when collapsed */
+  opacity: 1; /* Full opacity when visible */
+  transition: transform 0.3s ease, max-height 0.3s ease, visibility 0.3s, opacity 0.3s; /* Add transition for visibility and opacity */
 }
 
 /* Scroll indicator button in the profile info section */

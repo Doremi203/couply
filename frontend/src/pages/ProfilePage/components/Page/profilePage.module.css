@@ -7,25 +7,12 @@
   padding-bottom: 70px; /* Space for navbar */
 }
 
-/* Profile header */
-.profileHeader {
-  background-color: #6c5ce7;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  position: relative;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
-.profileHeader h5 {
+/* .profileHeader h5 {
   margin: 0;
   font-size: 18px;
   font-weight: 500;
-}
+} */
 
 .backButton {
   position: absolute;
@@ -41,17 +28,6 @@
   justify-content: center;
 }
 
-.profileActions {
-  display: flex;
-  position: absolute;
-  right: 15px;
-  top: 20px;
-}
-
-.actionIcon {
-  margin-left: 15px;
-  cursor: pointer;
-}
 
 /* Profile info */
 .profileInfo {
@@ -112,7 +88,7 @@
 }
 
 .editButton {
-  background-color: #6c5ce7;
+  background-color: #202C83;
   color: white;
   padding: 10px 20px;
   border-radius: 20px;
@@ -280,7 +256,7 @@
 
 .commonInterest {
   background-color: #d6e4ff;
-  border: 1px solid #6c5ce7;
+  border: 1px solid #202C83;
   color: #6c5ce7;
 }
 
@@ -288,7 +264,7 @@
   position: absolute;
   top: -8px;
   right: -5px;
-  background-color: #6c5ce7;
+  background-color: #202C83;
   color: white;
   font-size: 10px;
   padding: 2px 6px;
@@ -312,7 +288,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #6c5ce7;
+  background-color: #202C83;
   color: white;
   border-radius: 50%;
   width: 30px;
@@ -373,7 +349,7 @@
 }
 
 .saveButton {
-  background-color: #6c5ce7;
+  background-color: #202C83;
   color: white;
 }
 
@@ -443,8 +419,14 @@
 }
 
 .previewButton {
-  background-color: #6c5ce7;
+  background-color: #FF2DA0;
   color: white;
+  width: 13px;
+  height: 15px;
+  margin-left: 50px;
+  margin-top: -17px;
+  font-weight: normal;
+  font-size: 13px;
 }
 
 /* Logout and delete buttons */
@@ -468,4 +450,57 @@
 .deleteAccountButton {
   background-color: #ff4757;
   color: white;
+}
+
+
+/* Profile header */
+.profileHeader {
+  background-color: #202C83;
+  color: white;
+  text-align: center;
+  /* padding: 30px; */
+  position: relative;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 120px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 40px;
+  font-family: "Jost", sans-serif;
+  font-weight: medium;
+  /* margin-left: 135px; */
+  margin-top: 10px;
+}
+
+.profileActions {
+  display: flex;
+  position: absolute;
+  /* right: 80px; */
+  /* margin-right: 10px; */
+  margin-left: 200px;
+  top: 20px;
+  /* Increase gap between buttons for better spacing */
+  /* gap: 10px; */
+  /* Add padding to increase the overall clickable area */
+  padding: -20px;
+}
+
+.actionIcon {
+  margin-left: 15px;
+  cursor: pointer;
+  /* width: 20px;
+  height: 20px; */
+}
+
+.editIcon {
+  margin-left: -200px;
+  margin-top: -20px;
 }

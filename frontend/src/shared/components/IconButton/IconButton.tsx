@@ -6,11 +6,25 @@ interface CircleIconButtonProps {
   className?: string
   iconClassName?: string
   children: ReactNode
+  touchFriendly?: boolean // Add option for larger touch area
 }
 
-export const IconButton = ({onClick, className, iconClassName, children}: CircleIconButtonProps) => {
+export const IconButton = ({
+  onClick,
+  className,
+  iconClassName,
+  children,
+  touchFriendly = false
+}: CircleIconButtonProps) => {
   return (
-    <div className={`${styles.iconCircle} ${className || ''}`} onClick={onClick}>
+    <div
+      className={`
+        ${styles.iconCircle}
+        ${touchFriendly ? styles.touchFriendly : ''}
+        ${className || ''}
+      `}
+      onClick={onClick}
+    >
       <div className={`${styles.iconContainer} ${iconClassName || ''}`}>
         {children}
       </div>

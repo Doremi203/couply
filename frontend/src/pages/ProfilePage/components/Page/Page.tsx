@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import styles from "./profilePage.module.css";
 import { NavBar } from "../../../../shared/components/NavBar";
-import { CustomInput } from "../../../../shared/components/CustomInput";
 import { CustomButton } from "../../../../shared/components/CustomButton";
-import { ToggleButtons } from "../../../../shared/components/ToggleButtons";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import HistoryIcon from "@mui/icons-material/History";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import { IconButton } from "../../../../shared/components/IconButton";
+import { EditProfile } from "../EditProfile";
+import { ActivityHistory } from "../ActivityHistory";
+import { ProfileView } from "../../../../pages/LikesPage/components/ProfileView/ProfileView";
 
 interface ProfilePageProps {
   initialTab?: string;
@@ -127,20 +126,18 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     return (
       <div className={styles.profileContent}>
         <div className={styles.profileHeader}>
-          <div className={styles.backButton} onClick={() => setActiveTab("profile")}>
-            <KeyboardBackspaceIcon />
-          </div>
-          <h5>Profile</h5>
+          <div className={styles.header}> profile</div>
+         
           <div className={styles.profileActions}>
-            <div className={styles.actionIcon} onClick={handleEditToggle}>
+            <IconButton onClick={handleEditToggle} touchFriendly={true}>
               <EditIcon />
-            </div>
-            <div className={styles.actionIcon} onClick={handleProfileVisibilityToggle}>
+            </IconButton>
+            <IconButton onClick={handleProfileVisibilityToggle} >
               {isProfileHidden ? <VisibilityOffIcon /> : <VisibilityIcon />}
-            </div>
-            <div className={styles.actionIcon} onClick={() => setActiveTab("activity")}>
+            </IconButton>
+            <IconButton onClick={() => setActiveTab("activity")} touchFriendly={true}>
               <HistoryIcon />
-            </div>
+            </IconButton>
           </div>
         </div>
 
@@ -165,19 +162,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
               className={styles.verifyButton}
             />
           )}
-          <div className={styles.editProfileButton}>
-            <CustomButton
-              text="Edit Profile"
-              onClick={handleEditToggle}
-              className={styles.editButton}
-            />
-          </div>
         </div>
 
         <div className={styles.photoGallery}>
           <div className={styles.sectionHeader}>
             <h3>Photos</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
+            {/* <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span> */}
           </div>
           <div className={styles.photosGrid}>
             {profileData.photos.map((photo, index) => (
@@ -191,7 +181,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className={styles.profileSection}>
           <div className={styles.sectionHeader}>
             <h3>About Me</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
           </div>
           <p>{profileData.about}</p>
         </div>
@@ -199,7 +188,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className={styles.profileSection}>
           <div className={styles.sectionHeader}>
             <h3>Basic Information</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
+            {/* <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span> */}
           </div>
           <div className={styles.infoGrid}>
             <div className={styles.infoItem}>
@@ -228,7 +217,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className={styles.profileSection}>
           <div className={styles.sectionHeader}>
             <h3>Interests</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
+            {/* <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span> */}
           </div>
           <div className={styles.tagsList}>
             {profileData.interests.map((interest, index) => (
@@ -242,7 +231,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className={styles.profileSection}>
           <div className={styles.sectionHeader}>
             <h3>Music</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
+            {/* <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span> */}
           </div>
           <div className={styles.tagsList}>
             {profileData.music.map((item, index) => (
@@ -256,7 +245,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className={styles.profileSection}>
           <div className={styles.sectionHeader}>
             <h3>Movies</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
+            {/* <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span> */}
           </div>
           <div className={styles.tagsList}>
             {profileData.movies.map((item, index) => (
@@ -270,7 +259,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className={styles.profileSection}>
           <div className={styles.sectionHeader}>
             <h3>Books</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
+            {/* <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span> */}
           </div>
           <div className={styles.tagsList}>
             {profileData.books.map((item, index) => (
@@ -284,7 +273,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         <div className={styles.profileSection}>
           <div className={styles.sectionHeader}>
             <h3>Hobbies</h3>
-            <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span>
+            {/* <span className={styles.editLink} onClick={() => setActiveTab("edit")}>Edit</span> */}
           </div>
           <div className={styles.tagsList}>
             {profileData.hobbies.map((item, index) => (
@@ -297,7 +286,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
         <div className={styles.profileActions}>
           <CustomButton
-            text="View as Others See"
+            text="preview"
             onClick={() => setActiveTab("preview")}
             className={styles.previewButton}
           />
@@ -308,329 +297,72 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const renderEditMode = () => {
     return (
-      <div className={styles.editContent}>
-        <div className={styles.profileHeader}>
-          <div className={styles.backButton} onClick={() => setActiveTab("profile")}>
-            <KeyboardBackspaceIcon />
-          </div>
-          <h5>Edit Profile</h5>
-        </div>
-
-        <div className={styles.photoEditSection}>
-          <h3>Profile Photo</h3>
-          <div className={styles.profileImageEdit}>
-            <img
-              src={profileData.photos[0] || "/photo1.png"}
-              alt="Profile"
-              className={styles.profilePic}
-            />
-            <div className={styles.photoEditIcon}>
-              <PhotoCameraIcon />
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.photoGalleryEdit}>
-          <h3>Photos</h3>
-          <div className={styles.photosGrid}>
-            {profileData.photos.map((photo, index) => (
-              <div key={index} className={styles.photoItemEdit}>
-                <img src={photo} alt={`Photo ${index + 1}`} />
-                <div 
-                  className={styles.removePhotoIcon}
-                  onClick={() => handlePhotoRemove(index)}
-                >
-                  <CloseIcon />
-                </div>
-              </div>
-            ))}
-            <div className={styles.addPhotoItem} onClick={handlePhotoAdd}>
-              <AddIcon />
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>Basic Information</h3>
-          <div className={styles.editField}>
-            <label>Name</label>
-            <CustomInput
-              type="text"
-              placeholder="Your name"
-              value={profileData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
-            />
-          </div>
-          <div className={styles.editField}>
-            <label>Age</label>
-            <CustomInput
-              type="number"
-              placeholder="Your age"
-              value={profileData.age.toString()}
-              onChange={(e) => handleInputChange("age", e.target.value)}
-            />
-          </div>
-          <div className={styles.editField}>
-            <label>Date of Birth</label>
-            <CustomInput
-              type="date"
-              placeholder="Date of birth"
-              value={profileData.dateOfBirth}
-              onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
-            />
-          </div>
-          <div className={styles.editField}>
-            <label>Phone</label>
-            <CustomInput
-              type="tel"
-              placeholder="Your phone number"
-              value={profileData.phone}
-              onChange={(e) => handleInputChange("phone", e.target.value)}
-            />
-          </div>
-          <div className={styles.editField}>
-            <label>Email</label>
-            <CustomInput
-              type="email"
-              placeholder="Your email"
-              value={profileData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
-            />
-          </div>
-          <div className={styles.editField}>
-            <label>Gender</label>
-            <ToggleButtons
-              options={[
-                { label: "Female", value: "female" },
-                { label: "Male", value: "male" },
-              ]}
-              value={profileData.gender}
-              onSelect={(value) => handleInputChange("gender", value)}
-            />
-          </div>
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>About Me</h3>
-          <textarea
-            className={styles.textareaInput}
-            placeholder="Tell something about yourself"
-            value={profileData.about}
-            onChange={(e) => handleInputChange("about", e.target.value)}
-          />
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>Interests</h3>
-          <CustomInput
-            type="text"
-            placeholder="Interests (comma separated)"
-            value={profileData.interests.join(", ")}
-            onChange={(e) => handleArrayInputChange("interests", e.target.value)}
-          />
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>Music</h3>
-          <CustomInput
-            type="text"
-            placeholder="Favorite music (comma separated)"
-            value={profileData.music.join(", ")}
-            onChange={(e) => handleArrayInputChange("music", e.target.value)}
-          />
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>Movies</h3>
-          <CustomInput
-            type="text"
-            placeholder="Favorite movies (comma separated)"
-            value={profileData.movies.join(", ")}
-            onChange={(e) => handleArrayInputChange("movies", e.target.value)}
-          />
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>Books</h3>
-          <CustomInput
-            type="text"
-            placeholder="Favorite books (comma separated)"
-            value={profileData.books.join(", ")}
-            onChange={(e) => handleArrayInputChange("books", e.target.value)}
-          />
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>Hobbies</h3>
-          <CustomInput
-            type="text"
-            placeholder="Hobbies (comma separated)"
-            value={profileData.hobbies.join(", ")}
-            onChange={(e) => handleArrayInputChange("hobbies", e.target.value)}
-          />
-        </div>
-
-        <div className={styles.editSection}>
-          <h3>Profile Visibility</h3>
-          <div className={styles.toggleOption}>
-            <span>Hide my profile</span>
-            <ToggleButtons
-              options={[
-                { label: "No", value: "visible" },
-                { label: "Yes", value: "hidden" },
-              ]}
-              value={profileData.isHidden ? "hidden" : "visible"}
-              onSelect={(value) => handleInputChange("isHidden", value === "hidden" ? "true" : "false")}
-            />
-          </div>
-        </div>
-
-        <div className={styles.saveButtonContainer}>
-          <CustomButton
-            text="Save Changes"
-            onClick={handleSaveChanges}
-            className={styles.saveButton}
-          />
-        </div>
-      </div>
+      <EditProfile
+        profileData={profileData}
+        onBack={() => setActiveTab("profile")}
+        onSave={handleSaveChanges}
+        onInputChange={handleInputChange}
+        onArrayInputChange={handleArrayInputChange}
+        onPhotoAdd={handlePhotoAdd}
+        onPhotoRemove={handlePhotoRemove}
+      />
     );
   };
 
   const renderActivityHistory = () => {
     return (
-      <div className={styles.activityContent}>
-        <div className={styles.profileHeader}>
-          <div className={styles.backButton} onClick={() => setActiveTab("profile")}>
-            <KeyboardBackspaceIcon />
-          </div>
-          <h5>Activity History</h5>
-        </div>
-
-        <div className={styles.activityList}>
-          {activityHistory.map((activity, index) => (
-            <div key={index} className={styles.activityItem}>
-              <div className={styles.activityIcon}>
-                {activity.type === "view" && <VisibilityIcon />}
-                {activity.type === "like" && <span>❤️</span>}
-                {activity.type === "message" && <span>💬</span>}
-              </div>
-              <div className={styles.activityDetails}>
-                <span className={styles.activityUser}>{activity.user}</span>
-                <span className={styles.activityType}>
-                  {activity.type === "view" && "viewed your profile"}
-                  {activity.type === "like" && "liked your profile"}
-                  {activity.type === "message" && "sent you a message"}
-                </span>
-                <span className={styles.activityDate}>{formatDate(activity.date)}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <ActivityHistory
+        activityHistory={activityHistory}
+        onBack={() => setActiveTab("profile")}
+        formatDate={formatDate}
+      />
     );
   };
 
   const renderProfilePreview = () => {
-    // This shows how others see your profile
+    // Create a profile object that matches the ProfileView component's expected props
+    const profile = {
+      id: 1, // Dummy ID
+      name: profileData.name,
+      age: profileData.age,
+      imageUrl: profileData.photos[0] || "/photo1.png",
+      bio: profileData.about,
+      location: "Your Location", // You can add location to profileData if needed
+      interests: profileData.interests,
+      passion: [...profileData.interests, ...profileData.hobbies],
+      photos: profileData.photos,
+      lifestyle: {
+        kids: "I don't have kids", // Example lifestyle data
+      }
+    };
+
+    // Custom styles for the preview badge
+    const previewBadgeStyle: React.CSSProperties = {
+      position: 'absolute',
+      top: '20px',
+      right: '15px',
+      backgroundColor: '#ff9f43',
+      color: 'white',
+      padding: '5px 10px',
+      borderRadius: '20px',
+      fontSize: '12px',
+      zIndex: 1001, // Higher than the ProfileView's z-index
+      fontWeight: 'bold'
+    };
+
     return (
-      <div className={styles.previewContent}>
-        <div className={styles.profileHeader}>
-          <div className={styles.backButton} onClick={() => setActiveTab("profile")}>
-            <KeyboardBackspaceIcon />
-          </div>
-          <h5>Profile Preview</h5>
-          <div className={styles.previewBadge}>
-            <span>Preview Mode</span>
-          </div>
+      <div style={{ position: 'relative' as const }}>
+        {/* Preview badge overlay */}
+        <div style={previewBadgeStyle}>
+          <span>Preview Mode</span>
         </div>
-
-        <div className={styles.profileInfo}>
-          <img
-            src={profileData.photos[0] || "/photo1.png"}
-            alt="Profile"
-            className={styles.profilePic}
-          />
-          <h2>{profileData.name}, {profileData.age}</h2>
-          {isVerified && (
-            <div className={styles.verificationBadge}>
-              <VerifiedIcon />
-            </div>
-          )}
-        </div>
-
-        <div className={styles.photoGallery}>
-          <h3>Photos</h3>
-          <div className={styles.photosGrid}>
-            {profileData.photos.map((photo, index) => (
-              <div key={index} className={styles.photoItem}>
-                <img src={photo} alt={`Photo ${index + 1}`} />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.profileSection}>
-          <h3>About</h3>
-          <p>{profileData.about}</p>
-        </div>
-
-        <div className={styles.profileSection}>
-          <h3>Interests</h3>
-          <div className={styles.tagsList}>
-            {profileData.interests.map((interest, index) => (
-              <div key={index} className={`${styles.tag} ${index % 2 === 0 ? styles.commonInterest : ''}`}>
-                {interest}
-                {index % 2 === 0 && <span className={styles.commonBadge}>Common</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.profileSection}>
-          <h3>Music</h3>
-          <div className={styles.tagsList}>
-            {profileData.music.map((item, index) => (
-              <div key={index} className={`${styles.tag} ${index === 0 ? styles.commonInterest : ''}`}>
-                {item}
-                {index === 0 && <span className={styles.commonBadge}>Common</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.profileSection}>
-          <h3>Movies</h3>
-          <div className={styles.tagsList}>
-            {profileData.movies.map((item, index) => (
-              <div key={index} className={styles.tag}>
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.profileSection}>
-          <h3>Books</h3>
-          <div className={styles.tagsList}>
-            {profileData.books.map((item, index) => (
-              <div key={index} className={`${styles.tag} ${index === 0 ? styles.commonInterest : ''}`}>
-                {item}
-                {index === 0 && <span className={styles.commonBadge}>Common</span>}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.profileSection}>
-          <h3>Hobbies</h3>
-          <div className={styles.tagsList}>
-            {profileData.hobbies.map((item, index) => (
-              <div key={index} className={styles.tag}>
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
+        
+        {/* Use the ProfileView component from LikesPage */}
+        <ProfileView
+          profile={profile}
+          onClose={() => setActiveTab("profile")}
+          onLike={() => {}} // Empty function since we don't need like functionality in preview
+        />
       </div>
     );
   };

@@ -37,7 +37,7 @@ export const AuthPage = () => {
   const navigate = useNavigate();
 
   const onClick = () => {
-    navigate("/home");
+    navigate("/enterInfo");
   };
   return (
     <div className={styles.page}>
