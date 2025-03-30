@@ -1,0 +1,16 @@
+.previewContainer {
+  position: relative;
+}
+
+.previewBadge {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  background-color: #ff9f43;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 1001;
+  font-weight: bold;
+}

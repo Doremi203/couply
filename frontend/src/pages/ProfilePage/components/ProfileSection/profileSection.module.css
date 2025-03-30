@@ -1,0 +1,31 @@
+.profileSection {
+  margin-top: 25px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.editLink {
+  color: #6c5ce7;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.editLink:hover {
+  text-decoration: underline;
+}

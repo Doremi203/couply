@@ -1,7 +1,2 @@
-/**
- * Страница профиля пользователя с настройками и личной информацией
- * @module
- * @block Страница
- */
-
-export { ProfilePage } from './components/Page/Page';
+export { default } from './components/Page/Page';
+export * from './components/Page/Page';
