@@ -1,18 +1,51 @@
-// import { BrowserRouter as Router } from 'react-router-dom';
-// import NavBar from './NavBar';
+import type { Meta, StoryObj } from '@storybook/react';
+import { NavBar } from './NavBar';
+import { MemoryRouter } from 'react-router-dom';
 
-// export default {
-//   title: 'shared/Components/NavBar',
-//   component: NavBar,
-// };
+const meta = {
+  title: 'Components/NavBar',
+  component: NavBar,
+  parameters: {
+    layout: 'centered',
+  },
+  tags: ['autodocs'],
+} satisfies Meta<typeof NavBar>;
 
-// const Template = (args) => (
-//   <Router>
-//     <NavBar {...args} />
-//   </Router>
-// );
+export default meta;
+type Story = StoryObj<typeof meta>;
 
-// export const Default = Template.bind({});
-// Default.args = {};
+export const HomeActive: Story = {
+  decorators: [
+    (Story) => (
+      <MemoryRouter initialEntries={['/home']}>
+        <div style={{ width: '375px', padding: '20px', backgroundColor: '#f5f5f5' }}>
+          <Story />
+        </div>
+      </MemoryRouter>
+    ),
+  ],
+};
 
-// // TODO
+export const LikesActive: Story = {
+  decorators: [
+    (Story) => (
+      <MemoryRouter initialEntries={['/likes']}>
+        <div style={{ width: '375px', padding: '20px', backgroundColor: '#f5f5f5' }}>
+          <Story />
+        </div>
+      </MemoryRouter>
+    ),
+  ],
+};
+
+export const ProfileActive: Story = {
+  decorators: [
+    (Story) => (
+      <MemoryRouter initialEntries={['/profile']}>
+        <div style={{ width: '375px', padding: '20px', backgroundColor: '#f5f5f5' }}>
+          <Story />
+        </div>
+      </MemoryRouter>
+    ),
+  ],
+};
