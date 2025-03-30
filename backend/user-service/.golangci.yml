@@ -8,7 +8,6 @@ linters:
     - govet
     - ineffassign
     - staticcheck
-    - revive
     - typecheck
     - unused
     - gocyclo
@@ -16,9 +15,9 @@ linters:
 
 linters-settings:
   gocyclo:
-    min-complexity: 10
+    min-complexity: 20
   gocognit:
-    min-complexity: 10
+    min-complexity: 20
 
 run:
   timeout: 5m

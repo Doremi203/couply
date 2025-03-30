@@ -1,10 +1,12 @@
 -- +goose Up
 create table if not exists Photos (
-    id BIGSERIAL PRIMARY KEY,
     user_id BIGINT,
-    url VARCHAR(255) NOT NULL,
-    mime_type VARCHAR(255) NOT NULL,
+    order_number BIGINT,
+    url TEXT NOT NULL,
+    mime_type TEXT NOT NULL,
     uploaded_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, order_number),
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
 

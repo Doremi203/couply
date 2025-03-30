@@ -3,16 +3,15 @@ package postgres
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/Couply/backend/internal/domain/interest"
 )
 
 func (s *PgStorage) UpdateInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
-	const op = "UpdateInterests"
-
 	deleteSQL := `DELETE FROM Interests WHERE user_id = $1`
 	_, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, deleteSQL, userID)
 	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
+		return fmt.Errorf("UpdateInterests: %w", err)
 	}
 
 	interestSQL := `
@@ -33,7 +32,7 @@ func (s *PgStorage) UpdateInterests(ctx context.Context, userID int64, interests
 		for _, value := range values {
 			_, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, interestSQL, userID, interestType, value)
 			if err != nil {
-				return fmt.Errorf("%s: %w", op, err)
+				return fmt.Errorf("UpdateInterests: %w", err)
 			}
 		}
 	}

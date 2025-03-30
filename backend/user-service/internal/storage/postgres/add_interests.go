@@ -3,12 +3,11 @@ package postgres
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/Couply/backend/internal/domain/interest"
 )
 
 func (s *PgStorage) AddInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
-	const op = "AddInterests"
-
 	interestSQL := `
 		INSERT INTO Interests (user_id, type, value)
 		VALUES ($1, $2, $3)
@@ -27,7 +26,7 @@ func (s *PgStorage) AddInterests(ctx context.Context, userID int64, interests *i
 		for _, value := range values {
 			_, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, interestSQL, userID, interestType, value)
 			if err != nil {
-				return fmt.Errorf("%s: %w", op, err)
+				return fmt.Errorf("AddInterests: %w", err)
 			}
 		}
 	}
@@ -35,7 +34,7 @@ func (s *PgStorage) AddInterests(ctx context.Context, userID int64, interests *i
 	return nil
 }
 
-// Вспомогательная функция для преобразования срезов enum в срезы int
+// вспомогательная функция для преобразования срезов enum в срезы int
 func toIntSlice[T ~int](slice []T) []int {
 	result := make([]int, len(slice))
 	for i, v := range slice {

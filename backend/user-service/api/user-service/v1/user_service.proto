@@ -68,6 +68,23 @@ service UserService {
       }
     };
   }
+
+  rpc DeleteUserV1 (DeleteUserV1Request) returns (DeleteUserV1Response) {
+    option (google.api.http) = {
+      post: "/v1/DeleteUserV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Удаление пользователя";
+      description: "Принимает айди пользователя для полного удаления";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateUserV1Request {
@@ -175,8 +192,18 @@ message UpdateUserV1Response {
   User user = 1;
 }
 
+message DeleteUserV1Request {
+  int64 id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message DeleteUserV1Response {
+
+}
+
 message User {
-  string id = 1;
+  int64 id = 1;
   string name = 2;
   int32 age = 3;
   Gender gender = 4;
@@ -198,14 +225,16 @@ message User {
 }
 
 message Photo {
-  string id = 1;
-  string url = 2 [
+  int64 user_id = 1;
+  int32 order_number = 2;
+  string url = 3 [
     (google.api.field_behavior) = REQUIRED
   ];
-  string mime_type = 3 [
+  string mime_type = 4 [
     (google.api.field_behavior) = REQUIRED
   ];
-  google.protobuf.Timestamp uploaded_at = 4;
+  google.protobuf.Timestamp uploaded_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
 }
 
 enum Gender {

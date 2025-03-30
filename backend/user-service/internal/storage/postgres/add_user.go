@@ -3,12 +3,11 @@ package postgres
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/Couply/backend/internal/domain"
 )
 
 func (s *PgStorage) AddUser(ctx context.Context, user *domain.User) (*domain.User, error) {
-	const op = "AddUser"
-
 	userSQL := `
 		INSERT INTO Users (name, age, gender, location, bio, goal, zodiac, height, education, children, alcohol,
 		                   smoking, hidden, verified, created_at, updated_at)
@@ -22,7 +21,7 @@ func (s *PgStorage) AddUser(ctx context.Context, user *domain.User) (*domain.Use
 		user.Children, user.Alcohol, user.Smoking, user.Hidden, user.Verified, user.CreatedAt, user.UpdatedAt,
 	).Scan(&userID)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, fmt.Errorf("AddUser: %w", err)
 	}
 
 	user.ID = userID

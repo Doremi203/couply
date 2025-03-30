@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	"github.com/Doremi203/Couply/backend/internal/dto"
 )
 

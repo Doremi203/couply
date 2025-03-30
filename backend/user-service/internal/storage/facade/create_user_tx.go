@@ -3,6 +3,7 @@ package facade
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/Couply/backend/internal/domain"
 )
 
@@ -17,7 +18,7 @@ func (f *StorageFacade) CreateUserTx(ctx context.Context, user *domain.User) (*d
 		}
 
 		for _, photo := range user.Photos {
-			if err = f.storage.AddPhoto(ctxTx, user.ID, photo); err != nil {
+			if err = f.storage.AddPhoto(ctxTx, photo); err != nil {
 				return fmt.Errorf("failed to add photo: %w", err)
 			}
 		}

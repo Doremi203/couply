@@ -3,6 +3,7 @@ package facade
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/Couply/backend/internal/domain"
 )
 
@@ -13,11 +14,8 @@ func (f *StorageFacade) UpdateUserTx(ctx context.Context, user *domain.User) (*d
 			return fmt.Errorf("failed to update user: %w", err)
 		}
 
-		if err = f.storage.DeletePhotos(ctxTx, user.ID); err != nil {
-			return fmt.Errorf("failed to delete old photos: %w", err)
-		}
 		for _, photo := range user.Photos {
-			if err = f.storage.AddPhoto(ctxTx, user.ID, photo); err != nil {
+			if err = f.storage.UpdatePhoto(ctxTx, photo); err != nil {
 				return fmt.Errorf("failed to add new photo: %w", err)
 			}
 		}

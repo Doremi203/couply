@@ -1,0 +1,32 @@
+package dto
+
+import (
+	desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
+)
+
+type DeleteUserV1Request struct {
+	ID int64
+}
+
+type DeleteUserV1Response struct {
+}
+
+func DeleteUserRequestToPB(req *DeleteUserV1Request) *desc.DeleteUserV1Request {
+	return &desc.DeleteUserV1Request{
+		Id: req.ID,
+	}
+}
+
+func PBToDeleteUserRequest(req *desc.DeleteUserV1Request) *DeleteUserV1Request {
+	return &DeleteUserV1Request{
+		ID: req.Id,
+	}
+}
+
+func DeleteUserResponseToPB(_ *DeleteUserV1Response) *desc.DeleteUserV1Response {
+	return &desc.DeleteUserV1Response{}
+}
+
+func PBToDeleteUserResponse(_ *desc.DeleteUserV1Response) *DeleteUserV1Response {
+	return &DeleteUserV1Response{}
+}

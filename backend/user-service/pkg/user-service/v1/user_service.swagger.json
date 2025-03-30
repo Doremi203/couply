@@ -61,6 +61,45 @@
         ]
       }
     },
+    "/v1/DeleteUserV1": {
+      "post": {
+        "summary": "Удаление пользователя",
+        "description": "Принимает айди пользователя для полного удаления",
+        "operationId": "UserService_DeleteUserV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/backendDeleteUserV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/backendDeleteUserV1Request"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ],
+        "security": [
+          {
+            "api-token": []
+          }
+        ]
+      }
+    },
     "/v1/UpdateUserV1": {
       "post": {
         "summary": "Обновление пользователя",
@@ -213,6 +252,21 @@
         }
       }
     },
+    "backendDeleteUserV1Request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "backendDeleteUserV1Response": {
+      "type": "object"
+    },
     "backendEducation": {
       "type": "string",
       "enum": [
@@ -319,8 +373,13 @@
     "backendPhoto": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
+        "userId": {
+          "type": "string",
+          "format": "int64"
+        },
+        "orderNumber": {
+          "type": "integer",
+          "format": "int32"
         },
         "url": {
           "type": "string"
@@ -329,6 +388,10 @@
           "type": "string"
         },
         "uploadedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
           "type": "string",
           "format": "date-time"
         }
@@ -476,7 +539,8 @@
       "type": "object",
       "properties": {
         "id": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         },
         "name": {
           "type": "string"

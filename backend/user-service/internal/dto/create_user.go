@@ -1,10 +1,11 @@
 package dto
 
 import (
+	"time"
+
 	"github.com/Doremi203/Couply/backend/internal/domain"
 	"github.com/Doremi203/Couply/backend/internal/domain/interest"
 	desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
-	"time"
 )
 
 type CreateUserV1Request struct {

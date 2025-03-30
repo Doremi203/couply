@@ -3,12 +3,11 @@ package postgres
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/Couply/backend/internal/domain"
 )
 
 func (s *PgStorage) UpdateUser(ctx context.Context, user *domain.User) (*domain.User, error) {
-	const op = "UpdateUser"
-
 	userSQL := `
         UPDATE Users 
         SET name = $1, age = $2, gender = $3, location = $4, bio = $5, goal = $6, zodiac = $7, 
@@ -25,7 +24,7 @@ func (s *PgStorage) UpdateUser(ctx context.Context, user *domain.User) (*domain.
 		user.Verified, user.UpdatedAt, user.ID,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, fmt.Errorf("UpdateUser: %w", err)
 	}
 
 	return user, nil

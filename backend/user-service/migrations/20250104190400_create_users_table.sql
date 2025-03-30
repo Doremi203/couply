@@ -1,10 +1,10 @@
 -- +goose Up
 create table if not exists Users (
     id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
+    name TEXT NOT NULL,
     age INT CHECK (age > 18),
     gender INT NOT NULL,
-    location VARCHAR(255) NOT NULL,
+    location TEXT NOT NULL,
     bio TEXT,
     goal INT,
     zodiac INT,

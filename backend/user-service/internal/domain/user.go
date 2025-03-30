@@ -1,11 +1,11 @@
 package domain
 
 import (
+	"time"
+
 	"github.com/Doremi203/Couply/backend/internal/domain/interest"
 	desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"strconv"
-	"time"
 )
 
 type User struct {
@@ -139,7 +139,7 @@ func (b *UserBuilder) Build() *User {
 
 func UserToPB(user *User) *desc.User {
 	return &desc.User{
-		Id:        strconv.FormatInt(user.ID, 10),
+		Id:        user.ID,
 		Name:      user.Name,
 		Age:       user.Age,
 		Gender:    GenderToPB(user.Gender),
@@ -162,10 +162,8 @@ func UserToPB(user *User) *desc.User {
 }
 
 func PBToUser(user *desc.User) User {
-	id, _ := strconv.Atoi(user.Id)
-
 	return User{
-		ID:        int64(id),
+		ID:        user.Id,
 		Name:      user.Name,
 		Age:       user.Age,
 		Gender:    PBToGender(user.Gender),
