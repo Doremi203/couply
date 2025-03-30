@@ -57,11 +57,13 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
       </div>
       {onLike && (
-        <LikeButton
-          onClick={handleLikeClick}
-          className={styles.likeButton}
-          likeClassName={styles.like}
-        />
+        <div onClick={(e) => e.stopPropagation()}>
+          <LikeButton
+            onClick={handleLikeClick}
+            className={styles.likeButton}
+            likeClassName={styles.like}
+          />
+        </div>
       )}
     </div>
   );

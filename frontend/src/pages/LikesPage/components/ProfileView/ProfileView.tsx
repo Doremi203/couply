@@ -293,14 +293,24 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
             </svg>
           </div>
         </div>
-        <LikeButton
-          onClick={() => onLike(profile.id)}
-          className={styles.likeButton}
-        />
-        <DislikeButton
-          onClick={() => onLike(profile.id)}
-          className={styles.dislikeButton}
-        />
+        <div onClick={(e) => e.stopPropagation()}>
+          <LikeButton
+            onClick={() => {
+              // Call the onLike function to trigger the match modal
+              onLike(profile.id);
+            }}
+            className={styles.likeButton}
+          />
+        </div>
+        <div onClick={(e) => e.stopPropagation()}>
+          <DislikeButton
+            onClick={() => {
+              // Close the ProfileView and return to the likes page
+              onClose();
+            }}
+            className={styles.dislikeButton}
+          />
+        </div>
       </div>
 
       {/* Detailed profile information section */}

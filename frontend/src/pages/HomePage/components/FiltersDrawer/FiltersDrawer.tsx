@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { Drawer, Box, Slider, styled } from "@mui/material";
 import styles from "./filtersDrawer.module.css";
 import ToggleButtons from "../../../../shared/components/ToggleButtons/ToggleButtons";
-import CustomInput from "../../../../shared/components/CustomInput/CustomInput";
 import CustomButton from "../../../../shared/components/CustomButton/CustomButton";
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
 type Props = {
@@ -40,7 +38,7 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [interestedIn, setInterestedIn] = useState<string>("Girls");
   
   // Location
-  const [location, setLocation] = useState<string>("Chicago, USA");
+  //const [location, setLocation] = useState<string>("Chicago, USA");
   
   // Distance
   const [distance, setDistance] = useState<number>(40);
@@ -59,11 +57,11 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   // Verification status (new)
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
 
-  const handleDistanceChange = (event: Event, newValue: number | number[]) => {
+  const handleDistanceChange = (_event: Event, newValue: number | number[]) => {
     setDistance(newValue as number);
   };
 
-  const handleAgeRangeChange = (event: Event, newValue: number | number[]) => {
+  const handleAgeRangeChange = (_event: Event, newValue: number | number[]) => {
     setAgeRange(newValue as number[]);
   };
 
@@ -93,7 +91,7 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
 
   const handleClearFilters = () => {
     setInterestedIn("Both");
-    setLocation("Chicago, USA");
+    //setLocation("Chicago, USA");
     setDistance(40);
     setAgeRange([20, 28]);
     setSelectedInterests([]);

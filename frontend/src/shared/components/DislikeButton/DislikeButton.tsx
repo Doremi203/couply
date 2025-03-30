@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './dislikeButton.module.css'
 import Dislike from '../Dislike/Dislike'
 

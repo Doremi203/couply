@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import styles from "./enterInfo.module.css";
 import { CustomInput } from "../../../../shared/components/CustomInput";
 import { CustomButton } from "../../../../shared/components/CustomButton";
@@ -63,12 +63,6 @@ export const EnterInfoPage = () => {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <CustomButton
-        onClick={nextStep}
-        text={"Дальше"}
-        disabled={!isCurrentStepValid()}
-        className={styles.nextButton}
-      />
     </div>,
     <div key="birthDateSection">
       <h2>Дата рождения</h2>
@@ -77,11 +71,6 @@ export const EnterInfoPage = () => {
         type="date"
         value={birthDate}
         onChange={(e) => setBirthDate(e.target.value)}
-      />
-      <CustomButton
-        onClick={nextStep}
-        text={"Дальше"}
-        disabled={!isCurrentStepValid()}
       />
     </div>,
     <div key="datingSettingsSection">
@@ -109,11 +98,6 @@ export const EnterInfoPage = () => {
           value={preferredGender}
         />
       </div>
-      <CustomButton
-        onClick={nextStep}
-        text={"Дальше"}
-        disabled={!isCurrentStepValid()}
-      />
     </div>,
   ];
 
@@ -123,6 +107,12 @@ export const EnterInfoPage = () => {
         <KeyboardBackspaceIcon />
       </div>
       {sections[currentStep]}
+      <CustomButton
+        onClick={nextStep}
+        text={"Дальше"}
+        disabled={!isCurrentStepValid()}
+        className={styles.nextButton}
+      />
     </div>
   );
 };

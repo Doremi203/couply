@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { NavBar } from "../../../../shared/components/NavBar";
 import { MatchModal } from "../MatchModal";
 import { ProfileView } from "../ProfileView";
-import { useNavigate } from "react-router-dom";
 import styles from "./likesPage.module.css";
 import { ProfileCard } from "../ProfileCard";
 import { MatchCard, MatchProfile } from "../MatchCard";
@@ -94,7 +93,6 @@ const generateMatchId = (existingMatches: MatchProfile[]): number => {
 };
 
 export const LikesPage = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<"likes" | "matches">("likes");
   const [likes, setLikes] = useState<LikeProfile[]>(likesData);
   const [matches, setMatches] = useState<MatchProfile[]>(matchesData);
@@ -104,43 +102,54 @@ export const LikesPage = () => {
   const [showChatMessage, setShowChatMessage] = useState<number | null>(null);
 
   const handleLike = (id: number) => {
-    // Find the profile that was liked
-    const likedProfile = likes.find((like) => like.id === id);
+    // Check if this is a like from the likes tab (not from matches tab)
+    // Match IDs are in a different range (101+) than like IDs
+    const isFromLikesTab = id < 100;
     
-    if (likedProfile) {
-      // Check if this profile has already liked the user
-      if (likedProfile.hasLikedYou) {
-        // It's a match! Show the match modal
-        setMatchedProfile(likedProfile);
-        setShowMatchModal(true);
-      }
+    if (isFromLikesTab) {
+      // Find the profile that was liked
+      const likedProfile = likes.find((like) => like.id === id);
       
-      // Update the liked status
-      const updatedLikes = likes.map((like) =>
-        like.id === id ? { ...like, liked: true } : like
-      );
-      
-      // Create a new match object with a unique ID
-      const newMatch: MatchProfile = {
-        id: generateMatchId(matches), // Generate a unique ID
-        name: likedProfile.name,
-        age: likedProfile.age,
-        imageUrl: likedProfile.imageUrl,
-        telegram: `@${likedProfile.name.toLowerCase()}_${likedProfile.age}`,
-        instagram: `@${likedProfile.name.toLowerCase()}_insta`,
-      };
-      
-      // Add to matches and remove from likes if it was a match
-      if (likedProfile.hasLikedYou) {
-        setMatches([...matches, newMatch]);
-        setLikes(updatedLikes.filter((like) => like.id !== id));
-      } else {
-        setLikes(updatedLikes);
+      if (likedProfile) {
+        // Check if this profile has already liked the user
+        if (likedProfile.hasLikedYou) {
+          // It's a match! Show the match modal
+          setMatchedProfile(likedProfile);
+          setShowMatchModal(true);
+          
+          // Don't open the profile view when it's a match
+          setSelectedProfile(null);
+        }
+        
+        // Update the liked status
+        const updatedLikes = likes.map((like) =>
+          like.id === id ? { ...like, liked: true } : like
+        );
+        
+        // Create a new match object with a unique ID
+        const newMatch: MatchProfile = {
+          id: generateMatchId(matches), // Generate a unique ID
+          name: likedProfile.name,
+          age: likedProfile.age,
+          imageUrl: likedProfile.imageUrl,
+          telegram: `@${likedProfile.name.toLowerCase()}_${likedProfile.age}`,
+          instagram: `@${likedProfile.name.toLowerCase()}_insta`,
+        };
+        
+        // Add to matches and remove from likes if it was a match
+        if (likedProfile.hasLikedYou) {
+          setMatches([...matches, newMatch]);
+          setLikes(updatedLikes.filter((like) => like.id !== id));
+        } else {
+          setLikes(updatedLikes);
+        }
       }
     }
+    // If it's from matches tab (id >= 100), do nothing
   };
 
   const handleProfileClick = (profile: LikeProfile) => {
+    // When clicking on a profile, open the ProfileView
     setSelectedProfile(profile);
   };
 
@@ -169,8 +178,8 @@ export const LikesPage = () => {
 
   const handleSendMessage = () => {
     setShowMatchModal(false);
-    // Navigate to chat page
-    navigate("/chat");
+    // Switch to matches tab instead of navigating to chat
+    setActiveTab("matches");
   };
 
   const handleKeepSwiping = () => {

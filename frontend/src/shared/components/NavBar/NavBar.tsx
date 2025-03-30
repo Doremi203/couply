@@ -1,50 +1,37 @@
-import * as React from "react";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import QuestionAnswerOutlinedIcon from "@mui/icons-material/QuestionAnswerOutlined";
-import Paper from "@mui/material/Paper";
-import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+
+import { Link, useLocation } from "react-router-dom";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import { Link } from "react-router-dom";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import "./navBar.css";
 
 export const NavBar = () => {
-  const [value, setValue] = React.useState(0);
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   return (
-    <Paper
-      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-      elevation={3}
-    >
-      <BottomNavigation
-        showLabels
-        value={value}
-        onChange={(event, newValue) => {
-          setValue(newValue);
-        }}
-        sx={{
-          "& .Mui-selected": {
-            color: "#161F65",
-          },
-        }}
-      >
-        <BottomNavigationAction
-          icon={<HomeOutlinedIcon />}
-          component={Link}
+    <div className="navBarContainer">
+      <div className="navBarContent">
+        <Link
           to="/home"
-        />
-        <BottomNavigationAction
-          icon={<FavoriteBorderIcon />}
-          component={Link}
+          className={`navItem ${currentPath === "/home" ? "active" : ""}`}
+        >
+          <HomeOutlinedIcon style={{ color: currentPath === "/home" ? "#161F65" : "inherit" }} />
+        </Link>
+        <Link
           to="/likes"
-        />
-        <BottomNavigationAction
-          icon={<PermIdentityOutlinedIcon />}
-          component={Link}
+          className={`navItem ${currentPath === "/likes" ? "active" : ""}`}
+        >
+          <FavoriteBorderIcon style={{ color: currentPath === "/likes" ? "#161F65" : "inherit" }} />
+        </Link>
+        <Link
           to="/profile"
-        />
-      </BottomNavigation>
-    </Paper>
+          className={`navItem ${currentPath === "/profile" ? "active" : ""}`}
+        >
+          <PermIdentityOutlinedIcon style={{ color: currentPath === "/profile" ? "#161F65" : "inherit" }} />
+        </Link>
+      </div>
+    </div>
   );
 }
 

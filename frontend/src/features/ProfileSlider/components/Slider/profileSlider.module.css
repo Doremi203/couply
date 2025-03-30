@@ -1,14 +1,21 @@
 .slider {
-  /* text-align: center; */
+  width: 100%;
   max-width: 500px;
   margin: 0 auto;
   margin-top: 20px;
+  padding: 0 10px;
+  box-sizing: border-box;
 }
 
 .profileСard {
-  /* border: 1px solid #ccc; */
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .profileImage {
@@ -18,13 +25,7 @@
   border-radius: 35px;
 }
 
-.controls {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-}
+/* This section is now replaced by the updated .controls class below */
 
 .controls button {
   margin: 5px;
@@ -41,31 +42,28 @@
   margin: 10px;
 } */
 
+.controls {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  max-width: 300px;
+  margin: 20px auto;
+  position: relative;
+}
+
 .likeButton {
-  position: absolute;
   width: 62px;
   height: 62px;
-  left: 250px;
-  top: 693px;
-
-  /* background: #202c83; */
   border-radius: 50%;
-
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .dislikeButton {
-  position: absolute;
   width: 62px;
   height: 62px;
-  left: 64px;
-  top: 693px;
-
-  /* //background: #ff2da1; */
   border-radius: 50%;
-
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,4 +1,3 @@
-import React from 'react'
 import Like from '../Like/Like'
 import styles from './likeButton.module.css'
 

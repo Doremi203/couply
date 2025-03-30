@@ -16,11 +16,19 @@
   font-size: 40px;
   font-family: "Jost", sans-serif;
   font-weight: medium;
-  margin-left: 135px;
+  flex: 1;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .appName {
+    font-size: 40px;
+  }
 }
 
 
 .filtersIcon {
-  margin-right: 25px;
-  margin-top: 7px;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
 }

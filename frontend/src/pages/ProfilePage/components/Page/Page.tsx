@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import styles from "./profilePage.module.css";
 import { NavBar } from "../../../../shared/components/NavBar";
 import { CustomButton } from "../../../../shared/components/CustomButton";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import EditIcon from "@mui/icons-material/Edit";
@@ -93,13 +92,21 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     });
   };
 
-  const handlePhotoAdd = () => {
-    // In a real app, this would open a file picker
-    // For now, we'll just add a placeholder
-    setProfileData({
-      ...profileData,
-      photos: [...profileData.photos, "/man1.jpg"]
-    });
+  const handlePhotoAdd = (file?: File) => {
+    if (file) {
+      // Create a URL for the selected file
+      const fileUrl = URL.createObjectURL(file);
+      setProfileData({
+        ...profileData,
+        photos: [...profileData.photos, fileUrl]
+      });
+    } else {
+      // Fallback to placeholder if no file is provided
+      setProfileData({
+        ...profileData,
+        photos: [...profileData.photos, "/man1.jpg"]
+      });
+    }
   };
 
   const handlePhotoRemove = (index: number) => {

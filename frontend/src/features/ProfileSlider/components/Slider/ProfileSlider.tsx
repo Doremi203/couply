@@ -108,16 +108,8 @@ export const ProfileSlider = () => {
         {/* <p>{currentProfile.bio}</p> */}
       </div>
       <div className={styles.controls}>
-        {/* <div className={styles.likeCircle} onClick={handlePrev}>
-          <Like />
-        </div>
-
-        <div className={styles.dislikeCircle} onClick={handleNext}>
-          <Dislike />
-        </div> */}
-
-        <LikeButton onClick={handlePrev} className={styles.likeButton} />
         <DislikeButton onClick={handleNext} className={styles.dislikeButton} />
+        <LikeButton onClick={handlePrev} className={styles.likeButton} />
       </div>
 
       {selectedProfile && (
