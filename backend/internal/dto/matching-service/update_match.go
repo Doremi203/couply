@@ -1,0 +1,52 @@
+package matching_service
+
+import (
+	"github.com/Doremi203/Couply/backend/internal/domain/matching"
+	desc "github.com/Doremi203/Couply/backend/pkg/matching-service/v1"
+)
+
+type UpdateMatchV1Request struct {
+	MainUserID   int64
+	ChosenUserID int64
+	Approved     bool
+}
+
+type UpdateMatchV1Response struct {
+	Match *matching.Match
+}
+
+func UpdateMatchRequestToPB(req *UpdateMatchV1Request) *desc.UpdateMatchV1Request {
+	return &desc.UpdateMatchV1Request{
+		MainUserId:   req.MainUserID,
+		ChosenUserId: req.ChosenUserID,
+		Approved:     req.Approved,
+	}
+}
+
+func PBToUpdateMatchRequest(req *desc.UpdateMatchV1Request) *UpdateMatchV1Request {
+	return &UpdateMatchV1Request{
+		MainUserID:   req.MainUserId,
+		ChosenUserID: req.ChosenUserId,
+		Approved:     req.Approved,
+	}
+}
+
+func UpdateMatchResponseToPB(resp *UpdateMatchV1Response) *desc.UpdateMatchV1Response {
+	return &desc.UpdateMatchV1Response{
+		Match: matching.MatchToPB(resp.Match),
+	}
+}
+
+func PBToUpdateMatchResponse(resp *desc.UpdateMatchV1Response) *UpdateMatchV1Response {
+	return &UpdateMatchV1Response{
+		Match: matching.PBToMatch(resp.Match),
+	}
+}
+
+func UpdateMatchRequestToMatch(req *UpdateMatchV1Request) *matching.Match {
+	return &matching.Match{
+		MainUserID:   req.MainUserID,
+		ChosenUserID: req.ChosenUserID,
+		Approved:     req.Approved,
+	}
+}

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package backend;
+
+option go_package = "github.com/Doremi203/Couply/backend/pkg/search-service;search_service";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Приложение для знакомств. Сервис поиска";
+    version: "1.0.0";
+    description: "Сервис поиска для приложения, которое позволяет людям искать людей для знакомств";
+  };
+  host: "127.0.0.1:7001";
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "api-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_API_KEY;
+        name: "x-api-token";
+        description: "Токен авторизации";
+      }
+    }
+  }
+};
