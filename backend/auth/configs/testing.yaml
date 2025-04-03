@@ -1,0 +1,15 @@
+http:
+  port: 80
+
+grpc:
+  port: 50051
+
+logging:
+  level: info
+  format: json
+
+database:
+  host: rc1b-2ebn83j0efcj6nkm.mdb.yandexcloud.net
+  port: 6432
+  database: auth
+  options: sslmode=verify-full;target_session_attrs=read-write

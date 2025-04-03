@@ -36,7 +36,7 @@ func (u UseCase) BasicRegister(
 	switch {
 	case err == nil:
 		return errors.Wrapf(usecase.ErrAlreadyRegistered, "email already used: %s", email)
-	case errors.Is(err, user.ErrNotFound):
+	case errors.As(err, &user.NotFoundError{}):
 	// continue
 	default:
 		return errors.WrapFailf(err, "get existing user with email: %s", email)
@@ -55,7 +55,7 @@ func (u UseCase) BasicRegister(
 	err = u.userRepository.Create(ctx, usr)
 	switch {
 	case errors.Is(err, user.ErrAlreadyExists):
-		return nil
+		return errors.Wrapf(usecase.ErrAlreadyRegistered, "email already used: %s", email)
 	case err != nil:
 		return errors.WrapFailf(err, "save user")
 	}

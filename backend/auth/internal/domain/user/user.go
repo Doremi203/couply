@@ -36,8 +36,7 @@ func New(
 }
 
 type User struct {
-	ID        ID
-	Email     Email
-	Password  pswrd.HashedPassword
-	CreatedAt time.Time
+	ID       ID
+	Email    Email
+	Password pswrd.HashedPassword
 }

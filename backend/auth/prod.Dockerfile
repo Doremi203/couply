@@ -4,10 +4,10 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 WORKDIR /src/cmd/auth
-RUN go build -o /src/app
+RUN go build -ldflags="-s -w" -o /src/app
 
 FROM alpine
 WORKDIR /app
 COPY --from=build /src/app ./
-COPY ./configs ./configs
+COPY configs configs
 CMD ["./app"]

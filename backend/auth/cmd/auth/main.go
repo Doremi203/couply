@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/Doremi203/couply/backend/auth/gen/api/registration"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
 	"github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
@@ -13,7 +12,6 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
-	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
@@ -25,12 +23,12 @@ func main() {
 			return err
 		}
 
-		pgPool, err := pgxpool.New(ctx, dbConfig.ConnectionString())
+		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
-			return errors.Wrap(err, "could create connection pool for db")
+			return errors.WrapFail(err, "create postgres client")
 		}
 
-		userRepo := userpostgres.NewRepo(pgPool)
+		userRepo := userpostgres.NewRepo(dbClient)
 
 		registerWithCredentialsUsecase := registrationUC.NewUseCase(
 			userRepo,
@@ -47,10 +45,9 @@ func main() {
 		)
 
 		app.RegisterGRPCService(registrationService)
-
-		err = app.RegisterGatewayHandler(registration.RegisterRegistrationHandlerFromEndpoint)
+		err = app.RegisterGatewayHandler(registrationService)
 		if err != nil {
-			return errors.Wrap(err, "failed to register gateway handler for registration")
+			return err
 		}
 
 		return nil

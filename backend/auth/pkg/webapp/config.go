@@ -3,6 +3,7 @@ package webapp
 import (
 	"fmt"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/spf13/viper"
 	"log/slog"
 	"os"
@@ -22,21 +23,40 @@ type loggingConfig struct {
 	Format string
 }
 
+type swaggerUIConfig struct {
+	Path    string
+	Enabled bool
+}
+
 type Config struct {
-	grpc    grpcConfig
-	http    httpConfig
-	logging loggingConfig
+	grpc      grpcConfig
+	http      httpConfig
+	logging   loggingConfig
+	swaggerUI swaggerUIConfig
 
 	viperLoader *viper.Viper
 	logger      *slog.Logger
 }
 
 func (c *Config) ReadSection(name string, cfg any) error {
+	err := c.readSection(name, cfg)
+	if err != nil {
+		return err
+	}
+	c.logger.Info("loaded custom config", "section", name)
+
+	return nil
+}
+
+func (c *Config) readSection(name string, cfg any) error {
 	err := c.viperLoader.UnmarshalKey(name, cfg)
 	if err != nil {
-		return errors.Wrapf(err, "failed to read section %s into %v", name, cfg)
+		return errors.WrapFailf(err, "read section %s", name)
 	}
-	c.logger.Info("loaded custom config", "section", name, "config", cfg)
+	err = cleanenv.ReadEnv(cfg)
+	if err != nil {
+		return errors.WrapFailf(err, "read envs for config with %s", name)
+	}
 
 	return nil
 }
@@ -77,19 +97,24 @@ func loadConfig(
 		viperLoader: v,
 	}
 
-	err = v.UnmarshalKey("grpc", &cfg.grpc)
+	err = cfg.readSection("grpc", &cfg.grpc)
 	if err != nil {
-		return Config{}, errors.Wrap(err, "failed to decode grpc server config into struct")
+		return Config{}, errors.Wrap(err, "load grpc server config")
 	}
 
-	err = v.UnmarshalKey("http", &cfg.http)
+	err = cfg.readSection("http", &cfg.http)
 	if err != nil {
-		return Config{}, errors.Wrap(err, "failed to decode http server config into struct")
+		return Config{}, errors.Wrap(err, "load http server config")
 	}
 
-	err = v.UnmarshalKey("logging", &cfg.logging)
+	err = cfg.readSection("logging", &cfg.logging)
 	if err != nil {
-		return Config{}, errors.Wrap(err, "failed to decode app config into struct")
+		return Config{}, errors.Wrap(err, "load logging config")
+	}
+
+	err = cfg.readSection("swagger-ui", &cfg.swaggerUI)
+	if err != nil {
+		return Config{}, errors.WrapFail(err, "load swagger-ui config")
 	}
 
 	return cfg, nil
@@ -98,12 +123,12 @@ func loadConfig(
 func createConfig(v *viper.Viper, configs []string) error {
 	v.SetConfigName(configs[0])
 	if err := v.ReadInConfig(); err != nil {
-		return errors.Wrapf(err, "failed to load config: %s", configs[0])
+		return errors.WrapFailf(err, "read config: %s", configs[0])
 	}
 	for i := 1; i < len(configs); i++ {
 		v.SetConfigName(configs[i])
 		if err := v.MergeInConfig(); err != nil {
-			return errors.Wrapf(err, "failed to merge config: %s", configs[i])
+			return errors.WrapFailf(err, "merge config: %s", configs[i])
 		}
 	}
 

@@ -7,6 +7,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -28,6 +29,15 @@ type userAuthService struct {
 
 	log *slog.Logger
 	registration.UnimplementedRegistrationServer
+}
+
+func (s *userAuthService) RegisterToGateway(
+	ctx context.Context,
+	mux *runtime.ServeMux,
+	endpoint string,
+	opts []grpc.DialOption,
+) error {
+	return registration.RegisterRegistrationHandlerFromEndpoint(ctx, mux, endpoint, opts)
 }
 
 func (s *userAuthService) RegisterToServer(gRPC *grpc.Server) {

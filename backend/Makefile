@@ -33,7 +33,7 @@ services/deploy:
 
 ### Auth service targets
 auth/check-coverage:
-	-cd auth && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd auth && MIGRATIONS_PATH=$$(realpath ./migrations) go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
 	-cd auth && go-test-coverage --config=.local.testcoverage.yml
 	@rm auth/cover.out
 

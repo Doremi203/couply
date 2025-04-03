@@ -25,7 +25,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Job for linting the code
   lint:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -45,7 +44,6 @@ jobs:
           go-version: '1.23.5'
           cache: true
 
-      # Use the official golangci-lint GitHub Action
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
@@ -53,7 +51,6 @@ jobs:
           working-directory: backend/auth
           args: --timeout=3m
 
-  # Job for running tests with coverage
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -67,7 +64,6 @@ jobs:
         with:
           working-directory: backend/auth
 
-      # Run tests with coverage
       - name: Run tests with coverage
         run: go test -race -coverprofile=coverage.txt -covermode=atomic ./...
 
@@ -105,7 +101,6 @@ jobs:
           fail_ci_if_error: false
           verbose: true
 
-  # Job for building the application
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -119,6 +114,5 @@ jobs:
         with:
           working-directory: backend/auth
 
-      # Build with optimized flags
-      - name: Build
-        run: go build -v -ldflags="-s -w" -o auth_service ./cmd/auth
+      - name: Build Docker image
+        run: docker build -t auth_service:latest . -f prod.Dockerfile

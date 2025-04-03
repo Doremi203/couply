@@ -1,0 +1,119 @@
+name: Auth Service Release Flow
+on:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      - name: Set up Go
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version: '1.23.5'
+          cache: true
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.7
+          working-directory: backend/auth
+          args: --timeout=3m
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      - name: Run tests
+        run: go test -race ./...
+
+      - name: Deploy to docker
+        run: docker-compose -f docker-compose.testing.yml up -d
+
+      - name: Download migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz -o migrate.tar.gz
+          tar -zxvf migrate.tar.gz
+          chmod +x migrate
+          sudo mv migrate /usr/local/bin/
+
+      - name: Migrate up
+        run: migrate -source file://migrations -database postgres://user:pass@localhost:5432/auth?sslmode=disable up
+
+      - name: Run functional tests
+        run: echo "Running functional tests"
+
+  migrate-testing-up:
+    runs-on: ubuntu-latest
+    needs: test
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - name: Download migrate
+        run: |
+          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz -o migrate.tar.gz
+          tar -zxvf migrate.tar.gz
+          chmod +x migrate
+          sudo mv migrate /usr/local/bin/
+
+      - name: Setup yc
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
+
+      - name: Migrate up
+        run: |
+          echo "Fetching DB_USER from Yandex Cloud Lockbox..."
+          DB_USER=$(yc lockbox payload get testing-db --key user)
+          DB_PASS=$(yc lockbox payload get testing-db --key password)
+          
+          mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
+          
+          migrate -source file://migrations -database postgres://"$DB_USER":"$DB_PASS"@"${{ secrets.TESTING_DB_HOST }}"/auth?sslmode=verify-full;target_session_attrs=read-write up
+          
+
+  build:
+    runs-on: ubuntu-latest
+    needs: migrate-testing-up
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      - name: Setup yc
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
+
+      - name: Login docker
+        run: |
+          echo $(yc iam create-token)|docker login --username iam --password-stdin cr.yandex
+
+      - name: Build Docker image
+        run: docker build -t cr.yandex/crpe9kgeql1v6b7gujfj/auth-testing:latest --push . -f testing.Dockerfile

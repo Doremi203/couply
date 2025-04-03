@@ -24,6 +24,10 @@ type grpcService interface {
 	RegisterToServer(gRPC *grpc.Server)
 }
 
+type grpcGatewayService interface {
+	RegisterToGateway(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error
+}
+
 // ResourceCloser представляет функцию для закрытия или освобождения ресурса.
 // При вызове функция должна выполнить необходимые операции по освобождению и
 // вернуть ошибку, если что-то пошло не так.
@@ -42,6 +46,9 @@ type App struct {
 
 	Log     *slog.Logger
 	closers []ResourceCloser
+
+	healthCheckFunc   func() bool
+	livenessCheckFunc func() bool
 
 	grpcServer *grpc.Server
 	grpcMux    *runtime.ServeMux
@@ -62,12 +69,18 @@ func new() *App {
 
 	cfg, err := loadConfig(env)
 	if err != nil {
-		panic(errors.Wrap(err, "failed to load app config"))
+		panic(errors.WrapFail(err, "load app config"))
 	}
 
 	log := newLogger(cfg.logging)
 	log.Info("starting service with", "env", env)
-	log.Info("loaded app config", "grpc_cfg", cfg.grpc, "http_cfg", cfg.http, "logging_cfg", cfg.logging)
+	log.Info(
+		"loaded app config",
+		"grpc_cfg", cfg.grpc,
+		"http_cfg", cfg.http,
+		"logging_cfg", cfg.logging,
+		"swagger-ui", cfg.swaggerUI,
+	)
 	cfg.logger = log
 
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
@@ -86,12 +99,18 @@ func new() *App {
 		httpServer: &http.Server{
 			Addr: fmt.Sprintf(":%d", cfg.http.Port),
 		},
+		healthCheckFunc: func() bool {
+			return true
+		},
+		livenessCheckFunc: func() bool {
+			return true
+		},
 	}
 }
 
 // Run запускает приложение. Вызов функции блокируется до получения сигнала от OS о завершении приложения.
 //
-// Для запуска необходимо выставить переменную окружения APP_ENV, которая определяет окружение приложения. Возможные значения: (dev, testing, prod).
+// Для запуска необходимо выставить переменную окружения APP_ENV, которая определяет окружение приложения. Возможные значения: (dev, tests, testing, prod).
 //
 // Также необходимо указать переменную окружения CONFIGS_PATH, которая указывает путь к директории с конфигурационными файлами.
 func Run(setupFunc func(ctx context.Context, app *App) error) {
@@ -135,6 +154,14 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 	a.shutDown()
 }
 
+func (a *App) SetHealthCheck(f func() bool) {
+	a.healthCheckFunc = f
+}
+
+func (a *App) SetLivenessCheck(f func() bool) {
+	a.livenessCheckFunc = f
+}
+
 // AddCloser регистрирует функцию закрытия ресурса, которая будет вызвана
 // при завершении работы приложения. Все добавленные таким образом функции
 // вызываются в обратном порядке (первой вызывается последняя добавленная)
@@ -152,23 +179,23 @@ func (a *App) AddBackgroundProcess(processor BackgroundProcess) {
 
 // RegisterGRPCService регистрирует gRPC-сервис в приложении.
 func (a *App) RegisterGRPCService(service grpcService) {
-	t := reflect.TypeOf(service)
-	if t.Kind() == reflect.Ptr {
-		t = t.Elem()
-	}
-	serviceName := t.Name()
-	a.Log.Info("grpc service registered", "service", serviceName)
+	a.Log.Info("grpc service registered", "service", a.serviceName(service))
 	service.RegisterToServer(a.grpcServer)
 }
 
 func (a *App) RegisterGatewayHandler(
-	f func(ctx context.Context, mux *runtime.ServeMux, endpoint string, opts []grpc.DialOption) error,
+	service grpcGatewayService,
 ) error {
-	err := f(a.backgroundCtx, a.grpcMux, fmt.Sprintf("localhost:%d", a.Config.grpc.Port), []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())})
+	err := service.RegisterToGateway(
+		a.backgroundCtx,
+		a.grpcMux,
+		fmt.Sprintf("localhost:%d", a.Config.grpc.Port),
+		[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
+	)
 	if err != nil {
-		return errors.Wrap(err, "failed to register gateway handler")
+		return errors.WrapFailf(err, "register gateway handler %v", a.serviceName(service))
 	}
-	a.Log.Info("gateway handler registered successfully")
+	a.Log.Info("gateway handler registered", "service", a.serviceName(service))
 
 	return nil
 }
@@ -178,13 +205,13 @@ func (a *App) initGRPCServer() {
 		a.Log.Info("starting listen on", "port", a.Config.grpc.Port)
 		listener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.Config.grpc.Port))
 		if err != nil {
-			return errors.Wrap(err, "couldn't start grpc server listener")
+			return errors.WrapFail(err, "start grpc server listener")
 		}
 		a.Log.Info("starting grpc server on", "port", a.Config.grpc.Port)
 
 		err = a.grpcServer.Serve(listener)
 		if err != nil {
-			return errors.Wrap(err, "failed grpc serve")
+			return errors.WrapFail(err, "serve grpc")
 		}
 
 		return nil
@@ -192,12 +219,36 @@ func (a *App) initGRPCServer() {
 }
 
 func (a *App) initHTTPServer(grpcMux *runtime.ServeMux) {
+	mux := http.NewServeMux()
 
-	a.httpServer.Handler = grpcMux
+	if a.Config.swaggerUI.Enabled {
+		swaggerUIDir := http.Dir(a.Config.swaggerUI.Path)
+		mux.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServer(swaggerUIDir)))
+	}
+
+	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {
+		if !a.healthCheckFunc() {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	})
+
+	mux.HandleFunc("/liveliness", func(w http.ResponseWriter, _ *http.Request) {
+		if !a.livenessCheckFunc() {
+			w.WriteHeader(http.StatusServiceUnavailable)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+	})
+
+	mux.Handle("/", grpcMux)
+
+	a.httpServer.Handler = mux
 	a.AddBackgroundProcess(func(ctx context.Context) error {
 		a.Log.Info("starting http server on", "address", a.httpServer.Addr)
 		if err := a.httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			return errors.Wrap(err, "failed http serve")
+			return errors.WrapFail(err, "serve http")
 		}
 
 		return nil
@@ -246,4 +297,12 @@ func (a *App) shutDown() {
 	a.closeResources()
 
 	a.Log.Info("app shut down")
+}
+
+func (a *App) serviceName(service any) string {
+	t := reflect.TypeOf(service)
+	if t.Kind() == reflect.Ptr {
+		t = t.Elem()
+	}
+	return t.Name()
 }

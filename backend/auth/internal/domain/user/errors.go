@@ -1,6 +1,16 @@
 package user
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
-var ErrNotFound = errors.New("user not found")
+type NotFoundError struct {
+	Details string
+}
+
+func (e NotFoundError) Error() string {
+	return fmt.Sprintf("user not found with %s", e.Details)
+}
+
 var ErrAlreadyExists = errors.New("user already exists")
