@@ -11,7 +11,7 @@ func (s *PgStorageMatching) FetchMatches(ctx context.Context, userID int64, limi
 	matchSQL := `
 		SELECT *
 		FROM Matches
-		WHERE main_user_id = $1 AND approved = $2
+		WHERE (main_user_id = $1 OR chosen_user_id = $1) AND approved = $2
 		LIMIT $3 OFFSET $4
 	`
 
@@ -19,7 +19,7 @@ func (s *PgStorageMatching) FetchMatches(ctx context.Context, userID int64, limi
 
 	var matches []*matching.Match
 
-	err := pgxscan.Get(
+	err := pgxscan.Select(
 		ctx,
 		tx,
 		&matches,

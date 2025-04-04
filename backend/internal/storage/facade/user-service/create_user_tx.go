@@ -16,13 +16,13 @@ func (f *StorageFacadeUser) CreateUserTx(ctx context.Context, newUser *user.User
 			return fmt.Errorf("failed to add user: %w", err)
 		}
 
-		for _, photo := range newUser.Photos {
-			if err = f.storage.AddPhoto(ctxTx, photo); err != nil {
+		for _, photo := range createdUser.Photos {
+			if err = f.storage.AddPhoto(ctxTx, photo, createdUser.ID); err != nil {
 				return fmt.Errorf("failed to add photo: %w", err)
 			}
 		}
 
-		if err = f.storage.AddInterests(ctxTx, newUser.ID, newUser.Interest); err != nil {
+		if err = f.storage.AddInterests(ctxTx, createdUser.ID, createdUser.Interest); err != nil {
 			return fmt.Errorf("failed to add interests: %w", err)
 		}
 

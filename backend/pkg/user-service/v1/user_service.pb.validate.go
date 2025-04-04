@@ -68,10 +68,10 @@ func (m *CreateUserV1Request) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetAge() <= 18 {
+	if m.GetAge() < 18 {
 		err := CreateUserV1RequestValidationError{
 			field:  "Age",
-			reason: "value must be greater than 18",
+			reason: "value must be greater than or equal to 18",
 		}
 		if !all {
 			return err
@@ -1609,8 +1609,6 @@ func (m *Photo) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for UserId
 
 	// no validation rules for OrderNumber
 

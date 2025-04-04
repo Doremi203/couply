@@ -6,10 +6,10 @@ import (
 	"github.com/Doremi203/Couply/backend/internal/domain/user"
 )
 
-func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo) error {
+func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, userID int64) error {
 	photoSQL := `
         UPDATE Photos 
-        SET url = $1, mime_type = $2, uploaded_at = $3
+        SET url = $1, mime_type = $2, updated_at = $3
         WHERE user_id = $4 AND order_number = $5
     `
 
@@ -18,8 +18,8 @@ func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo) erro
 		photoSQL,
 		photo.URL,
 		photo.MimeType,
-		photo.UploadedAt,
-		photo.UserID,
+		photo.UpdatedAt,
+		userID,
 		photo.OrderNumber,
 	)
 	if err != nil {

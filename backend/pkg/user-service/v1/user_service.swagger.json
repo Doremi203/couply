@@ -429,10 +429,6 @@
     "backendPhoto": {
       "type": "object",
       "properties": {
-        "userId": {
-          "type": "string",
-          "format": "int64"
-        },
         "orderNumber": {
           "type": "integer",
           "format": "int32"

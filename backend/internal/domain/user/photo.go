@@ -8,7 +8,6 @@ import (
 )
 
 type Photo struct {
-	UserID      int64     `db:"user_id"`
 	OrderNumber int32     `db:"order_number"`
 	URL         string    `db:"url"`
 	MimeType    string    `db:"mime_type"`
@@ -18,7 +17,6 @@ type Photo struct {
 
 func PhotoToPB(photo *Photo) *desc.Photo {
 	return &desc.Photo{
-		UserId:      photo.UserID,
 		OrderNumber: photo.OrderNumber,
 		Url:         photo.URL,
 		MimeType:    photo.MimeType,
@@ -29,7 +27,6 @@ func PhotoToPB(photo *Photo) *desc.Photo {
 
 func PBToPhoto(photo *desc.Photo) *Photo {
 	return &Photo{
-		UserID:      photo.UserId,
 		OrderNumber: photo.OrderNumber,
 		URL:         photo.Url,
 		MimeType:    photo.MimeType,

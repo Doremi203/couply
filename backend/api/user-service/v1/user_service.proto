@@ -110,7 +110,7 @@ message CreateUserV1Request {
     (google.api.field_behavior) = REQUIRED
   ];
   int32 age = 2 [
-    (validate.rules).int32.gt = 18,
+    (validate.rules).int32.gte = 18,
     (google.api.field_behavior) = REQUIRED
   ];
   Gender gender = 3 [
@@ -250,16 +250,15 @@ message User {
 }
 
 message Photo {
-  int64 user_id = 1;
-  int32 order_number = 2;
-  string url = 3 [
+  int32 order_number = 1;
+  string url = 2 [
     (google.api.field_behavior) = REQUIRED
   ];
-  string mime_type = 4 [
+  string mime_type = 3 [
     (google.api.field_behavior) = REQUIRED
   ];
-  google.protobuf.Timestamp uploaded_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp uploaded_at = 4;
+  google.protobuf.Timestamp updated_at = 5;
 }
 
 enum Gender {

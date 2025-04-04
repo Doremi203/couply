@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *Implementation) DeleteUser(ctx context.Context, in *desc.DeleteUserV1Request) (*desc.DeleteUserV1Response, error) {
+func (i *Implementation) DeleteUserV1(ctx context.Context, in *desc.DeleteUserV1Request) (*desc.DeleteUserV1Response, error) {
 	if err := in.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}

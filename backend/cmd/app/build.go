@@ -127,11 +127,18 @@ func setupHTTPServer(ctx context.Context, grpcHost string) *http.Server {
 
 	handlerWithCors := corsMiddleware(mux)
 
-	err := desc.RegisterUserServiceHandlerFromEndpoint(ctx, mux, grpcHost, []grpc.DialOption{
+	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	})
+	}
+
+	err := desc.RegisterUserServiceHandlerFromEndpoint(ctx, mux, grpcHost, opts)
 	if err != nil {
 		log.Fatalf("failed to register order service handler: %v", err)
+	}
+
+	err = matching_service_desc.RegisterMatchingServiceHandlerFromEndpoint(ctx, mux, grpcHost, opts)
+	if err != nil {
+		log.Fatalf("failed to register matching service handler: %v", err)
 	}
 
 	logger.Infof(ctx, "http server listening on: %v", httpHost)
@@ -146,8 +153,14 @@ func setupHTTPServer(ctx context.Context, grpcHost string) *http.Server {
 func setupAdminServer(ctx context.Context, adminHost string) *http.Server {
 	adminServer := chi.NewRouter()
 
-	adminServer.HandleFunc("/swagger.json", func(w http.ResponseWriter, _ *http.Request) {
+	adminServer.HandleFunc("/user-service/swagger.json", func(w http.ResponseWriter, _ *http.Request) {
 		b, _ := os.ReadFile("./pkg/user-service/v1/user_service.swagger.json")
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write(b)
+	})
+
+	adminServer.HandleFunc("/matching-service/swagger.json", func(w http.ResponseWriter, _ *http.Request) {
+		b, _ := os.ReadFile("./pkg/matching-service/v1/matching_service.swagger.json")
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write(b)
 	})

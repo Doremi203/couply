@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Doremi203/Couply/backend/internal/domain/user"
+	"time"
 )
 
 func (f *StorageFacadeUser) UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error) {
@@ -14,7 +15,8 @@ func (f *StorageFacadeUser) UpdateUserTx(ctx context.Context, user *user.User) (
 		}
 
 		for _, photo := range user.Photos {
-			if err = f.storage.UpdatePhoto(ctxTx, photo); err != nil {
+			photo.UpdatedAt = time.Now()
+			if err = f.storage.UpdatePhoto(ctxTx, photo, user.ID); err != nil {
 				return fmt.Errorf("failed to add new photo: %w", err)
 			}
 		}

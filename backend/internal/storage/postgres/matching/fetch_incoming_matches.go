@@ -19,7 +19,7 @@ func (s *PgStorageMatching) FetchIncomingMatches(ctx context.Context, userID int
 
 	var matches []*matching.Match
 
-	err := pgxscan.Get(
+	err := pgxscan.Select(
 		ctx,
 		tx,
 		&matches,

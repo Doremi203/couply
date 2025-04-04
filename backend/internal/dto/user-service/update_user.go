@@ -78,6 +78,7 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 
 func UpdateUserRequestToUser(req *UpdateUserV1Request) *user.User {
 	return user.NewUserBuilder().
+		SetID(req.ID).
 		SetName(req.Name).
 		SetAge(req.Age).
 		SetGender(req.Gender).

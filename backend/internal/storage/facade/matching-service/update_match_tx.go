@@ -6,7 +6,7 @@ import (
 )
 
 func (f *StorageFacadeMatching) UpdateMatchTx(ctx context.Context, match *matching.Match) (*matching.Match, error) {
-	err := f.txManager.RunReadCommitted(ctx, func(ctx context.Context) error {
+	err := f.txManager.RunRepeatableRead(ctx, func(ctx context.Context) error {
 		err := f.storage.UpdateMatch(ctx, match)
 		return err
 	})
