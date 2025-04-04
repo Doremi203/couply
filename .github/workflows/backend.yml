@@ -1,0 +1,22 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'backend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version: '1.23'
