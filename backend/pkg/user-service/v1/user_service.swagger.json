@@ -100,6 +100,45 @@
         ]
       }
     },
+    "/v1/FetchUserV1": {
+      "post": {
+        "summary": "Получение пользователя",
+        "description": "Принимает айди пользователя для получения его данных",
+        "operationId": "UserService_FetchUserV1",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/backendFetchUserV1Response"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/backendFetchUserV1Request"
+            }
+          }
+        ],
+        "tags": [
+          "UserService"
+        ],
+        "security": [
+          {
+            "api-token": []
+          }
+        ]
+      }
+    },
     "/v1/UpdateUserV1": {
       "post": {
         "summary": "Обновление пользователя",
@@ -276,6 +315,23 @@
         "EDUCATION_PHD"
       ],
       "default": "EDUCATION_UNSPECIFIED"
+    },
+    "backendFetchUserV1Request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "backendFetchUserV1Response": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/backendUser"
+        }
+      }
     },
     "backendGastronomy": {
       "type": "string",

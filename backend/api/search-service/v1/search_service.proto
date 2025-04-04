@@ -32,3 +32,23 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
   }
 };
+
+service SearchingService {
+  rpc CreateFilterV1 (CreateFilterV1Request) returns (CreateFilterV1Response) {
+    option (google.api.http) = {
+      post: "/v1/CreateFilterV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Создание фильтра";
+      description: "Принимает важные поля для создания фильтра";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+}
+

@@ -22,6 +22,7 @@ const (
 	UserService_CreateUserV1_FullMethodName = "/backend.UserService/CreateUserV1"
 	UserService_UpdateUserV1_FullMethodName = "/backend.UserService/UpdateUserV1"
 	UserService_DeleteUserV1_FullMethodName = "/backend.UserService/DeleteUserV1"
+	UserService_FetchUserV1_FullMethodName  = "/backend.UserService/FetchUserV1"
 )
 
 // UserServiceClient is the client API for UserService service.
@@ -31,6 +32,7 @@ type UserServiceClient interface {
 	CreateUserV1(ctx context.Context, in *CreateUserV1Request, opts ...grpc.CallOption) (*CreateUserV1Response, error)
 	UpdateUserV1(ctx context.Context, in *UpdateUserV1Request, opts ...grpc.CallOption) (*UpdateUserV1Response, error)
 	DeleteUserV1(ctx context.Context, in *DeleteUserV1Request, opts ...grpc.CallOption) (*DeleteUserV1Response, error)
+	FetchUserV1(ctx context.Context, in *FetchUserV1Request, opts ...grpc.CallOption) (*FetchUserV1Response, error)
 }
 
 type userServiceClient struct {
@@ -71,6 +73,16 @@ func (c *userServiceClient) DeleteUserV1(ctx context.Context, in *DeleteUserV1Re
 	return out, nil
 }
 
+func (c *userServiceClient) FetchUserV1(ctx context.Context, in *FetchUserV1Request, opts ...grpc.CallOption) (*FetchUserV1Response, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(FetchUserV1Response)
+	err := c.cc.Invoke(ctx, UserService_FetchUserV1_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServiceServer is the server API for UserService service.
 // All implementations must embed UnimplementedUserServiceServer
 // for forward compatibility.
@@ -78,6 +90,7 @@ type UserServiceServer interface {
 	CreateUserV1(context.Context, *CreateUserV1Request) (*CreateUserV1Response, error)
 	UpdateUserV1(context.Context, *UpdateUserV1Request) (*UpdateUserV1Response, error)
 	DeleteUserV1(context.Context, *DeleteUserV1Request) (*DeleteUserV1Response, error)
+	FetchUserV1(context.Context, *FetchUserV1Request) (*FetchUserV1Response, error)
 	mustEmbedUnimplementedUserServiceServer()
 }
 
@@ -96,6 +109,9 @@ func (UnimplementedUserServiceServer) UpdateUserV1(context.Context, *UpdateUserV
 }
 func (UnimplementedUserServiceServer) DeleteUserV1(context.Context, *DeleteUserV1Request) (*DeleteUserV1Response, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserV1 not implemented")
+}
+func (UnimplementedUserServiceServer) FetchUserV1(context.Context, *FetchUserV1Request) (*FetchUserV1Response, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FetchUserV1 not implemented")
 }
 func (UnimplementedUserServiceServer) mustEmbedUnimplementedUserServiceServer() {}
 func (UnimplementedUserServiceServer) testEmbeddedByValue()                     {}
@@ -172,6 +188,24 @@ func _UserService_DeleteUserV1_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserService_FetchUserV1_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FetchUserV1Request)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServiceServer).FetchUserV1(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserService_FetchUserV1_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServiceServer).FetchUserV1(ctx, req.(*FetchUserV1Request))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserService_ServiceDesc is the grpc.ServiceDesc for UserService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +224,10 @@ var UserService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUserV1",
 			Handler:    _UserService_DeleteUserV1_Handler,
+		},
+		{
+			MethodName: "FetchUserV1",
+			Handler:    _UserService_FetchUserV1_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Doremi203/Couply/backend/internal/domain/matching"
-	"github.com/Doremi203/Couply/backend/internal/storage/postgres/user"
+	"github.com/georgysavva/scany/pgxscan"
 )
 
 func (s *PgStorageMatching) FetchIncomingMatches(ctx context.Context, userID int64, limit, offset int32) ([]*matching.Match, error) {

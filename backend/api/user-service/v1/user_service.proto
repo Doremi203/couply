@@ -85,6 +85,23 @@ service UserService {
       }
     };
   }
+
+  rpc FetchUserV1 (FetchUserV1Request) returns (FetchUserV1Response) {
+    option (google.api.http) = {
+      post: "/v1/FetchUserV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение пользователя";
+      description: "Принимает айди пользователя для получения его данных";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateUserV1Request {
@@ -200,6 +217,14 @@ message DeleteUserV1Request {
 
 message DeleteUserV1Response {
 
+}
+
+message FetchUserV1Request {
+  int64 id = 1;
+}
+
+message FetchUserV1Response {
+  User user = 1;
 }
 
 message User {

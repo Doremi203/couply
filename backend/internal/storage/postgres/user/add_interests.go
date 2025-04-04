@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Doremi203/Couply/backend/internal/domain/user/interest"
+	"strconv"
 )
 
 func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
@@ -12,27 +13,25 @@ func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interest
 		VALUES ($1, $2, $3)
 	`
 
-	interestMap := map[string][]int{
-		"social":           toIntSlice(interests.Social),
-		"sport":            toIntSlice(interests.Sport),
-		"self_development": toIntSlice(interests.SelfDevelopment),
-		"art":              toIntSlice(interests.Art),
-		"hobby":            toIntSlice(interests.Hobby),
-		"gastronomy":       toIntSlice(interests.Gastronomy),
+	interestMap := map[string]string{
+		"social":           toString(interests.Social),
+		"sport":            toString(interests.Sport),
+		"self_development": toString(interests.SelfDevelopment),
+		"art":              toString(interests.Art),
+		"hobby":            toString(interests.Hobby),
+		"gastronomy":       toString(interests.Gastronomy),
 	}
 
-	for interestType, values := range interestMap {
-		for _, value := range values {
-			_, err := s.txManager.GetQueryEngine(ctx).Exec(
-				ctx,
-				interestSQL,
-				userID,
-				interestType,
-				value,
-			)
-			if err != nil {
-				return fmt.Errorf("AddInterests: %w", err)
-			}
+	for interestType, value := range interestMap {
+		_, err := s.txManager.GetQueryEngine(ctx).Exec(
+			ctx,
+			interestSQL,
+			userID,
+			interestType,
+			value,
+		)
+		if err != nil {
+			return fmt.Errorf("AddInterests: %w", err)
 		}
 	}
 
@@ -40,10 +39,10 @@ func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interest
 }
 
 // вспомогательная функция для преобразования срезов enum в срезы int
-func toIntSlice[T ~int](slice []T) []int {
-	result := make([]int, len(slice))
-	for i, v := range slice {
-		result[i] = int(v)
+func toString[T ~int](slice []T) string {
+	result := ""
+	for _, v := range slice {
+		result += strconv.Itoa(int(v))
 	}
 	return result
 }
