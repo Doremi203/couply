@@ -1107,22 +1107,22 @@ var _ interface {
 	ErrorName() string
 } = DeleteUserV1ResponseValidationError{}
 
-// Validate checks the field values on FetchUserV1Request with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *FetchUserV1Request) Validate() error {
+// Validate checks the field values on GetUserV1Request with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetUserV1Request) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on FetchUserV1Request with the rules
+// ValidateAll checks the field values on GetUserV1Request with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// FetchUserV1RequestMultiError, or nil if none found.
-func (m *FetchUserV1Request) ValidateAll() error {
+// GetUserV1RequestMultiError, or nil if none found.
+func (m *GetUserV1Request) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *FetchUserV1Request) validate(all bool) error {
+func (m *GetUserV1Request) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1132,19 +1132,19 @@ func (m *FetchUserV1Request) validate(all bool) error {
 	// no validation rules for Id
 
 	if len(errors) > 0 {
-		return FetchUserV1RequestMultiError(errors)
+		return GetUserV1RequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// FetchUserV1RequestMultiError is an error wrapping multiple validation errors
-// returned by FetchUserV1Request.ValidateAll() if the designated constraints
+// GetUserV1RequestMultiError is an error wrapping multiple validation errors
+// returned by GetUserV1Request.ValidateAll() if the designated constraints
 // aren't met.
-type FetchUserV1RequestMultiError []error
+type GetUserV1RequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m FetchUserV1RequestMultiError) Error() string {
+func (m GetUserV1RequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1153,11 +1153,11 @@ func (m FetchUserV1RequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m FetchUserV1RequestMultiError) AllErrors() []error { return m }
+func (m GetUserV1RequestMultiError) AllErrors() []error { return m }
 
-// FetchUserV1RequestValidationError is the validation error returned by
-// FetchUserV1Request.Validate if the designated constraints aren't met.
-type FetchUserV1RequestValidationError struct {
+// GetUserV1RequestValidationError is the validation error returned by
+// GetUserV1Request.Validate if the designated constraints aren't met.
+type GetUserV1RequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1165,24 +1165,22 @@ type FetchUserV1RequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e FetchUserV1RequestValidationError) Field() string { return e.field }
+func (e GetUserV1RequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e FetchUserV1RequestValidationError) Reason() string { return e.reason }
+func (e GetUserV1RequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e FetchUserV1RequestValidationError) Cause() error { return e.cause }
+func (e GetUserV1RequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e FetchUserV1RequestValidationError) Key() bool { return e.key }
+func (e GetUserV1RequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e FetchUserV1RequestValidationError) ErrorName() string {
-	return "FetchUserV1RequestValidationError"
-}
+func (e GetUserV1RequestValidationError) ErrorName() string { return "GetUserV1RequestValidationError" }
 
 // Error satisfies the builtin error interface
-func (e FetchUserV1RequestValidationError) Error() string {
+func (e GetUserV1RequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1194,14 +1192,14 @@ func (e FetchUserV1RequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sFetchUserV1Request.%s: %s%s",
+		"invalid %sGetUserV1Request.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = FetchUserV1RequestValidationError{}
+var _ error = GetUserV1RequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -1209,24 +1207,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = FetchUserV1RequestValidationError{}
+} = GetUserV1RequestValidationError{}
 
-// Validate checks the field values on FetchUserV1Response with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *FetchUserV1Response) Validate() error {
+// Validate checks the field values on GetUserV1Response with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetUserV1Response) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on FetchUserV1Response with the rules
+// ValidateAll checks the field values on GetUserV1Response with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// FetchUserV1ResponseMultiError, or nil if none found.
-func (m *FetchUserV1Response) ValidateAll() error {
+// GetUserV1ResponseMultiError, or nil if none found.
+func (m *GetUserV1Response) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *FetchUserV1Response) validate(all bool) error {
+func (m *GetUserV1Response) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -1237,7 +1235,7 @@ func (m *FetchUserV1Response) validate(all bool) error {
 		switch v := interface{}(m.GetUser()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, FetchUserV1ResponseValidationError{
+				errors = append(errors, GetUserV1ResponseValidationError{
 					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1245,7 +1243,7 @@ func (m *FetchUserV1Response) validate(all bool) error {
 			}
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				errors = append(errors, FetchUserV1ResponseValidationError{
+				errors = append(errors, GetUserV1ResponseValidationError{
 					field:  "User",
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -1254,7 +1252,7 @@ func (m *FetchUserV1Response) validate(all bool) error {
 		}
 	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
-			return FetchUserV1ResponseValidationError{
+			return GetUserV1ResponseValidationError{
 				field:  "User",
 				reason: "embedded message failed validation",
 				cause:  err,
@@ -1263,19 +1261,19 @@ func (m *FetchUserV1Response) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return FetchUserV1ResponseMultiError(errors)
+		return GetUserV1ResponseMultiError(errors)
 	}
 
 	return nil
 }
 
-// FetchUserV1ResponseMultiError is an error wrapping multiple validation
-// errors returned by FetchUserV1Response.ValidateAll() if the designated
-// constraints aren't met.
-type FetchUserV1ResponseMultiError []error
+// GetUserV1ResponseMultiError is an error wrapping multiple validation errors
+// returned by GetUserV1Response.ValidateAll() if the designated constraints
+// aren't met.
+type GetUserV1ResponseMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m FetchUserV1ResponseMultiError) Error() string {
+func (m GetUserV1ResponseMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -1284,11 +1282,11 @@ func (m FetchUserV1ResponseMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m FetchUserV1ResponseMultiError) AllErrors() []error { return m }
+func (m GetUserV1ResponseMultiError) AllErrors() []error { return m }
 
-// FetchUserV1ResponseValidationError is the validation error returned by
-// FetchUserV1Response.Validate if the designated constraints aren't met.
-type FetchUserV1ResponseValidationError struct {
+// GetUserV1ResponseValidationError is the validation error returned by
+// GetUserV1Response.Validate if the designated constraints aren't met.
+type GetUserV1ResponseValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -1296,24 +1294,24 @@ type FetchUserV1ResponseValidationError struct {
 }
 
 // Field function returns field value.
-func (e FetchUserV1ResponseValidationError) Field() string { return e.field }
+func (e GetUserV1ResponseValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e FetchUserV1ResponseValidationError) Reason() string { return e.reason }
+func (e GetUserV1ResponseValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e FetchUserV1ResponseValidationError) Cause() error { return e.cause }
+func (e GetUserV1ResponseValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e FetchUserV1ResponseValidationError) Key() bool { return e.key }
+func (e GetUserV1ResponseValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e FetchUserV1ResponseValidationError) ErrorName() string {
-	return "FetchUserV1ResponseValidationError"
+func (e GetUserV1ResponseValidationError) ErrorName() string {
+	return "GetUserV1ResponseValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e FetchUserV1ResponseValidationError) Error() string {
+func (e GetUserV1ResponseValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -1325,14 +1323,14 @@ func (e FetchUserV1ResponseValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sFetchUserV1Response.%s: %s%s",
+		"invalid %sGetUserV1Response.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = FetchUserV1ResponseValidationError{}
+var _ error = GetUserV1ResponseValidationError{}
 
 var _ interface {
 	Field() string
@@ -1340,7 +1338,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = FetchUserV1ResponseValidationError{}
+} = GetUserV1ResponseValidationError{}
 
 // Validate checks the field values on User with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error

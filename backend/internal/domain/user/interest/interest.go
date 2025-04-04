@@ -11,6 +11,17 @@ type Interest struct {
 	Gastronomy      []Gastronomy
 }
 
+func NewInterest() *Interest {
+	return &Interest{
+		Sport:           make([]Sport, 0),
+		SelfDevelopment: make([]SelfDevelopment, 0),
+		Art:             make([]Art, 0),
+		Social:          make([]Social, 0),
+		Hobby:           make([]Hobby, 0),
+		Gastronomy:      make([]Gastronomy, 0),
+	}
+}
+
 func InterestToPB(interest *Interest) *desc.Interest {
 	return &desc.Interest{
 		Sport:           SportSliceToPB(interest.Sport),

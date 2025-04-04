@@ -86,9 +86,9 @@ service UserService {
     };
   }
 
-  rpc FetchUserV1 (FetchUserV1Request) returns (FetchUserV1Response) {
+  rpc GetUserV1 (GetUserV1Request) returns (GetUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/FetchUserV1"
+      post: "/v1/GetUserV1"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -219,11 +219,11 @@ message DeleteUserV1Response {
 
 }
 
-message FetchUserV1Request {
+message GetUserV1Request {
   int64 id = 1;
 }
 
-message FetchUserV1Response {
+message GetUserV1Response {
   User user = 1;
 }
 

@@ -100,16 +100,16 @@
         ]
       }
     },
-    "/v1/FetchUserV1": {
+    "/v1/GetUserV1": {
       "post": {
         "summary": "Получение пользователя",
         "description": "Принимает айди пользователя для получения его данных",
-        "operationId": "UserService_FetchUserV1",
+        "operationId": "UserService_GetUserV1",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/backendFetchUserV1Response"
+              "$ref": "#/definitions/backendGetUserV1Response"
             }
           },
           "default": {
@@ -125,7 +125,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/backendFetchUserV1Request"
+              "$ref": "#/definitions/backendGetUserV1Request"
             }
           }
         ],
@@ -316,23 +316,6 @@
       ],
       "default": "EDUCATION_UNSPECIFIED"
     },
-    "backendFetchUserV1Request": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "int64"
-        }
-      }
-    },
-    "backendFetchUserV1Response": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/backendUser"
-        }
-      }
-    },
     "backendGastronomy": {
       "type": "string",
       "enum": [
@@ -356,6 +339,23 @@
         "GENDER_FEMALE"
       ],
       "default": "GENDER_UNSPECIFIED"
+    },
+    "backendGetUserV1Request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "backendGetUserV1Response": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/backendUser"
+        }
+      }
     },
     "backendGoal": {
       "type": "string",
