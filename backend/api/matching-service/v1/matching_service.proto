@@ -1,0 +1,240 @@
+syntax = "proto3";
+
+package backend;
+
+option go_package = "github.com/Doremi203/Couply/backend/pkg/matching-service;matching_service";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Приложение для знакомств. Сервис мэтчей";
+    version: "1.0.0";
+    description: "Сервис мэтчей для приложения, которое позволяет людям искать людей для знакомств";
+  };
+  host: "127.0.0.1:7001";
+  schemes: HTTP;
+  schemes: HTTPS;
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "api-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_API_KEY;
+        name: "x-api-token";
+        description: "Токен авторизации";
+      }
+    }
+  }
+};
+
+service MatchingService {
+  rpc CreateMatchV1 (CreateMatchV1Request) returns (CreateMatchV1Response) {
+    option (google.api.http) = {
+      post: "/v1/CreateMatchV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Создание мэтча";
+      description: "Принимает важные поля для создания мэтча";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+
+  rpc UpdateMatchV1 (UpdateMatchV1Request) returns (UpdateMatchV1Response) {
+    option (google.api.http) = {
+      post: "/v1/UpdateMatchV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Обновление мэтча";
+      description: "Принимает важные поля для обновления мэтча";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+
+  rpc DeleteMatchV1 (DeleteMatchV1Request) returns (DeleteMatchV1Response) {
+    option (google.api.http) = {
+      post: "/v1/DeleteMatchV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Удаление мэтча";
+      description: "Принимает важные поля для удаления мэтча";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+
+  rpc FetchMatchesV1 (FetchMatchesV1Request) returns (FetchMatchesV1Response) {
+    option (google.api.http) = {
+      post: "/v1/FetchMatchesV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Синхронизация мэтчей";
+      description: "Принимает важные поля для синхронизации мэтчей";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+
+  rpc FetchIncomingMatchesV1 (FetchIncomingMatchesV1Request) returns (FetchIncomingMatchesV1Response) {
+    option (google.api.http) = {
+      post: "/v1/FetchIncomingMatchesV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Синхронизация входящих мэтчей";
+      description: "Принимает важные поля для синхронизации входящих мэтчей";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+
+  rpc FetchOutgoingMatchesV1 (FetchOutgoingMatchesV1Request) returns (FetchOutgoingMatchesV1Response) {
+    option (google.api.http) = {
+      post: "/v1/FetchOutgoingMatchesV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Синхронизация исходящих мэтчей";
+      description: "Принимает важные поля для синхронизации исходящих мэтчей";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+}
+
+message CreateMatchV1Request {
+  int64 main_user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int64 chosen_user_id = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message CreateMatchV1Response {
+  Match match = 1;
+}
+
+message UpdateMatchV1Request {
+  int64 main_user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int64 chosen_user_id = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  bool approved = 3 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message UpdateMatchV1Response {
+  Match match = 1;
+}
+
+message DeleteMatchV1Request {
+  int64 main_user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int64 chosen_user_id = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message DeleteMatchV1Response {
+
+}
+
+message FetchMatchesV1Request {
+  int64 main_user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int32 limit = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32.gt = 0
+  ];
+  int32 offset = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32.gte = 0
+  ];
+}
+
+message FetchMatchesV1Response {
+  repeated Match match = 1;
+}
+
+message FetchIncomingMatchesV1Request {
+  int64 chosen_user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int32 limit = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32.gt = 0
+  ];
+  int32 offset = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32.gte = 0
+  ];
+}
+
+message FetchIncomingMatchesV1Response {
+  repeated Match match = 1;
+}
+
+message FetchOutgoingMatchesV1Request {
+  int64 main_user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int32 limit = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32.gt = 0
+  ];
+  int32 offset = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32.gte = 0
+  ];
+}
+
+message FetchOutgoingMatchesV1Response {
+  repeated Match match = 1;
+}
+
+message Match {
+  int64 main_user_id = 1;
+  int64 chosen_user_id = 2;
+  bool approved = 3;
+}
