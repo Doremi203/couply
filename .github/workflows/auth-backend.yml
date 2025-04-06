@@ -65,7 +65,7 @@ jobs:
           working-directory: backend/auth
 
       - name: Run tests with coverage
-        run: MIGRATIONS_PATH=$(PWD)/migrations go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+        run: MIGRATIONS_PATH=${{ github.workspace }}/backend/auth/migrations go test -race -coverprofile=coverage.txt -covermode=atomic ./...
 
       - name: Download artifact - main test coverage
         id: download-main-breakdown
