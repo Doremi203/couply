@@ -24,7 +24,16 @@ deps/linters:
 	sudo curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.64.7
 
 common/pull/proto:
-	buf export buf.build/googleapis/googleapis --output common/proto/
+	$(call CLONE_PROTO_REPO, https://github.com/googleapis/googleapis, google/api)
+
+define CLONE_PROTO_REPO
+	@echo "Клонируем $(1)"
+	git clone --filter=blob:none --no-checkout $(1) common/proto
+	cd common/proto && \
+		git sparse-checkout init --no-cone && \
+		git sparse-checkout set $(2)/*.proto && \
+		git checkout
+endef
 
 generate: auth/generate
 
