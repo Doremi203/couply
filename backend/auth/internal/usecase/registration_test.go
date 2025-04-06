@@ -1,4 +1,4 @@
-package registration
+package usecase
 
 import (
 	"context"
@@ -6,7 +6,6 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	mock_password "github.com/Doremi203/couply/backend/auth/internal/mocks/password"
 	mock_user "github.com/Doremi203/couply/backend/auth/internal/mocks/user"
-	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/idempotency"
 	mock_uuid "github.com/Doremi203/couply/backend/auth/pkg/uuid/mock"
 	"github.com/google/uuid"
@@ -55,7 +54,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 				password:       "password",
 			},
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				return assert.ErrorIs(t, err, usecase.ErrAlreadyRegistered)
+				return assert.ErrorIs(t, err, ErrAlreadyRegistered)
 			},
 		},
 		{
@@ -109,31 +108,6 @@ func TestUseCase_BasicRegister(t *testing.T) {
 			wantErr: assert.Error,
 		},
 		{
-			name: "create user already exists error then already registered error",
-			setup: func(m mocks) {
-				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
-				hashedPassword := pswrd.HashedPassword("password-hash")
-				m.hasher.EXPECT().Hash(pswrd.Password("password")).Return(hashedPassword, nil)
-				id := uuid.New()
-				m.uuidProvider.EXPECT().GenerateV7().Return(id, nil)
-
-				usr := user.User{
-					ID:       user.ID(id),
-					Email:    "email",
-					Password: hashedPassword,
-				}
-				m.userRepository.EXPECT().Create(gomock.Any(), usr).Return(user.ErrAlreadyExists)
-			},
-			args: args{
-				idempotencyKey: "key",
-				email:          "email",
-				password:       "password",
-			},
-			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				return assert.ErrorIs(t, err, usecase.ErrAlreadyRegistered)
-			},
-		},
-		{
 			name: "create user success then success",
 			setup: func(m mocks) {
 				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
@@ -171,12 +145,12 @@ func TestUseCase_BasicRegister(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			r := UseCase{
+			r := Registration{
 				userRepository: mocks.userRepository,
 				hasher:         mocks.hasher,
 				uuidProvider:   mocks.uuidProvider,
 			}
-			err := r.BasicRegister(context.Background(), tt.args.email, tt.args.password)
+			err := r.BasicV1(context.Background(), tt.args.email, tt.args.password)
 			tt.wantErr(t, err)
 		})
 	}

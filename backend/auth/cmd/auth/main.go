@@ -5,19 +5,32 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
 	"github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
-	registrationUC "github.com/Doremi203/couply/backend/auth/internal/usecase/registration"
+	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/argon"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"strings"
 )
 
 func main() {
 	webapp.Run(func(ctx context.Context, app *webapp.App) error {
-		dbConfig := postgres.Config{}
+		app.AddGatewayOptions(
+			runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
+				switch s = strings.ToLower(s); s {
+				case "idempotency-key":
+					return s, true
+				default:
+					return runtime.DefaultHeaderMatcher(s)
+				}
+			}),
+		)
 
+		dbConfig := postgres.Config{}
 		err := app.Config.ReadSection("database", &dbConfig)
 		if err != nil {
 			return err
@@ -27,10 +40,11 @@ func main() {
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")
 		}
+		app.AddCloser(dbClient.Close)
 
 		userRepo := userpostgres.NewRepo(dbClient)
 
-		registerWithCredentialsUsecase := registrationUC.NewUseCase(
+		registrationUseCase := usecase.NewRegistration(
 			userRepo,
 			pswrd.NewDefaultHasher(
 				salt.DefaultProvider{},
@@ -40,15 +54,14 @@ func main() {
 		)
 
 		registrationService := grpc.NewRegistrationService(
-			registerWithCredentialsUsecase,
+			registrationUseCase,
 			app.Log,
+			postgres.NewProvider(dbClient.Pool),
+			idempotencypostgres.NewRepo(dbClient),
 		)
 
-		app.RegisterGRPCService(registrationService)
-		err = app.RegisterGatewayHandler(registrationService)
-		if err != nil {
-			return err
-		}
+		app.RegisterGRPCServices(registrationService)
+		app.AddGatewayHandlers(registrationService)
 
 		return nil
 	})

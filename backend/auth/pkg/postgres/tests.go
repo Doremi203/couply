@@ -129,10 +129,11 @@ func (tester Tester) Run(
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
 
-		tx, err := tester.db.BeginTx(ctx, pgx.TxOptions{
+		options := pgx.TxOptions{
 			IsoLevel:   pgx.ReadCommitted,
 			AccessMode: pgx.ReadWrite,
-		})
+		}
+		tx, err := tester.db.BeginTx(ctx, options)
 		require.NoError(t, err)
 
 		defer func() {
@@ -140,7 +141,7 @@ func (tester Tester) Run(
 			require.NoError(t, rbErr)
 		}()
 
-		ctx = ContextWithTx(ctx, tx)
+		ctx = ContextWithTx(ctx, tx, options)
 		for _, fixture := range fixtures {
 			_, err := tester.db.Exec(ctx, fixture)
 			require.NoError(t, err)

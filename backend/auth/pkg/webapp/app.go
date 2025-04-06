@@ -50,9 +50,10 @@ type App struct {
 	healthCheckFunc   func() bool
 	livenessCheckFunc func() bool
 
-	grpcServer *grpc.Server
-	grpcMux    *runtime.ServeMux
-	httpServer *http.Server
+	grpcServer      *grpc.Server
+	gatewayOptions  []runtime.ServeMuxOption
+	gatewayHandlers []grpcGatewayService
+	httpServer      *http.Server
 
 	backgroundProcesses  []BackgroundProcess
 	backgroundCtx        context.Context
@@ -62,7 +63,7 @@ type App struct {
 	Config Config
 }
 
-func new() *App {
+func initApp() *App {
 	envStr := os.Getenv("APP_ENV")
 	env := parseEnvironment(envStr)
 	fmt.Println("APP_ENV", env)
@@ -95,7 +96,6 @@ func new() *App {
 		backgroundCtx:        backgroundCtx,
 		backgroundCancelFunc: backgroundCancelFunc,
 		grpcServer:           grpcServer,
-		grpcMux:              runtime.NewServeMux(),
 		httpServer: &http.Server{
 			Addr: fmt.Sprintf(":%d", cfg.http.Port),
 		},
@@ -117,7 +117,7 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 
-	a := new()
+	a := initApp()
 
 	defer func() {
 		if err := recover(); err != nil {
@@ -132,8 +132,18 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 		os.Exit(1)
 	}
 
+	grpcMux := runtime.NewServeMux(a.gatewayOptions...)
+
+	for _, service := range a.gatewayHandlers {
+		err := a.registerGatewayHandler(grpcMux, service)
+		if err != nil {
+			a.Log.Error("app register grpc gateway handler failed", "error", err)
+			os.Exit(1)
+		}
+	}
+
 	a.initGRPCServer()
-	a.initHTTPServer(a.grpcMux)
+	a.initHTTPServer(grpcMux)
 
 	a.startBackgroundProcesses()
 
@@ -152,6 +162,10 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 	}
 
 	a.shutDown()
+}
+
+func (a *App) AddGatewayOptions(opts ...runtime.ServeMuxOption) {
+	a.gatewayOptions = append(a.gatewayOptions, opts...)
 }
 
 func (a *App) SetHealthCheck(f func() bool) {
@@ -177,18 +191,27 @@ func (a *App) AddBackgroundProcess(processor BackgroundProcess) {
 	a.backgroundProcesses = append(a.backgroundProcesses, processor)
 }
 
-// RegisterGRPCService регистрирует gRPC-сервис в приложении.
-func (a *App) RegisterGRPCService(service grpcService) {
-	a.Log.Info("grpc service registered", "service", a.serviceName(service))
-	service.RegisterToServer(a.grpcServer)
+// RegisterGRPCServices регистрирует gRPC-сервис в приложении.
+func (a *App) RegisterGRPCServices(services ...grpcService) {
+	for _, service := range services {
+		a.Log.Info("grpc service registered", "service", a.serviceName(service))
+		service.RegisterToServer(a.grpcServer)
+	}
 }
 
-func (a *App) RegisterGatewayHandler(
+func (a *App) AddGatewayHandlers(
+	services ...grpcGatewayService,
+) {
+	a.gatewayHandlers = append(a.gatewayHandlers, services...)
+}
+
+func (a *App) registerGatewayHandler(
+	grpcMux *runtime.ServeMux,
 	service grpcGatewayService,
 ) error {
 	err := service.RegisterToGateway(
 		a.backgroundCtx,
-		a.grpcMux,
+		grpcMux,
 		fmt.Sprintf("localhost:%d", a.Config.grpc.Port),
 		[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
 	)

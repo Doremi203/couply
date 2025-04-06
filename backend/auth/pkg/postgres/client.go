@@ -10,11 +10,16 @@ import (
 
 type txKey struct{}
 
-func ContextWithTx(ctx context.Context, tx pgx.Tx) context.Context {
-	return context.WithValue(ctx, txKey{}, tx)
+type txData struct {
+	Tx      pgx.Tx
+	Options pgx.TxOptions
 }
-func TxFromContext(ctx context.Context) (pgx.Tx, bool) {
-	tx, ok := ctx.Value(txKey{}).(pgx.Tx)
+
+func ContextWithTx(ctx context.Context, tx pgx.Tx, options pgx.TxOptions) context.Context {
+	return context.WithValue(ctx, txKey{}, txData{Tx: tx, Options: options})
+}
+func TxFromContext(ctx context.Context) (txData, bool) {
+	tx, ok := ctx.Value(txKey{}).(txData)
 	return tx, ok
 }
 
@@ -42,7 +47,7 @@ type client struct {
 func (c *client) Exec(ctx context.Context, query string, args ...any) (pgconn.CommandTag, error) {
 	tx, ok := TxFromContext(ctx)
 	if ok {
-		return tx.Exec(ctx, query, args...)
+		return tx.Tx.Exec(ctx, query, args...)
 	}
 
 	return c.Pool.Exec(ctx, query, args...)
@@ -51,7 +56,7 @@ func (c *client) Exec(ctx context.Context, query string, args ...any) (pgconn.Co
 func (c *client) Query(ctx context.Context, query string, args ...any) (pgx.Rows, error) {
 	tx, ok := TxFromContext(ctx)
 	if ok {
-		return tx.Query(ctx, query, args...)
+		return tx.Tx.Query(ctx, query, args...)
 	}
 
 	return c.Pool.Query(ctx, query, args...)
@@ -60,8 +65,13 @@ func (c *client) Query(ctx context.Context, query string, args ...any) (pgx.Rows
 func (c *client) QueryRow(ctx context.Context, query string, args ...any) pgx.Row {
 	tx, ok := TxFromContext(ctx)
 	if ok {
-		return tx.QueryRow(ctx, query, args...)
+		return tx.Tx.QueryRow(ctx, query, args...)
 	}
 
 	return c.Pool.QueryRow(ctx, query, args...)
+}
+
+func (c *client) Close() error {
+	c.Pool.Close()
+	return nil
 }

@@ -7,8 +7,10 @@ RUN SWAGGER_VERSION=$(curl -s https://api.github.com/repos/swagger-api/swagger-u
     mkdir swagger-ui && \
     tar -xzf swagger-ui.tar.gz -C swagger-ui --strip-components=2 swagger-ui-${SWAGGER_VERSION#v}/dist
 
-FROM golang:alpine AS build
+FROM golang:alpine AS delve
 RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+FROM golang:alpine AS build
 WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
@@ -23,4 +25,6 @@ COPY configs configs
 COPY --from=swagger-ui /swagger-ui swagger-ui
 COPY swagger/swagger-initializer.js swagger-ui/swagger-initializer.js
 COPY swagger/api swagger-ui/api
+
+COPY --from=delve /go/bin/dlv /usr/local/bin/dlv
 CMD ["dlv", "--listen=:40000", "--headless=true", "--api-version=2", "--accept-multiclient", "exec", "/app/app"]

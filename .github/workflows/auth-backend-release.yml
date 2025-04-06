@@ -43,7 +43,7 @@ jobs:
           working-directory: backend/auth
 
       - name: Run tests
-        run: go test -race ./...
+        run: MIGRATIONS_PATH=$(PWD)/migrations go test -race ./...
 
       - name: Deploy to docker
         run: docker-compose -f docker-compose.testing.yml up -d
