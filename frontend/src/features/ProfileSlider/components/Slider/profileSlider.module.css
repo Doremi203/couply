@@ -2,14 +2,14 @@
   width: 100%;
   max-width: 500px;
   margin: 0 auto;
-  margin-top: 20px;
-  padding: 0 10px;
+  margin-top: 1.25rem; /* 20px in rem */
+  padding: 0 0.625rem; /* 10px in rem */
   box-sizing: border-box;
 }
 
 .profileСard {
-  padding: 10px;
-  margin-bottom: 10px;
+  padding: 0.625rem; /* 10px in rem */
+  margin-bottom: 0.625rem; /* 10px in rem */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,42 +19,35 @@
 }
 
 .profileImage {
-  width: 350px;
-  height: 530px;
+  width: 100%;
+  max-width: 350px;
+  height: auto;
+  aspect-ratio: 2/3; /* Maintain aspect ratio instead of fixed height */
   object-fit: cover;
-  border-radius: 35px;
+  border-radius: 2.188rem; /* 35px in rem */
 }
 
 /* This section is now replaced by the updated .controls class below */
 
 .controls button {
-  /* margin: 5px; */
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 0.625rem 1.25rem; /* 10px 20px in rem */
+  font-size: 1rem;
   cursor: pointer;
 }
-
-/* .sliderLikeButton {
-  margin: 10px;
-}
-
-.sliderDislikeButton {
-  margin: 10px;
-} */
 
 .controls {
   display: flex;
   justify-content: space-around;
   width: 100%;
   max-width: 300px;
-  margin: -30px auto;
+  margin: -1.875rem auto 0; /* -30px auto 0 in rem */
   position: relative;
-
+  z-index: 10;
 }
 
 .likeButton {
-  width: 62px;
-  height: 62px;
+  width: 3.875rem; /* 62px in rem */
+  height: 3.875rem; /* 62px in rem */
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -62,8 +55,8 @@
 }
 
 .dislikeButton {
-  width: 62px;
-  height: 62px;
+  width: 3.875rem; /* 62px in rem */
+  height: 3.875rem; /* 62px in rem */
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -72,4 +65,33 @@
 
 .name {
   text-align: center;
+  font-size: 1.25rem;
+  margin-top: 0.625rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .profileImage {
+    max-width: 100%;
+    border-radius: 1.5rem; /* Smaller border radius on mobile */
+  }
+  
+  .controls {
+    max-width: 250px;
+  }
+  
+  .likeButton, .dislikeButton {
+    width: 3.25rem; /* Smaller on mobile */
+    height: 3.25rem; /* Smaller on mobile */
+  }
+}
+
+@media (min-width: 768px) {
+  .slider {
+    margin-top: 2rem;
+  }
+  
+  .profileImage {
+    max-width: 400px; /* Larger on desktop */
+  }
 }

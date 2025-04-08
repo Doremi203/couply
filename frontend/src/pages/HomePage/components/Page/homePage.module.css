@@ -1,5 +1,5 @@
 .personCard {
-  margin-top: 140px;
+  margin-top: 8.75rem; /* 140px in rem */
 }
 
 .header {
@@ -7,7 +7,12 @@
    justify-content: space-between;
    align-items: center;
    position: relative;
-   margin-top: 10px;
+   margin-top: 0.625rem; /* 10px in rem */
+   padding: 0 1rem;
+   max-width: 1200px;
+   margin-left: auto;
+   margin-right: auto;
+   width: 100%;
 }
 
 .appName {
@@ -15,7 +20,7 @@
   justify-content: center;
   align-items: center;
   color: #202c83;
-  font-size: 40px;
+  font-size: 2.5rem; /* 40px in rem */
   font-family: "Jost", sans-serif;
   font-weight: medium;
   position: absolute;
@@ -24,21 +29,44 @@
   text-align: center;
 }
 
-@media (max-width: 480px) {
-  .appName {
-    font-size: 40px;
-  }
-}
-
-
 .spacer {
-  width: 40px; /* Match the approximate width of the filtersIcon */
+  width: 2.5rem; /* 40px in rem */
 }
 
 .filtersIcon {
-  margin-right: 15px;
-  margin-top: 10px;
+  margin-right: 0.938rem; /* 15px in rem */
+  margin-top: 0.625rem; /* 10px in rem */
   display: flex;
   align-items: center;
-  width: 40px;
+  width: 2.5rem; /* 40px in rem */
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .appName {
+    font-size: 2rem; /* Smaller on mobile */
+  }
+  
+  .header {
+    padding: 0 0.5rem;
+  }
+  
+  .filtersIcon {
+    margin-right: 0.5rem;
+    width: 2rem;
+  }
+  
+  .spacer {
+    width: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .header {
+    margin-top: 1rem;
+  }
+  
+  .personCard {
+    margin-top: 9.375rem; /* Larger on desktop */
+  }
 }

@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import styles from "./profilePage.module.css";
 import { NavBar } from "../../../../shared/components/NavBar";
 import { ProfileData, ActivityItem } from "../../types";
-import { ProfileView } from "../ProfileView";
+// import { ProfileView } from "../ProfileView";
 import { EditProfile } from "../EditProfile";
 import { ActivityHistory } from "../ActivityHistory";
 import { ProfilePreview } from "../ProfilePreview";
+import ProfileView from "../ProfileView";
 
 interface ProfilePageProps {
   initialTab?: string;

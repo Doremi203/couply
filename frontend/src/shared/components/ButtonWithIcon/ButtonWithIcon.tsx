@@ -1,11 +1,34 @@
+import { ReactNode } from "react";
 import styles from "./buttonWithIcon.module.css";
 
-export const ButtonWithIcon = () => {
+interface ButtonWithIconProps {
+  icon: ReactNode;
+  text: string;
+  onClick: () => void;
+  className?: string;
+  disabled?: boolean;
+}
+
+export const ButtonWithIcon = ({
+  icon,
+  text,
+  onClick,
+  className,
+  disabled = false,
+}: ButtonWithIconProps) => {
   return (
-    <button className={styles.buttonWithIcon}>
-      <img src="logo.png" alt="Google Icon" className={styles.buttonIcon} />
-      LOGIN WITH PHONE
-    </button>
+    <div className={styles.buttonWrapper}>
+      <button
+        className={`${styles.buttonWithIcon} ${className ? className : ""} ${
+          disabled ? styles.disabled : ""
+        }`}
+        onClick={onClick}
+        disabled={disabled}
+      >
+        <div className={styles.iconContainer}>{icon}</div>
+        <span className={styles.buttonText}>{text}</span>
+      </button>
+    </div>
   );
 };
 

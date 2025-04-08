@@ -1,10 +1,10 @@
 
 .backButton {
     position: absolute;
-    top: 20px;
-    left: -10px;
-    width: 40px;
-    height: 40px;
+    top: 1.25rem; /* 20px in rem */
+    left: -0.625rem; /* -10px in rem */
+    width: 2.5rem; /* 40px in rem */
+    height: 2.5rem; /* 40px in rem */
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0);
     display: flex;
@@ -13,4 +13,22 @@
     border: none;
     cursor: pointer;
     z-index: 2;
-  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .backButton {
+        width: 2rem; /* Smaller on mobile */
+        height: 2rem; /* Smaller on mobile */
+        top: 1rem; /* Smaller on mobile */
+        left: -0.5rem; /* Smaller on mobile */
+    }
+}
+
+@media (min-width: 768px) {
+    .backButton {
+        width: 3rem; /* Larger on desktop */
+        height: 3rem; /* Larger on desktop */
+        top: 1.5rem; /* Larger on desktop */
+    }
+}
