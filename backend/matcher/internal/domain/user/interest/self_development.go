@@ -18,66 +18,66 @@ const (
 	SelfDevelopmentReading
 )
 
-func PBToSelfDevelopment(selfDevelopment desc.Selfdevelopment) SelfDevelopment {
+func PBToSelfDevelopment(selfDevelopment desc.SelfDevelopment) SelfDevelopment {
 	switch selfDevelopment {
-	case desc.Selfdevelopment_SELFDEVELOPMENT_UNSPECIFIED:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_UNSPECIFIED:
 		return SelfDevelopmentUnspecified
-	case desc.Selfdevelopment_SELFDEVELOPMENT_LANGUAGES:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_LANGUAGES:
 		return SelfDevelopmentLanguages
-	case desc.Selfdevelopment_SELFDEVELOPMENT_LECTURES:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_LECTURES:
 		return SelfDevelopmentLectures
-	case desc.Selfdevelopment_SELFDEVELOPMENT_ONLINE_COURSES:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_ONLINE_COURSES:
 		return SelfDevelopmentOnlineCourses
-	case desc.Selfdevelopment_SELFDEVELOPMENT_SELF_EDUCATION:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_SELF_EDUCATION:
 		return SelfDevelopmentSelfEducation
-	case desc.Selfdevelopment_SELFDEVELOPMENT_MEDITATION:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_MEDITATION:
 		return SelfDevelopmentMeditation
-	case desc.Selfdevelopment_SELFDEVELOPMENT_PSYCHOLOGY:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_PSYCHOLOGY:
 		return SelfDevelopmentPsychology
-	case desc.Selfdevelopment_SELFDEVELOPMENT_PHILOSOPHY:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_PHILOSOPHY:
 		return SelfDevelopmentPhilosophy
-	case desc.Selfdevelopment_SELFDEVELOPMENT_HISTORY:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_HISTORY:
 		return SelfDevelopmentHistory
-	case desc.Selfdevelopment_SELFDEVELOPMENT_TECHNOLOGY:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_TECHNOLOGY:
 		return SelfDevelopmentTechnology
-	case desc.Selfdevelopment_SELFDEVELOPMENT_READING:
+	case desc.SelfDevelopment_SELFDEVELOPMENT_READING:
 		return SelfDevelopmentReading
 	default:
 		return SelfDevelopment(0)
 	}
 }
 
-func SelfDevelopmentToPB(selfDevelopment SelfDevelopment) desc.Selfdevelopment {
+func SelfDevelopmentToPB(selfDevelopment SelfDevelopment) desc.SelfDevelopment {
 	switch selfDevelopment {
 	case SelfDevelopmentUnspecified:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_UNSPECIFIED
+		return desc.SelfDevelopment_SELFDEVELOPMENT_UNSPECIFIED
 	case SelfDevelopmentLanguages:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_LANGUAGES
+		return desc.SelfDevelopment_SELFDEVELOPMENT_LANGUAGES
 	case SelfDevelopmentLectures:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_LECTURES
+		return desc.SelfDevelopment_SELFDEVELOPMENT_LECTURES
 	case SelfDevelopmentOnlineCourses:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_ONLINE_COURSES
+		return desc.SelfDevelopment_SELFDEVELOPMENT_ONLINE_COURSES
 	case SelfDevelopmentSelfEducation:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_SELF_EDUCATION
+		return desc.SelfDevelopment_SELFDEVELOPMENT_SELF_EDUCATION
 	case SelfDevelopmentMeditation:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_MEDITATION
+		return desc.SelfDevelopment_SELFDEVELOPMENT_MEDITATION
 	case SelfDevelopmentPsychology:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_PSYCHOLOGY
+		return desc.SelfDevelopment_SELFDEVELOPMENT_PSYCHOLOGY
 	case SelfDevelopmentPhilosophy:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_PHILOSOPHY
+		return desc.SelfDevelopment_SELFDEVELOPMENT_PHILOSOPHY
 	case SelfDevelopmentHistory:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_HISTORY
+		return desc.SelfDevelopment_SELFDEVELOPMENT_HISTORY
 	case SelfDevelopmentTechnology:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_TECHNOLOGY
+		return desc.SelfDevelopment_SELFDEVELOPMENT_TECHNOLOGY
 	case SelfDevelopmentReading:
-		return desc.Selfdevelopment_SELFDEVELOPMENT_READING
+		return desc.SelfDevelopment_SELFDEVELOPMENT_READING
 	default:
-		return desc.Selfdevelopment(0)
+		return desc.SelfDevelopment(0)
 	}
 }
 
-func SelfDevelopmentSliceToPB(sds []SelfDevelopment) []desc.Selfdevelopment {
-	sdsPB := make([]desc.Selfdevelopment, 0, len(sds))
+func SelfDevelopmentSliceToPB(sds []SelfDevelopment) []desc.SelfDevelopment {
+	sdsPB := make([]desc.SelfDevelopment, 0, len(sds))
 
 	for _, sd := range sds {
 		sdsPB = append(sdsPB, SelfDevelopmentToPB(sd))
@@ -86,7 +86,7 @@ func SelfDevelopmentSliceToPB(sds []SelfDevelopment) []desc.Selfdevelopment {
 	return sdsPB
 }
 
-func PBToSelfDevelopmentSlice(sds []desc.Selfdevelopment) []SelfDevelopment {
+func PBToSelfDevelopmentSlice(sds []desc.SelfDevelopment) []SelfDevelopment {
 	sdsDomain := make([]SelfDevelopment, 0, len(sds))
 
 	for _, sd := range sds {

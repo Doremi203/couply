@@ -129,6 +129,7 @@ message CreateUserV1Request {
     (validate.rules).enum.defined_only = true
   ];
   int32 height = 9 [
+    (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32.gt = 0
   ];
   Education education = 10 [
@@ -164,7 +165,7 @@ message UpdateUserV1Request {
     (validate.rules).string.min_len = 2
   ];
   int32 age = 3 [
-    (validate.rules).int32.gt = 18
+    (validate.rules).int32.gte = 18
   ];
   Gender gender = 4 [
     (validate.rules).enum.defined_only = true
@@ -276,7 +277,7 @@ message Interest {
   repeated Sport sport = 1 [
     (validate.rules).repeated.items.enum.defined_only = true
   ];
-  repeated Selfdevelopment selfdevelopment = 2 [
+  repeated SelfDevelopment self_development = 2 [
     (validate.rules).repeated.items.enum.defined_only = true
   ];
   repeated Art art = 3 [
@@ -310,7 +311,7 @@ enum Sport {
   SPORT_CLIMBING = 13;
 }
 
-enum Selfdevelopment {
+enum SelfDevelopment {
   SELFDEVELOPMENT_UNSPECIFIED = 0;
   SELFDEVELOPMENT_LANGUAGES = 1;
   SELFDEVELOPMENT_LECTURES = 2;

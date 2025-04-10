@@ -25,7 +25,7 @@ func NewInterest() *Interest {
 func InterestToPB(interest *Interest) *desc.Interest {
 	return &desc.Interest{
 		Sport:           SportSliceToPB(interest.Sport),
-		Selfdevelopment: SelfDevelopmentSliceToPB(interest.SelfDevelopment),
+		SelfDevelopment: SelfDevelopmentSliceToPB(interest.SelfDevelopment),
 		Art:             ArtSliceToPB(interest.Art),
 		Social:          SocialSliceToPB(interest.Social),
 		Hobby:           HobbySliceToPB(interest.Hobby),
@@ -35,11 +35,11 @@ func InterestToPB(interest *Interest) *desc.Interest {
 
 func PBToInterest(interest *desc.Interest) *Interest {
 	return &Interest{
-		Sport:           PBToSportSlice(interest.GetSport()),
-		SelfDevelopment: PBToSelfDevelopmentSlice(interest.GetSelfdevelopment()),
-		Art:             PBToArtSlice(interest.GetArt()),
-		Social:          PBToSocialSlice(interest.GetSocial()),
-		Hobby:           PBToHobbySlice(interest.GetHobby()),
-		Gastronomy:      PBToGastronomySlice(interest.GetGastronomy()),
+		Sport:           PBToSportSlice(interest.Sport),
+		SelfDevelopment: PBToSelfDevelopmentSlice(interest.SelfDevelopment),
+		Art:             PBToArtSlice(interest.Art),
+		Social:          PBToSocialSlice(interest.Social),
+		Hobby:           PBToHobbySlice(interest.Hobby),
+		Gastronomy:      PBToGastronomySlice(interest.Gastronomy),
 	}
 }
