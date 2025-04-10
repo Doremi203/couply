@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-12]: feat: some filter entities" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.23.0/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;previak&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:Doremi203/Couply.git&quot;,
+    &quot;accountId&quot;: &quot;d15386b3-9a5c-4275-917a-3dcfd9f41020&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2qtOpHHxlN5UYrs6drR36mJpLcR" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Docker.backend.couply_db: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.backend: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.user-service.couply_db: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Docker.user-service: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;Go Build.go build github.com/Doremi203/Couply/backend/cmd.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target..vendor-proto.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.bin-deps.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.generate (1).executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.generate.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.goose-add.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.goose-down.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.goose-up (1).executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.goose-up.executor&quot;: &quot;Run&quot;,
+    &quot;Makefile Target.lint.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/danilkunashev&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;google.protobuf.language&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;redis&quot;,
+      &quot;postgresql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/internal/storage/facade/matching-service" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/matching-service" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/internal/storage/facade/matching-service" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/facade/user-service" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/user" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/matching-service" />
+      <recent name="$PROJECT_DIR$/backend/internal/domain/matching" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Makefile Target.generate">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="Couply" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/Doremi203/Couply/backend/cmd" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Couply" />
+      <working_directory value="$PROJECT_DIR$/backend" />
+      <envs>
+        <env name="LOG_LEVEL" value="debug, LOG_WRITER=stdout, LOG_HANDLER=json" />
+      </envs>
+      <kind value="PACKAGE" />
+      <package value="github.com/Doremi203/Couply/backend/cmd" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/backend/cmd/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="Couply" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <configuration name="generate" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="generate" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="goose-down" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/user-service/Makefile" target="goose-down" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="goose-up (1)" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/user-service/Makefile" target="goose-up" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="lint" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/user-service/Makefile" target="lint" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.go build github.com/Doremi203/Couply/backend/cmd" />
+      <item itemvalue="Makefile Target.goose-up (1)" />
+      <item itemvalue="Makefile Target.lint" />
+      <item itemvalue="Makefile Target.goose-down" />
+      <item itemvalue="Makefile Target.generate" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile Target.goose-down" />
+        <item itemvalue="Makefile Target.lint" />
+        <item itemvalue="Makefile Target.goose-up (1)" />
+        <item itemvalue="Makefile Target.generate" />
+        <item itemvalue="Go Build.go build github.com/Doremi203/Couply/backend/cmd" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-33c477a475b1-e0158606a674-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-241.18034.61" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-GO-241.18034.61" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[Couply]: feat: init" />
+    <MESSAGE value="[COUPLY-12]: feat: init" />
+    <MESSAGE value="[COUPLY-12]: feat: add main files for dev" />
+    <MESSAGE value="[COUPLY-12]: fix: Makefile" />
+    <MESSAGE value="[COUPLY-12]: feat: add user service proto file; feat: add logger" />
+    <MESSAGE value="[COUPLY-12]: fix: Makefile; feat: generate code based on user_service.proto" />
+    <MESSAGE value="[COUPLY-12]: feat: add template" />
+    <MESSAGE value="[COUPLY-12]: feat: add main" />
+    <MESSAGE value="[COUPLY-12]: feat: add migrations" />
+    <MESSAGE value="[COUPLY-12]: feat: add domain entities" />
+    <MESSAGE value="[COUPLY-12]: feat: mkdir domain/interest" />
+    <MESSAGE value="[COUPLY-12]: feat: add main logic for create user" />
+    <MESSAGE value="[COUPLY-12]: fix: create user works now" />
+    <MESSAGE value="[COUPLY-12]: feat: add update user rpc" />
+    <MESSAGE value="[COUPLY-12]: feat: add delete user rpc; feat: different improvements" />
+    <MESSAGE value="[COUPLY-12]: feat: add matching service" />
+    <MESSAGE value="[COUPLY-12]: fix: go mod" />
+    <MESSAGE value="[COUPLY-12]: feat: add get user" />
+    <MESSAGE value="[COUPLY-12]: fix: diff fixes after testing" />
+    <MESSAGE value="[COUPLY-12]: feat: add gitignore" />
+    <MESSAGE value="[COUPLY-12]: feat: some filter entities" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-12]: feat: some filter entities" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
