@@ -1,12 +1,14 @@
-import React, { useRef, useState } from "react";
-import styles from "./editProfile.module.css";
-import { CustomInput } from "../../../../shared/components/CustomInput";
-import { CustomButton } from "../../../../shared/components/CustomButton";
-import { ToggleButtons } from "../../../../shared/components/ToggleButtons";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
-import AddIcon from "@mui/icons-material/Add";
-import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
+import React, { useRef, useState } from 'react';
+
+import { CustomButton } from '../../../../shared/components/CustomButton';
+import { CustomInput } from '../../../../shared/components/CustomInput';
+import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
+
+import styles from './editProfile.module.css';
 
 interface ProfileData {
   name: string;
@@ -42,7 +44,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   onInputChange,
   onArrayInputChange,
   onPhotoAdd,
-  onPhotoRemove
+  onPhotoRemove,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -89,7 +91,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <h3>Profile Photo</h3>
         <div className={styles.profileImageEdit}>
           <img
-            src={profileData.photos[0] || "/photo1.png"}
+            src={profileData.photos[0] || '/photo1.png'}
             alt="Profile"
             className={styles.profilePic}
           />
@@ -127,7 +129,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             type="text"
             placeholder="Your name"
             value={profileData.name}
-            onChange={(e) => onInputChange("name", e.target.value)}
+            onChange={(e) => onInputChange('name', e.target.value)}
           />
         </div>
         <div className={styles.editField}>
@@ -136,7 +138,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             type="number"
             placeholder="Your age"
             value={profileData.age.toString()}
-            onChange={(e) => onInputChange("age", e.target.value)}
+            onChange={(e) => onInputChange('age', e.target.value)}
           />
         </div>
         <div className={styles.editField}>
@@ -145,7 +147,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             type="date"
             placeholder="Date of birth"
             value={profileData.dateOfBirth}
-            onChange={(e) => onInputChange("dateOfBirth", e.target.value)}
+            onChange={(e) => onInputChange('dateOfBirth', e.target.value)}
           />
         </div>
         <div className={styles.editField}>
@@ -154,7 +156,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             type="tel"
             placeholder="Your phone number"
             value={profileData.phone}
-            onChange={(e) => onInputChange("phone", e.target.value)}
+            onChange={(e) => onInputChange('phone', e.target.value)}
           />
         </div>
         <div className={styles.editField}>
@@ -163,18 +165,18 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             type="email"
             placeholder="Your email"
             value={profileData.email}
-            onChange={(e) => onInputChange("email", e.target.value)}
+            onChange={(e) => onInputChange('email', e.target.value)}
           />
         </div>
         <div className={styles.editField}>
           <label>Gender</label>
           <ToggleButtons
             options={[
-              { label: "Female", value: "female" },
-              { label: "Male", value: "male" },
+              { label: 'Female', value: 'female' },
+              { label: 'Male', value: 'male' },
             ]}
             value={profileData.gender}
-            onSelect={(value) => onInputChange("gender", value)}
+            onSelect={(value) => onInputChange('gender', value)}
           />
         </div>
       </div>
@@ -186,7 +188,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             className={styles.textareaInput}
             placeholder="Tell something about yourself"
             value={profileData.about}
-            onChange={(e) => onInputChange("about", e.target.value)}
+            onChange={(e) => onInputChange('about', e.target.value)}
             maxLength={500}
           />
           <div className={styles.characterCount}>
@@ -200,8 +202,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <CustomInput
           type="text"
           placeholder="Interests (comma separated)"
-          value={profileData.interests.join(", ")}
-          onChange={(e) => onArrayInputChange("interests", e.target.value)}
+          value={profileData.interests.join(', ')}
+          onChange={(e) => onArrayInputChange('interests', e.target.value)}
         />
       </div>
 
@@ -210,8 +212,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <CustomInput
           type="text"
           placeholder="Favorite music (comma separated)"
-          value={profileData.music.join(", ")}
-          onChange={(e) => onArrayInputChange("music", e.target.value)}
+          value={profileData.music.join(', ')}
+          onChange={(e) => onArrayInputChange('music', e.target.value)}
         />
       </div>
 
@@ -220,8 +222,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <CustomInput
           type="text"
           placeholder="Favorite movies (comma separated)"
-          value={profileData.movies.join(", ")}
-          onChange={(e) => onArrayInputChange("movies", e.target.value)}
+          value={profileData.movies.join(', ')}
+          onChange={(e) => onArrayInputChange('movies', e.target.value)}
         />
       </div>
 
@@ -230,8 +232,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <CustomInput
           type="text"
           placeholder="Favorite books (comma separated)"
-          value={profileData.books.join(", ")}
-          onChange={(e) => onArrayInputChange("books", e.target.value)}
+          value={profileData.books.join(', ')}
+          onChange={(e) => onArrayInputChange('books', e.target.value)}
         />
       </div>
 
@@ -240,8 +242,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <CustomInput
           type="text"
           placeholder="Hobbies (comma separated)"
-          value={profileData.hobbies.join(", ")}
-          onChange={(e) => onArrayInputChange("hobbies", e.target.value)}
+          value={profileData.hobbies.join(', ')}
+          onChange={(e) => onArrayInputChange('hobbies', e.target.value)}
         />
       </div>
 
@@ -251,11 +253,11 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           <span>Hide my profile</span>
           <ToggleButtons
             options={[
-              { label: "No", value: "visible" },
-              { label: "Yes", value: "hidden" },
+              { label: 'No', value: 'visible' },
+              { label: 'Yes', value: 'hidden' },
             ]}
-            value={profileData.isHidden ? "hidden" : "visible"}
-            onSelect={(value) => onInputChange("isHidden", value === "hidden" ? "true" : "false")}
+            value={profileData.isHidden ? 'hidden' : 'visible'}
+            onSelect={(value) => onInputChange('isHidden', value === 'hidden' ? 'true' : 'false')}
           />
         </div>
       </div>

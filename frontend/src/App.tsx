@@ -1,35 +1,36 @@
-import "./App.css";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { AuthPage } from "./pages/AuthPage";
-import { SplashPage } from "./pages/SplashPage";
-import { HomePage } from "./pages/HomePage";
-import { ProfilePage } from "./pages/ProfilePage";
-import { LikesPage } from "./pages/LikesPage";
-import { EnterInfoPage } from "./pages/EnterInfoPage";
+import './App.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import { AuthPage } from './pages/AuthPage';
+import { EnterInfoPage } from './pages/EnterInfoPage';
+import { HomePage } from './pages/HomePage';
+import { LikesPage } from './pages/LikesPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { SplashPage } from './pages/SplashPage';
 
 const router = createBrowserRouter([
   {
-    path: "auth",
+    path: 'auth',
     element: <AuthPage />,
   },
   {
-    path: "enterInfo",
+    path: 'enterInfo',
     element: <EnterInfoPage />,
   },
   {
-    path: "/",
+    path: '/',
     element: <SplashPage />,
   },
   {
-    path: "home",
+    path: 'home',
     element: <HomePage />,
   },
   {
-    path: "profile",
+    path: 'profile',
     element: <ProfilePage />,
   },
   {
-    path: "likes",
+    path: 'likes',
     element: <LikesPage />,
   },
 ]);

@@ -1,6 +1,7 @@
-import EnterInfoPage from './Page';
 import { StoryObj, Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
+
+import EnterInfoPage from './Page';
 
 const meta: Meta = {
   title: 'Pages/EnterInfoPage',

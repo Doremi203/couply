@@ -1,5 +1,6 @@
-import Like from '../Like/Like'
-import styles from './likeButton.module.css'
+import Like from '../Like/Like';
+
+import styles from './likeButton.module.css';
 
 interface LikeButtonProps {
   onClick: () => void
@@ -12,7 +13,7 @@ export const LikeButton = ({onClick, className, likeClassName}: LikeButtonProps)
     <div className={`${styles.likeCircle} ${className || ''}`} onClick={onClick}>
       <Like className={likeClassName} />
     </div>
-  )
-}
+  );
+};
 
 export default LikeButton;

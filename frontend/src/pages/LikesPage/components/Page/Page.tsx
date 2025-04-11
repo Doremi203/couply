@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { NavBar } from "../../../../shared/components/NavBar";
-import { MatchModal } from "../MatchModal";
-import { ProfileView } from "../ProfileView";
-import styles from "./likesPage.module.css";
-import { ProfileCard } from "../ProfileCard";
-import { MatchCard, MatchProfile } from "../MatchCard";
+import { useState } from 'react';
+
+import { NavBar } from '../../../../shared/components/NavBar';
+import { MatchCard, MatchProfile } from '../MatchCard';
+import { MatchModal } from '../MatchModal';
+import { ProfileCard } from '../ProfileCard';
+import { ProfileView } from '../ProfileView';
+
+import styles from './likesPage.module.css';
 
 // Define types for our data
 interface LikeProfile {
@@ -25,43 +27,43 @@ interface LikeProfile {
 const likesData: LikeProfile[] = [
   {
     id: 1,
-    name: "Анна",
+    name: 'Анна',
     age: 25,
-    imageUrl: "woman1.jpg",
+    imageUrl: 'woman1.jpg',
     liked: false,
     hasLikedYou: true, // This profile has already liked the user
-    location: "Москва, Россия",
-    interests: ["Музыка", "Путешествия", "Фотография", "Мода", "Искусство"],
+    location: 'Москва, Россия',
+    interests: ['Музыка', 'Путешествия', 'Фотография', 'Мода', 'Искусство'],
   },
   {
     id: 2,
-    name: "Иван",
+    name: 'Иван',
     age: 30,
-    imageUrl: "man1.jpg",
+    imageUrl: 'man1.jpg',
     liked: false,
     hasLikedYou: true, // This profile has already liked the user
-    location: "Санкт-Петербург, Россия",
-    interests: ["Спорт", "Кино", "Технологии", "Путешествия"],
+    location: 'Санкт-Петербург, Россия',
+    interests: ['Спорт', 'Кино', 'Технологии', 'Путешествия'],
   },
   {
     id: 3,
-    name: "Ольга",
+    name: 'Ольга',
     age: 28,
-    imageUrl: "photo1.png",
+    imageUrl: 'photo1.png',
     liked: false,
     hasLikedYou: false,
-    location: "Казань, Россия",
-    interests: ["Книги", "Йога", "Кулинария", "Природа"],
+    location: 'Казань, Россия',
+    interests: ['Книги', 'Йога', 'Кулинария', 'Природа'],
   },
   {
     id: 4,
-    name: "Алексей",
+    name: 'Алексей',
     age: 32,
-    imageUrl: "man1.jpg",
+    imageUrl: 'man1.jpg',
     liked: false,
     hasLikedYou: false,
-    location: "Екатеринбург, Россия",
-    interests: ["Музыка", "Горы", "Фотография", "Путешествия"],
+    location: 'Екатеринбург, Россия',
+    interests: ['Музыка', 'Горы', 'Фотография', 'Путешествия'],
   },
 ];
 
@@ -69,19 +71,19 @@ const likesData: LikeProfile[] = [
 const matchesData: MatchProfile[] = [
   {
     id: 101, // Using different ID range for matches
-    name: "Мария",
+    name: 'Мария',
     age: 27,
-    imageUrl: "woman1.jpg",
-    telegram: "@maria_27",
-    instagram: "@maria_insta",
+    imageUrl: 'woman1.jpg',
+    telegram: '@maria_27',
+    instagram: '@maria_insta',
   },
   {
     id: 102, // Using different ID range for matches
-    name: "Дмитрий",
+    name: 'Дмитрий',
     age: 31,
-    imageUrl: "man1.jpg",
-    telegram: "@dmitry_31",
-    instagram: "@dmitry_insta",
+    imageUrl: 'man1.jpg',
+    telegram: '@dmitry_31',
+    instagram: '@dmitry_insta',
   },
 ];
 
@@ -93,7 +95,7 @@ const generateMatchId = (existingMatches: MatchProfile[]): number => {
 };
 
 export const LikesPage = () => {
-  const [activeTab, setActiveTab] = useState<"likes" | "matches">("likes");
+  const [activeTab, setActiveTab] = useState<'likes' | 'matches'>('likes');
   const [likes, setLikes] = useState<LikeProfile[]>(likesData);
   const [matches, setMatches] = useState<MatchProfile[]>(matchesData);
   const [showMatchModal, setShowMatchModal] = useState(false);
@@ -123,7 +125,7 @@ export const LikesPage = () => {
         
         // Update the liked status
         const updatedLikes = likes.map((like) =>
-          like.id === id ? { ...like, liked: true } : like
+          like.id === id ? { ...like, liked: true } : like,
         );
         
         // Create a new match object with a unique ID
@@ -161,12 +163,12 @@ export const LikesPage = () => {
       age: match.age,
       imageUrl: match.imageUrl,
       hasLikedYou: true,
-      bio: "This is a match! You can contact them via social media.",
-      location: "",
+      bio: 'This is a match! You can contact them via social media.',
+      location: '',
       interests: [],
       lifestyle: {
-        "contact": `Telegram: ${match.telegram}`,
-        "social": `Instagram: ${match.instagram}`
+        'contact': `Telegram: ${match.telegram}`,
+        'social': `Instagram: ${match.instagram}`,
       },
     };
     setSelectedProfile(matchAsProfile);
@@ -179,7 +181,7 @@ export const LikesPage = () => {
   const handleSendMessage = () => {
     setShowMatchModal(false);
     // Switch to matches tab instead of navigating to chat
-    setActiveTab("matches");
+    setActiveTab('matches');
   };
 
   const handleKeepSwiping = () => {
@@ -207,20 +209,20 @@ export const LikesPage = () => {
 
       <div className={styles.tabs}>
         <div
-          className={`${styles.tab} ${activeTab === "likes" ? styles.activeTab : ""}`}
-          onClick={() => setActiveTab("likes")}
+          className={`${styles.tab} ${activeTab === 'likes' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('likes')}
         >
           likes
         </div>
         <div
-          className={`${styles.tab} ${activeTab === "matches" ? styles.activeTab : ""}`}
-          onClick={() => setActiveTab("matches")}
+          className={`${styles.tab} ${activeTab === 'matches' ? styles.activeTab : ''}`}
+          onClick={() => setActiveTab('matches')}
         >
           matches
         </div>
       </div>
 
-      {activeTab === "likes" && (
+      {activeTab === 'likes' && (
         <div className={styles.section}>
           {likes.length > 0 ? (
             <div className={styles.profilesGrid}>
@@ -248,7 +250,7 @@ export const LikesPage = () => {
         </div>
       )}
 
-      {activeTab === "matches" && (
+      {activeTab === 'matches' && (
         <div className={styles.section}>
           {matches.length > 0 ? (
             <div className={styles.matchesContainer}>

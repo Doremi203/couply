@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { MatchCard, MatchProfile } from './MatchCard';
 
 const meta: Meta<typeof MatchCard> = {

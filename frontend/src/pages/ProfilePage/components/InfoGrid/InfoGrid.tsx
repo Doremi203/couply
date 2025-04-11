@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./infoGrid.module.css";
+import React from 'react';
+
+import styles from './infoGrid.module.css';
 
 interface InfoItem {
   label: string;

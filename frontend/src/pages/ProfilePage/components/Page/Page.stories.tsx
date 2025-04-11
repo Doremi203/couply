@@ -1,6 +1,7 @@
-import Page from './Page';
 import { StoryObj, Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
+
+import Page from './Page';
 
 const meta: Meta = {
   title: 'Pages/ProfilePage',
@@ -27,7 +28,7 @@ export const Default: Story = {
   args: {
     initialTab: 'profile',
     initialEditMode: false,
-    initialVerified: false
+    initialVerified: false,
   },
   name: 'Profile View',
   parameters: {
@@ -43,7 +44,7 @@ export const EditMode: Story = {
   args: {
     initialTab: 'edit',
     initialEditMode: true,
-    initialVerified: false
+    initialVerified: false,
   },
   name: 'Edit Mode View',
   parameters: {
@@ -59,7 +60,7 @@ export const ActivityHistory: Story = {
   args: {
     initialTab: 'activity',
     initialEditMode: false,
-    initialVerified: false
+    initialVerified: false,
   },
   name: 'Activity History View',
   parameters: {
@@ -75,7 +76,7 @@ export const ProfilePreview: Story = {
   args: {
     initialTab: 'preview',
     initialEditMode: false,
-    initialVerified: false
+    initialVerified: false,
   },
   name: 'Profile Preview Mode',
   parameters: {
@@ -91,7 +92,7 @@ export const VerifiedProfile: Story = {
   args: {
     initialTab: 'profile',
     initialEditMode: false,
-    initialVerified: true
+    initialVerified: true,
   },
   name: 'Verified Profile View',
   parameters: {

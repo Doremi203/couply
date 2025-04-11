@@ -1,5 +1,6 @@
-import { ProfileSlider } from './ProfileSlider';
 import { StoryObj, Meta } from '@storybook/react';
+
+import { ProfileSlider } from './ProfileSlider';
 
 const meta: Meta = {
   title: 'Features/ProfileSlider',

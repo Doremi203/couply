@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./photoGallery.module.css";
+import React from 'react';
+
+import styles from './photoGallery.module.css';
 
 interface PhotoGalleryProps {
   photos: string[];

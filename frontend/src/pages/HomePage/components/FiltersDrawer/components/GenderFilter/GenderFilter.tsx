@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "../../filtersDrawer.module.css";
-import ToggleButtons from "../../../../../../shared/components/ToggleButtons/ToggleButtons";
+import React from 'react';
+
+import ToggleButtons from '../../../../../../shared/components/ToggleButtons/ToggleButtons';
+import styles from '../../filtersDrawer.module.css';
 
 type GenderOption = {
   label: string;

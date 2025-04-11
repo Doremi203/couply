@@ -1,5 +1,6 @@
-import React from "react";
-import CustomButton from "../../../../../../shared/components/CustomButton/CustomButton";
+import React from 'react';
+
+import CustomButton from '../../../../../../shared/components/CustomButton/CustomButton';
 
 type FilterActionsProps = {
   onContinue: () => void;
@@ -8,7 +9,7 @@ type FilterActionsProps = {
 
 const FilterActions: React.FC<FilterActionsProps> = ({
   onContinue,
-  buttonText = "Continue"
+  buttonText = 'Continue',
 }) => {
   return (
     <CustomButton

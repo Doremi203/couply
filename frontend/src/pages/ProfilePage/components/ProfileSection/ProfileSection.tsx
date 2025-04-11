@@ -1,5 +1,6 @@
-import React, { ReactNode } from "react";
-import styles from "./profileSection.module.css";
+import React, { ReactNode } from 'react';
+
+import styles from './profileSection.module.css';
 
 interface ProfileSectionProps {
   title: string;
@@ -12,7 +13,7 @@ export const ProfileSection: React.FC<ProfileSectionProps> = ({
   title,
   children,
   onEdit,
-  showEditLink = false
+  showEditLink = false,
 }) => {
   return (
     <div className={styles.profileSection}>

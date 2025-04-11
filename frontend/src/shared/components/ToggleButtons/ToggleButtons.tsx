@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import styles from "./toggleButtons.module.css";
+import React, { useState, useEffect } from 'react';
+
+import styles from './toggleButtons.module.css';
 
 interface ToggleButtonOption {
   label: string;
@@ -17,7 +18,7 @@ export const ToggleButtons: React.FC<ToggleButtonsProps> = ({
   onSelect,
   value,
 }) => {
-  const [selected, setSelected] = useState<string>(value || "");
+  const [selected, setSelected] = useState<string>(value || '');
 
   useEffect(() => {
     if (value) {

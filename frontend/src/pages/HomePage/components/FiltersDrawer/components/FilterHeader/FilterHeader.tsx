@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "../../filtersDrawer.module.css";
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import React from 'react';
+
+import styles from '../../filtersDrawer.module.css';
 
 type FilterHeaderProps = {
   onBack: () => void;

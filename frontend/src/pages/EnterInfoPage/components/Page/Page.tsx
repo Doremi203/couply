@@ -1,25 +1,28 @@
-import { useState } from "react";
-import styles from "./enterInfo.module.css";
-import { CustomInput } from "../../../../shared/components/CustomInput";
-import { CustomButton } from "../../../../shared/components/CustomButton";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
-import { ToggleButtons } from "../../../../shared/components/ToggleButtons";
-import { useNavigate } from "react-router-dom";
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { CustomButton } from '../../../../shared/components/CustomButton';
+import { CustomInput } from '../../../../shared/components/CustomInput';
+import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
+
+import styles from './enterInfo.module.css';
+
 
 export const EnterInfoPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   
   // State for form values
-  const [name, setName] = useState("");
-  const [birthDate, setBirthDate] = useState("");
-  const [userGender, setUserGender] = useState("");
-  const [preferredGender, setPreferredGender] = useState("");
+  const [name, setName] = useState('');
+  const [birthDate, setBirthDate] = useState('');
+  const [userGender, setUserGender] = useState('');
+  const [preferredGender, setPreferredGender] = useState('');
 
   const nextStep = () => {
     if (currentStep === sections.length - 1) {
       // If we're on the last step, navigate to home page
-      navigate("/home");
+      navigate('/home');
     } else {
       // Otherwise, go to the next step
       setCurrentStep((prevStep) => prevStep + 1);
@@ -44,11 +47,11 @@ export const EnterInfoPage = () => {
   const isCurrentStepValid = () => {
     switch (currentStep) {
       case 0:
-        return name.trim() !== "";
+        return name.trim() !== '';
       case 1:
-        return birthDate !== "";
+        return birthDate !== '';
       case 2:
-        return userGender !== "" && preferredGender !== "";
+        return userGender !== '' && preferredGender !== '';
       default:
         return false;
     }
@@ -79,8 +82,8 @@ export const EnterInfoPage = () => {
         <label>Ваш пол:</label>
         <ToggleButtons
           options={[
-            { label: "Женский", value: "female" },
-            { label: "Мужской", value: "male" },
+            { label: 'Женский', value: 'female' },
+            { label: 'Мужской', value: 'male' },
           ]}
           onSelect={handleUserGenderSelect}
           value={userGender}
@@ -90,9 +93,9 @@ export const EnterInfoPage = () => {
         <label>Кого вам показывать:</label>
         <ToggleButtons
           options={[
-            { label: "Женщин", value: "female" },
-            { label: "Мужчин", value: "male" },
-            { label: "Всех", value: "other" },
+            { label: 'Женщин', value: 'female' },
+            { label: 'Мужчин', value: 'male' },
+            { label: 'Всех', value: 'other' },
           ]}
           onSelect={handlePreferredGenderSelect}
           value={preferredGender}
@@ -109,7 +112,7 @@ export const EnterInfoPage = () => {
       {sections[currentStep]}
       <CustomButton
         onClick={nextStep}
-        text={"Дальше"}
+        text="Дальше"
         disabled={!isCurrentStepValid()}
         className={styles.nextButton}
       />

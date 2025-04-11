@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./commonInterest.module.css";
+import React from 'react';
+
+import styles from './commonInterest.module.css';
 
 interface CommonInterestProps {
   text: string;
@@ -10,10 +11,10 @@ interface CommonInterestProps {
 export const CommonInterest: React.FC<CommonInterestProps> = ({
   text,
   isCommon,
-  className = "",
+  className = '',
 }) => {
   return (
-    <div className={`${styles.tag} ${isCommon ? styles.commonInterest : ""} ${className}`}>
+    <div className={`${styles.tag} ${isCommon ? styles.commonInterest : ''} ${className}`}>
       {text}
       {isCommon && <span className={styles.commonBadge}>Common</span>}
     </div>

@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { ProfileView } from './ProfileView';
 
 const meta: Meta<typeof ProfileView> = {
@@ -27,9 +28,9 @@ const sampleProfile = {
   interests: ['Photography', 'Travel', 'Coffee', 'Art', 'Music'],
   lifestyle: {
     kids: "I don't have kids",
-    pets: "Dog lover",
-    drinking: "Social drinker",
-    smoking: "Non-smoker",
+    pets: 'Dog lover',
+    drinking: 'Social drinker',
+    smoking: 'Non-smoker',
   },
   passion: ['Photography', 'Travel', 'Coffee', 'Art', 'Music', 'Hiking', 'Yoga'],
   photos: [

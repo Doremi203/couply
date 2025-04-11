@@ -1,8 +1,10 @@
-import React from "react";
-import styles from "./profileInfo.module.css";
-import { CustomButton } from "../../../../shared/components/CustomButton";
-import VerifiedIcon from "@mui/icons-material/Verified";
-import { ProfileData } from "../../types";
+import VerifiedIcon from '@mui/icons-material/Verified';
+import React from 'react';
+
+import { CustomButton } from '../../../../shared/components/CustomButton';
+import { ProfileData } from '../../types';
+
+import styles from './profileInfo.module.css';
 
 interface ProfileInfoProps {
   profileData: ProfileData;
@@ -13,13 +15,13 @@ interface ProfileInfoProps {
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   profileData,
   isVerified,
-  onVerificationRequest
+  onVerificationRequest,
 }) => {
   return (
     <div className={styles.profileInfo}>
       <div className={styles.profileImageContainer}>
         <img
-          src={profileData.photos[0] || "/photo1.png"}
+          src={profileData.photos[0] || '/photo1.png'}
           alt="Profile"
           className={styles.profilePic}
         />

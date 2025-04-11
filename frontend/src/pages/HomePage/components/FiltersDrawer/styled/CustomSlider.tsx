@@ -1,4 +1,4 @@
-import { Slider, styled } from "@mui/material";
+import { Slider, styled } from '@mui/material';
 
 // Custom styled slider with blue track
 export const CustomSlider = styled(Slider)({

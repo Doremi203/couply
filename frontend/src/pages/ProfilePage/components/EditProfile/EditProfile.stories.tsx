@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import { EditProfile } from './EditProfile';
 
 const meta = {

@@ -1,5 +1,6 @@
-import ToggleButtons from './ToggleButtons';
 import { StoryObj, Meta } from '@storybook/react';
+
+import ToggleButtons from './ToggleButtons';
 
 interface ToggleButtonsStoryProps {
   options: Array<{ label: string; value: string }>;

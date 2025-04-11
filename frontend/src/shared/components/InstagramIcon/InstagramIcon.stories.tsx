@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { InstagramIcon } from './InstagramIcon';
 
 const meta: Meta<typeof InstagramIcon> = {

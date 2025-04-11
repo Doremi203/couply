@@ -1,4 +1,4 @@
-import styles from "./customButton.module.css";
+import styles from './customButton.module.css';
 
 interface CustomButtonProps {
   text: string;
@@ -16,8 +16,8 @@ export const CustomButton = ({
   return (
     <div className={styles.customButtonWrapper}>
       <button
-        className={`${styles.customButton} ${className ? className : ""} ${
-          disabled ? styles.disabled : ""
+        className={`${styles.customButton} ${className ? className : ''} ${
+          disabled ? styles.disabled : ''
         }`}
         onClick={onClick}
         disabled={disabled}

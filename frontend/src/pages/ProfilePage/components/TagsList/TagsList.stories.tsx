@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import { TagsList } from './TagsList';
 
 const meta = {
@@ -37,7 +38,7 @@ export const ManyItems: Story = {
     items: [
       'Travel', 'Photography', 'Cooking', 'Reading', 'Hiking', 'Music',
       'Movies', 'Art', 'Dancing', 'Swimming', 'Yoga', 'Running',
-      'Gaming', 'Painting', 'Writing', 'Gardening'
+      'Gaming', 'Painting', 'Writing', 'Gardening',
     ],
     commonItems: ['Photography', 'Music', 'Art', 'Gaming'],
   },

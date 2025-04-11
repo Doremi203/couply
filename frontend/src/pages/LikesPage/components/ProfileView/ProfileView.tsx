@@ -7,12 +7,14 @@
  * - Common interest tags highlighted
  * - Touch gestures support for navigation
  */
-import React, { useState, useRef, useEffect } from "react";
-import styles from "./profileView.module.css";
-import { DislikeButton } from "../../../../shared/components/DislikeButton";
-import { LikeButton } from "../../../../shared/components/LikeButton";
-import { BackButton } from "../../../../shared/components/BackButton";
-import { ProfileInfo } from "./components/ProfileInfo";
+import React, { useState, useRef, useEffect } from 'react';
+
+import { BackButton } from '../../../../shared/components/BackButton';
+import { DislikeButton } from '../../../../shared/components/DislikeButton';
+import { LikeButton } from '../../../../shared/components/LikeButton';
+
+import { ProfileInfo } from './components/ProfileInfo';
+import styles from './profileView.module.css';
 
 interface ProfileViewProps {
   profile: {
@@ -38,8 +40,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onLike,
 }) => {
   // State to track the menu position - initially expanded to show full photo
-  const [menuPosition, setMenuPosition] = useState<"collapsed" | "expanded">(
-    "expanded"
+  const [menuPosition, setMenuPosition] = useState<'collapsed' | 'expanded'>(
+    'expanded',
   );
 
   // Refs for containers to handle scrolling and touch events
@@ -49,34 +51,34 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   // Sample photos for the profile
   const samplePhotos = [
     profile.imageUrl, // Use the profile image as the first photo
-    "woman1.jpg",
-    "man1.jpg",
-    "photo1.png",
-    "woman1.jpg",
-    "man1.jpg",
+    'woman1.jpg',
+    'man1.jpg',
+    'photo1.png',
+    'woman1.jpg',
+    'man1.jpg',
   ];
 
   // Mock data for the profile details
   const profileDetails = {
-    bio: profile.bio || "Hello, I am a fashion designer based in Florida.",
-    location: profile.location || "Miami Beach, Florida",
+    bio: profile.bio || 'Hello, I am a fashion designer based in Florida.',
+    location: profile.location || 'Miami Beach, Florida',
     lifestyle: profile.lifestyle || {
       kids: "I don't have kids",
     },
     passion: profile.passion ||
       profile.interests || [
-        "Music",
-        "Travel",
-        "Tea",
-        "Photography",
-        "Fashion",
-        "House Parties",
+        'Music',
+        'Travel',
+        'Tea',
+        'Photography',
+        'Fashion',
+        'House Parties',
       ],
     photos: profile.photos || samplePhotos,
   };
 
   // Simulate common interests (in a real app, this would be compared with the user's interests)
-  const commonInterests = ["Music", "Travel", "Photography"];
+  const commonInterests = ['Music', 'Travel', 'Photography'];
 
   // Check if an interest is common
   const isCommonInterest = (interest: string) => {
@@ -91,7 +93,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
    * Toggle between expanded (full photo) and collapsed (showing details) states
    */
   const toggleMenuPosition = () => {
-    setMenuPosition(menuPosition === "collapsed" ? "expanded" : "collapsed");
+    setMenuPosition(menuPosition === 'collapsed' ? 'expanded' : 'collapsed');
   };
 
   // No initial scroll - let the user scroll manually to see details
@@ -108,30 +110,30 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         
         // If user scrolls down when menu is expanded, collapse the menu to show info
         if (
-          menuPosition === "expanded" &&
+          menuPosition === 'expanded' &&
           scrollTop > 50
         ) {
-          setMenuPosition("collapsed");
+          setMenuPosition('collapsed');
         }
         
         // If user scrolls back up when menu is collapsed, expand the menu to hide info
         if (
-          menuPosition === "collapsed" &&
+          menuPosition === 'collapsed' &&
           scrollTop < 20
         ) {
-          setMenuPosition("expanded");
+          setMenuPosition('expanded');
         }
       }
     };
 
     const container = containerRef.current;
     if (container) {
-      container.addEventListener("scroll", handleScroll);
+      container.addEventListener('scroll', handleScroll);
     }
 
     return () => {
       if (container) {
-        container.removeEventListener("scroll", handleScroll);
+        container.removeEventListener('scroll', handleScroll);
       }
     };
   }, [menuPosition]);
@@ -144,13 +146,13 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
     toggleMenuPosition();
 
     // Scroll to appropriate position based on new menu state
-    if (menuPosition === "collapsed") {
+    if (menuPosition === 'collapsed') {
       // If currently collapsed, will expand, so scroll down to show full photo and hide info
       setTimeout(() => {
         if (containerRef.current) {
           containerRef.current.scrollTo({
             top: containerRef.current.scrollHeight,
-            behavior: "smooth",
+            behavior: 'smooth',
           });
         }
       }, 100);
@@ -160,7 +162,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         if (containerRef.current) {
           containerRef.current.scrollTo({
             top: 0,
-            behavior: "smooth",
+            behavior: 'smooth',
           });
         }
       }, 100);
@@ -195,31 +197,31 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
     const isUpSwipe = distance > 30; // More sensitive - positive means swiping up
 
     // If we're in collapsed state and swiping down, expand to show full photo and hide info
-    if (isDownSwipe && menuPosition === "collapsed") {
+    if (isDownSwipe && menuPosition === 'collapsed') {
       // Expand the menu
-      setMenuPosition("expanded");
+      setMenuPosition('expanded');
 
       // Scroll to show the full photo
       setTimeout(() => {
         if (containerRef.current) {
           containerRef.current.scrollTo({
             top: containerRef.current.scrollHeight,
-            behavior: "smooth",
+            behavior: 'smooth',
           });
         }
       }, 50); // Faster timeout
     }
     // If we're in expanded state and swiping up, collapse to show details
-    else if (isUpSwipe && menuPosition === "expanded") {
+    else if (isUpSwipe && menuPosition === 'expanded') {
       // Collapse the menu
-      setMenuPosition("collapsed");
+      setMenuPosition('collapsed');
 
       // Scroll back to the top
       setTimeout(() => {
         if (containerRef.current) {
           containerRef.current.scrollTo({
             top: 0,
-            behavior: "smooth",
+            behavior: 'smooth',
           });
         }
       }, 50); // Faster timeout
@@ -235,7 +237,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       {/* Full-screen photo view with overlay content */}
       <div
         className={`${styles.profileImageContainer} ${
-          menuPosition === "expanded" ? styles.expanded : ""
+          menuPosition === 'expanded' ? styles.expanded : ''
         }`}
       >
         <BackButton onClose={onClose} />
@@ -246,7 +248,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           className={styles.profileImage}
         />
         {/* Gradient overlay for better text visibility */}
-        <div className={styles.profileGradient}></div>
+        <div className={styles.profileGradient} />
 
         {/* Content displayed on top of the photo */}
         <div className={styles.photoContent}>
@@ -268,11 +270,11 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           {/* Scroll indicator at bottom of photo - always visible */}
           <div
             className={`${styles.photoScrollIndicator} ${
-              menuPosition === "collapsed" ? styles.showScrollBack : ""
+              menuPosition === 'collapsed' ? styles.showScrollBack : ''
             }`}
             onClick={handleToggleClick}
           >
-            {menuPosition === "collapsed" ? "Scroll back to photo" : "Scroll up to view details"}
+            {menuPosition === 'collapsed' ? 'Scroll back to photo' : 'Scroll up to view details'}
             <svg
               width="16"
               height="16"
@@ -280,7 +282,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               style={{
-                transform: menuPosition === "collapsed" ? "rotate(180deg)" : "none"
+                transform: menuPosition === 'collapsed' ? 'rotate(180deg)' : 'none',
               }}
             >
               <path

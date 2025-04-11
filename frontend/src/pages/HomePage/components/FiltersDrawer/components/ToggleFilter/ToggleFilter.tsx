@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "../../filtersDrawer.module.css";
+import React from 'react';
+
+import styles from '../../filtersDrawer.module.css';
 
 type ToggleFilterProps = {
   title: string;
@@ -12,7 +13,7 @@ const ToggleFilter: React.FC<ToggleFilterProps> = ({
   title,
   description,
   value,
-  onChange
+  onChange,
 }) => {
   return (
     <div className={styles.section}>
@@ -24,7 +25,7 @@ const ToggleFilter: React.FC<ToggleFilterProps> = ({
             checked={value}
             onChange={onChange}
           />
-          <span className={styles.slider}></span>
+          <span className={styles.slider} />
         </label>
       </div>
       <p className={styles.verificationText}>

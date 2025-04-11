@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./customInput.module.css";
+import React from 'react';
+
+import styles from './customInput.module.css';
 
 interface CustomInputProps {
   placeholder: string;
@@ -21,7 +22,7 @@ export const CustomInput = ({
       <input
         type={type}
         placeholder={placeholder}
-        className={`${styles.customInput} ${className ? className : ""}`}
+        className={`${styles.customInput} ${className ? className : ''}`}
         value={value}
         onChange={onChange}
       />

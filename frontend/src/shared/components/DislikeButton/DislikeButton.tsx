@@ -1,5 +1,6 @@
-import styles from './dislikeButton.module.css'
-import Dislike from '../Dislike/Dislike'
+import Dislike from '../Dislike/Dislike';
+
+import styles from './dislikeButton.module.css';
 
 interface DislikeButtonProps {
   onClick: () => void
@@ -11,7 +12,7 @@ export const DislikeButton = ({onClick, className}: DislikeButtonProps) => {
     <div className={`${styles.dislikeCircle} ${className || ''}`} onClick={onClick}>
       <Dislike />
     </div>
-  )
-}
+  );
+};
 
 export default DislikeButton;

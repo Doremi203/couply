@@ -1,12 +1,14 @@
-import React from "react";
-import styles from "./profileView.module.css";
-import { ProfileData } from "../../types";
-import { ProfileHeader } from "../ProfileHeader";
-import { ProfileInfo } from "../ProfileInfo";
-import { PhotoGallery } from "../PhotoGallery";
-import { ProfileSection } from "../ProfileSection";
-import { TagsList } from "../TagsList";
-import { InfoGrid } from "../InfoGrid";
+import React from 'react';
+
+import { ProfileData } from '../../types';
+import { InfoGrid } from '../InfoGrid';
+import { PhotoGallery } from '../PhotoGallery';
+import { ProfileHeader } from '../ProfileHeader';
+import { ProfileInfo } from '../ProfileInfo';
+import { ProfileSection } from '../ProfileSection';
+import { TagsList } from '../TagsList';
+
+import styles from './profileView.module.css';
 
 interface ProfileViewProps {
   profileData: ProfileData;
@@ -27,15 +29,15 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onVisibilityToggle,
   onActivityClick,
   onPreviewClick,
-  onVerificationRequest
+  onVerificationRequest,
 }) => {
   // Create info items for the basic information section
   const basicInfoItems = [
-    { label: "Name", value: profileData.name },
-    { label: "Age", value: profileData.age },
-    { label: "Gender", value: profileData.gender === "female" ? "Female" : "Male" },
-    { label: "Email", value: profileData.email },
-    { label: "Phone", value: profileData.phone }
+    { label: 'Name', value: profileData.name },
+    { label: 'Age', value: profileData.age },
+    { label: 'Gender', value: profileData.gender === 'female' ? 'Female' : 'Male' },
+    { label: 'Email', value: profileData.email },
+    { label: 'Phone', value: profileData.phone },
   ];
 
   return (

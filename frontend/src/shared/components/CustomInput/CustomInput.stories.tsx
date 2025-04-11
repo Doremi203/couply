@@ -1,5 +1,6 @@
-import CustomInput from './CustomInput';
 import { StoryObj, Meta } from '@storybook/react';
+
+import CustomInput from './CustomInput';
 
 interface CustomInputStoryProps {
   placeholder: string;

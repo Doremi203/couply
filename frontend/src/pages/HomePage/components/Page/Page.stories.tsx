@@ -1,6 +1,7 @@
-import HomePage from './Page';
 import { StoryObj, Meta } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
+
+import HomePage from './Page';
 
 const meta: Meta = {
   title: 'Pages/HomePage',

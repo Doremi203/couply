@@ -1,4 +1,4 @@
-import styles from './backButton.module.css'
+import styles from './backButton.module.css';
 
 interface BackButtonProps {
   onClose: () => void
@@ -30,5 +30,5 @@ export const BackButton = ({onClose}: BackButtonProps) => {
       />
     </svg>
   </button>
-  )
-}
+  );
+};

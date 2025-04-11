@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { DislikeButton } from './DislikeButton';
 
 const meta: Meta<typeof DislikeButton> = {

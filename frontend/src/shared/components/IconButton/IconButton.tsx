@@ -1,5 +1,6 @@
-import { ReactNode } from 'react'
-import styles from './iconButton.module.css'
+import { ReactNode } from 'react';
+
+import styles from './iconButton.module.css';
 
 interface CircleIconButtonProps {
   onClick: () => void
@@ -14,7 +15,7 @@ export const IconButton = ({
   className,
   iconClassName,
   children,
-  touchFriendly = false
+  touchFriendly = false,
 }: CircleIconButtonProps) => {
   return (
     <div
@@ -29,7 +30,7 @@ export const IconButton = ({
         {children}
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default IconButton;

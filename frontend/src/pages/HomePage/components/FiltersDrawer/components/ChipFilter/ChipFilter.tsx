@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "../../filtersDrawer.module.css";
+import React from 'react';
+
+import styles from '../../filtersDrawer.module.css';
 
 type ChipFilterProps = {
   title: string;
@@ -12,7 +13,7 @@ const ChipFilter: React.FC<ChipFilterProps> = ({
   title,
   options,
   selectedOptions,
-  onToggle
+  onToggle,
 }) => {
   return (
     <div className={styles.section}>

@@ -1,4 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
+
 import { TelegramIcon } from './TelegramIcon';
 
 const meta: Meta<typeof TelegramIcon> = {

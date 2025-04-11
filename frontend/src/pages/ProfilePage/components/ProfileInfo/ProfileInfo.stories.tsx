@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ProfileInfo } from './ProfileInfo';
+
 import { ProfileData } from '../../types';
+
+import { ProfileInfo } from './ProfileInfo';
 
 const meta = {
   title: 'Components/ProfileInfo',

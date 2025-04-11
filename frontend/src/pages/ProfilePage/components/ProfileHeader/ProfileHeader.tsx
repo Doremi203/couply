@@ -1,11 +1,13 @@
-import React from "react";
-import styles from "./profileHeader.module.css";
-import { IconButton } from "../../../../shared/components/IconButton";
-import { CustomButton } from "../../../../shared/components/CustomButton";
-import EditIcon from "@mui/icons-material/Edit";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import HistoryIcon from "@mui/icons-material/History";
+import EditIcon from '@mui/icons-material/Edit';
+import HistoryIcon from '@mui/icons-material/History';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import React from 'react';
+
+import { CustomButton } from '../../../../shared/components/CustomButton';
+import { IconButton } from '../../../../shared/components/IconButton';
+
+import styles from './profileHeader.module.css';
 
 interface ProfileHeaderProps {
   isProfileHidden: boolean;
@@ -20,7 +22,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   onEditToggle,
   onVisibilityToggle,
   onActivityClick,
-  onPreviewClick
+  onPreviewClick,
 }) => {
   return (
     <div className={styles.profileHeader}>

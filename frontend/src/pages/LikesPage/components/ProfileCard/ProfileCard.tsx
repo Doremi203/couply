@@ -1,6 +1,8 @@
-import React from "react";
-import styles from "./profileCard.module.css";
-import { LikeButton } from "../../../../shared/components/LikeButton";
+import React from 'react';
+
+import { LikeButton } from '../../../../shared/components/LikeButton';
+
+import styles from './profileCard.module.css';
 
 export interface ProfileCardProps {
   profile: {

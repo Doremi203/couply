@@ -1,59 +1,61 @@
-import { useState } from "react";
-import { useSwipeable } from "react-swipeable";
-import styles from "./profileSlider.module.css";
-import { DislikeButton } from "../../../../shared/components/DislikeButton";
-import { LikeButton } from "../../../../shared/components/LikeButton";
-import { ProfileView } from "../../../../pages/LikesPage/components/ProfileView";
+import { useState } from 'react';
+import { useSwipeable } from 'react-swipeable';
+
+import { ProfileView } from '../../../../pages/LikesPage/components/ProfileView';
+import { DislikeButton } from '../../../../shared/components/DislikeButton';
+import { LikeButton } from '../../../../shared/components/LikeButton';
+
+import styles from './profileSlider.module.css';
 
 
 const profiles = [
   {
     id: 1,
-    name: "Анна",
+    name: 'Анна',
     age: 25,
-    bio: "Люблю путешествовать и заниматься спортом.",
-    imageUrl: "man1.jpg",
-    location: "Москва, Россия",
-    interests: ["Музыка", "Путешествия", "Фотография", "Спорт", "Искусство"],
+    bio: 'Люблю путешествовать и заниматься спортом.',
+    imageUrl: 'man1.jpg',
+    location: 'Москва, Россия',
+    interests: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
     lifestyle: {
-      kids: "Нет детей",
-      smoking: "Не курю",
-      alcohol: "Иногда",
-      education: "Высшее образование"
+      kids: 'Нет детей',
+      smoking: 'Не курю',
+      alcohol: 'Иногда',
+      education: 'Высшее образование',
     },
-    passion: ["Музыка", "Путешествия", "Фотография", "Спорт", "Искусство"]
+    passion: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
   },
   {
     id: 2,
-    name: "Иван",
+    name: 'Иван',
     age: 30,
-    bio: "Пишу музыку и люблю кататься на велосипеде.",
-    imageUrl: "photo1.png",
-    location: "Санкт-Петербург, Россия",
-    interests: ["Музыка", "Велоспорт", "Технологии", "Кино", "Путешествия"],
+    bio: 'Пишу музыку и люблю кататься на велосипеде.',
+    imageUrl: 'photo1.png',
+    location: 'Санкт-Петербург, Россия',
+    interests: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
     lifestyle: {
-      kids: "Нет детей",
-      smoking: "Не курю",
-      alcohol: "Редко",
-      education: "Высшее образование"
+      kids: 'Нет детей',
+      smoking: 'Не курю',
+      alcohol: 'Редко',
+      education: 'Высшее образование',
     },
-    passion: ["Музыка", "Велоспорт", "Технологии", "Кино", "Путешествия"]
+    passion: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
   },
   {
     id: 3,
-    name: "Ольга",
+    name: 'Ольга',
     age: 28,
-    bio: "Увлекаюсь фотографией и кулинарией.",
-    imageUrl: "woman1.jpg",
-    location: "Казань, Россия",
-    interests: ["Фотография", "Кулинария", "Книги", "Йога", "Природа"],
+    bio: 'Увлекаюсь фотографией и кулинарией.',
+    imageUrl: 'woman1.jpg',
+    location: 'Казань, Россия',
+    interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
     lifestyle: {
-      kids: "Нет детей",
-      smoking: "Не курю",
-      alcohol: "Не пью",
-      education: "Высшее образование"
+      kids: 'Нет детей',
+      smoking: 'Не курю',
+      alcohol: 'Не пью',
+      education: 'Высшее образование',
     },
-    passion: ["Фотография", "Кулинария", "Книги", "Йога", "Природа"]
+    passion: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
   },
   // Добавьте больше профилей по потребности
 ];
@@ -68,7 +70,7 @@ export const ProfileSlider = () => {
 
   const handlePrev = () => {
     setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + profiles.length) % profiles.length
+      (prevIndex) => (prevIndex - 1 + profiles.length) % profiles.length,
     );
   };
 
@@ -123,7 +125,7 @@ export const ProfileSlider = () => {
             location: selectedProfile.location,
             interests: selectedProfile.interests,
             lifestyle: selectedProfile.lifestyle,
-            passion: selectedProfile.passion
+            passion: selectedProfile.passion,
           }}
           onClose={handleCloseProfile}
           onLike={handleLike}

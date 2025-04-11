@@ -1,5 +1,6 @@
-import React from "react";
-import styles from "./tagsList.module.css";
+import React from 'react';
+
+import styles from './tagsList.module.css';
 
 interface TagsListProps {
   items: string[];
@@ -8,7 +9,7 @@ interface TagsListProps {
 
 export const TagsList: React.FC<TagsListProps> = ({ 
   items, 
-  commonItems = [] 
+  commonItems = [], 
 }) => {
   return (
     <div className={styles.tagsList}>

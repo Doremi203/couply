@@ -1,6 +1,7 @@
-import React from "react";
-import styles from "../../filtersDrawer.module.css";
-import { CustomSlider } from "../../styled/CustomSlider";
+import React from 'react';
+
+import styles from '../../filtersDrawer.module.css';
+import { CustomSlider } from '../../styled/CustomSlider';
 
 type SliderFilterProps = {
   title: string;
@@ -9,7 +10,7 @@ type SliderFilterProps = {
   max: number;
   onChange: (event: Event, value: number | number[]) => void;
   unit?: string;
-  valueLabelDisplay?: "auto" | "on" | "off";
+  valueLabelDisplay?: 'auto' | 'on' | 'off';
 };
 
 const SliderFilter: React.FC<SliderFilterProps> = ({
@@ -18,8 +19,8 @@ const SliderFilter: React.FC<SliderFilterProps> = ({
   min,
   max,
   onChange,
-  unit = "",
-  valueLabelDisplay = "off"
+  unit = '',
+  valueLabelDisplay = 'off',
 }) => {
   // Format the display value based on whether it's a single value or range
   const displayValue = Array.isArray(value) 

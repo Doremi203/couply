@@ -1,5 +1,6 @@
-import { ReactNode } from "react";
-import styles from "./buttonWithIcon.module.css";
+import { ReactNode } from 'react';
+
+import styles from './buttonWithIcon.module.css';
 
 interface ButtonWithIconProps {
   icon: ReactNode;
@@ -19,8 +20,8 @@ export const ButtonWithIcon = ({
   return (
     <div className={styles.buttonWrapper}>
       <button
-        className={`${styles.buttonWithIcon} ${className ? className : ""} ${
-          disabled ? styles.disabled : ""
+        className={`${styles.buttonWithIcon} ${className ? className : ''} ${
+          disabled ? styles.disabled : ''
         }`}
         onClick={onClick}
         disabled={disabled}

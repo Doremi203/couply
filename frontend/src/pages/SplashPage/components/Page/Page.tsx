@@ -1,11 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import styles from "./splashPage.module.css";
+import { useNavigate } from 'react-router-dom';
+
+import styles from './splashPage.module.css';
 
 export const SplashPage = () => {
   const navigate = useNavigate();
 
   setTimeout(() => {
-    navigate("/auth");
+    navigate('/auth');
   }, 3000);
 
   return (
@@ -18,7 +19,7 @@ export const SplashPage = () => {
           className={styles.logo}
         />
 
-        <div className={styles.loader}></div>
+        <div className={styles.loader} />
       </body>
     </div>
   );

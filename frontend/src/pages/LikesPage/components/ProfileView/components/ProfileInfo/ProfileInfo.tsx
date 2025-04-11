@@ -6,9 +6,10 @@
  * - Interest tags with common interests highlighted
  * - Detailed sections (bio, lifestyle, passion, photos)
  */
-import React from "react";
-import styles from "../../profileView.module.css";
-import { CommonInterest } from "../../../../../../shared/components/CommonInterest";
+import React from 'react';
+
+import { CommonInterest } from '../../../../../../shared/components/CommonInterest';
+import styles from '../../profileView.module.css';
 
 interface ProfileInfoProps {
   profile: {
@@ -31,7 +32,7 @@ interface ProfileInfoProps {
     passion: string[];
     photos: string[];
   };
-  menuPosition: "collapsed" | "expanded";
+  menuPosition: 'collapsed' | 'expanded';
   handleToggleClick: () => void;
   handleTouchStart: (e: React.TouchEvent) => void;
   handleTouchMove: (e: React.TouchEvent) => void;
@@ -55,7 +56,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
     <div
       ref={profileInfoRef}
       className={`${styles.profileInfo} ${
-        menuPosition === "expanded" ? styles.expanded : styles.collapsed
+        menuPosition === 'expanded' ? styles.expanded : styles.collapsed
       }`}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}

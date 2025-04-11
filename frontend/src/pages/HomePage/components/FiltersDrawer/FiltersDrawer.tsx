@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { Drawer, Box } from "@mui/material";
-import styles from "./filtersDrawer.module.css";
+import { Drawer, Box } from '@mui/material';
+import React, { useState } from 'react';
+
 
 // Import components
-import FilterHeader from "./components/FilterHeader";
-import GenderFilter from "./components/GenderFilter";
-import SliderFilter from "./components/SliderFilter";
-import ChipFilter from "./components/ChipFilter";
-import ToggleFilter from "./components/ToggleFilter";
-import FilterActions from "./components/FilterActions";
+import ChipFilter from './components/ChipFilter';
+import FilterActions from './components/FilterActions';
+import FilterHeader from './components/FilterHeader';
+import GenderFilter from './components/GenderFilter';
+import SliderFilter from './components/SliderFilter';
+import ToggleFilter from './components/ToggleFilter';
+import styles from './filtersDrawer.module.css';
 
 type Props = {
   open: boolean;
@@ -17,7 +18,7 @@ type Props = {
 
 const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   // Gender preference
-  const [interestedIn, setInterestedIn] = useState<string>("Girls");
+  const [interestedIn, setInterestedIn] = useState<string>('Girls');
   
   // Distance
   const [distance, setDistance] = useState<number>(40);
@@ -26,11 +27,11 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [ageRange, setAgeRange] = useState<number[]>([20, 28]);
   
   // Interests
-  const interestOptions = ["Sports", "Travel", "Music", "Art", "Food"];
+  const interestOptions = ['Sports', 'Travel', 'Music', 'Art', 'Food'];
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   
   // Music preferences
-  const musicOptions = ["Rock", "Pop", "Hip Hop", "Jazz", "Classical"];
+  const musicOptions = ['Rock', 'Pop', 'Hip Hop', 'Jazz', 'Classical'];
   const [selectedMusicPreferences, setSelectedMusicPreferences] = useState<string[]>([]);
   
   // Verification status
@@ -69,7 +70,7 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   };
 
   const handleClearFilters = () => {
-    setInterestedIn("Both");
+    setInterestedIn('Both');
     setDistance(40);
     setAgeRange([20, 28]);
     setSelectedInterests([]);
@@ -78,9 +79,9 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   };
 
   const genderOptions = [
-    { label: "Girls", value: "Girls" },
-    { label: "Boys", value: "Boys" },
-    { label: "Both", value: "Both" },
+    { label: 'Girls', value: 'Girls' },
+    { label: 'Boys', value: 'Boys' },
+    { label: 'Both', value: 'Both' },
   ];
 
   return (
@@ -98,8 +99,8 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
           width: '100%',
           maxWidth: '430px',
           margin: '0 auto',
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
-        }
+          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
+        },
       }}
     >
       <Box className={styles.container}>

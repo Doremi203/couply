@@ -1,5 +1,6 @@
-import CustomButton from './CustomButton';
 import { StoryObj, Meta } from '@storybook/react';
+
+import CustomButton from './CustomButton';
 
 interface CustomButtonStoryProps {
   text: string;

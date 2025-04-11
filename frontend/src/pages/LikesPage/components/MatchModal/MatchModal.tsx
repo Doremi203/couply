@@ -1,6 +1,8 @@
-import React from "react";
-import styles from "./matchModal.module.css";
-import { CustomButton } from "../../../../shared/components/CustomButton";
+import React from 'react';
+
+import { CustomButton } from '../../../../shared/components/CustomButton';
+
+import styles from './matchModal.module.css';
 
 interface MatchModalProps {
   userImage: string;
@@ -22,14 +24,14 @@ export const MatchModal: React.FC<MatchModalProps> = ({
       <div className={styles.modal}>
         <div className={styles.confetti}>
           {/* Confetti elements */}
-          <div className={`${styles.confettiItem} ${styles.confetti1}`}></div>
-          <div className={`${styles.confettiItem} ${styles.confetti2}`}></div>
-          <div className={`${styles.confettiItem} ${styles.confetti3}`}></div>
-          <div className={`${styles.confettiItem} ${styles.confetti4}`}></div>
-          <div className={`${styles.confettiItem} ${styles.confetti5}`}></div>
-          <div className={`${styles.confettiItem} ${styles.confetti6}`}></div>
-          <div className={`${styles.confettiItem} ${styles.confetti7}`}></div>
-          <div className={`${styles.confettiItem} ${styles.confetti8}`}></div>
+          <div className={`${styles.confettiItem} ${styles.confetti1}`} />
+          <div className={`${styles.confettiItem} ${styles.confetti2}`} />
+          <div className={`${styles.confettiItem} ${styles.confetti3}`} />
+          <div className={`${styles.confettiItem} ${styles.confetti4}`} />
+          <div className={`${styles.confettiItem} ${styles.confetti5}`} />
+          <div className={`${styles.confettiItem} ${styles.confetti6}`} />
+          <div className={`${styles.confettiItem} ${styles.confetti7}`} />
+          <div className={`${styles.confettiItem} ${styles.confetti8}`} />
         </div>
 
         <div className={styles.profileImages}>

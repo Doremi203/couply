@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { NavBar } from './NavBar';
 import { MemoryRouter } from 'react-router-dom';
+
+import { NavBar } from './NavBar';
 
 const meta = {
   title: 'Components/NavBar',
