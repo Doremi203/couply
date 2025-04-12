@@ -64,14 +64,13 @@ jobs:
       - name: Setup yc
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
-          echo "/opt/yc/bin/yc" >> $GITHUB_PATH
-          yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
+          /opt/yc/bin/yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
 
       - name: Migrate up
         run: |
           echo "Fetching DB_USER from Yandex Cloud Lockbox..."
-          DB_USER=$(yc lockbox payload get testing-db --key user)
-          DB_PASS=$(yc lockbox payload get testing-db --key password)
+          DB_USER=$(/opt/yc/bin/yc lockbox payload get testing-db --key user)
+          DB_PASS=$(/opt/yc/bin/yc lockbox payload get testing-db --key password)
           
           mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
           
@@ -95,12 +94,11 @@ jobs:
       - name: Setup yc
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
-          echo "/opt/yc/bin/yc" >> $GITHUB_PATH
-          yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
+          /opt/yc/bin/yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
 
       - name: Login docker
         run: |
-          echo $(yc iam create-token)|docker login --username iam --password-stdin cr.yandex
+          echo $(/opt/yc/bin/yc iam create-token)|docker login --username iam --password-stdin cr.yandex
 
       - name: Build Docker image
         run: docker build -t cr.yandex/crpe9kgeql1v6b7gujfj/auth-testing:latest --push . -f testing.Dockerfile
