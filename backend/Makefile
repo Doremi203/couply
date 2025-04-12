@@ -1,6 +1,6 @@
 ### Common targets for all services
-DB = postgres://user:pass@localhost:5432/
-DB_PARAMS = ?sslmode=disable
+DB = pgx://user:pass@localhost:5432/
+DB_PARAMS = ?sslmode=disable;preferSimpleProtocol=true
 
 MIGRATE_CREATE = migrate create -ext sql -dir
 
@@ -64,10 +64,10 @@ auth/generate:
 AUTH_MIGRATIONS = file://auth/migrations
 
 auth/migrate/up:
-	migrate -source $(AUTH_MIGRATIONS) -database $(DB)auth$(DB_PARAMS) up
+	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" up
 
 auth/migrate/down:
-	migrate -source $(AUTH_MIGRATIONS) -database $(DB)auth$(DB_PARAMS) down -all
+	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down -all
 
 auth/migrate/create:
 	$(MIGRATE_CREATE) $(AUTH_MIGRATIONS) $(name)
