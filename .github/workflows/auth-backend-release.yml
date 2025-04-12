@@ -62,6 +62,8 @@ jobs:
       run:
         working-directory: backend/auth
     steps:
+      - uses: actions/checkout@v4
+
       - name: Download migrate
         run: |
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz -o migrate.tar.gz
