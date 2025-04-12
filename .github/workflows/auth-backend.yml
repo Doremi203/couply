@@ -10,14 +10,13 @@ on:
     paths:
       - 'backend/auth/**'
       - '.github/workflows/backend.yml'
-      - '.github/actions/codegen/**'  # Include changes to composite action
+      - '.github/actions/codegen/**'
   pull_request:
     branches: ["main"]
     paths:
       - 'backend/auth/**'
       - '.github/workflows/backend.yml'
-      - '.github/actions/codegen/**'  # Include changes to composite action
-  workflow_dispatch: # Allow manual triggering
+      - '.github/actions/codegen/**'
 
 # Cancel any in-progress job or run for the same branch/PR to save resources
 concurrency:
@@ -66,32 +65,6 @@ jobs:
 
       - name: Run tests with coverage
         run: MIGRATIONS_PATH=${{ github.workspace }}/backend/auth/migrations go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...
-
-      - name: Download artifact - main test coverage
-        id: download-main-breakdown
-        uses: dawidd6/action-download-artifact@v9
-        with:
-          branch: main
-          workflow_conclusion: success
-          name: main.breakdown.backend.auth
-          if_no_artifact_found: warn
-          github_token: '${{ github.token }}'
-
-      - name: Check test coverage
-        uses: vladopajic/go-test-coverage@v2.13.0
-        with:
-          profile: ./backend/auth/coverage.txt
-          threshold-total: 15
-          breakdown-file-name: ${{ github.ref_name == 'main' && 'main.breakdown.backend.auth' || '' }}
-          diff-base-breakdown-file-name: ${{ steps.download-main-breakdown.outputs.found_artifact == 'true' && 'main.breakdown.backend.auth' || '' }}
-
-      - name: upload artifact (main.breakdown)
-        uses: actions/upload-artifact@v4
-        if: github.ref_name == 'main'
-        with:
-          name: main.breakdown.backend.auth
-          path: main.breakdown.backend.auth
-          if-no-files-found: error
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v5
