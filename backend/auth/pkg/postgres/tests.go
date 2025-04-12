@@ -32,14 +32,14 @@ func SetupTests(m *testing.M, tester *Tester) {
 	}
 
 	req := testcontainers.ContainerRequest{
-		Image:        "postgres:13-alpine",
+		Image:        "postgres",
 		ExposedPorts: []string{"5432/tcp"},
 		Env: map[string]string{
 			"POSTGRES_PASSWORD": cfg.Password,
 			"POSTGRES_USER":     cfg.User,
 			"POSTGRES_DB":       cfg.Database,
 		},
-		WaitingFor: wait.ForListeningPort("5432/tcp").WithStartupTimeout(10 * time.Second),
+		WaitingFor: wait.ForListeningPort("5432/tcp").WithStartupTimeout(20 * time.Second),
 	}
 
 	postgresC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{

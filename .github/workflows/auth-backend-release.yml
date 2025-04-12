@@ -16,12 +16,6 @@ jobs:
         with:
           working-directory: backend/auth
 
-      - name: Set up Go
-        uses: actions/setup-go@v5.1.0
-        with:
-          go-version: '1.23.5'
-          cache: true
-
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
@@ -46,7 +40,7 @@ jobs:
         run: MIGRATIONS_PATH=${{ github.workspace }}/backend/auth/migrations go test ./... -race
 
       - name: Deploy to docker
-        run: docker-compose -f docker-compose.testing.yml up -d
+        run: docker compose -f docker-compose.testing.yml up -d
 
       - name: Download migrate
         run: |
