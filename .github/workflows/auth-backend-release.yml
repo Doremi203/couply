@@ -76,7 +76,7 @@ jobs:
           
           mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
           
-          ./migrate -source file://migrations -database "postgres://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/auth?sslmode=verify-full;target_session_attrs=read-write" up
+          ./migrate -source file://migrations -database "pgx://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/auth?sslmode=verify-full;target_session_attrs=read-write" up
           
 
   build:
