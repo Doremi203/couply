@@ -1,6 +1,6 @@
 ### Common targets for all services
-DB = pgx://user:pass@localhost:5432/
-DB_PARAMS = ?sslmode=disable;preferSimpleProtocol=true
+DB = pgx5://user:pass@localhost:5432/
+DB_PARAMS = ?sslmode=disable
 
 MIGRATE_CREATE = migrate create -ext sql -dir
 
