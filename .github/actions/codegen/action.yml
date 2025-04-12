@@ -2,10 +2,6 @@ name: 'Codegen'
 description: 'Generate code for service'
 
 inputs:
-  go-version:
-    description: 'Go version to use'
-    required: false
-    default: '1.23.5'
   working-directory:
     description: 'Working directory for commands'
     required: true
