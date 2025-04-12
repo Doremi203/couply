@@ -25,6 +25,7 @@ runs:
 
     - name: Set up Go
       uses: actions/setup-go@v5.1.0
+      working-directory: ${{ inputs.working-directory }}
       with:
         go-version: ${{ inputs.go-version }}
 
