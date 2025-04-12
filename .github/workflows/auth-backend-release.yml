@@ -49,7 +49,7 @@ jobs:
           chmod +x migrate
 
       - name: Migrate up
-        run: migrate -source file://migrations -database postgres://user:pass@localhost:5432/auth?sslmode=disable up
+        run: ./migrate -source file://migrations -database postgres://user:pass@localhost:5432/auth?sslmode=disable up
 
       - name: Run functional tests
         run: echo "Running functional tests"
@@ -67,7 +67,6 @@ jobs:
           curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz -o migrate.tar.gz
           tar -zxvf migrate.tar.gz
           chmod +x migrate
-          sudo mv migrate /usr/local/bin/
 
       - name: Setup yc
         run: |
@@ -82,7 +81,7 @@ jobs:
           
           mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
           
-          migrate -source file://migrations -database postgres://"$DB_USER":"$DB_PASS"@"${{ secrets.TESTING_DB_HOST }}"/auth?sslmode=verify-full;target_session_attrs=read-write up
+          ./migrate -source file://migrations -database postgres://"$DB_USER":"$DB_PASS"@"${{ secrets.TESTING_DB_HOST }}"/auth?sslmode=verify-full;target_session_attrs=read-write up
           
 
   build:
