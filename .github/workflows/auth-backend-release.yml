@@ -40,7 +40,7 @@ jobs:
         run: MIGRATIONS_PATH=${{ github.workspace }}/backend/auth/migrations go test ./... -race
 
       - name: Deploy to docker
-        run: docker compose -f docker-compose.testing.yml up -d
+        run: cd .. && docker compose -f docker-compose.testing.yml up -d
 
       - name: Download migrate
         run: |
