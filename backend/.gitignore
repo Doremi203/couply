@@ -1,0 +1,13 @@
+# ignore vendor
+vendor/*
+common/proto/*
+
+# ignore proto build artifacts
+*cover.out
+*gen/*
+*_mock.go
+*.pb.go
+*.grpc.pb.go
+*.pb.gw.go
+*.swagger.json
+*.pb.validate.go

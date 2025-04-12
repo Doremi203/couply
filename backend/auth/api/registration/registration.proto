@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package registration;
+
+option go_package = "github.com/Doremi203/couply/backend/auth/api/registration";
+
+import "google/api/annotations.proto";
+
+service Registration {
+    rpc BasicRegisterV1(BasicRegisterRequestV1) returns (BasicRegisterResponseV1) {
+        option (google.api.http) = {
+            post: "/v1/register/basic"
+            body: "*"
+        };
+    }
+}
+
+message BasicRegisterRequestV1 {
+    string email = 1;
+    string password = 2;
+}
+
+message BasicRegisterResponseV1 {}

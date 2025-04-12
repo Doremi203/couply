@@ -1,0 +1,21 @@
+grpc:
+  port: 8080
+
+http:
+  port: 9090
+
+logging:
+  level: debug
+  format: console
+
+swagger-ui:
+  path: /app/swagger-ui
+  enabled: true
+
+database:
+  host: db
+  port: 5432
+  user: user
+  password: pass
+  database: auth
+  options: sslmode=disable

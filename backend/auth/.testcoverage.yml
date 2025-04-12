@@ -1,0 +1,11 @@
+profile: ./backend/auth/coverage.txt
+
+threshold:
+  total: 15
+
+exclude:
+  paths:
+    - \.pb\.go$
+    - \.pb\.gw\.go$
+    - \.pb\.validate\.go$
+    - _mock\.go$

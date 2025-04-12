@@ -1,0 +1,86 @@
+name: Auth Service CI/CD
+
+permissions:
+  actions: read
+  contents: read
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'backend/auth/**'
+      - '.github/workflows/backend.yml'
+      - '.github/actions/codegen/**'
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'backend/auth/**'
+      - '.github/workflows/backend.yml'
+      - '.github/actions/codegen/**'
+
+# Cancel any in-progress job or run for the same branch/PR to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.7
+          working-directory: backend/auth
+          args: --timeout=3m
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      - name: Run tests with coverage
+        run: MIGRATIONS_PATH=${{ github.workspace }}/backend/auth/migrations go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: ${{ github.repository }}
+          files: ./backend/auth/coverage.txt
+          fail_ci_if_error: false
+          verbose: true
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/auth
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/auth
+
+      - name: Build Docker image
+        run: docker build -t auth_service:latest . -f prod.Dockerfile
