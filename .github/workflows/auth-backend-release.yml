@@ -63,7 +63,7 @@ jobs:
 
       - name: Download yc
         run: |
-          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i $HOME/yandex-cloud
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i $HOME/yandex-cloud -n
           echo "$HOME/yandex-cloud" >> $GITHUB_PATH
 
       - name: Setup yc
