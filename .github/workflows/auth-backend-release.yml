@@ -65,14 +65,14 @@ jobs:
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
           echo '${{ secrets.YC_SERVICE_KEY }}' > sa-key.json
-          cat sa-key.json
           /opt/yc/bin/yc config set service-account-key sa-key.json
+          /opt/yc/bin/yc config set folder-id b1ggapscf0p06cohndtt
 
       - name: Migrate up
         run: |
           echo "Fetching DB_USER from Yandex Cloud Lockbox..."
-          DB_USER=$(/opt/yc/bin/yc lockbox payload get testing-db --key user)
-          DB_PASS=$(/opt/yc/bin/yc lockbox payload get testing-db --key password)
+          DB_USER=$(/opt/yc/bin/yc lockbox payload get --name testing-db --key user)
+          DB_PASS=$(/opt/yc/bin/yc lockbox payload get --name testing-db --key password)
           
           mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
           
@@ -97,6 +97,7 @@ jobs:
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
           echo '${{ secrets.YC_SERVICE_KEY }}' > sa-key.json
+          /opt/yc/bin/yc config set folder-id b1ggapscf0p06cohndtt
           /opt/yc/bin/yc config set service-account-key sa-key.json
 
       - name: Login docker
