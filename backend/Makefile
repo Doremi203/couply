@@ -1,5 +1,5 @@
 ### Common targets for all services
-DB = pgx5://user:pass@localhost:5432/
+DB = postgresql://user:pass@localhost:5432/
 DB_PARAMS = ?sslmode=disable
 
 MIGRATE_CREATE = migrate create -ext sql -dir
