@@ -61,14 +61,10 @@ jobs:
           tar -zxvf migrate.tar.gz
           chmod +x migrate
 
-      - name: Download yc
-        run: |
-          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i $HOME/yandex-cloud -n
-          echo "$HOME/yandex-cloud" >> $GITHUB_PATH
-
       - name: Setup yc
         run: |
-          yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+          /opt/yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
 
       - name: Migrate up
         run: |
@@ -97,8 +93,8 @@ jobs:
 
       - name: Setup yc
         run: |
-          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-          yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+          /opt/yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
 
       - name: Login docker
         run: |
