@@ -70,10 +70,12 @@ jobs:
           tar -zxvf migrate.tar.gz
           chmod +x migrate
 
-      - name: Setup yc
+      - name: Download yc
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-          source "/home/runner/.bashrc"
+
+      - name: Setup yc
+        run: |
           yc config set service-account-key "${{ secrets.YC_SERVICE_KEY }}"
 
       - name: Migrate up
