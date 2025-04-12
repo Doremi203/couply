@@ -39,17 +39,8 @@ jobs:
       - name: Run tests
         run: MIGRATIONS_PATH=${{ github.workspace }}/backend/auth/migrations go test ./... -race
 
-      - name: Deploy to docker
+      - name: Docker compose
         run: cd .. && docker compose -f docker-compose.testing.yml up -d
-
-      - name: Download migrate
-        run: |
-          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz -o migrate.tar.gz
-          tar -zxvf migrate.tar.gz
-          chmod +x migrate
-
-      - name: Migrate up
-        run: ./migrate -source file://migrations -database postgres://user:pass@localhost:5432/auth?sslmode=disable up
 
       - name: Run functional tests
         run: echo "Running functional tests"

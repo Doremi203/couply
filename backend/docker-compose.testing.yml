@@ -1,6 +1,11 @@
 services:
   db:
     image: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
@@ -21,4 +26,14 @@ services:
       - "8080:8080"
       - "9090:9090"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+  migrate:
+    image: migrate/migrate
+    entrypoint: ["migrate", "-source", "file://migrations", "-database", "postgres://user:pass@db:5432/auth?sslmode=disable", "up"]
+    volumes:
+      - ./migrations:/migrations
+    depends_on:
+      db:
+        condition: service_healthy
