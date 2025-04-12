@@ -1,5 +1,5 @@
 ### Common targets for all services
-DB = postgresql://user:pass@localhost:5432/
+DB = postgres://user:pass@localhost:5432/
 DB_PARAMS = ?sslmode=disable
 
 MIGRATE_CREATE = migrate create -ext sql -dir
@@ -12,6 +12,9 @@ deps/buf:
 
 deps/mockgen:
 	go install go.uber.org/mock/mockgen@latest
+
+deps/goose:
+	go install github.com/pressly/goose/v3/cmd/goose@latest
 
 deps/protoc:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
@@ -61,13 +64,13 @@ auth/run: auth/build
 auth/generate:
 	cd auth && go generate ./...
 
-AUTH_MIGRATIONS = file://auth/migrations
+AUTH_MIGRATIONS = auth/migtest
 
 auth/migrate/up:
-	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" up
+	goose -dir $(AUTH_MIGRATIONS) postgres "$(DB)auth$(DB_PARAMS)" up
 
 auth/migrate/down:
-	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down -all
+	goose -dir $(AUTH_MIGRATIONS) postgres "$(DB)auth$(DB_PARAMS)" reset
 
 auth/migrate/create:
 	$(MIGRATE_CREATE) $(AUTH_MIGRATIONS) $(name)

@@ -55,11 +55,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download migrate
+      - name: Set up Go
+        uses: actions/setup-go@v5.1.0
+        with:
+          go-version-file: backend/auth/go.mod
+          cache-dependency-path: backend/auth/go.sum
+
+      - name: Download goose
         run: |
-          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz -o migrate.tar.gz
-          tar -zxvf migrate.tar.gz
-          chmod +x migrate
+          go install github.com/pressly/goose/v3/cmd/goose@latest
 
       - name: Setup yc
         run: |
@@ -76,7 +80,7 @@ jobs:
           
           mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
           
-          ./migrate -source file://migrations -database "postgresql://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/auth?sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/home/runner/.postgresql/root.crt" up
+          goose -dir migtest postgres "postgres://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/auth?sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/home/runner/.postgresql/root.crt" up
           
 
   build:
