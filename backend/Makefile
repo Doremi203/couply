@@ -13,9 +13,6 @@ deps/buf:
 deps/mockgen:
 	go install go.uber.org/mock/mockgen@latest
 
-deps/goose:
-	go install github.com/pressly/goose/v3/cmd/goose@latest
-
 deps/protoc:
 	go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
@@ -64,13 +61,13 @@ auth/run: auth/build
 auth/generate:
 	cd auth && go generate ./...
 
-AUTH_MIGRATIONS = auth/migtest
+AUTH_MIGRATIONS = file://auth/migrations
 
 auth/migrate/up:
-	goose -dir $(AUTH_MIGRATIONS) postgres "$(DB)auth$(DB_PARAMS)" up
+	migrate -verbose -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" up
 
 auth/migrate/down:
-	goose -dir $(AUTH_MIGRATIONS) postgres "$(DB)auth$(DB_PARAMS)" reset
+	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down -all
 
 auth/migrate/create:
 	$(MIGRATE_CREATE) $(AUTH_MIGRATIONS) $(name)
