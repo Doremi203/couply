@@ -1,6 +1,8 @@
 import { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
+import { Notification } from '../../../../shared/components/Notification';
+import { sendMatchNotification } from '../../../../shared/lib/services/MatchNotificationService';
 import { MatchCard, MatchProfile } from '../MatchCard';
 import { MatchModal } from '../MatchModal';
 import { ProfileCard } from '../ProfileCard';
@@ -89,8 +91,10 @@ const matchesData: MatchProfile[] = [
 
 // Helper function to generate a unique ID for new matches
 const generateMatchId = (existingMatches: MatchProfile[]): number => {
-  const maxId = existingMatches.reduce((max: number, match: MatchProfile) => 
-    Math.max(max, match.id), 100);
+  const maxId = existingMatches.reduce(
+    (max: number, match: MatchProfile) => Math.max(max, match.id),
+    100,
+  );
   return maxId + 1;
 };
 
@@ -102,32 +106,44 @@ export const LikesPage = () => {
   const [matchedProfile, setMatchedProfile] = useState<LikeProfile | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<LikeProfile | null>(null);
   const [showChatMessage, setShowChatMessage] = useState<number | null>(null);
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationProfile, setNotificationProfile] = useState<LikeProfile | null>(null);
 
   const handleLike = (id: number) => {
     // Check if this is a like from the likes tab (not from matches tab)
     // Match IDs are in a different range (101+) than like IDs
     const isFromLikesTab = id < 100;
-    
+
     if (isFromLikesTab) {
       // Find the profile that was liked
-      const likedProfile = likes.find((like) => like.id === id);
-      
+      const likedProfile = likes.find(like => like.id === id);
+
       if (likedProfile) {
         // Check if this profile has already liked the user
         if (likedProfile.hasLikedYou) {
           // It's a match! Show the match modal
           setMatchedProfile(likedProfile);
           setShowMatchModal(true);
-          
+
+          // Show in-app notification
+          setNotificationProfile(likedProfile);
+          setShowNotification(true);
+
+          // Send push notification
+          sendMatchNotification({
+            userId: 'user123', // В реальном приложении это должно быть получено из аутентификации
+            matchId: likedProfile.id,
+            matchName: likedProfile.name,
+            matchImage: likedProfile.imageUrl,
+          });
+
           // Don't open the profile view when it's a match
           setSelectedProfile(null);
         }
-        
+
         // Update the liked status
-        const updatedLikes = likes.map((like) =>
-          like.id === id ? { ...like, liked: true } : like,
-        );
-        
+        const updatedLikes = likes.map(like => (like.id === id ? { ...like, liked: true } : like));
+
         // Create a new match object with a unique ID
         const newMatch: MatchProfile = {
           id: generateMatchId(matches), // Generate a unique ID
@@ -137,11 +153,11 @@ export const LikesPage = () => {
           telegram: `@${likedProfile.name.toLowerCase()}_${likedProfile.age}`,
           instagram: `@${likedProfile.name.toLowerCase()}_insta`,
         };
-        
+
         // Add to matches and remove from likes if it was a match
         if (likedProfile.hasLikedYou) {
           setMatches([...matches, newMatch]);
-          setLikes(updatedLikes.filter((like) => like.id !== id));
+          setLikes(updatedLikes.filter(like => like.id !== id));
         } else {
           setLikes(updatedLikes);
         }
@@ -167,8 +183,8 @@ export const LikesPage = () => {
       location: '',
       interests: [],
       lifestyle: {
-        'contact': `Telegram: ${match.telegram}`,
-        'social': `Instagram: ${match.instagram}`,
+        contact: `Telegram: ${match.telegram}`,
+        social: `Instagram: ${match.instagram}`,
       },
     };
     setSelectedProfile(matchAsProfile);
@@ -191,21 +207,23 @@ export const LikesPage = () => {
   const handleSocialClick = (matchId: number, type: 'telegram' | 'instagram') => {
     // Show a message when clicking on social media buttons
     setShowChatMessage(matchId);
-    
+
     // Log which social media was clicked
     console.log(`Opening ${type} for match ID ${matchId}`);
-    
+
     // Hide the message after 2 seconds
     setTimeout(() => {
       setShowChatMessage(null);
     }, 2000);
   };
 
+  const handleCloseNotification = () => {
+    setShowNotification(false);
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        likes & matches
-      </div>
+      <div className={styles.header}>likes & matches</div>
 
       <div className={styles.tabs}>
         <div
@@ -226,7 +244,7 @@ export const LikesPage = () => {
         <div className={styles.section}>
           {likes.length > 0 ? (
             <div className={styles.profilesGrid}>
-              {likes.map((profile) => (
+              {likes.map(profile => (
                 <ProfileCard
                   key={profile.id}
                   profile={profile}
@@ -239,8 +257,17 @@ export const LikesPage = () => {
           ) : (
             <div className={styles.emptyState}>
               <div className={styles.emptyStateIcon}>
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z" fill="#E0E0E0"/>
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"
+                    fill="#E0E0E0"
+                  />
                 </svg>
               </div>
               <p className={styles.emptyStateText}>У вас пока нет лайков</p>
@@ -254,7 +281,7 @@ export const LikesPage = () => {
         <div className={styles.section}>
           {matches.length > 0 ? (
             <div className={styles.matchesContainer}>
-              {matches.map((match) => (
+              {matches.map(match => (
                 <MatchCard
                   key={match.id}
                   match={match}
@@ -267,8 +294,17 @@ export const LikesPage = () => {
           ) : (
             <div className={styles.emptyState}>
               <div className={styles.emptyStateIcon}>
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z" fill="#E0E0E0"/>
+                <svg
+                  width="64"
+                  height="64"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 21.35L10.55 20.03C5.4 15.36 2 12.28 2 8.5C2 5.42 4.42 3 7.5 3C9.24 3 10.91 3.81 12 5.09C13.09 3.81 14.76 3 16.5 3C19.58 3 22 5.42 22 8.5C22 12.28 18.6 15.36 13.45 20.04L12 21.35Z"
+                    fill="#E0E0E0"
+                  />
                 </svg>
               </div>
               <p className={styles.emptyStateText}>У вас пока нет мэтчей</p>
@@ -289,12 +325,16 @@ export const LikesPage = () => {
       )}
 
       {selectedProfile && (
-        <ProfileView
-          profile={selectedProfile}
-          onClose={handleCloseProfile}
-          onLike={handleLike}
-        />
+        <ProfileView profile={selectedProfile} onClose={handleCloseProfile} onLike={handleLike} />
       )}
+
+      {/* {showNotification && notificationProfile && (
+        <Notification
+          message={`У вас взаимная симпатия с ${notificationProfile.name}!`}
+          image={notificationProfile.imageUrl}
+          onClose={handleCloseNotification}
+        />
+      )} */}
 
       <NavBar />
     </div>

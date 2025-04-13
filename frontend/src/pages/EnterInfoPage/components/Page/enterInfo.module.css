@@ -20,3 +20,45 @@
   z-index: 1000;
   width: 290px;
 }
+
+.notificationPrompt {
+  background-color: var(--section-background);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.notificationPrompt h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: 18px;
+}
+
+.notificationPrompt p {
+  margin-bottom: 20px;
+  color: var(--secondary-text-color);
+  font-size: 14px;
+}
+
+.promptButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.allowButton {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+}
+
+.skipButton {
+  margin-top: 5px;
+}
+
+.outlinedButton {
+  background-color: transparent !important;
+  color: var(--primary-color) !important;
+  border: 1px solid var(--primary-color) !important;
+}

@@ -1,0 +1,54 @@
+{
+  "name": "Couply",
+  "short_name": "Couply",
+  "description": "Приложение для знакомств",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#202C83",
+  "theme_color": "#202C83",
+  "icons": [
+    {
+      "src": "icon512_rounded.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon512_maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "gcm_sender_id": "103953800507",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "orientation": "portrait",
+  "categories": ["dating", "social"],
+  "shortcuts": [
+    {
+      "name": "Лайки",
+      "short_name": "Лайки",
+      "description": "Просмотр лайков и совпадений",
+      "url": "/likes",
+      "icons": [
+        {
+          "src": "icon512_rounded.png",
+          "sizes": "512x512"
+        }
+      ]
+    },
+    {
+      "name": "Профиль",
+      "short_name": "Профиль",
+      "description": "Просмотр и редактирование профиля",
+      "url": "/profile",
+      "icons": [
+        {
+          "src": "icon512_rounded.png",
+          "sizes": "512x512"
+        }
+      ]
+    }
+  ]
+}

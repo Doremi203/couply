@@ -5,33 +5,53 @@ import { useNavigate } from 'react-router-dom';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
+import {
+  isPushNotificationSupported,
+  askUserPermission,
+  registerServiceWorker,
+  createPushSubscription,
+  sendSubscriptionToServer,
+} from '../../../../shared/lib/services/PushNotificationService';
 
 import styles from './enterInfo.module.css';
-
 
 export const EnterInfoPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
-  
+
   // State for form values
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [userGender, setUserGender] = useState('');
   const [preferredGender, setPreferredGender] = useState('');
 
+  // State for notification permission
+  const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
+  const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
+
   const nextStep = () => {
     if (currentStep === sections.length - 1) {
-      // If we're on the last step, navigate to home page
-      navigate('/home');
+      // If we're on the last step, check if we should show notification prompt
+      if (
+        isPushNotificationSupported() &&
+        !notificationPermissionRequested &&
+        Notification.permission !== 'granted' &&
+        Notification.permission !== 'denied'
+      ) {
+        setShowNotificationPrompt(true);
+      } else {
+        // If notifications are not supported or permission already requested, navigate to home
+        navigate('/home');
+      }
     } else {
       // Otherwise, go to the next step
-      setCurrentStep((prevStep) => prevStep + 1);
+      setCurrentStep(prevStep => prevStep + 1);
     }
   };
 
   const prevStep = () => {
     if (currentStep > 0) {
-      setCurrentStep((prevStep) => prevStep - 1);
+      setCurrentStep(prevStep => prevStep - 1);
     }
   };
 
@@ -41,6 +61,41 @@ export const EnterInfoPage = () => {
 
   const handlePreferredGenderSelect = (value: string) => {
     setPreferredGender(value);
+  };
+
+  // Handle notification permission request
+  const handleRequestPermission = async () => {
+    setNotificationPermissionRequested(true);
+    setShowNotificationPrompt(false);
+
+    try {
+      const permission = await askUserPermission();
+
+      if (permission === 'granted') {
+        const registration = await registerServiceWorker();
+
+        if (registration) {
+          const subscription = await createPushSubscription(registration);
+
+          if (subscription) {
+            // In a real app, you would get the userId from authentication
+            await sendSubscriptionToServer(subscription, 'user123');
+          }
+        }
+      }
+
+      // Navigate to home page regardless of permission result
+      navigate('/home');
+    } catch (error) {
+      console.error('Error requesting notification permission:', error);
+      navigate('/home');
+    }
+  };
+
+  const handleSkipPermission = () => {
+    setNotificationPermissionRequested(true);
+    setShowNotificationPrompt(false);
+    navigate('/home');
   };
 
   // Check if the current step's form is valid
@@ -64,7 +119,7 @@ export const EnterInfoPage = () => {
         placeholder="Введите имя"
         type="text"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={e => setName(e.target.value)}
       />
     </div>,
     <div key="birthDateSection">
@@ -73,7 +128,7 @@ export const EnterInfoPage = () => {
         placeholder="Выберите дату рождения"
         type="date"
         value={birthDate}
-        onChange={(e) => setBirthDate(e.target.value)}
+        onChange={e => setBirthDate(e.target.value)}
       />
     </div>,
     <div key="datingSettingsSection">
@@ -110,12 +165,32 @@ export const EnterInfoPage = () => {
         <KeyboardBackspaceIcon />
       </div>
       {sections[currentStep]}
-      <CustomButton
-        onClick={nextStep}
-        text="Дальше"
-        disabled={!isCurrentStepValid()}
-        className={styles.nextButton}
-      />
+
+      {showNotificationPrompt ? (
+        <div className={styles.notificationPrompt}>
+          <h3>Разрешить уведомления?</h3>
+          <p>Получайте уведомления о новых совпадениях и важных событиях в приложении</p>
+          <div className={styles.promptButtons}>
+            <CustomButton
+              onClick={handleRequestPermission}
+              text="Разрешить"
+              className={styles.allowButton}
+            />
+            <CustomButton
+              onClick={handleSkipPermission}
+              text="Не сейчас"
+              className={`${styles.skipButton} ${styles.outlinedButton}`}
+            />
+          </div>
+        </div>
+      ) : (
+        <CustomButton
+          onClick={nextStep}
+          text="Дальше"
+          disabled={!isCurrentStepValid()}
+          className={styles.nextButton}
+        />
+      )}
     </div>
   );
 };

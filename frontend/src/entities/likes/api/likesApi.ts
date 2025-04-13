@@ -23,66 +23,66 @@ export interface CreateLikeParams {
 
 // Расширение базового API для работы с лайками и матчами
 export const likesApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     // Получение лайков пользователя
     getUserLikes: builder.query<Like[], void>({
       query: () => '/likes/me',
-      providesTags: (result) => 
-        result 
+      providesTags: result =>
+        result
           ? [
               ...result.map(({ id }) => ({ type: 'Likes' as const, id })),
               { type: 'Likes', id: 'LIST' },
             ]
           : [{ type: 'Likes', id: 'LIST' }],
     }),
-    
+
     // Получение лайков, полученных пользователем
     getReceivedLikes: builder.query<Like[], void>({
       query: () => '/likes/received',
-      providesTags: (result) => 
-        result 
+      providesTags: result =>
+        result
           ? [
               ...result.map(({ id }) => ({ type: 'Likes' as const, id })),
               { type: 'Likes', id: 'RECEIVED' },
             ]
           : [{ type: 'Likes', id: 'RECEIVED' }],
     }),
-    
+
     // Создание лайка
     createLike: builder.mutation<Like, CreateLikeParams>({
-      query: (data) => ({
+      query: data => ({
         url: '/likes',
         method: 'POST',
         body: data,
       }),
       invalidatesTags: [{ type: 'Likes', id: 'LIST' }],
     }),
-    
+
     // Удаление лайка
     deleteLike: builder.mutation<void, string>({
-      query: (id) => ({
+      query: id => ({
         url: `/likes/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: (result, error, id) => [{ type: 'Likes', id }],
+      invalidatesTags: (_result, _error, id) => [{ type: 'Likes', id }],
     }),
-    
+
     // Получение матчей пользователя
     getUserMatches: builder.query<Match[], void>({
       query: () => '/matches',
-      providesTags: (result) => 
-        result 
+      providesTags: result =>
+        result
           ? [
               ...result.map(({ id }) => ({ type: 'Matches' as const, id })),
               { type: 'Matches', id: 'LIST' },
             ]
           : [{ type: 'Matches', id: 'LIST' }],
     }),
-    
+
     // Получение конкретного матча
     getMatch: builder.query<Match, string>({
-      query: (id) => `/matches/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Matches', id }],
+      query: id => `/matches/${id}`,
+      providesTags: (_result, _error, id) => [{ type: 'Matches', id }],
     }),
   }),
 });

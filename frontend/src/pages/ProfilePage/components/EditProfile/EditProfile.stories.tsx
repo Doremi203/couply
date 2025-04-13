@@ -22,7 +22,8 @@ const mockProfileData = {
   email: 'jane.doe@example.com',
   gender: 'female',
   interests: ['Travel', 'Photography', 'Cooking'],
-  about: 'I love exploring new places and trying different cuisines. Photography is my passion, and I enjoy capturing moments during my travels.',
+  about:
+    'I love exploring new places and trying different cuisines. Photography is my passion, and I enjoy capturing moments during my travels.',
   music: ['Pop', 'Rock', 'Jazz'],
   movies: ['Inception', 'The Godfather', 'La La Land'],
   books: ['1984', 'To Kill a Mockingbird', 'The Great Gatsby'],
@@ -38,7 +39,7 @@ export const Default: Story = {
     onSave: () => console.log('Save button clicked'),
     onInputChange: (field, value) => console.log(`Field ${field} changed to ${value}`),
     onArrayInputChange: (field, value) => console.log(`Array field ${field} changed to ${value}`),
-    onPhotoAdd: (file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
-    onPhotoRemove: (index) => console.log(`Photo at index ${index} removed`),
+    onPhotoAdd: (_file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
+    onPhotoRemove: index => console.log(`Photo at index ${index} removed`),
   },
 };
