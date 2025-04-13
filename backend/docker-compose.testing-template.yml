@@ -1,0 +1,28 @@
+services:
+  auth:
+    image: cr.yandex/crpe9kgeql1v6b7gujfj/auth:{{AUTH_VERSION}}
+    environment:
+      APP_ENV: testing
+      CONFIGS_PATH: /app/configs
+    ports:
+      - "80:80"
+      - "50051:50051"
+    depends_on:
+      - fluentbit
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: auth.logs
+
+  fluentbit:
+    image: cr.yandex/yc/fluent-bit-plugin-yandex:v1.0.3-fluent-bit-1.8.6
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    restart: always
+    environment:
+      YC_GROUP_ID: e233nsjdeji24pelrlei
+    volumes:
+      - /etc/fluentbit/fluentbit.conf:/fluent-bit/etc/fluent-bit.conf
+      - /etc/fluentbit/parsers.conf:/fluent-bit/etc/parsers.conf
