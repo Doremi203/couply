@@ -115,7 +115,7 @@ jobs:
 
       - name: Generate docker-compose.yml with version
         run: |
-          sed "s/{{AUTH_VERSION}}/${{ env.RELEASE_VERSION }}/g" backend/docker-compose.testing-template.yml > docker-compose.testing-generated.yml
+          sed "s/{{AUTH_VERSION}}/${{ env.RELEASE_VERSION }}/g" ${{ github.workspace }}/backend/docker-compose.testing-template.yml > docker-compose.testing-generated.yml
 
       - name: Deploy to testing
         run: |
