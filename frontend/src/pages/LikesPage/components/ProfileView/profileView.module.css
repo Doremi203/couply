@@ -76,12 +76,12 @@
 }
 
 /* Center the image on larger screens */
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .profileImageContainer {
     max-width: 768px;
     margin: 0 auto;
   }
-}
+} */
 
 /* Gradient overlay for better text visibility on the photo */
 .profileGradient {
@@ -140,24 +140,24 @@
 }
 
 /* Responsive adjustments for photo content */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .photoContent {
-    padding: 1rem; /* Smaller padding on mobile */
+    padding: 1rem;
   }
 
   .photoName {
-    font-size: 1.5rem; /* Smaller font on mobile */
+    font-size: 1.5rem; 
   }
 
   .photoInfo {
-    font-size: 0.875rem; /* Smaller font on mobile */
+    font-size: 0.875rem; 
   }
 
   .photoTag {
-    padding: 0.25rem 0.5rem; /* Smaller padding on mobile */
-    font-size: 0.75rem; /* Smaller font on mobile */
+    padding: 0.25rem 0.5rem; 
+    font-size: 0.75rem; 
   }
-}
+} */
 
 /* Scroll indicator at the bottom of the photo */
 .photoScrollIndicator {
@@ -282,13 +282,13 @@
 }
 
 /* Responsive adjustments for profile info */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .profileInfo {
-    padding: 1rem; /* Smaller padding on mobile */
-    border-top-left-radius: 1rem; /* Smaller radius on mobile */
-    border-top-right-radius: 1rem; /* Smaller radius on mobile */
+    padding: 1rem; 
+    border-top-left-radius: 1rem; 
+    border-top-right-radius: 1rem; 
   }
-}
+} */
 
 /* Collapsed state - moves the profile info up to show details */
 .profileInfo.collapsed {
@@ -412,9 +412,10 @@
 .dislikeButton {
   background-color: grey;
   position: fixed;
-  left: 25%;
+  /* left: 25%; */
+  left: 60%;
   transform: translateX(-50%);
-  bottom: 9.375rem; /* 150px in rem */
+  bottom: 11rem; /* 150px in rem */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -429,9 +430,9 @@
 
 .likeButton {
   position: fixed;
-  right: 25%;
+  right: 15%;
   transform: translateX(50%);
-  bottom: 9.375rem; /* 150px in rem */
+  bottom: 11rem; /* 150px in rem */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -445,12 +446,12 @@
 }
 
 /* Responsive adjustments for buttons */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .dislikeButton,
   .likeButton {
-    width: 3.25rem; /* Smaller on mobile */
-    height: 3.25rem; /* Smaller on mobile */
-    bottom: 7.5rem; /* Lower on mobile */
+    width: 3.25rem; 
+    height: 3.25rem; 
+    bottom: 7.5rem; 
   }
 }
 
@@ -464,7 +465,7 @@
     right: calc(50% - 100px);
     transform: none;
   }
-}
+} */
 
 /* Hide buttons when profile info is displayed */
 .profileImageContainer:not(.expanded) .likeButton,
@@ -492,18 +493,17 @@
   margin-bottom: 0.25rem;
 }
 
-/* Responsive adjustments for interest tags */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .interestTags {
-    gap: 0.375rem; /* Smaller gap on mobile */
+    gap: 0.375rem;
   }
 
   .interestTag {
-    padding: 0.25rem 0.5rem; /* Smaller padding on mobile */
-    font-size: 0.75rem; /* Smaller font on mobile */
-    border-radius: 1rem; /* Smaller radius on mobile */
+    padding: 0.25rem 0.5rem; 
+    font-size: 0.75rem; 
+    border-radius: 1rem; 
   }
-}
+} */
 
 /* Styling for common interests - highlighted with different color and badge */
 .commonInterest {
@@ -530,17 +530,16 @@
   font-weight: 500;
 }
 
-/* Responsive adjustments for common interests */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .commonInterest {
-    padding-top: 1rem; /* Smaller padding on mobile */
+    padding-top: 1rem; 
   }
 
   .commonBadge {
-    font-size: 0.625rem; /* Smaller font on mobile */
-    top: 0.25rem; /* Smaller top position on mobile */
+    font-size: 0.625rem; 
+    top: 0.25rem; 
   }
-}
+} */
 
 /* Container for detailed profile information sections */
 .detailedInfo {
@@ -559,7 +558,7 @@
   font-size: 1.125rem; /* 18px in rem */
   font-weight: bold;
   margin-bottom: 0.313rem; /* 5px in rem */
-  //color: #161f65; /* Brand color for headings */
+  /* //color: #161f65; Brand color for headings */
   color: var(--primary-color);
 }
 
@@ -572,30 +571,29 @@
   font-size: 0.938rem; /* 15px in rem */
 }
 
-/* Responsive adjustments for info sections */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .infoSection h3 {
-    font-size: 1rem; /* Smaller font on mobile */
+    font-size: 1rem; 
   }
 
   .infoSection p {
-    font-size: 0.875rem; /* Smaller font on mobile */
+    font-size: 0.875rem; 
   }
-}
+} */
 
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .detailedInfo {
-    margin-top: 1rem; /* Larger margin on desktop */
+    margin-top: 1rem; 
   }
 
   .infoSection {
-    margin-bottom: 1.25rem; /* Larger margin on desktop */
+    margin-bottom: 1.25rem; 
   }
 
   .infoSection h3 {
-    font-size: 1.25rem; /* Larger font on desktop */
+    font-size: 1.25rem; 
   }
-}
+} */
 
 /* Grid layout for photos */
 .photosGrid {
@@ -621,29 +619,24 @@
   object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
 }
 
-/* Responsive adjustments for photo grid */
+/* Responsive adjustments for photo grid
 @media (max-width: 480px) {
   .photosGrid {
-    gap: 0.25rem; /* Smaller gap on mobile */
+    gap: 0.25rem; 
   }
 
   .photoItem {
-    border-radius: 0.375rem; /* Smaller radius on mobile */
+    border-radius: 0.375rem; 
   }
 }
 
 @media (min-width: 768px) {
   .photosGrid {
-    grid-template-columns: repeat(4, 1fr); /* 4 columns on larger screens */
-    gap: 0.75rem; /* Larger gap on desktop */
+    grid-template-columns: repeat(4, 1fr); 
+    gap: 0.75rem; 
   }
 
   .photoItem {
-    min-height: 6.25rem; /* Larger minimum height on desktop */
+    min-height: 6.25rem; 
   }
-}
-
-/* .like {
-  width: 10px;
-  height: 10px;
 } */

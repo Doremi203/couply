@@ -1,4 +1,15 @@
+/* .pageContainer {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+} */
+
 .pageContainer {
+  padding: 20px;
+  padding-bottom: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   background-color: var(--background-color);
   color: var(--text-color);
   min-height: 100vh;
@@ -19,6 +30,7 @@
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+  /* margin-top: 1rem; */
 }
 
 .appName {
@@ -26,7 +38,7 @@
   justify-content: center;
   align-items: center;
   color: var(--primary-color);
-  font-size: 2.5rem; /* 40px in rem */
+  font-size: 4rem; /* 40px in rem */
   font-family: 'Jost', sans-serif;
   font-weight: medium;
   position: absolute;
@@ -50,7 +62,7 @@
 /* Responsive adjustments */
 @media (max-width: 480px) {
   .appName {
-    font-size: 2rem; /* Smaller on mobile */
+    font-size: 3rem; /* Smaller on mobile */
   }
 
   .header {

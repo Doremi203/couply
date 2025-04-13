@@ -13,7 +13,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 3.5rem; /* Using rem instead of fixed pixels */
+  height: 4rem; /* Using rem instead of fixed pixels */
   padding: 0 1rem;
   max-width: 768px; /* Maximum width for larger screens */
   margin: 0 auto; /* Center the navbar on larger screens */
@@ -44,13 +44,13 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .navBarContent {
     padding: 0 0.5rem;
   }
 
   .navItem {
-    padding: 0.25rem;
+    padding: 1rem;
   }
 }
 
@@ -59,4 +59,4 @@
     bottom: 0;
     border-radius: 1rem 1rem 0 0;
   }
-}
+} */

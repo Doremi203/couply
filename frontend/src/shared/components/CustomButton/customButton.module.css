@@ -16,7 +16,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%; /* Make it responsive */
+  width: 100%;
   max-width: 290px; /* Maximum width */
 }
 

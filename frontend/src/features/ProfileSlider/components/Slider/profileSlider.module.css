@@ -46,8 +46,10 @@
 }
 
 .likeButton {
-  width: 3.875rem; /* 62px in rem */
-  height: 3.875rem; /* 62px in rem */
+  /* width: 3.875rem; 62px in rem */
+  /* height: 3.875rem; 62px in rem */
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -55,8 +57,10 @@
 }
 
 .dislikeButton {
-  width: 3.875rem; /* 62px in rem */
-  height: 3.875rem; /* 62px in rem */
+  /* width: 3.875rem;  62px in rem 
+  height: 3.875rem; 62px in rem */
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -65,7 +69,7 @@
 
 .name {
   text-align: center;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   margin-top: 0.625rem;
 }
 
@@ -75,14 +79,15 @@
     max-width: 100%;
     border-radius: 1.5rem; /* Smaller border radius on mobile */
   }
-  
+
   .controls {
-    max-width: 250px;
+    max-width: 400px;
   }
-  
-  .likeButton, .dislikeButton {
-    width: 3.25rem; /* Smaller on mobile */
-    height: 3.25rem; /* Smaller on mobile */
+
+  .likeButton,
+  .dislikeButton {
+    width: 4rem; /* Smaller on mobile */
+    height: 4rem; /* Smaller on mobile */
   }
 }
 
@@ -90,7 +95,7 @@
   .slider {
     margin-top: 2rem;
   }
-  
+
   .profileImage {
     max-width: 400px; /* Larger on desktop */
   }
