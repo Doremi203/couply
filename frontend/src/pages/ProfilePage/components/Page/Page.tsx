@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
+import ActivityHistory from '../../../../widgets/ActivityHistory';
 import { ProfileData, ActivityItem } from '../../types';
-// import { ProfileView } from "../ProfileView";
-import { ActivityHistory } from '../ActivityHistory';
 import { EditProfile } from '../EditProfile';
 import { ProfilePreview } from '../ProfilePreview';
 import ProfileView from '../ProfileView';
@@ -42,10 +41,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     books: ['Fiction', 'Biography'],
     hobbies: ['Photography', 'Cooking', 'Hiking'],
     isHidden: false,
-    photos: [
-      '/photo1.png',
-      '/woman1.jpg',
-    ],
+    photos: ['/photo1.png', '/woman1.jpg'],
   });
 
   // Activity history
@@ -94,7 +90,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     if (file) {
       // Create a URL for the selected file
       const fileUrl = URL.createObjectURL(file);
-      
+
       if (isAvatar) {
         // If this is an avatar upload, set it as the first photo
         const updatedPhotos = [...profileData.photos];
@@ -113,7 +109,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     } else {
       // Fallback to placeholder if no file is provided
       const placeholderUrl = '/man1.jpg';
-      
+
       if (isAvatar) {
         // If this is an avatar upload, set it as the first photo
         const updatedPhotos = [...profileData.photos];
@@ -175,12 +171,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           />
         );
       case 'preview':
-        return (
-          <ProfilePreview
-            profileData={profileData}
-            onClose={() => setActiveTab('profile')}
-          />
-        );
+        return <ProfilePreview profileData={profileData} onClose={() => setActiveTab('profile')} />;
       default:
         return (
           <ProfileView
