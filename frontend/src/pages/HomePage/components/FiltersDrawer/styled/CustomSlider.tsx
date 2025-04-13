@@ -1,24 +1,24 @@
 import { Slider, styled } from '@mui/material';
 
-// Custom styled slider with blue track
+// Custom styled slider that adapts to theme
 export const CustomSlider = styled(Slider)({
-  color: '#202C83',
+  color: 'var(--primary-color)',
   height: 8,
   '& .MuiSlider-track': {
     border: 'none',
-    backgroundColor: '#202C83',
+    backgroundColor: 'var(--primary-color)',
   },
   '& .MuiSlider-thumb': {
     height: 24,
     width: 24,
-    backgroundColor: '#202C83',
-    border: '2px solid #fff',
-    boxShadow: '0 3px 6px rgba(0,0,0,0.16)',
+    backgroundColor: 'var(--primary-color)',
+    border: '2px solid var(--header-text-color)',
+    boxShadow: '0 3px 6px var(--shadow-color)',
     '&:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
-      boxShadow: '0 3px 8px rgba(0,0,0,0.3)',
+      boxShadow: '0 3px 8px var(--shadow-color)',
     },
   },
   '& .MuiSlider-rail': {
-    backgroundColor: '#E0E0E0',
+    backgroundColor: 'var(--button-background)',
   },
 });

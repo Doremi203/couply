@@ -1,6 +1,6 @@
 .profileHeader {
-  background-color: #202C83;
-  color: white;
+  background-color: var(--header-background);
+  color: var(--header-text-color);
   text-align: center;
   position: relative;
   border-bottom-left-radius: 20px;
@@ -17,7 +17,7 @@
   align-items: center;
   color: white;
   font-size: 40px;
-  font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
   font-weight: medium;
   margin-top: 10px;
 }
@@ -42,7 +42,7 @@
 }
 
 .previewButton {
-  background-color: #FF2DA0;
+  background-color: #ff2da0;
   color: white;
   width: 13px;
   height: 15px;

@@ -13,7 +13,7 @@
   justify-content: space-between;
   align-items: center;
   position: relative;
-  margin-top: 0.625rem; /* 10px in rem */
+  /* margin-top: 0.625rem; 10px in rem */
   padding: 0 1rem;
   max-width: 1200px;
   margin-left: auto;

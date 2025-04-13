@@ -559,14 +559,15 @@
   font-size: 1.125rem; /* 18px in rem */
   font-weight: bold;
   margin-bottom: 0.313rem; /* 5px in rem */
-  color: #161f65; /* Brand color for headings */
+  //color: #161f65; /* Brand color for headings */
+  color: var(--primary-color);
 }
 
 /* Paragraph text in info sections */
 .infoSection p {
   margin: 0;
   margin-bottom: 0.313rem; /* 5px in rem */
-  color: #333;
+  color: var(--tag-color);
   line-height: 1.3; /* Reduced line height for compact layout */
   font-size: 0.938rem; /* 15px in rem */
 }

@@ -20,7 +20,7 @@
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
   background-color: var(--background-color);
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px var(--shadow-color);
   overflow: hidden;
 }
 
@@ -70,7 +70,7 @@
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #202c83;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
@@ -143,12 +143,12 @@
 }
 
 .chipSelected {
-  background-color: #202c83;
-  color: white;
+  background-color: var(--primary-color);
+  color: var(--header-text-color);
 }
 
 .chipSelected:hover {
-  background-color: #1a2570;
+  background-color: var(--secondary-color);
 }
 
 /* Toggle Switch */
@@ -196,11 +196,11 @@
 }
 
 input:checked + .slider {
-  background-color: #202c83;
+  background-color: var(--primary-color);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #202c83;
+  box-shadow: 0 0 1px var(--primary-color);
 }
 
 input:checked + .slider:before {

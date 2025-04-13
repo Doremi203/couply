@@ -87,7 +87,7 @@
 }
 
 .editButton {
-  background-color: #202c83;
+  background-color: var(--primary-color);
   color: white;
   padding: 10px 20px;
   border-radius: 20px;
@@ -255,15 +255,15 @@
 
 .commonInterest {
   background-color: #d6e4ff;
-  border: 1px solid #202c83;
-  color: #6c5ce7;
+  border: 1px solid var(--primary-color);
+  color: var(--secondary-color);
 }
 
 .commonBadge {
   position: absolute;
   top: -8px;
   right: -5px;
-  background-color: #202c83;
+  background-color: var(--primary-color);
   color: white;
   font-size: 10px;
   padding: 2px 6px;
@@ -287,7 +287,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #202c83;
+  background-color: var(--primary-color);
   color: white;
   border-radius: 50%;
   width: 30px;
@@ -348,7 +348,7 @@
 }
 
 .saveButton {
-  background-color: #202c83;
+  background-color: var(--primary-color);
   color: white;
 }
 

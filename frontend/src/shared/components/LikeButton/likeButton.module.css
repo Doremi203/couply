@@ -4,8 +4,8 @@
   height: 62px;
   /* left: 64px;
   top: 693px; */
-
-  background: #202c83;
+  background: var(--primary-color);
+  border-radius: 50%;
   border-radius: 50%;
 
   /* display: flex;

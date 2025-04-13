@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
-import { Notification } from '../../../../shared/components/Notification';
 import { sendMatchNotification } from '../../../../shared/lib/services/MatchNotificationService';
 import { MatchCard, MatchProfile } from '../MatchCard';
 import { MatchModal } from '../MatchModal';
@@ -106,8 +105,8 @@ export const LikesPage = () => {
   const [matchedProfile, setMatchedProfile] = useState<LikeProfile | null>(null);
   const [selectedProfile, setSelectedProfile] = useState<LikeProfile | null>(null);
   const [showChatMessage, setShowChatMessage] = useState<number | null>(null);
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationProfile, setNotificationProfile] = useState<LikeProfile | null>(null);
+  // const [showNotification, setShowNotification] = useState(false);
+  // const [notificationProfile, setNotificationProfile] = useState<LikeProfile | null>(null);
 
   const handleLike = (id: number) => {
     // Check if this is a like from the likes tab (not from matches tab)
@@ -126,8 +125,8 @@ export const LikesPage = () => {
           setShowMatchModal(true);
 
           // Show in-app notification
-          setNotificationProfile(likedProfile);
-          setShowNotification(true);
+          // setNotificationProfile(likedProfile);
+          // setShowNotification(true);
 
           // Send push notification
           sendMatchNotification({
@@ -217,9 +216,9 @@ export const LikesPage = () => {
     }, 2000);
   };
 
-  const handleCloseNotification = () => {
-    setShowNotification(false);
-  };
+  // const handleCloseNotification = () => {
+  //   setShowNotification(false);
+  // };
 
   return (
     <div className={styles.container}>

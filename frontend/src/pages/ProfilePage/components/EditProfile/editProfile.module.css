@@ -9,8 +9,8 @@
 
 /* Profile header */
 .profileHeader {
-  background-color: #202C83;
-  color: white;
+  background-color: var(--header-background);
+  color: var(--header-text-color);
   text-align: center;
   position: relative;
   border-bottom-left-radius: 20px;
@@ -67,7 +67,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #202C83;
+  background-color: var(--primary-color);
   color: white;
   border-radius: 50%;
   width: 30px;
@@ -138,7 +138,7 @@
 
 .addPhotoItem svg {
   font-size: 30px;
-  color: #6c5ce7;
+  color: var(--secondary-color);
 }
 
 /* Edit sections */
@@ -184,7 +184,9 @@
   resize: vertical;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   background-color: #fff;
   color: #333;
   line-height: 1.5;
@@ -194,7 +196,7 @@
 }
 
 .textareaInput:focus {
-  border-color: #202C83;
+  border-color: var(--primary-color);
   box-shadow: 0 0 0 2px rgba(32, 44, 131, 0.1);
 }
 
@@ -230,17 +232,17 @@
 }
 
 .saveButton {
-  background-color: #202C83;
+  background-color: var(--primary-color);
   color: white;
 }
 
 .header {
-    display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   color: white;
   font-size: 40px;
-  font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
   font-weight: medium;
   /* margin-left: 135px; */
   margin-top: 10px;

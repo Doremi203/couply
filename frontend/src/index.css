@@ -35,7 +35,7 @@ body[data-theme='dark'] {
   --border-color: #222222;
   --tag-background: #222222;
   --tag-color: #ffffff;
-  --header-background: #000000;
+  --header-background: #4fd1c5;
   --header-text-color: #ffffff;
   --button-background: #222222;
   --button-color: #cccccc;
@@ -104,6 +104,8 @@ body {
   min-height: 100vh;
   margin: 0;
   padding: 0;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
   font-family: 'Jost', sans-serif;
   box-sizing: border-box;
   background-color: var(--background-color);

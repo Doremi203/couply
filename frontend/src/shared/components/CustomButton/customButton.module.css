@@ -1,13 +1,15 @@
 .customButton {
   padding: 0.625rem 1.25rem; /* 10px 20px in rem */
-  background-color: #202c83;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 1.875rem; /* 30px in rem */
   font-size: 1rem;
   font-weight: bold;
   cursor: pointer;
-  transition: background-color 0.3s, opacity 0.3s;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
   outline: none;
   text-align: center;
   height: 3.125rem; /* 50px in rem */
@@ -19,7 +21,7 @@
 }
 
 .customButton:hover {
-  background-color: #5a62a2;
+  background-color: var(--secondary-color);
 }
 
 .customButton.disabled {

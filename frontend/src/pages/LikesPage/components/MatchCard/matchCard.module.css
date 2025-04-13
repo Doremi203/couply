@@ -3,8 +3,8 @@
   align-items: center;
   padding: 12px;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  background-color: var(--section-background);
   cursor: pointer;
   margin-bottom: 10px;
   position: relative;
@@ -37,7 +37,7 @@
   position: absolute;
   bottom: -20px;
   left: 0;
-  background-color: #161F65;
+  background-color: var(--primary-color);
   color: white;
   padding: 4px 8px;
   border-radius: 4px;
@@ -62,7 +62,7 @@
   gap: 8px;
   margin-left: auto;
   flex-shrink: 0;
-  align-items: center; 
+  align-items: center;
 }
 
 .socialButton {

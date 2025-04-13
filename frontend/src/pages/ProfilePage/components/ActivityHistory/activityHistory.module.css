@@ -5,8 +5,8 @@
 
 /* Profile header */
 .profileHeader {
-  background-color: #202C83;
-  color: white;
+  background-color: var(--header-background);
+  color: var(--header-text-color);
   text-align: center;
   position: relative;
   border-bottom-left-radius: 20px;
@@ -21,9 +21,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: white;
+  color: var(--header-text-color);
   font-size: 40px;
-  font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
   font-weight: medium;
   margin-top: 10px;
 }
@@ -33,7 +33,7 @@
   left: 15px;
   top: 20px;
   background: none;
-  color: white;
+  color: var(--header-text-color);
   border: none;
   font-size: 24px;
   cursor: pointer;
