@@ -4,6 +4,9 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
 }
 
 .header {
@@ -11,9 +14,9 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
-  color: #202c83;
+  color: var(--primary-color);
   font-size: 40px;
-  font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
   font-weight: medium;
 }
 
@@ -21,9 +24,9 @@
   /* font-size: 24px; */
   /* font-weight: bold;
   color: #161F65; */
-  color: #202c83;
+  color: var(--primary-color);
   font-size: 40px;
-  font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
   font-weight: medium;
 }
 
@@ -35,7 +38,7 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
-  color: #161F65;
+  color: var(--primary-color);
 }
 
 .profilesGrid {
@@ -47,11 +50,13 @@
 .profileCard {
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: white;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  background-color: var(--section-background);
   position: relative;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .profileCard:hover {
@@ -89,7 +94,9 @@
   align-items: center;
   cursor: pointer;
   z-index: 5;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .likeButton:hover {
@@ -103,7 +110,6 @@
   gap: 15px;
 }
 
-
 .emptyState {
   display: flex;
   flex-direction: column;
@@ -111,8 +117,8 @@
   justify-content: center;
   padding: 40px 30px;
   text-align: center;
-  color: #666;
-  background-color: #f9f9f9;
+  color: var(--secondary-text-color);
+  background-color: var(--background-color);
   border-radius: 10px;
   margin-top: 20px;
 }
@@ -126,17 +132,17 @@
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 8px;
-  color: #333;
+  color: var(--text-color);
 }
 
 .emptyStateSubtext {
   font-size: 14px;
-  color: #666;
+  color: var(--secondary-text-color);
 }
 
 .tabs {
   display: flex;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color);
   margin-bottom: 20px;
 }
 
@@ -146,16 +152,18 @@
   padding: 10px;
   cursor: pointer;
   font-weight: bold;
-  transition: color 0.2s ease, border-bottom 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-bottom 0.2s ease;
 }
 
 .tab:hover {
-  color: #161F65;
+  color: var(--primary-color);
 }
 
 .activeTab {
-  color: #161F65;
-  border-bottom: 2px solid #161F65;
+  color: var(--primary-color);
+  border-bottom: 2px solid var(--primary-color);
 }
 
 .like {

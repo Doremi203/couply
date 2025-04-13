@@ -1,6 +1,5 @@
-import { Drawer, Box } from '@mui/material';
-import React, { useState } from 'react';
-
+import { Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
 
 // Import components
 import ChipFilter from './components/ChipFilter';
@@ -16,24 +15,36 @@ type Props = {
   onClose: () => void;
 };
 
-const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
+export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
+  // Prevent body scrolling when modal is open
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
   // Gender preference
   const [interestedIn, setInterestedIn] = useState<string>('Girls');
-  
+
   // Distance
   const [distance, setDistance] = useState<number>(40);
-  
+
   // Age range
   const [ageRange, setAgeRange] = useState<number[]>([20, 28]);
-  
+
   // Interests
   const interestOptions = ['Sports', 'Travel', 'Music', 'Art', 'Food'];
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  
+
   // Music preferences
   const musicOptions = ['Rock', 'Pop', 'Hip Hop', 'Jazz', 'Classical'];
   const [selectedMusicPreferences, setSelectedMusicPreferences] = useState<string[]>([]);
-  
+
   // Verification status
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
 
@@ -84,84 +95,71 @@ const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     { label: 'Both', value: 'Both' },
   ];
 
+  if (!open) return null;
+
   return (
-    <Drawer
-      anchor="top"
-      open={open}
-      onClose={onClose}
-      PaperProps={{
-        sx: {
-          borderBottomLeftRadius: '20px',
-          borderBottomRightRadius: '20px',
-          height: 'auto',
-          maxHeight: '90vh',
-          overflow: 'auto',
-          width: '100%',
-          maxWidth: '430px',
-          margin: '0 auto',
-          boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)',
-        },
-      }}
-    >
-      <Box className={styles.container}>
-        {/* Header */}
-        <FilterHeader onBack={onClose} onClear={handleClearFilters} />
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContainer}>
+        <Box className={styles.content}>
+          {/* Header */}
+          <FilterHeader onBack={onClose} onClear={handleClearFilters} />
 
-        {/* Gender Preference */}
-        <GenderFilter 
-          value={interestedIn} 
-          options={genderOptions} 
-          onChange={handleGenderSelect} 
-        />
+          {/* Gender Preference */}
+          <GenderFilter
+            value={interestedIn}
+            options={genderOptions}
+            onChange={handleGenderSelect}
+          />
 
-        {/* Distance Slider */}
-        <SliderFilter
-          title="Distance"
-          value={distance}
-          min={1}
-          max={100}
-          onChange={handleDistanceChange}
-          unit="km"
-        />
+          {/* Distance Slider */}
+          <SliderFilter
+            title="Distance"
+            value={distance}
+            min={1}
+            max={100}
+            onChange={handleDistanceChange}
+            unit="km"
+          />
 
-        {/* Age Range Slider */}
-        <SliderFilter
-          title="Age"
-          value={ageRange}
-          min={18}
-          max={65}
-          onChange={handleAgeRangeChange}
-          valueLabelDisplay="auto"
-        />
+          {/* Age Range Slider */}
+          <SliderFilter
+            title="Age"
+            value={ageRange}
+            min={18}
+            max={65}
+            onChange={handleAgeRangeChange}
+            valueLabelDisplay="auto"
+          />
 
-        {/* Interests */}
-        <ChipFilter
-          title="Interests"
-          options={interestOptions}
-          selectedOptions={selectedInterests}
-          onToggle={toggleInterest}
-        />
+          {/* Interests */}
+          <ChipFilter
+            title="Interests"
+            options={interestOptions}
+            selectedOptions={selectedInterests}
+            onToggle={toggleInterest}
+          />
 
-        {/* Music Preferences */}
-        <ChipFilter
-          title="Music Preferences"
-          options={musicOptions}
-          selectedOptions={selectedMusicPreferences}
-          onToggle={toggleMusicPreference}
-        />
+          {/* Music Preferences */}
+          <ChipFilter
+            title="Music Preferences"
+            options={musicOptions}
+            selectedOptions={selectedMusicPreferences}
+            onToggle={toggleMusicPreference}
+          />
 
-        {/* Verification Status */}
-        <ToggleFilter
-          title="Verification Status"
-          description="Only show verified profiles"
-          value={verificationStatus}
-          onChange={handleVerificationToggle}
-        />
+          {/* Verification Status */}
+          <ToggleFilter
+            title="Verification Status"
+            description="Only show verified profiles"
+            value={verificationStatus}
+            onChange={handleVerificationToggle}
+          />
 
-        {/* Continue Button */}
-        <FilterActions onContinue={onClose} />
-      </Box>
-    </Drawer>
+          {/* Continue Button */}
+          <FilterActions onContinue={onClose} />
+        </Box>
+      </div>
+    </div>
   );
 };
 

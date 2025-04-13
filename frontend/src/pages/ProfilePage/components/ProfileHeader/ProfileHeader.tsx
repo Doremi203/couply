@@ -6,6 +6,7 @@ import React from 'react';
 
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { IconButton } from '../../../../shared/components/IconButton';
+import { ThemeToggle } from '../../../../shared/components/ThemeToggle';
 
 import styles from './profileHeader.module.css';
 
@@ -37,13 +38,10 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <IconButton onClick={onActivityClick} touchFriendly={true}>
           <HistoryIcon />
         </IconButton>
+        <ThemeToggle />
       </div>
       <div className={styles.previewButtonContainer}>
-        <CustomButton
-          text="preview"
-          onClick={onPreviewClick}
-          className={styles.previewButton}
-        />
+        <CustomButton text="preview" onClick={onPreviewClick} className={styles.previewButton} />
       </div>
     </div>
   );

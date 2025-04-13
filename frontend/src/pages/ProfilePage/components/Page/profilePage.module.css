@@ -3,10 +3,10 @@
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: var(--background-color);
+  color: var(--text-color);
   padding-bottom: 70px; /* Space for navbar */
 }
-
 
 /* .profileHeader h5 {
   margin: 0;
@@ -27,7 +27,6 @@
   align-items: center;
   justify-content: center;
 }
-
 
 /* Profile info */
 .profileInfo {
@@ -88,7 +87,7 @@
 }
 
 .editButton {
-  background-color: #202C83;
+  background-color: #202c83;
   color: white;
   padding: 10px 20px;
   border-radius: 20px;
@@ -199,10 +198,10 @@
 /* Profile sections */
 .profileSection {
   margin-top: 25px;
-  background-color: white;
+  background-color: var(--section-background);
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 5px var(--shadow-color);
 }
 
 .profileSection h3 {
@@ -210,12 +209,12 @@
   margin-bottom: 10px;
   font-size: 18px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-color);
 }
 
 .profileSection p {
   margin: 0;
-  color: #666;
+  color: var(--secondary-text-color);
   line-height: 1.5;
 }
 
@@ -246,17 +245,17 @@
 }
 
 .tag {
-  background-color: #f0f0f0;
+  background-color: var(--tag-background);
   padding: 6px 12px;
   border-radius: 20px;
   font-size: 14px;
-  color: #333;
+  color: var(--tag-color);
   position: relative;
 }
 
 .commonInterest {
   background-color: #d6e4ff;
-  border: 1px solid #202C83;
+  border: 1px solid #202c83;
   color: #6c5ce7;
 }
 
@@ -264,7 +263,7 @@
   position: absolute;
   top: -8px;
   right: -5px;
-  background-color: #202C83;
+  background-color: #202c83;
   color: white;
   font-size: 10px;
   padding: 2px 6px;
@@ -288,7 +287,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #202C83;
+  background-color: #202c83;
   color: white;
   border-radius: 50%;
   width: 30px;
@@ -349,7 +348,7 @@
 }
 
 .saveButton {
-  background-color: #202C83;
+  background-color: #202c83;
   color: white;
 }
 
@@ -419,7 +418,7 @@
 }
 
 .previewButton {
-  background-color: #FF2DA0;
+  background-color: #ff2da0;
   color: white;
   width: 13px;
   height: 15px;
@@ -452,11 +451,10 @@
   color: white;
 }
 
-
 /* Profile header */
 .profileHeader {
-  background-color: #202C83;
-  color: white;
+  background-color: var(--header-background);
+  color: var(--header-text-color);
   text-align: center;
   /* padding: 30px; */
   position: relative;
@@ -474,7 +472,7 @@
   align-items: center;
   color: white;
   font-size: 40px;
-  font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
   font-weight: medium;
   /* margin-left: 135px; */
   margin-top: 10px;

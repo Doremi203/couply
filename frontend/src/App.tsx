@@ -7,6 +7,7 @@ import { HomePage } from './pages/HomePage';
 import { LikesPage } from './pages/LikesPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { SplashPage } from './pages/SplashPage';
+import { ThemeProvider } from './shared/lib/context/ThemeContext';
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
+  );
 }
 
 export default App;

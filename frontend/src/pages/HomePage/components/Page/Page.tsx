@@ -7,7 +7,6 @@ import FiltersDrawer from '../FiltersDrawer/FiltersDrawer';
 
 import styles from './homePage.module.css';
 
-
 export const HomePage = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
@@ -19,7 +18,7 @@ export const HomePage = () => {
   };
 
   return (
-    <div>
+    <div className={styles.pageContainer}>
       <div className={styles.header}>
         <div className={styles.spacer} />
         <div className={styles.appName}> couply</div>

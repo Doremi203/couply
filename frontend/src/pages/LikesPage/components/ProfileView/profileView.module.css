@@ -13,7 +13,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: white;
+  background-color: var(--background-color);
   z-index: 1000;
   overflow-y: auto; /* Allow scrolling of the container */
   display: flex;
@@ -144,15 +144,15 @@
   .photoContent {
     padding: 1rem; /* Smaller padding on mobile */
   }
-  
+
   .photoName {
     font-size: 1.5rem; /* Smaller font on mobile */
   }
-  
+
   .photoInfo {
     font-size: 0.875rem; /* Smaller font on mobile */
   }
-  
+
   .photoTag {
     padding: 0.25rem 0.5rem; /* Smaller padding on mobile */
     font-size: 0.75rem; /* Smaller font on mobile */
@@ -242,7 +242,7 @@
 /* Profile information section - initially positioned below the screen */
 .profileInfo {
   padding: 1.25rem; /* 20px in rem */
-  background-color: white;
+  background-color: var(--section-background);
   border-top-left-radius: 1.25rem; /* 20px in rem */
   border-top-right-radius: 1.25rem; /* 20px in rem */
   position: absolute;
@@ -252,7 +252,11 @@
   z-index: 5;
   max-height: 80vh; /* Allow more content to be visible when scrolled */
   overflow-y: auto; /* Allow scrolling within the info section */
-  transition: transform 0.3s ease, max-height 0.3s ease, visibility 0.3s, opacity 0.3s; /* Smooth transitions including visibility and opacity */
+  transition:
+    transform 0.3s ease,
+    max-height 0.3s ease,
+    visibility 0.3s,
+    opacity 0.3s; /* Smooth transitions including visibility and opacity */
   overscroll-behavior: contain; /* Prevent scroll chaining */
   touch-action: pan-y; /* Allow vertical touch scrolling */
   -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
@@ -270,7 +274,11 @@
   box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1); /* Add shadow for better visibility */
   visibility: hidden; /* Hide completely when expanded */
   opacity: 0; /* Fade out for smoother transition */
-  transition: transform 0.3s ease, max-height 0.3s ease, visibility 0.3s, opacity 0.3s; /* Add transition for visibility and opacity */
+  transition:
+    transform 0.3s ease,
+    max-height 0.3s ease,
+    visibility 0.3s,
+    opacity 0.3s; /* Add transition for visibility and opacity */
 }
 
 /* Responsive adjustments for profile info */
@@ -287,7 +295,11 @@
   transform: translateY(50vh); /* Move up to show when collapsed */
   visibility: visible; /* Ensure visibility when collapsed */
   opacity: 1; /* Full opacity when visible */
-  transition: transform 0.3s ease, max-height 0.3s ease, visibility 0.3s, opacity 0.3s; /* Add transition for visibility and opacity */
+  transition:
+    transform 0.3s ease,
+    max-height 0.3s ease,
+    visibility 0.3s,
+    opacity 0.3s; /* Add transition for visibility and opacity */
 }
 
 /* Scroll indicator button in the profile info section */
@@ -296,12 +308,12 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 15px;
-  color: #666;
+  color: var(--secondary-text-color);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   padding: 12px 0;
-  background-color: rgba(240, 240, 240, 0.9);
+  background-color: var(--button-background);
   border-radius: 20px;
   margin-top: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -316,13 +328,13 @@
 
 /* Hover effect for the scroll indicator */
 .scrollIndicator:hover {
-  background-color: rgba(230, 230, 230, 1);
+  background-color: var(--border-color);
   transform: translateY(2px);
 }
 
 /* Active (pressed) state for the scroll indicator */
 .scrollIndicator:active {
-  background-color: rgba(220, 220, 220, 1);
+  background-color: var(--button-active-background);
   transform: translateY(3px);
 }
 
@@ -335,7 +347,11 @@
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -362,7 +378,7 @@
 
 .profileAge {
   font-size: 16px;
-  color: #666;
+  color: var(--secondary-text-color);
   margin: 0;
 }
 
@@ -383,12 +399,14 @@
   transition: transform 0.2s ease;
 }
 
-.closeButton:hover, .likeButton:hover, .dislikeButton:hover {
+.closeButton:hover,
+.likeButton:hover,
+.dislikeButton:hover {
   transform: scale(1.1);
 }
 
 .closeButton {
-  background-color: #f0f0f0;
+  background-color: var(--button-background);
 }
 
 .dislikeButton {
@@ -404,7 +422,9 @@
   width: 3.75rem; /* 60px in rem */
   height: 3.75rem; /* 60px in rem */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: opacity 0.3s ease, transform 0.2s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
 }
 
 .likeButton {
@@ -419,12 +439,15 @@
   width: 3.75rem; /* 60px in rem */
   height: 3.75rem; /* 60px in rem */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition: opacity 0.3s ease, transform 0.2s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
 }
 
 /* Responsive adjustments for buttons */
 @media (max-width: 480px) {
-  .dislikeButton, .likeButton {
+  .dislikeButton,
+  .likeButton {
     width: 3.25rem; /* Smaller on mobile */
     height: 3.25rem; /* Smaller on mobile */
     bottom: 7.5rem; /* Lower on mobile */
@@ -436,7 +459,7 @@
     left: calc(50% - 100px);
     transform: none;
   }
-  
+
   .likeButton {
     right: calc(50% - 100px);
     transform: none;
@@ -460,11 +483,11 @@
 
 /* Individual interest tag */
 .interestTag {
-  background-color: #f0f0f0;
+  background-color: var(--tag-background);
   padding: 0.375rem 0.75rem; /* 6px 12px in rem */
   border-radius: 1.25rem; /* 20px in rem */
   font-size: 0.875rem; /* 14px in rem */
-  color: #333;
+  color: var(--tag-color);
   position: relative;
   margin-bottom: 0.25rem;
 }
@@ -474,7 +497,7 @@
   .interestTags {
     gap: 0.375rem; /* Smaller gap on mobile */
   }
-  
+
   .interestTag {
     padding: 0.25rem 0.5rem; /* Smaller padding on mobile */
     font-size: 0.75rem; /* Smaller font on mobile */
@@ -512,7 +535,7 @@
   .commonInterest {
     padding-top: 1rem; /* Smaller padding on mobile */
   }
-  
+
   .commonBadge {
     font-size: 0.625rem; /* Smaller font on mobile */
     top: 0.25rem; /* Smaller top position on mobile */
@@ -536,7 +559,7 @@
   font-size: 1.125rem; /* 18px in rem */
   font-weight: bold;
   margin-bottom: 0.313rem; /* 5px in rem */
-  color: #161F65; /* Brand color for headings */
+  color: #161f65; /* Brand color for headings */
 }
 
 /* Paragraph text in info sections */
@@ -553,7 +576,7 @@
   .infoSection h3 {
     font-size: 1rem; /* Smaller font on mobile */
   }
-  
+
   .infoSection p {
     font-size: 0.875rem; /* Smaller font on mobile */
   }
@@ -563,11 +586,11 @@
   .detailedInfo {
     margin-top: 1rem; /* Larger margin on desktop */
   }
-  
+
   .infoSection {
     margin-bottom: 1.25rem; /* Larger margin on desktop */
   }
-  
+
   .infoSection h3 {
     font-size: 1.25rem; /* Larger font on desktop */
   }
@@ -602,7 +625,7 @@
   .photosGrid {
     gap: 0.25rem; /* Smaller gap on mobile */
   }
-  
+
   .photoItem {
     border-radius: 0.375rem; /* Smaller radius on mobile */
   }
@@ -613,7 +636,7 @@
     grid-template-columns: repeat(4, 1fr); /* 4 columns on larger screens */
     gap: 0.75rem; /* Larger gap on desktop */
   }
-  
+
   .photoItem {
     min-height: 6.25rem; /* Larger minimum height on desktop */
   }
