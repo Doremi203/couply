@@ -1,6 +1,6 @@
 services:
   auth:
-    image: cr.yandex/crpe9kgeql1v6b7gujfj/auth:{{AUTH_VERSION}}
+    image: cr.yandex/crpe9kgeql1v6b7gujfj/auth-testing:{{AUTH_VERSION}}
     environment:
       APP_ENV: testing
       CONFIGS_PATH: /app/configs
