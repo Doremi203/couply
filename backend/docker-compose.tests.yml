@@ -18,7 +18,7 @@ services:
   auth:
     build:
       context: ./auth
-      dockerfile: testing.Dockerfile
+      dockerfile: tests.Dockerfile
     environment:
       APP_ENV: tests
       CONFIGS_PATH: /app/configs
