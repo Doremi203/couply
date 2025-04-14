@@ -1,6 +1,5 @@
 # ignore vendor
 vendor/*
-common/proto/*
 
 # ignore proto build artifacts
 *cover.out

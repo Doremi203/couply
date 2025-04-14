@@ -4,6 +4,8 @@ services:
     environment:
       APP_ENV: testing
       CONFIGS_PATH: /app/configs
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "80:80"
       - "50051:50051"
