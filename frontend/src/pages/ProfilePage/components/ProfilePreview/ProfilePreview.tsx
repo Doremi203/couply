@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { ProfileView } from '../../../../pages/LikesPage/components/ProfileView/ProfileView';
+// import { ProfileView } from '../../../../pages/LikesPage/components/ProfileView/ProfileView';
+import { ProfileView } from '../../../../widgets/ProfileView';
 import { ProfileData } from '../../types';
 
 import styles from './profilePreview.module.css';
@@ -10,10 +11,7 @@ interface ProfilePreviewProps {
   onClose: () => void;
 }
 
-export const ProfilePreview: React.FC<ProfilePreviewProps> = ({
-  profileData,
-  onClose,
-}) => {
+export const ProfilePreview: React.FC<ProfilePreviewProps> = ({ profileData, onClose }) => {
   // Create a profile object that matches the ProfileView component's expected props
   const profile = {
     id: 1, // Dummy ID
@@ -36,7 +34,7 @@ export const ProfilePreview: React.FC<ProfilePreviewProps> = ({
       <div className={styles.previewBadge}>
         <span>Preview Mode</span>
       </div>
-      
+
       {/* Use the ProfileView component from LikesPage */}
       <ProfileView
         profile={profile}

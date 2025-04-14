@@ -2,7 +2,8 @@ import React from 'react';
 
 import { ProfileData } from '../../types';
 import { InfoGrid } from '../InfoGrid';
-import { PhotoGallery } from '../PhotoGallery';
+// import { PhotoGallery } from '../PhotoGallery';
+import PhotoGallery from '../PhotoGallery';
 import { ProfileHeader } from '../ProfileHeader';
 import { ProfileInfo } from '../ProfileInfo';
 import { ProfileSection } from '../ProfileSection';

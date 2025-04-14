@@ -1,0 +1,43 @@
+.profileHeader {
+  background-color: var(--header-background);
+  color: var(--header-text-color);
+  text-align: center;
+  position: relative;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 80px;
+}
+
+.profileHeader h5 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.backButton {
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 40px;
+  font-family: 'Jost', sans-serif;
+  font-weight: medium;
+  margin-top: 10px;
+}

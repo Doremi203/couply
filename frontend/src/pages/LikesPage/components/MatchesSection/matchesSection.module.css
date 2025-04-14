@@ -1,0 +1,9 @@
+.section {
+  margin-bottom: 20px;
+}
+
+.matchesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}

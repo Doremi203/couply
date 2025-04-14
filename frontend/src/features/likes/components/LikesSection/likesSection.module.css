@@ -1,0 +1,13 @@
+.section {
+  margin-bottom: 20px;
+}
+
+.profilesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.profileCard {
+  /* Additional styling for profile cards in the likes section */
+}

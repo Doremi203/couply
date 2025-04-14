@@ -1,1 +1,0 @@
-export { ProfilePhotoEdit } from './ProfilePhotoEdit';

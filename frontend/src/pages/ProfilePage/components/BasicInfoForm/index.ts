@@ -1,1 +1,0 @@
-export { BasicInfoForm } from './BasicInfoForm';

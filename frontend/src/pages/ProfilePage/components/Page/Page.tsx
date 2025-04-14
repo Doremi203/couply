@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
 import ActivityHistory from '../../../../widgets/ActivityHistory';
+// import { ProfileView } from '../../../../widgets/ProfileView';
+import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileData, ActivityItem } from '../../types';
-import { EditProfile } from '../EditProfile';
 import { ProfilePreview } from '../ProfilePreview';
-import ProfileView from '../ProfileView';
+import { ProfileView } from '../ProfileView';
 
 import styles from './profilePage.module.css';
 

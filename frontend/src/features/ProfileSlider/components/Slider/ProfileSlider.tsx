@@ -4,9 +4,9 @@ import { useSwipeable } from 'react-swipeable';
 import { ProfileView } from '../../../../pages/LikesPage/components/ProfileView';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
 import { LikeButton } from '../../../../shared/components/LikeButton';
+// import { ProfileView } from '../../../../widgets/ProfileView';
 
 import styles from './profileSlider.module.css';
-
 
 const profiles = [
   {
@@ -62,16 +62,14 @@ const profiles = [
 
 export const ProfileSlider = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [selectedProfile, setSelectedProfile] = useState<typeof profiles[0] | null>(null);
+  const [selectedProfile, setSelectedProfile] = useState<(typeof profiles)[0] | null>(null);
 
   const handleNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % profiles.length);
+    setCurrentIndex(prevIndex => (prevIndex + 1) % profiles.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex(
-      (prevIndex) => (prevIndex - 1 + profiles.length) % profiles.length,
-    );
+    setCurrentIndex(prevIndex => (prevIndex - 1 + profiles.length) % profiles.length);
   };
 
   const handlers = useSwipeable({

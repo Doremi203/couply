@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
+import FiltersDrawer from '../../../../features/filters/components/FiltersDrawer';
 import { ProfileSlider } from '../../../../features/ProfileSlider';
 import { FiltersIcon } from '../../../../shared/components/FiltersIcon';
 import { NavBar } from '../../../../shared/components/NavBar';
-import FiltersDrawer from '../FiltersDrawer/FiltersDrawer';
 
 import styles from './homePage.module.css';
 

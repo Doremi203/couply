@@ -9,27 +9,16 @@
  */
 import React, { useState, useRef, useEffect } from 'react';
 
-import { BackButton } from '../../../../shared/components/BackButton';
-import { DislikeButton } from '../../../../shared/components/DislikeButton';
-import { LikeButton } from '../../../../shared/components/LikeButton';
+import { BackButton } from '../../shared/components/BackButton';
+import { DislikeButton } from '../../shared/components/DislikeButton';
+import { LikeButton } from '../../shared/components/LikeButton';
+import { ProfileData } from '../../shared/components/ProfileCard';
 
-import { ProfileInfo } from './components/ProfileInfo';
+import ProfileInfo from './components/ProfileInfo';
 import styles from './profileView.module.css';
 
-interface ProfileViewProps {
-  profile: {
-    id: number;
-    name: string;
-    age: number;
-    imageUrl: string;
-    hasLikedYou?: boolean;
-    bio?: string;
-    location?: string;
-    interests?: string[];
-    lifestyle?: { [key: string]: string };
-    passion?: string[];
-    photos?: string[];
-  };
+export interface ProfileViewProps {
+  profile: ProfileData;
   onClose: () => void;
   onLike: (id: number) => void;
 }
