@@ -12,4 +12,4 @@ database:
   host: rc1b-2ebn83j0efcj6nkm.mdb.yandexcloud.net
   port: 6432
   database: auth
-  options: sslmode=verify-full;target_session_attrs=read-write
+  options: sslmode=verify-full&target_session_attrs=read-write

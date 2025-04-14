@@ -100,7 +100,7 @@ func initApp() *App {
 			Addr: fmt.Sprintf(":%d", cfg.http.Port),
 		},
 		healthCheckFunc: func() bool {
-			return true
+			return false
 		},
 		livenessCheckFunc: func() bool {
 			return true
@@ -146,6 +146,10 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 	a.initHTTPServer(grpcMux)
 
 	a.startBackgroundProcesses()
+
+	a.healthCheckFunc = func() bool {
+		return true
+	}
 
 	<-ctx.Done()
 	cancel()
