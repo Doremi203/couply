@@ -7,7 +7,7 @@ services:
       APP_ENV: testing
       CONFIGS_PATH: /app/configs
     volumes:
-      - /etc/ssl/.postgresql/root.crt:/root/.postgresql/root.crt:ro
+      - /etc/ssl/.postgresql:/root/.postgresql:ro
     ports:
       - "80:80"
       - "50051:50051"
