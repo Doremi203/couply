@@ -18,9 +18,8 @@ RUN go build -ldflags="-s -w" -o /src/app
 FROM alpine
 WORKDIR /app
 COPY --from=build /src/app ./
-COPY --from=build /src/scripts/entrypoint.sh /entrypoint.sh
 COPY configs configs
 COPY --from=swagger-ui /swagger-ui swagger-ui
 COPY swagger/swagger-initializer.js swagger-ui/swagger-initializer.js
 COPY swagger/api swagger-ui/api
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["./app"]

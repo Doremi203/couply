@@ -1,11 +1,11 @@
 services:
   auth:
     image: cr.yandex/crpe9kgeql1v6b7gujfj/auth-testing:{{AUTH_VERSION}}
+    env_file:
+      - /tmp/secrets.env
     environment:
       APP_ENV: testing
       CONFIGS_PATH: /app/configs
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
     ports:
       - "80:80"
       - "50051:50051"
@@ -16,6 +16,8 @@ services:
       options:
         fluentd-address: localhost:24224
         tag: auth.logs
+        fluentd-async: "true"
+        fluentd-async-reconnect-interval: "1s"
 
   fluentbit:
     image: cr.yandex/yc/fluent-bit-plugin-yandex:v1.0.3-fluent-bit-1.8.6
