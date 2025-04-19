@@ -36,9 +36,6 @@ func main() {
 			return err
 		}
 
-		// temporal
-		app.Log.Info("TEST LOG", "db_user", dbConfig.User)
-
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")

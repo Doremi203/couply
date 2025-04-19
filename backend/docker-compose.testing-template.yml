@@ -6,6 +6,8 @@ services:
     environment:
       APP_ENV: testing
       CONFIGS_PATH: /app/configs
+    volumes:
+      - /etc/ssl/.postgresql/root.crt:/root/.postgresql/root.crt:ro
     ports:
       - "80:80"
       - "50051:50051"
@@ -18,6 +20,7 @@ services:
         tag: auth.logs
         fluentd-async: "true"
         fluentd-async-reconnect-interval: "1s"
+        fluentd-request-ack: "true"
 
   fluentbit:
     image: cr.yandex/yc/fluent-bit-plugin-yandex:v1.0.3-fluent-bit-1.8.6
