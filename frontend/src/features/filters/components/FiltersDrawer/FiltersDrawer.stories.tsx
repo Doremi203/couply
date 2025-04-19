@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import FiltersDrawer from './FiltersDrawer';
 
 const meta = {
-  title: 'Components/FiltersDrawer',
+  title: 'Features/FiltersDrawer',
   component: FiltersDrawer,
   parameters: {
     layout: 'centered',

@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Like } from './Like';
 
 const meta = {
-  title: 'shared/Components/Like',
+  title: 'Shared/Like',
   component: Like,
   parameters: {
     layout: 'centered',

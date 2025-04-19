@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { TelegramIcon } from './TelegramIcon';
 
 const meta: Meta<typeof TelegramIcon> = {
-  title: 'Shared/components/TelegramIcon',
+  title: 'Shared/TelegramIcon',
   component: TelegramIcon,
   parameters: {
     layout: 'centered',

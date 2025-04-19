@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { LikeButton } from './LikeButton';
 
 const meta: Meta<typeof LikeButton> = {
-  title: 'Shared/components/LikeButton',
+  title: 'Shared/LikeButton',
   component: LikeButton,
   parameters: {
     layout: 'centered',
@@ -27,7 +27,7 @@ export const WithCustomClass: Story = {
     likeClassName: 'customLike',
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ padding: '1rem' }}>
         <style>
           {`

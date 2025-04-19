@@ -10,7 +10,7 @@ interface CustomButtonStoryProps {
 }
 
 const meta: Meta<CustomButtonStoryProps> = {
-  title: 'shared/components/CustomButton',
+  title: 'Shared/CustomButton',
   component: CustomButton,
   argTypes: {
     onClick: { action: 'clicked' },

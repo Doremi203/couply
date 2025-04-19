@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Dislike } from './Dislike';
 
 const meta = {
-  title: 'shared/components/Dislike',
+  title: 'Shared/Dislike',
   component: Dislike,
   parameters: {
     layout: 'centered',

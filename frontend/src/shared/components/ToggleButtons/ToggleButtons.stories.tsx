@@ -9,7 +9,7 @@ interface ToggleButtonsStoryProps {
 }
 
 const meta: Meta<ToggleButtonsStoryProps> = {
-  title: 'shared/Components/ToggleButtons',
+  title: 'Shared/ToggleButtons',
   component: ToggleButtons,
   argTypes: {
     onSelect: { action: 'selected' },

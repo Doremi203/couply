@@ -11,7 +11,7 @@ interface CustomInputStoryProps {
 }
 
 const meta: Meta<CustomInputStoryProps> = {
-  title: 'shared/components/CustomInput',
+  title: 'Shared/CustomInput',
   component: CustomInput,
   argTypes: {
     onChange: { action: 'changed' },

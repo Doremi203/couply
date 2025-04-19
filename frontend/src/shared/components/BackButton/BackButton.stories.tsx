@@ -3,15 +3,13 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { BackButton } from './BackButton';
 
 const meta = {
-  title: 'Components/BackButton',
+  title: 'Shared/BackButton',
   component: BackButton,
   parameters: {
     layout: 'centered',
     backgrounds: {
       default: 'dark',
-      values: [
-        { name: 'dark', value: '#202C83' },
-      ],
+      values: [{ name: 'dark', value: '#202C83' }],
     },
   },
   tags: ['autodocs'],

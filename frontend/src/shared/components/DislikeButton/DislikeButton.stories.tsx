@@ -3,7 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import { DislikeButton } from './DislikeButton';
 
 const meta: Meta<typeof DislikeButton> = {
-  title: 'Shared/components/DislikeButton',
+  title: 'Shared/DislikeButton',
   component: DislikeButton,
   parameters: {
     layout: 'centered',
@@ -26,7 +26,7 @@ export const WithCustomClass: Story = {
     className: 'customDislikeButton',
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div style={{ padding: '1rem' }}>
         <style>
           {`

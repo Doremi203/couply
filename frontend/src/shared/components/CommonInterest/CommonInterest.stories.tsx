@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { CommonInterest } from './CommonInterest';
 
 const meta = {
-  title: 'Components/CommonInterest',
+  title: 'Shared/CommonInterest',
   component: CommonInterest,
   parameters: {
     layout: 'centered',
