@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
@@ -271,7 +272,14 @@ func (a *App) initHTTPServer(grpcMux *runtime.ServeMux) {
 
 	mux.Handle("/", grpcMux)
 
-	a.httpServer.Handler = mux
+	a.httpServer.Handler = cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"*"},
+		ExposedHeaders:   []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           600,
+	}).Handler(mux)
 	a.AddBackgroundProcess(func(ctx context.Context) error {
 		a.Log.Info("starting http server on", "address", a.httpServer.Addr)
 		if err := a.httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
