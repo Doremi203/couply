@@ -7,6 +7,7 @@ import { EnterInfoPage } from './pages/EnterInfoPage';
 import { HomePage } from './pages/HomePage';
 import { LikesPage } from './pages/LikesPage';
 import { ProfilePage } from './pages/ProfilePage';
+import RegistrationPage from './pages/RegistrationPage';
 import { SplashPage } from './pages/SplashPage';
 import { ThemeProvider } from './shared/lib/context/ThemeContext';
 import { usePushNotifications } from './shared/lib/hooks/usePushNotifications';
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
   {
     path: 'auth',
     element: <AuthPage />,
+  },
+  {
+    path: 'registration',
+    element: <RegistrationPage />,
   },
   {
     path: 'enterInfo',

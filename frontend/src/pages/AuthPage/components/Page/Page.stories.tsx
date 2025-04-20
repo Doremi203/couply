@@ -7,7 +7,7 @@ const meta: Meta = {
   title: 'Pages/AuthPage',
   component: AuthPage,
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
         <Story />
       </BrowserRouter>

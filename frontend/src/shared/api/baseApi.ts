@@ -1,14 +1,14 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // Базовый URL API
-const API_BASE_URL = 'https://api.example.com'; // Замените на ваш реальный API URL
+const API_BASE_URL = 'https://testing.couply.ru'; // Замените на ваш реальный API URL
 
 // Базовый API для RTK Query
 export const baseApi = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    prepareHeaders: (headers) => {
+    prepareHeaders: headers => {
       // Здесь можно добавить авторизационные заголовки
       const token = localStorage.getItem('token');
       if (token) {
@@ -18,5 +18,5 @@ export const baseApi = createApi({
     },
   }),
   endpoints: () => ({}), // Пустые endpoints, будут расширяться в других файлах
-  tagTypes: ['Profile', 'Likes', 'Matches'], // Добавьте здесь все типы тегов для кэширования
+  tagTypes: ['Profile', 'Likes', 'Matches', 'User'], // Добавлен тег 'User' для аутентификации
 });
