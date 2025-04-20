@@ -19,12 +19,16 @@ export const useProfileView = () => {
       imageUrl: match.imageUrl,
       hasLikedYou: true,
       bio: 'This is a match! You can contact them via social media.',
-      location: '',
-      interests: [],
+      location: 'Matched User',
+      interests: ['Match'],
       lifestyle: {
         contact: `Telegram: ${match.telegram}`,
         social: `Instagram: ${match.instagram}`,
       },
+      // Add photos property to ensure the ProfileView component can display photos
+      photos: [match.imageUrl, match.imageUrl],
+      // Add passion property to ensure the ProfileView component can display interests
+      passion: ['Match', 'Connection'],
     };
     setSelectedProfile(matchAsProfile);
   };
