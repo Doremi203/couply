@@ -26,16 +26,29 @@ deps/linters:
 common/pull/proto: common/pull/proto/googleapis
 
 common/pull/proto/googleapis:
-	$(call CLONE_PROTO_REPO, https://github.com/googleapis/googleapis,google/api/http.proto google/api/annotations.proto)
+	$(call CLONE_PROTO_REPO, https://github.com/googleapis/googleapis,google/api/http.proto google/api/annotations.proto google/api/field_behavior.proto)
+
+common/pull/proto/googleapis:
+	$(call CLONE_PROTO_REPO, https://github.com/grpc-ecosystem/grpc-gateway,protoc-gen-openapiv2/options/annotations.proto)
+
+common/pull/proto/protoc-gen-openapiv2:
+	$(call CLONE_PROTO_REPO, https://github.com/grpc-ecosystem/grpc-gateway,protoc-gen-openapiv2/options/annotations.proto protoc-gen-openapiv2/options/openapiv2.proto)
+
+common/pull/proto/validate:
+	$(call CLONE_PROTO_REPO, https://github.com/bufbuild/protoc-gen-validate,validate/validate.proto)
 
 define CLONE_PROTO_REPO
 	@echo "Клонируем $(1)"
-	git clone --filter=blob:none --no-checkout $(1) common/proto
-	cd common/proto && \
+	@rm -rf tmp
+	@git clone --filter=blob:none --no-checkout $(1) tmp
+	@cd tmp && \
 		git sparse-checkout init --no-cone && \
 		git sparse-checkout set $(2) && \
 		git checkout
-	rm -rf common/proto/.git
+	@mkdir -p common/proto
+	@cd tmp && \
+		rsync -aR $(2) $(CURDIR)/common/proto/
+	@rm -rf tmp
 endef
 
 generate: auth/generate
@@ -52,11 +65,11 @@ auth/check-coverage:
 auth/lint:
 	cd auth && golangci-lint run
 
-auth/build:
-	cd auth && go build -o bin/auth ./cmd/auth
+auth/run:
+	docker compose up -d auth
 
-auth/run: auth/build
-	APP_ENV=dev CONFIGS_PATH=auth/configs ./auth/bin/auth
+auth/start: auth/generate
+	docker compose up --build --force-recreate -d auth
 
 auth/generate:
 	cd auth && go generate ./...

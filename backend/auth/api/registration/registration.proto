@@ -5,12 +5,25 @@ package registration;
 option go_package = "github.com/Doremi203/couply/backend/auth/api/registration";
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 service Registration {
     rpc BasicRegisterV1(BasicRegisterRequestV1) returns (BasicRegisterResponseV1) {
         option (google.api.http) = {
             post: "/v1/register/basic"
             body: "*"
+        };
+        option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Регистрация с помощью почти и пароля";
+            description: "Регистрирует пользователя по почте и паролю";
+            parameters: {
+                headers: {
+                    name: "Idempotency-Key"
+                    description: "Ключ идемпотентности для запроса. Должен быть валидным UUID."
+                    type: STRING
+                    required: true
+                }
+            }
         };
     }
 }
