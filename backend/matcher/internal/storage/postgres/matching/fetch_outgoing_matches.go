@@ -2,9 +2,9 @@ package matching
 
 import (
 	"context"
-	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/matching"
-	"github.com/georgysavva/scany/pgxscan"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
+	"github.com/jackc/pgx/v5"
 )
 
 func (s *PgStorageMatching) FetchOutgoingMatches(ctx context.Context, userID int64, limit, offset int32) ([]*matching.Match, error) {
@@ -17,20 +17,15 @@ func (s *PgStorageMatching) FetchOutgoingMatches(ctx context.Context, userID int
 
 	tx := s.txManager.GetQueryEngine(ctx)
 
-	var matches []*matching.Match
-
-	err := pgxscan.Select(
-		ctx,
-		tx,
-		&matches,
-		matchSQL,
-		userID,
-		false,
-		limit,
-		offset,
-	)
+	rows, err := tx.Query(ctx, matchSQL, userID, false, limit, offset)
 	if err != nil {
-		return nil, fmt.Errorf("FetchOutgoingMatches: %w", err)
+		return nil, errors.WrapFail(err, "fetch outgoing matches")
+	}
+	defer rows.Close()
+
+	matches, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[matching.Match])
+	if err != nil {
+		return nil, errors.WrapFail(err, "unmarshal outgoing matches to struct")
 	}
 
 	return matches, nil

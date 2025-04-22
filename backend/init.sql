@@ -1,1 +1,2 @@
 CREATE DATABASE auth;
+CREATE DATABASE matcher;

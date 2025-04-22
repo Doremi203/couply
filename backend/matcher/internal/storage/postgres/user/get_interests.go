@@ -3,8 +3,8 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/user/interest"
-	"github.com/jackc/pgx/v4"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
+	"github.com/jackc/pgx/v5"
 	"log"
 	"strings"
 )

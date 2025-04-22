@@ -1,8 +1,8 @@
 package user_service
 
 import (
-	"github.com/Doremi203/Couply/backend/internal/domain/user"
-	desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
 type GetUserV1Request struct {

@@ -2,8 +2,8 @@ package matching_service
 
 import (
 	"context"
-	dto "github.com/Doremi203/Couply/backend/internal/dto/matching-service"
-	desc "github.com/Doremi203/Couply/backend/pkg/matching-service/v1"
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
+	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

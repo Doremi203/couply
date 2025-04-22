@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package backend;
+package matcher;
 
-option go_package = "github.com/Doremi203/Couply/backend/pkg/matching-service;matching_service";
+option go_package = "github.com/Doremi203/couply/backend/matcher/api/matching-service/v1";
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";

@@ -2,7 +2,7 @@ package user_service
 
 import (
 	"context"
-	user_service "github.com/Doremi203/Couply/backend/internal/dto/user-service"
+	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 )
 
 func (c *UseCase) GetUser(ctx context.Context, in *user_service.GetUserV1Request) (*user_service.GetUserV1Response, error) {

@@ -15,10 +15,24 @@ services:
     ports:
       - "5432:5432"
 
+  matcher:
+    build:
+      context: .
+      dockerfile: matcher/prod.Dockerfile
+    environment:
+      APP_ENV: tests
+      CONFIGS_PATH: /app/configs
+    ports:
+      - "7001:7001"
+      - "7002:7002"
+    depends_on:
+      db:
+        condition: service_healthy
+
   auth:
     build:
-      context: ./auth
-      dockerfile: tests.Dockerfile
+      context: .
+      dockerfile: auth/prod.Dockerfile
     environment:
       APP_ENV: tests
       CONFIGS_PATH: /app/configs

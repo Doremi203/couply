@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package backend;
+package matcher;
 
-option go_package = "github.com/Doremi203/Couply/backend/pkg/search-service;search_service";
+option go_package = "github.com/Doremi203/couply/backend/matcher/api/search-service/v1";
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
@@ -51,4 +51,8 @@ service SearchingService {
     };
   }
 }
+
+message CreateFilterV1Request {}
+
+message CreateFilterV1Response {}
 

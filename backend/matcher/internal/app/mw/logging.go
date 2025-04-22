@@ -3,7 +3,7 @@ package mw
 import (
 	"context"
 
-	"github.com/Doremi203/Couply/backend/internal/logger"
+	"github.com/Doremi203/couply/backend/matcher/internal/logger"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

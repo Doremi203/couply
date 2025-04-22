@@ -2,7 +2,7 @@ package matching_service
 
 import (
 	"context"
-	"github.com/Doremi203/Couply/backend/internal/domain/matching"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
 func (f *StorageFacadeMatching) FetchIncomingMatchesTx(ctx context.Context, userID int64, limit, offset int32) ([]*matching.Match, error) {

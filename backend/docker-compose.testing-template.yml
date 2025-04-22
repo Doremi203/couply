@@ -1,6 +1,6 @@
 services:
   auth:
-    image: cr.yandex/crpe9kgeql1v6b7gujfj/auth-testing:{{AUTH_VERSION}}
+    image: cr.yandex/crpe9kgeql1v6b7gujfj/{{SERVICE_NAME}}-testing:{{SERVICE_VERSION}}
     env_file:
       - /tmp/secrets.env
     environment:
@@ -17,7 +17,7 @@ services:
       driver: fluentd
       options:
         fluentd-address: localhost:24224
-        tag: auth.logs
+        tag: {{SERVICE_NAME}}.logs
         fluentd-async: "true"
         fluentd-async-reconnect-interval: "1s"
         fluentd-request-ack: "true"

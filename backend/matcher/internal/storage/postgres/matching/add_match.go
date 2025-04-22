@@ -3,7 +3,7 @@ package matching
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/matching"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
 func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match) error {

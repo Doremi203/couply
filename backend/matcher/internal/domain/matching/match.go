@@ -1,6 +1,6 @@
 package matching
 
-import desc "github.com/Doremi203/Couply/backend/pkg/matching-service/v1"
+import desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
 
 type Match struct {
 	MainUserID   int64

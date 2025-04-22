@@ -1,6 +1,11 @@
 services:
   db:
     image: postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
@@ -10,9 +15,23 @@ services:
     ports:
       - "5432:5432"
 
+  matcher:
+    build:
+      context: .
+      dockerfile: matcher/dev.Dockerfile
+    environment:
+      APP_ENV: dev
+      CONFIGS_PATH: /app/configs
+    ports:
+      - "7001:7001"
+      - "7002:7002"
+    depends_on:
+      db:
+        condition: service_healthy
+
   auth:
     build:
-      context: ./auth
+      context: auth
       dockerfile: dev.Dockerfile
     environment:
       APP_ENV: dev
@@ -21,4 +40,5 @@ services:
       - "8080:8080"
       - "9090:9090"
     depends_on:
-      - db
+      db:
+        condition: service_healthy

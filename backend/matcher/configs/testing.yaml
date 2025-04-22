@@ -1,0 +1,15 @@
+http:
+  port: 80
+
+grpc:
+  port: 50051
+
+logging:
+  level: info
+  format: json
+
+database:
+  host: rc1a-1ns3p57pcpp20u6s.mdb.yandexcloud.net
+  port: 6432
+  database: matcher
+  options: sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/root/.postgresql/root.crt

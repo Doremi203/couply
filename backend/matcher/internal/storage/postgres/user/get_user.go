@@ -3,7 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/user"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
 func (s *PgStorageUser) GetUser(ctx context.Context, userID int64) (*user.User, error) {

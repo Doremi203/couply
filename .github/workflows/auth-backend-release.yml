@@ -89,7 +89,7 @@ jobs:
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: backend/auth
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
 
@@ -112,15 +112,18 @@ jobs:
           echo $(/opt/yc/bin/yc iam create-token)|docker login --username iam --password-stdin cr.yandex
 
       - name: Build Docker image
-        run: docker build -t cr.yandex/crpe9kgeql1v6b7gujfj/auth-testing:${{ env.RELEASE_VERSION }} --push . -f testing.Dockerfile
+        run: docker build -t cr.yandex/crpe9kgeql1v6b7gujfj/auth-testing:${{ env.RELEASE_VERSION }} --push . -f auth/testing.Dockerfile
 
       - name: Generate docker-compose.yml with version
         run: |
-          sed "s/{{AUTH_VERSION}}/${{ env.RELEASE_VERSION }}/g" ${{ github.workspace }}/backend/docker-compose.testing-template.yml > docker-compose.testing-generated.yml
+          sed -e "s/{{SERVICE_VERSION}}/${{ env.RELEASE_VERSION }}/g" \
+              -e "s/{{SERVICE_NAME}}/auth/g" \
+              ${{ github.workspace }}/backend/docker-compose.testing-template.yml \
+          > docker-compose.testing-generated.yml
 
       - name: Deploy to testing
         run: |
-          /opt/yc/bin/yc compute instance-group add-metadata --name vm-testing --metadata-from-file docker-compose=docker-compose.testing-generated.yml
+          /opt/yc/bin/yc compute instance-group add-metadata --name auth-testing --metadata-from-file docker-compose=docker-compose.testing-generated.yml
 
 
   publish-release:

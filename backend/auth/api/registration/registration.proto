@@ -14,7 +14,7 @@ service Registration {
             body: "*"
         };
         option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Регистрация с помощью почти и пароля";
+            summary: "Регистрация с помощью почты и пароля";
             description: "Регистрирует пользователя по почте и паролю";
             parameters: {
                 headers: {
