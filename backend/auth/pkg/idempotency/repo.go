@@ -2,6 +2,7 @@ package idempotency
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 

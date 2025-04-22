@@ -1,8 +1,8 @@
 package user_service
 
 import (
-	"github.com/Doremi203/Couply/backend/internal/storage/postgres"
-	"github.com/Doremi203/Couply/backend/internal/storage/postgres/user"
+	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres"
+	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/user"
 )
 
 type StorageFacadeUser struct {

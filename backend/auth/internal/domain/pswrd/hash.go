@@ -4,10 +4,11 @@ import (
 	"crypto/subtle"
 	"encoding/base64"
 	"fmt"
+	"strings"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/argon"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
-	"strings"
 )
 
 const (

@@ -2,10 +2,11 @@ package idempotency
 
 import (
 	"context"
+	"log/slog"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/tx"
 	"google.golang.org/grpc/codes"
-	"log/slog"
 )
 
 func RunGRPCHandler[T any](

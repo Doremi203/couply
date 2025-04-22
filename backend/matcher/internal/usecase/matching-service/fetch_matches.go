@@ -2,7 +2,8 @@ package matching_service
 
 import (
 	"context"
-	dto "github.com/Doremi203/Couply/backend/internal/dto/matching-service"
+
+	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
 )
 
 func (c *UseCase) FetchMatches(ctx context.Context, in *dto.FetchMatchesV1Request) (*dto.FetchMatchesV1Response, error) {

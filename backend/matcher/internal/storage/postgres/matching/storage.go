@@ -1,6 +1,6 @@
 package matching
 
-import "github.com/Doremi203/Couply/backend/internal/storage/postgres"
+import "github.com/Doremi203/couply/backend/matcher/internal/storage/postgres"
 
 type PgStorageMatching struct {
 	txManager postgres.TransactionManager

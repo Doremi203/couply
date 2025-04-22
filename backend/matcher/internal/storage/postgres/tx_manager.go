@@ -3,16 +3,20 @@ package postgres
 import (
 	"context"
 
-	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v5"
 
-	"github.com/jackc/pgconn"
-	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
+type dbClient interface {
+	BeginTx(ctx context.Context, opts pgx.TxOptions) (pgx.Tx, error)
+	QueryEngine
+}
+
 type QueryEngine interface {
-	Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error)
-	Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error)
-	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
+	Exec(ctx context.Context, sql string, arguments ...any) (pgconn.CommandTag, error)
+	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
+	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
 }
 
 type TransactionManager interface {
@@ -26,10 +30,10 @@ type TransactionManager interface {
 type txManagerKey struct{}
 
 type TxManager struct {
-	pool *pgxpool.Pool
+	pool dbClient
 }
 
-func NewTxManager(pool *pgxpool.Pool) *TxManager {
+func NewTxManager(pool dbClient) *TxManager {
 	return &TxManager{pool: pool}
 }
 

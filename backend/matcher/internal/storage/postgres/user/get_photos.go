@@ -3,7 +3,8 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/user"
+
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
 func (s *PgStorageUser) GetPhotos(ctx context.Context, userID int64) ([]*user.Photo, error) {

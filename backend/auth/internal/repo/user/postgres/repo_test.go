@@ -2,13 +2,14 @@ package userpostgres
 
 import (
 	"context"
+	"testing"
+	"time"
+
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	"time"
 )
 
 func Test_repo_Create(t *testing.T) {

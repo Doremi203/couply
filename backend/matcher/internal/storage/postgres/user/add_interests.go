@@ -3,8 +3,9 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/user/interest"
 	"strconv"
+
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
 )
 
 func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interests *interest.Interest) error {

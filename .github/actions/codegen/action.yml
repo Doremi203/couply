@@ -15,15 +15,15 @@ runs:
         path: |
           ~/.cache/go-build
           /tmp/buf-cache
-        key: ${{ runner.os }}-tools-${{ hashFiles(format('{0}/go.mod', inputs.working-directory), format('{0}/go.sum', inputs.working-directory), 'backend/buf.yaml') }}
+        key: ${{ runner.os }}-tools-${{ hashFiles('backend/go.mod', 'backend/go.sum', 'backend/buf.yaml') }}
         restore-keys: |
           ${{ runner.os }}-tools-
 
     - name: Set up Go
       uses: actions/setup-go@v5.1.0
       with:
-        go-version-file: ${{ inputs.working-directory }}/go.mod
-        cache-dependency-path: ${{ inputs.working-directory }}/go.sum
+        go-version-file: backend/go.mod
+        cache-dependency-path: backend/go.sum
 
     - name: Setup Buf
       uses: bufbuild/buf-setup-action@v1

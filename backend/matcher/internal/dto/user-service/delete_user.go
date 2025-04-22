@@ -1,7 +1,7 @@
 package user_service
 
 import (
-	desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 )
 
 type DeleteUserV1Request struct {

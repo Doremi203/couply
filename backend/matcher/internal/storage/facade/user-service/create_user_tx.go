@@ -3,7 +3,8 @@ package user_service
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/user"
+
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
 func (f *StorageFacadeUser) CreateUserTx(ctx context.Context, newUser *user.User) (*user.User, error) {

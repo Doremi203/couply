@@ -1,5 +1,4 @@
--- +goose Up
-create table if not exists Users (
+create table if not exists users (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     age INT CHECK (age > 18),
@@ -18,6 +17,3 @@ create table if not exists Users (
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
-
--- +goose Down
-drop table if exists Users;

@@ -2,9 +2,9 @@ package user_service
 
 import (
 	"context"
-	"github.com/Doremi203/Couply/backend/internal/dto/user-service"
 
-	desc "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
+	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )

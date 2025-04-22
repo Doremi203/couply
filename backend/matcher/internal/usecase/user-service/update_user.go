@@ -2,7 +2,8 @@ package user_service
 
 import (
 	"context"
-	"github.com/Doremi203/Couply/backend/internal/dto/user-service"
+
+	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 )
 
 func (c *UseCase) UpdateUser(ctx context.Context, in *user_service.UpdateUserV1Request) (*user_service.UpdateUserV1Response, error) {

@@ -2,12 +2,13 @@ package webapp
 
 import (
 	"fmt"
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/spf13/viper"
 	"log/slog"
 	"os"
 	"path/filepath"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/spf13/viper"
 )
 
 type grpcConfig struct {

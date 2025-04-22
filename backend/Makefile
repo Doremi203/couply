@@ -4,6 +4,11 @@ DB_PARAMS = ?sslmode=disable
 
 MIGRATE_CREATE = migrate create -ext sql -dir
 
+deps: deps/migrate deps/go-test-coverage deps/buf deps/mockgen deps/protoc deps/linters
+
+deps/migrate:
+	brew install golang-migrate
+
 deps/go-test-coverage:
 	go install github.com/vladopajic/go-test-coverage/v2@latest
 
@@ -28,9 +33,6 @@ common/pull/proto: common/pull/proto/googleapis
 common/pull/proto/googleapis:
 	$(call CLONE_PROTO_REPO, https://github.com/googleapis/googleapis,google/api/http.proto google/api/annotations.proto google/api/field_behavior.proto)
 
-common/pull/proto/googleapis:
-	$(call CLONE_PROTO_REPO, https://github.com/grpc-ecosystem/grpc-gateway,protoc-gen-openapiv2/options/annotations.proto)
-
 common/pull/proto/protoc-gen-openapiv2:
 	$(call CLONE_PROTO_REPO, https://github.com/grpc-ecosystem/grpc-gateway,protoc-gen-openapiv2/options/annotations.proto protoc-gen-openapiv2/options/openapiv2.proto)
 
@@ -51,10 +53,10 @@ define CLONE_PROTO_REPO
 	@rm -rf tmp
 endef
 
-generate: auth/generate
+generate: auth/generate matcher/generate
 
 services/deploy:
-	docker-compose up
+	docker compose up
 
 ### Auth service targets
 auth/check-coverage:
@@ -84,3 +86,35 @@ auth/migrate/down:
 
 auth/migrate/create:
 	$(MIGRATE_CREATE) $(AUTH_MIGRATIONS) $(name)
+
+### Matcher service targets
+matcher/check-coverage:
+	-cd matcher && MIGRATIONS_PATH=$(PWD)/matcher/migrations go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd matcher && go-test-coverage --config=.local.testcoverage.yml
+	@rm matcher/cover.out
+
+matcher/local-build:
+	cd matcher/cmd/matcher && go build -ldflags="-s -w"
+
+matcher/lint:
+	cd matcher && golangci-lint run
+
+matcher/run:
+	docker compose up -d matcher
+
+matcher/start: matcher/generate
+	docker compose up --build --force-recreate -d matcher
+
+matcher/generate:
+	cd matcher && go generate ./...
+
+MATCHER_MIGRATIONS = file://matcher/migrations
+
+matcher/migrate/up:
+	migrate -verbose -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" up
+
+matcher/migrate/down:
+	migrate -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" down -all
+
+matcher/migrate/create:
+	$(MIGRATE_CREATE) $(MATCHER_MIGRATIONS) $(name)

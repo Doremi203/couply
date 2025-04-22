@@ -3,7 +3,7 @@ package mw
 import (
 	"context"
 
-	user_service "github.com/Doremi203/Couply/backend/pkg/user-service/v1"
+	user_service "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

@@ -9,13 +9,13 @@ on:
     branches: ["main"]
     paths:
       - 'backend/auth/**'
-      - '.github/workflows/backend.yml'
+      - '.github/workflows/auth-backend.yml'
       - '.github/actions/codegen/**'
   pull_request:
     branches: ["main"]
     paths:
       - 'backend/auth/**'
-      - '.github/workflows/backend.yml'
+      - '.github/workflows/auth-backend.yml'
       - '.github/actions/codegen/**'
 
 # Cancel any in-progress job or run for the same branch/PR to save resources
@@ -74,7 +74,7 @@ jobs:
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: backend/auth
+        working-directory: backend
     steps:
       - uses: actions/checkout@v4
 
@@ -83,4 +83,4 @@ jobs:
           working-directory: backend/auth
 
       - name: Build Docker image
-        run: docker build -t auth_service:latest . -f prod.Dockerfile
+        run: docker build -t auth_service:latest . -f auth/prod.Dockerfile

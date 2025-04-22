@@ -1,8 +1,8 @@
 package matching_service
 
 import (
-	"github.com/Doremi203/Couply/backend/internal/domain/matching"
-	desc "github.com/Doremi203/Couply/backend/pkg/matching-service/v1"
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
 type FetchMatchesV1Request struct {

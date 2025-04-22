@@ -2,8 +2,11 @@ package matching_service
 
 import (
 	"context"
-	dto "github.com/Doremi203/Couply/backend/internal/dto/matching-service"
-	desc "github.com/Doremi203/Couply/backend/pkg/matching-service/v1"
+
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
+	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc"
 )
 
 type matchingServiceUseCase interface {
@@ -21,4 +24,17 @@ type Implementation struct {
 
 func NewImplementation(usecase matchingServiceUseCase) *Implementation {
 	return &Implementation{usecase: usecase}
+}
+
+func (i *Implementation) RegisterToGateway(
+	ctx context.Context,
+	mux *runtime.ServeMux,
+	endpoint string,
+	opts []grpc.DialOption,
+) error {
+	return desc.RegisterMatchingServiceHandlerFromEndpoint(ctx, mux, endpoint, opts)
+}
+
+func (i *Implementation) RegisterToServer(gRPC *grpc.Server) {
+	desc.RegisterMatchingServiceServer(gRPC, i)
 }

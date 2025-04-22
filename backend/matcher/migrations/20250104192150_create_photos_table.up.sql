@@ -1,5 +1,4 @@
--- +goose Up
-create table if not exists Photos (
+create table if not exists photos (
     user_id BIGINT,
     order_number BIGINT,
     url TEXT NOT NULL,
@@ -9,6 +8,3 @@ create table if not exists Photos (
     PRIMARY KEY (user_id, order_number),
     FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 );
-
--- +goose Down
-drop table if exists Photos;

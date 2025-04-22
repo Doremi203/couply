@@ -1,0 +1,8 @@
+services:
+  matcher:
+    build:
+      dockerfile: matcher/debug.Dockerfile
+    ports:
+      - "40000:40000"
+    security_opt:
+      - seccomp=unconfined

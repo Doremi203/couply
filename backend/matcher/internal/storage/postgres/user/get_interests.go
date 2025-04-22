@@ -3,10 +3,11 @@ package user
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/Couply/backend/internal/domain/user/interest"
-	"github.com/jackc/pgx/v4"
 	"log"
 	"strings"
+
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
+	"github.com/jackc/pgx/v5"
 )
 
 func (s *PgStorageUser) GetInterests(ctx context.Context, userID int64) (*interest.Interest, error) {

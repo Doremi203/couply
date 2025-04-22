@@ -1,0 +1,88 @@
+name: Matcher Service CI/CD
+
+permissions:
+  actions: read
+  contents: read
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - 'backend/matcher/**'
+      - 'backend/auth/pkg/**'
+      - '.github/workflows/backend.yml'
+      - '.github/actions/codegen/**'
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'backend/matcher/**'
+      - 'backend/auth/pkg/**'
+      - '.github/workflows/matcher-backend.yml'
+      - '.github/actions/codegen/**'
+
+# Cancel any in-progress job or run for the same branch/PR to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: backend/matcher
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/matcher
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: v1.64.7
+          working-directory: backend/matcher
+          args: --timeout=3m
+
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/matcher
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/matcher
+
+      - name: Run tests with coverage
+        run: MIGRATIONS_PATH=${{ github.workspace }}/backend/matcher/migrations go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: ${{ github.repository }}
+          files: ./backend/matcher/coverage.txt
+          fail_ci_if_error: false
+          verbose: true
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ./.github/actions/codegen
+        with:
+          working-directory: backend/matcher
+
+      - name: Build Docker image
+        run: docker build -t matcher_service:latest . -f matcher/prod.Dockerfile
