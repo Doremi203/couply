@@ -1,11 +1,12 @@
 package pswrd
 
 import (
+	"testing"
+
 	mock_argon "github.com/Doremi203/couply/backend/auth/pkg/argon/mock"
 	mock_salt "github.com/Doremi203/couply/backend/auth/pkg/salt/mock"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-	"testing"
 )
 
 func TestDefaultHasher_Hash(t *testing.T) {

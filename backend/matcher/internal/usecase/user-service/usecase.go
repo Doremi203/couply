@@ -2,6 +2,7 @@ package user_service
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 

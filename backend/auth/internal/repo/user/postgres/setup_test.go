@@ -1,8 +1,9 @@
 package userpostgres
 
 import (
-	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"testing"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 )
 
 var tester postgres.Tester

@@ -2,6 +2,7 @@ package user_service
 
 import (
 	"context"
+
 	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 )
 

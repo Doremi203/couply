@@ -3,8 +3,9 @@ package user_service
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	"time"
+
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
 func (f *StorageFacadeUser) UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error) {

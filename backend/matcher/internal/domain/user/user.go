@@ -1,8 +1,9 @@
 package user
 
 import (
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
 	"time"
+
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"

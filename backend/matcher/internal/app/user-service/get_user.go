@@ -2,6 +2,7 @@ package user_service
 
 import (
 	"context"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 	"google.golang.org/grpc/codes"

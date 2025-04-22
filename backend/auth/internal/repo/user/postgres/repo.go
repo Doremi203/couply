@@ -3,6 +3,7 @@ package userpostgres
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"

@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"strings"
+
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
 	"github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
@@ -14,7 +16,6 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"strings"
 )
 
 func main() {

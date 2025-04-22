@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"strings"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
@@ -15,7 +17,6 @@ import (
 	matching_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/matching-service"
 	user_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/user-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"strings"
 )
 
 func main() {

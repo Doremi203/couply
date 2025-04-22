@@ -2,6 +2,7 @@ package salt
 
 import (
 	"crypto/rand"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 

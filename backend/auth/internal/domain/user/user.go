@@ -1,11 +1,12 @@
 package user
 
 import (
+	"time"
+
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	uuidgen "github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/google/uuid"
-	"time"
 )
 
 type ID uuid.UUID

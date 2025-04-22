@@ -1,9 +1,10 @@
 package user_service
 
 import (
+	"time"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
-	"time"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 )

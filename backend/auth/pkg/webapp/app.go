@@ -3,12 +3,6 @@ package webapp
 import (
 	"context"
 	"fmt"
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/rs/cors"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/reflection"
 	"log/slog"
 	"net"
 	"net/http"
@@ -19,6 +13,13 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/reflection"
 )
 
 type grpcService interface {
