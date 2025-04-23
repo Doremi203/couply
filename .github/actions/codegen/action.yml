@@ -1,11 +1,6 @@
 name: 'Codegen'
 description: 'Generate code for service'
 
-inputs:
-  working-directory:
-    description: 'Working directory for commands'
-    required: true
-
 runs:
   using: "composite"
   steps:
@@ -46,5 +41,5 @@ runs:
 
     - name: Run go generate
       shell: bash
-      working-directory: ${{ inputs.working-directory }}
+      working-directory: backend
       run: go generate ./...

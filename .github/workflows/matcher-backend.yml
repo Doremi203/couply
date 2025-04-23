@@ -36,8 +36,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/codegen
-        with:
-          working-directory: backend/matcher
 
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
@@ -56,8 +54,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/codegen
-        with:
-          working-directory: backend/matcher
 
       - name: Run tests with coverage
         run: MIGRATIONS_PATH=${{ github.workspace }}/backend/matcher/migrations go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...
@@ -81,8 +77,6 @@ jobs:
       - uses: actions/checkout@v4
 
       - uses: ./.github/actions/codegen
-        with:
-          working-directory: backend/matcher
 
       - name: Build Docker image
         run: docker build -t matcher_service:latest . -f matcher/prod.Dockerfile
