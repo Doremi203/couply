@@ -252,7 +252,12 @@ func (a *App) initHTTPServer(grpcMux *runtime.ServeMux) {
 
 	if a.Config.swaggerUI.Enabled {
 		swaggerUIDir := http.Dir(a.Config.swaggerUI.Path)
-		mux.Handle("/swagger/", http.StripPrefix("/swagger/", http.FileServer(swaggerUIDir)))
+		mux.Handle("/swagger/", http.StripPrefix("/swagger/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Cache-Control", "no-store, no-cache, must-revalidate")
+			w.Header().Set("Pragma", "no-cache")
+			w.Header().Set("Expires", "0")
+			http.FileServer(swaggerUIDir).ServeHTTP(w, r)
+		})))
 	}
 
 	mux.HandleFunc("/health", func(w http.ResponseWriter, _ *http.Request) {

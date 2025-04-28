@@ -16,9 +16,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     version: "1.0.0";
     description: "Сервис пользователей для приложения, которое позволяет людям искать людей для знакомств";
   };
-  host: "127.0.0.1:7001";
-  schemes: HTTP;
-  schemes: HTTPS;
   consumes: "application/json";
   produces: "application/json";
   security_definitions: {
