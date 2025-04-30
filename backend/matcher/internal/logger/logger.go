@@ -47,7 +47,7 @@ func init() {
 		if len(logWriter) > 0 {
 			var file *os.File
 
-			file, err = os.OpenFile(logWriter, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+			file, err = os.OpenFile(logWriter, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666) //nolint:gosec
 			if err != nil {
 				log.Fatalf("Failed to open log writer file %q: %v", logWriter, err)
 			}

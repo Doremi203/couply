@@ -71,7 +71,12 @@ func SetupTests(m *testing.M, tester *Tester) {
 	if err != nil {
 		log.Fatalf("couldn't open db connection: %v", err)
 	}
-	defer sqlDB.Close()
+	defer func() {
+		err := sqlDB.Close()
+		if err != nil {
+			log.Printf("couldn't close db connection: %v", err)
+		}
+	}()
 
 	driver, err := postgres.WithInstance(sqlDB, &postgres.Config{})
 	if err != nil {

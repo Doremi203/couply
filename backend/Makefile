@@ -26,7 +26,7 @@ deps/protoc:
 	go install github.com/envoyproxy/protoc-gen-validate/cmd/protoc-gen-validate-go@latest
 
 deps/linters:
-	sudo curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.64.7
+	brew install golangci-lint
 
 common/pull/proto: common/pull/proto/googleapis
 
