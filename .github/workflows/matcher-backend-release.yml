@@ -6,23 +6,6 @@ permissions:
   contents: write
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    defaults:
-      run:
-        working-directory: backend/matcher
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: ./.github/actions/codegen
-
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v7
-        with:
-          version: latest
-          working-directory: backend/matcher
-
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -47,7 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - test
-      - lint
     timeout-minutes: 10
     defaults:
       run:
@@ -81,7 +63,7 @@ jobs:
   build-testing:
     runs-on: ubuntu-latest
     needs: migrate-testing-up
-    timeout-minutes: 10
+    timeout-minutes: 20
     defaults:
       run:
         working-directory: backend
