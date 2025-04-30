@@ -27,11 +27,11 @@ func PhotoToPB(photo *Photo) *desc.Photo {
 
 func PBToPhoto(photo *desc.Photo) *Photo {
 	return &Photo{
-		OrderNumber: photo.OrderNumber,
-		URL:         photo.Url,
-		MimeType:    photo.MimeType,
-		UploadedAt:  photo.UploadedAt.AsTime(),
-		UpdatedAt:   photo.UpdatedAt.AsTime(),
+		OrderNumber: photo.GetOrderNumber(),
+		URL:         photo.GetUrl(),
+		MimeType:    photo.GetMimeType(),
+		UploadedAt:  photo.GetUploadedAt().AsTime(),
+		UpdatedAt:   photo.GetUpdatedAt().AsTime(),
 	}
 }
 

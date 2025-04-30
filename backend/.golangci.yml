@@ -1,0 +1,31 @@
+version: "2"
+
+linters:
+  enable:
+    - errcheck
+    - goconst
+    - goimports
+    - gosec
+    - govet
+    - ineffassign
+    - staticcheck
+    - typecheck
+    - unused
+    - gocyclo
+    - gocognit
+    - protogetter
+  exclusions:
+    warn-unused: true
+  settings:
+    gocyclo:
+      min-complexity: 20
+    gocognit:
+      min-complexity: 20
+
+run:
+  timeout: 5m
+  modules-download-mode: readonly
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0

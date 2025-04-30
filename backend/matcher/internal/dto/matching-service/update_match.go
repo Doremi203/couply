@@ -25,9 +25,9 @@ func UpdateMatchRequestToPB(req *UpdateMatchV1Request) *desc.UpdateMatchV1Reques
 
 func PBToUpdateMatchRequest(req *desc.UpdateMatchV1Request) *UpdateMatchV1Request {
 	return &UpdateMatchV1Request{
-		MainUserID:   req.MainUserId,
-		ChosenUserID: req.ChosenUserId,
-		Approved:     req.Approved,
+		MainUserID:   req.GetMainUserId(),
+		ChosenUserID: req.GetChosenUserId(),
+		Approved:     req.GetApproved(),
 	}
 }
 
@@ -39,7 +39,7 @@ func UpdateMatchResponseToPB(resp *UpdateMatchV1Response) *desc.UpdateMatchV1Res
 
 func PBToUpdateMatchResponse(resp *desc.UpdateMatchV1Response) *UpdateMatchV1Response {
 	return &UpdateMatchV1Response{
-		Match: matching.PBToMatch(resp.Match),
+		Match: matching.PBToMatch(resp.GetMatch()),
 	}
 }
 

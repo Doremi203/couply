@@ -19,7 +19,7 @@ func DeleteUserRequestToPB(req *DeleteUserV1Request) *desc.DeleteUserV1Request {
 
 func PBToDeleteUserRequest(req *desc.DeleteUserV1Request) *DeleteUserV1Request {
 	return &DeleteUserV1Request{
-		ID: req.Id,
+		ID: req.GetId(),
 	}
 }
 

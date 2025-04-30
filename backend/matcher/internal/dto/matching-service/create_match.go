@@ -23,8 +23,8 @@ func CreateMatchRequestToPB(req *CreateMatchV1Request) *desc.CreateMatchV1Reques
 
 func PBToCreateMatchRequest(req *desc.CreateMatchV1Request) *CreateMatchV1Request {
 	return &CreateMatchV1Request{
-		MainUserID:   req.MainUserId,
-		ChosenUserID: req.ChosenUserId,
+		MainUserID:   req.GetMainUserId(),
+		ChosenUserID: req.GetChosenUserId(),
 	}
 }
 
@@ -36,7 +36,7 @@ func CreateMatchResponseToPB(resp *CreateMatchV1Response) *desc.CreateMatchV1Res
 
 func PBToCreateMatchResponse(resp *desc.CreateMatchV1Response) *CreateMatchV1Response {
 	return &CreateMatchV1Response{
-		Match: matching.PBToMatch(resp.Match),
+		Match: matching.PBToMatch(resp.GetMatch()),
 	}
 }
 

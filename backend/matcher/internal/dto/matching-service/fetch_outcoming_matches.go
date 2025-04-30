@@ -25,9 +25,9 @@ func FetchOutgoingMatchesRequestToPB(req *FetchOutgoingMatchesV1Request) *desc.F
 
 func PBToFetchOutgoingMatchesRequest(req *desc.FetchOutgoingMatchesV1Request) *FetchOutgoingMatchesV1Request {
 	return &FetchOutgoingMatchesV1Request{
-		MainUserID: req.MainUserId,
-		Limit:      req.Limit,
-		Offset:     req.Offset,
+		MainUserID: req.GetMainUserId(),
+		Limit:      req.GetLimit(),
+		Offset:     req.GetOffset(),
 	}
 }
 
@@ -39,6 +39,6 @@ func FetchOutgoingMatchesResponseToPB(resp *FetchOutgoingMatchesV1Response) *des
 
 func PBToFetchOutgoingMatchesResponseSlice(resp *desc.FetchOutgoingMatchesV1Response) *FetchOutgoingMatchesV1Response {
 	return &FetchOutgoingMatchesV1Response{
-		Matches: matching.PBToMatchSlice(resp.Match),
+		Matches: matching.PBToMatchSlice(resp.GetMatch()),
 	}
 }

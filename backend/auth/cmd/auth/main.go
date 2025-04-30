@@ -6,11 +6,11 @@ import (
 
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
-	"github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
+	userpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/argon"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
+	idempotencypostgres "github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"

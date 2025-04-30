@@ -18,9 +18,9 @@ func MatchToPB(match *Match) *desc.Match {
 
 func PBToMatch(match *desc.Match) *Match {
 	return &Match{
-		MainUserID:   match.MainUserId,
-		ChosenUserID: match.ChosenUserId,
-		Approved:     match.Approved,
+		MainUserID:   match.GetMainUserId(),
+		ChosenUserID: match.GetChosenUserId(),
+		Approved:     match.GetApproved(),
 	}
 }
 
