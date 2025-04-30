@@ -4,7 +4,6 @@ linters:
   enable:
     - errcheck
     - goconst
-    - goimports
     - gosec
     - govet
     - ineffassign
@@ -20,6 +19,10 @@ linters:
       min-complexity: 20
     gocognit:
       min-complexity: 20
+
+formatters:
+  enable:
+    - goimports
 
 run:
   timeout: 5m

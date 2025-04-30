@@ -58,6 +58,9 @@ generate: auth/generate matcher/generate
 services/deploy:
 	docker compose up
 
+lint:
+	golangci-lint run
+
 ### Auth service targets
 auth/check-coverage:
 	-cd auth && MIGRATIONS_PATH=$(PWD)/auth/migrations go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
