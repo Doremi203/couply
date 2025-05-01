@@ -24,6 +24,10 @@ func (e customError) Unwrap() error {
 	return e.wrappedErr
 }
 
+func (e customError) Is(err error) bool {
+	return e.Error() == err.Error()
+}
+
 func Error(msg string) error {
 	return Errorf(msg)
 }
