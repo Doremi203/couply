@@ -6,11 +6,11 @@ import (
 )
 
 type NotFoundError struct {
-	Details string
+	Err error
 }
 
 func (e NotFoundError) Error() string {
-	return fmt.Sprintf("user not found with %s", e.Details)
+	return fmt.Sprintf("user not found: %v", e.Err)
 }
 
 var ErrAlreadyExists = errors.New("user already exists")

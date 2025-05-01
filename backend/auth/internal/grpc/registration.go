@@ -3,7 +3,6 @@ package grpc
 import (
 	"context"
 	"fmt"
-	"log/slog"
 
 	"github.com/Doremi203/couply/backend/auth/gen/api/registration"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
@@ -11,6 +10,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/idempotency"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"github.com/Doremi203/couply/backend/auth/pkg/tx"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -20,7 +20,7 @@ import (
 
 func NewRegistrationService(
 	useCase usecase.Registration,
-	log *slog.Logger,
+	log log.Logger,
 	txProvider tx.Provider,
 	idempotencyRepo idempotency.Repo,
 ) *registrationService {
@@ -37,7 +37,7 @@ type registrationService struct {
 	txProvider          tx.Provider
 	idempotencyRepo     idempotency.Repo
 
-	log *slog.Logger
+	log log.Logger
 	registration.UnimplementedRegistrationServer
 }
 
@@ -67,7 +67,7 @@ func (s *registrationService) BasicRegisterV1(
 			err := s.registrationUseCase.BasicV1(ctx, user.Email(req.GetEmail()), pswrd.Password(req.GetPassword()))
 			switch {
 			case errors.Is(err, usecase.ErrAlreadyRegistered):
-				s.log.Warn("user already registered", "error", err)
+				s.log.Warn(errors.Wrap(err, "user already registered"))
 				return idempotency.Response[registration.BasicRegisterResponseV1]{
 					Data:    nil,
 					Code:    codes.AlreadyExists,
@@ -82,7 +82,7 @@ func (s *registrationService) BasicRegisterV1(
 			}, nil
 		})
 	if err != nil {
-		s.log.Error("basic register v1 failed", "error", err)
+		s.log.Error(errors.Wrap(err, "basic register v1 failed"))
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 

@@ -4,6 +4,9 @@ import (
 	"log/slog"
 	"os"
 	"strings"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 )
 
 type logFormat string
@@ -22,7 +25,7 @@ func parseLogFormat(s string) logFormat {
 	}
 }
 
-func newLogger(config loggingConfig) *slog.Logger {
+func newLogger(config loggingConfig) log.Logger {
 	format := parseLogFormat(config.Format)
 	level := parseLogLevel(config.Level)
 
@@ -44,7 +47,7 @@ func newLogger(config loggingConfig) *slog.Logger {
 		)
 	}
 
-	return slog.New(h)
+	return errors.Logger(slog.New(h))
 }
 
 func parseLogLevel(level string) slog.Level {

@@ -69,6 +69,9 @@ auth/check-coverage:
 	-cd auth && go-test-coverage --config=.local.testcoverage.yml
 	@rm auth/cover.out
 
+auth/local-build:
+	cd auth/cmd/auth && go build -ldflags="-s -w"
+
 auth/lint:
 	cd auth && golangci-lint run
 

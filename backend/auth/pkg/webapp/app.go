@@ -3,7 +3,6 @@ package webapp
 import (
 	"context"
 	"fmt"
-	"log/slog"
 	"net"
 	"net/http"
 	"os"
@@ -13,6 +12,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -46,7 +47,7 @@ type BackgroundProcess func(ctx context.Context) error
 type App struct {
 	wg sync.WaitGroup
 
-	Log     *slog.Logger
+	Log     log.Logger
 	closers []ResourceCloser
 
 	healthCheckFunc   func() bool
@@ -75,28 +76,28 @@ func initApp() *App {
 		panic(errors.WrapFail(err, "load app config"))
 	}
 
-	log := newLogger(cfg.logging)
-	log.Info("starting service with", "env", env)
-	log.Info(
+	logger := newLogger(cfg.logging)
+	logger.Info("starting service with", "env", env)
+	logger.Info(
 		"loaded app config",
 		"grpc_cfg", cfg.grpc,
 		"http_cfg", cfg.http,
 		"logging_cfg", cfg.logging,
 		"swagger-ui", cfg.swaggerUI,
 	)
-	cfg.logger = log
+	cfg.logger = logger
 
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
 
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(NewUnaryPanicInterceptor(log)),
+		grpc.UnaryInterceptor(NewUnaryPanicInterceptor(logger)),
 	)
 	reflection.Register(grpcServer)
 
 	return &App{
 		Env:                  env,
 		Config:               cfg,
-		Log:                  log,
+		Log:                  logger,
 		backgroundCtx:        backgroundCtx,
 		backgroundCancelFunc: backgroundCancelFunc,
 		grpcServer:           grpcServer,
@@ -128,14 +129,16 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 
 	defer func() {
 		if err := recover(); err != nil {
-			a.Log.Error("app crashed with panic", "error", err, "stack", string(debug.Stack()))
+			a.Log.Error(
+				errors.Wrapf(err.(error), "app crashed with panic %v", errors.Token("stack", string(debug.Stack()))),
+			)
 			os.Exit(1)
 		}
 	}()
 
 	err := setupFunc(ctx, a)
 	if err != nil {
-		a.Log.Error("app setup failed", "error", err)
+		a.Log.Error(errors.Wrap(err, "app setup failed"))
 		os.Exit(1)
 	}
 
@@ -144,7 +147,7 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 	for _, service := range a.gatewayHandlers {
 		err := a.registerGatewayHandler(grpcMux, service)
 		if err != nil {
-			a.Log.Error("app register grpc gateway handler failed", "error", err)
+			a.Log.Error(errors.WrapFail(err, "register grpc gateway handler"))
 			os.Exit(1)
 		}
 	}
@@ -166,10 +169,11 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 
 	a.grpcServer.GracefulStop()
 
-	httpShutdownCtx, httpCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	const httpServerShutdownTimeout = 5 * time.Second
+	httpShutdownCtx, httpCancel := context.WithTimeout(context.Background(), httpServerShutdownTimeout)
 	defer httpCancel()
 	if err := a.httpServer.Shutdown(httpShutdownCtx); err != nil {
-		a.Log.Error("failed http server shutdown within timeout", "error", err)
+		a.Log.Error(errors.WrapFailf(err, "shutdown http server within %v", errors.Token("timeout", httpServerShutdownTimeout)))
 	}
 
 	a.shutDown()
@@ -227,7 +231,11 @@ func (a *App) registerGatewayHandler(
 		[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
 	)
 	if err != nil {
-		return errors.WrapFailf(err, "register gateway handler %v", a.serviceName(service))
+		return errors.WrapFailf(
+			err,
+			"register gateway handler for %v",
+			errors.Token("service", a.serviceName(service)),
+		)
 	}
 	a.Log.Info("gateway handler registered", "service", a.serviceName(service))
 
@@ -307,13 +315,13 @@ func (a *App) startBackgroundProcesses() {
 			defer a.wg.Done()
 			err := processor(a.backgroundCtx)
 			if err != nil && !errors.Is(err, errBackgroundProcessStopped) {
-				a.Log.Error("failed to start background", "error", err)
+				a.Log.Error(errors.WrapFail(err, "start background process"))
 			}
 		}()
 	}
 }
 
-var errBackgroundProcessStopped = errors.New("background process has been stopped")
+var errBackgroundProcessStopped = errors.Error("background process has been stopped")
 
 func (a *App) stopBackgroundProcesses() {
 	a.Log.Info("stopping background processes")
@@ -330,7 +338,7 @@ func (a *App) closeResources() {
 	for i := len(a.closers) - 1; i >= 0; i-- {
 		err := a.closers[i]()
 		if err != nil {
-			a.Log.Error("failed to close resource", "err", err)
+			a.Log.Error(errors.WrapFail(err, "close resource"))
 		}
 	}
 

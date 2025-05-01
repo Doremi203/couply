@@ -2,16 +2,16 @@ package idempotency
 
 import (
 	"context"
-	"log/slog"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"github.com/Doremi203/couply/backend/auth/pkg/tx"
 	"google.golang.org/grpc/codes"
 )
 
 func RunGRPCHandler[T any](
 	ctx context.Context,
-	log *slog.Logger,
+	log log.Logger,
 	txProvider tx.Provider,
 	repo Repo,
 	useCase func(context.Context) (Response[T], error),
@@ -32,7 +32,7 @@ func RunGRPCHandler[T any](
 		if err != nil {
 			rollbackErr := txProvider.RollbackTx(ctx)
 			if rollbackErr != nil {
-				log.Error("failed to rollback idempotency tx", "error", err)
+				log.Error(errors.WrapFail(err, "rollback idempotency tx"))
 			}
 		}
 	}()

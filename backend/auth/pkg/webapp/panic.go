@@ -2,15 +2,16 @@ package webapp
 
 import (
 	"context"
-	"log/slog"
 	"runtime/debug"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func NewUnaryPanicInterceptor(logger *slog.Logger) grpc.UnaryServerInterceptor {
+func NewUnaryPanicInterceptor(logger log.Logger) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
 		req interface{},
@@ -19,11 +20,11 @@ func NewUnaryPanicInterceptor(logger *slog.Logger) grpc.UnaryServerInterceptor {
 	) (resp interface{}, err error) {
 		defer func() {
 			if r := recover(); r != nil {
-				logger.Error("panic in handler",
-					"handler", info.FullMethod,
-					"error", r,
-					"stack", debug.Stack(),
-				)
+				logger.Error(errors.Errorf("panic in %v with %v and %v",
+					errors.Token("handler", info.FullMethod),
+					errors.Token("error", r),
+					errors.Token("stack", debug.Stack()),
+				))
 				err = status.Errorf(codes.Internal, "internal server error")
 			}
 		}()
