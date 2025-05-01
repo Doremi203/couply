@@ -1,13 +1,15 @@
 syntax = "proto3";
 
-package matcher;
+package search_service.v1;
 
-option go_package = "github.com/Doremi203/couply/backend/matcher/api/search-service/v1";
+option go_package = "github.com/Doremi203/Couply/backend/matcher/gen/api/search-service;search_service";
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "validate/validate.proto";
+import "api/common/v1/common.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -49,7 +51,102 @@ service SearchingService {
   }
 }
 
-message CreateFilterV1Request {}
+message CreateFilterV1Request {
+  GenderPriority gender_priority = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum.defined_only = true
+  ];
+  int32 min_age = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 max_age = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 min_height = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  int32 max_height = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  Range height_range = 6 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  int32 distance = 7 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32.gte = 0,
+    (validate.rules).int32.lte = 99
+  ];
+  common.v1.Goal goal = 8 [
+    (validate.rules).enum.defined_only = true
+  ];
+  SearchPreferences search_preferences = 9;
+  common.v1.Zodiac zodiac = 10 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Education education = 11 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Children children = 12 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Alcohol alcohol = 13 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Smoking smoking = 14 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Interest interest = 15;
+}
 
-message CreateFilterV1Response {}
+message CreateFilterV1Response {
+  Filter filter = 1;
+}
 
+message Filter {
+  int32 user_id = 1;
+  GenderPriority gender_priority = 2;
+  Range age_range = 3;
+  Range height_range = 4;
+  int32 distance = 5;
+  common.v1.Goal goal = 6;
+  SearchPreferences search_preferences = 7;
+  common.v1.Zodiac zodiac = 8 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Education education = 9 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Children children = 10 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Alcohol alcohol = 11 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Smoking smoking = 12 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Interest interest = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
+}
+
+message Range {
+  int32 min = 1;
+  int32 max = 2;
+}
+
+enum GenderPriority {
+  GENDERPRIORITY_UNSPECIFIED = 0;
+  GENDERPRIORITY_MALE = 1;
+  GENDERPRIORITY_FEMALE = 2;
+  GENDERPRIORITY_ANY = 3;
+}
+
+message SearchPreferences {
+  bool only_verified = 1;
+  bool only_premium = 2;
+}

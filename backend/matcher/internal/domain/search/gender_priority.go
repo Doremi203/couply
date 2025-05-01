@@ -1,6 +1,6 @@
 package search
 
-import desc "github.com/Doremi203/Couply/backend/pkg/search-service/v1"
+import desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 
 type GenderPriority int
 

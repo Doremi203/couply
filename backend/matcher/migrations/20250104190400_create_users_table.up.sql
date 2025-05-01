@@ -1,7 +1,7 @@
 create table if not exists users (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL,
-    age INT CHECK (age > 18),
+    age INT CHECK (age >= 18),
     gender INT NOT NULL,
     location TEXT NOT NULL,
     bio TEXT,

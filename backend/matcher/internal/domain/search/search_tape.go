@@ -1,21 +1,21 @@
 package search
 
-import desc "github.com/Doremi203/Couply/backend/pkg/search-service/v1"
+import desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 
-type SearchTape struct {
+type SearchPreferences struct {
 	OnlyVerified bool
 	OnlyPremium  bool
 }
 
-func SearchTapeToPB(st *SearchTape) *desc.SearchTape {
-	return &desc.SearchTape{
+func SearchPreferencesToPB(st *SearchPreferences) *desc.SearchPreferences {
+	return &desc.SearchPreferences{
 		OnlyVerified: st.OnlyVerified,
 		OnlyPremium:  st.OnlyPremium,
 	}
 }
 
-func PBToSearchTape(st *desc.SearchTape) *SearchTape {
-	return &SearchTape{
+func PBToSearchPreferences(st *desc.SearchPreferences) *SearchPreferences {
+	return &SearchPreferences{
 		OnlyVerified: st.OnlyVerified,
 		OnlyPremium:  st.OnlyPremium,
 	}

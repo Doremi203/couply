@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package common.v1;
+
+option go_package = "github.com/Doremi203/couply/backend/matcher/gen/api/common";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+import "validate/validate.proto";
+
+message Interest {
+  repeated Sport sport = 1 [
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated SelfDevelopment self_development = 2 [
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated Art art = 3 [
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated Social social = 4 [
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated Hobby hobby = 5 [
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated Gastronomy gastronomy = 6 [
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+}
+
+enum Goal {
+  GOAL_UNSPECIFIED = 0;
+  GOAL_DATING = 1;
+  GOAL_RELATIONSHIP = 2;
+  GOAL_FRIENDSHIP = 3;
+  GOAL_JUST_CHATTING = 4;
+}
+
+enum Sport {
+  SPORT_UNSPECIFIED = 0;
+  SPORT_RUNNING = 1;
+  SPORT_SWIMMING = 2;
+  SPORT_YOGA = 3;
+  SPORT_BYCICLE = 4;
+  SPORT_GYM = 5;
+  SPORT_SKIING = 6;
+  SPORT_SNOWBOARDING = 7;
+  SPORT_DANCING = 8;
+  SPORT_MARTIAL_ARTS = 9;
+  SPORT_SURFING = 10;
+  SPORT_HIKING = 11;
+  SPORT_TENNIS = 12;
+  SPORT_CLIMBING = 13;
+}
+
+enum SelfDevelopment {
+  SELFDEVELOPMENT_UNSPECIFIED = 0;
+  SELFDEVELOPMENT_LANGUAGES = 1;
+  SELFDEVELOPMENT_LECTURES = 2;
+  SELFDEVELOPMENT_ONLINE_COURSES = 3;
+  SELFDEVELOPMENT_SELF_EDUCATION = 4;
+  SELFDEVELOPMENT_MEDITATION = 5;
+  SELFDEVELOPMENT_PSYCHOLOGY = 6;
+  SELFDEVELOPMENT_PHILOSOPHY = 7;
+  SELFDEVELOPMENT_HISTORY = 8;
+  SELFDEVELOPMENT_TECHNOLOGY = 9;
+  SELFDEVELOPMENT_READING = 10;
+}
+
+enum Art {
+  ART_UNSPECIFIED = 0;
+  ART_PAINTING = 1;
+  ART_PHOTOGRAPH = 2;
+  ART_MUSIC = 3;
+  ART_SINGING = 4;
+  ART_WRITING = 5;
+  ART_SCULPTURE = 6;
+  ART_THEATER = 7;
+  ART_CINEMA = 8;
+  ART_NEEDLEWORK = 9;
+}
+
+enum Social {
+  SOCIAL_UNSPECIFIED = 0;
+  SOCIAL_VOLUNTEERING = 1;
+  SOCIAL_CHARITY = 2;
+  SOCIAL_ECO_ACTIVISM = 3;
+  SOCIAL_ELDERLY_CARE = 4;
+  SOCIAL_CHILDCARE = 5;
+  SOCIAL_ANIMAL_WELFARE = 6;
+}
+
+enum Hobby {
+  HOBBY_UNSPECIFIED = 0;
+  HOBBY_LITERATURE = 1;
+  HOBBY_VIDEO_GAMES = 2;
+  HOBBY_BOARD_GAMES = 3;
+  HOBBY_TRAVELS = 4;
+  HOBBY_PLANT_CULTIVATION = 5;
+  HOBBY_FISHING = 6;
+  HOBBY_DOG_WALKS = 7;
+  HOBBY_CATS_LOVER = 8;
+  HOBBY_CARS_AND_MOTORCYCLES = 9;
+  HOBBY_CONCERTS = 10;
+}
+
+enum Gastronomy {
+  GASTRONOMY_UNSPECIFIED = 0;
+  GASTRONOMY_COOKING = 1;
+  GASTRONOMY_WINE_DEGUSTATION = 2;
+  GASTRONOMY_BARS = 3;
+  GASTRONOMY_COFFEE = 4;
+  GASTRONOMY_TEA = 5;
+  GASTRONOMY_VEGAN = 6;
+  GASTRONOMY_FOOD_CRITIC = 7;
+  GASTRONOMY_SUGAR_LOVER = 8;
+}
+
+enum Zodiac {
+  ZODIAC_UNSPECIFIED = 0;
+  ZODIAC_ARIES = 1;
+  ZODIAC_TAURUS = 2;
+  ZODIAC_GEMINI = 3;
+  ZODIAC_CANCER = 4;
+  ZODIAC_LEO = 5;
+  ZODIAC_VIRGO = 6;
+  ZODIAC_LIBRA = 7;
+  ZODIAC_SCORPIO = 8;
+  ZODIAC_SAGITTARIUS = 9;
+  ZODIAC_CAPRICORN = 10;
+  ZODIAC_AQUARIUS = 11;
+  ZODIAC_PISCES = 12;
+}
+
+enum Education {
+  EDUCATION_UNSPECIFIED = 0;
+  EDUCATION_SECONDARY = 1;
+  EDUCATION_HIGHER = 2;
+  EDUCATION_PHD = 3;
+}
+
+enum Children {
+  CHILDREN_UNSPECIFIED = 0;
+  CHILDREN_NO = 1;
+  CHILDREN_NOT_YET = 2;
+  CHILDREN_YES = 3;
+}
+
+enum Alcohol {
+  ALCOHOL_UNSPECIFIED = 0;
+  ALCOHOL_NEGATIVELY = 1;
+  ALCOHOL_NEUTRALLY = 2;
+  ALCOHOL_POSITIVELY = 3;
+}
+
+enum Smoking {
+  SMOKING_UNSPECIFIED = 0;
+  SMOKING_NEGATIVELY = 1;
+  SMOKING_NEUTRALLY = 2;
+  SMOKING_POSITIVELY = 3;
+}
