@@ -42,7 +42,7 @@ type DefaultHasher struct {
 func (h DefaultHasher) Hash(password Password) (HashedPassword, error) {
 	s, err := h.saltProvider.Generate(saltLength)
 	if err != nil {
-		return HashedPassword{}, errors.Wrap(err, "failed to generate salt")
+		return HashedPassword{}, errors.WrapFail(err, "generate salt")
 	}
 
 	return HashedPassword(
@@ -57,17 +57,17 @@ func (h DefaultHasher) Hash(password Password) (HashedPassword, error) {
 func (h DefaultHasher) Verify(password Password, hashedPassword HashedPassword) error {
 	parts := strings.Split(string(hashedPassword), "$")
 	if len(parts) != 2 {
-		return fmt.Errorf("incorrect hashed password format for %v", hashedPassword)
+		return errors.Errorf("incorrect format for %v", errors.Token("hashed_password", hashedPassword))
 	}
 
 	hash, err := base64.RawStdEncoding.DecodeString(parts[0])
 	if err != nil {
-		return errors.Wrap(err, "failed hash base64 decoding")
+		return errors.WrapFail(err, "decode base64 hash")
 	}
 
 	s, err := base64.RawStdEncoding.DecodeString(parts[1])
 	if err != nil {
-		return errors.Wrap(err, "failed salt base64 decoding")
+		return errors.WrapFail(err, "decode base64 salt")
 	}
 
 	providedHash := h.argonProvider.Hash([]byte(password), s)

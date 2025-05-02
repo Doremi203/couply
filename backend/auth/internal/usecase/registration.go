@@ -27,7 +27,7 @@ type Registration struct {
 	uuidProvider   uuid.Provider
 }
 
-var ErrAlreadyRegistered = errors.New("user already registered")
+var ErrAlreadyRegistered = errors.Error("user already registered")
 
 // BasicV1 создает аккаунт пользователя с переданным user.Email и pswrd.Password.
 //
@@ -40,11 +40,11 @@ func (u Registration) BasicV1(
 	_, err := u.userRepository.GetByEmail(ctx, email)
 	switch {
 	case err == nil:
-		return errors.Wrapf(ErrAlreadyRegistered, "email already used: %s", email)
+		return errors.Wrapf(ErrAlreadyRegistered, "%v already used", errors.Token("email", email))
 	case errors.As(err, &user.NotFoundError{}):
 	// continue
 	default:
-		return errors.WrapFailf(err, "get existing user with email: %s", email)
+		return errors.WrapFailf(err, "get existing user with %v", errors.Token("email", email))
 	}
 
 	hash, err := u.hasher.Hash(password)

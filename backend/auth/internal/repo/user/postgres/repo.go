@@ -2,7 +2,6 @@ package userpostgres
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -30,10 +29,10 @@ func (r *repo) Create(ctx context.Context, u user.User) error {
 	`
 	res, err := r.db.Exec(ctx, query, u.ID, u.Email, u.Password)
 	if err != nil {
-		return errors.Wrap(err, "failed to save user")
+		return errors.WrapFail(err, "save user")
 	}
 	if res.RowsAffected() == 0 {
-		return errors.Wrapf(user.ErrAlreadyExists, "user with email %s", u.Email)
+		return errors.Wrapf(user.ErrAlreadyExists, "user with %v", errors.Token("email", u.Email))
 	}
 
 	return nil
@@ -51,9 +50,11 @@ func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, err
 	err := row.Scan(&u.ID, &u.Email, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return user.User{}, user.NotFoundError{Details: fmt.Sprintf("with email %s", email)}
+		return user.User{}, user.NotFoundError{
+			Err: errors.Errorf("no user rows with %v", errors.Token("email", email)),
+		}
 	case err != nil:
-		return user.User{}, errors.Wrap(err, "failed to fetch user by email")
+		return user.User{}, errors.WrapFail(err, "fetch user by email")
 	}
 
 	return u, nil

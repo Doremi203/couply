@@ -2,9 +2,10 @@ package webapp
 
 import (
 	"fmt"
-	"log/slog"
 	"os"
 	"path/filepath"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/ilyakaznacheev/cleanenv"
@@ -36,7 +37,7 @@ type Config struct {
 	swaggerUI swaggerUIConfig
 
 	viperLoader *viper.Viper
-	logger      *slog.Logger
+	logger      log.Logger
 }
 
 func (c *Config) ReadSection(name string, cfg any) error {
@@ -52,11 +53,11 @@ func (c *Config) ReadSection(name string, cfg any) error {
 func (c *Config) readSection(name string, cfg any) error {
 	err := c.viperLoader.UnmarshalKey(name, cfg)
 	if err != nil {
-		return errors.WrapFailf(err, "read section %s", name)
+		return errors.WrapFailf(err, "read section %v", errors.Token("name", name))
 	}
 	err = cleanenv.ReadEnv(cfg)
 	if err != nil {
-		return errors.WrapFailf(err, "read envs for config with %s", name)
+		return errors.WrapFailf(err, "read envs for config with %v", errors.Token("name", name))
 	}
 
 	return nil
@@ -124,12 +125,12 @@ func loadConfig(
 func createConfig(v *viper.Viper, configs []string) error {
 	v.SetConfigName(configs[0])
 	if err := v.ReadInConfig(); err != nil {
-		return errors.WrapFailf(err, "read config: %s", configs[0])
+		return errors.WrapFailf(err, "read %v", errors.Token("config", configs[0]))
 	}
 	for i := 1; i < len(configs); i++ {
 		v.SetConfigName(configs[i])
 		if err := v.MergeInConfig(); err != nil {
-			return errors.WrapFailf(err, "merge config: %s", configs[i])
+			return errors.WrapFailf(err, "merge %v", errors.Token("config", configs[i]))
 		}
 	}
 

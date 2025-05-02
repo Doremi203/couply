@@ -23,7 +23,7 @@ func (p *provider) ContextWithTx(ctx context.Context, isolation tx.Isolation) (c
 	existingTx, ok := TxFromContext(ctx)
 	if ok {
 		if p.toGeneralIsolation(existingTx.Options.IsoLevel) < isolation {
-			return nil, errors.New("existing tx isolation level should be stricter or same as nested tx")
+			return nil, errors.Error("existing tx isolation level should be stricter or same as nested tx")
 		}
 		return ctx, nil
 	}
@@ -47,7 +47,7 @@ func (p *provider) ContextWithTx(ctx context.Context, isolation tx.Isolation) (c
 func (p *provider) CommitTx(ctx context.Context) error {
 	tx, ok := TxFromContext(ctx)
 	if !ok {
-		return errors.New("no tx to commit")
+		return errors.Error("no tx to commit")
 	}
 
 	return tx.Tx.Commit(ctx)
@@ -56,7 +56,7 @@ func (p *provider) CommitTx(ctx context.Context) error {
 func (p *provider) RollbackTx(ctx context.Context) error {
 	tx, ok := TxFromContext(ctx)
 	if !ok {
-		return errors.New("no tx to rollback")
+		return errors.Error("no tx to rollback")
 	}
 
 	return tx.Tx.Rollback(ctx)
