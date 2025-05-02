@@ -18,7 +18,8 @@
     "build-storybook": "storybook build",
     "test-storybook": "test-storybook",
     "test-storybook:coverage": "test-storybook --coverage",
-    "storybook-coverage": "npm run test-storybook:coverage && npm run generate-coverage-report"
+    "storybook-coverage": "npm run test-storybook:coverage && npm run generate-coverage-report",
+    "e2e": "npx testplane gui --config ./testplane-run-config.cjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

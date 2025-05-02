@@ -4,7 +4,7 @@ describe('User Registration Scenario', () => {
     await browser.setWindowSize(1920, 1080);
 
     // 1. Navigate to the Auth page
-    await browser.url('https://testing.couply.ru/auth');
+    await browser.url('https://resonant-pastelito-84ec5c.netlify.app/');
 
     // Wait for the page to load completely
     await browser.pause(3000);
