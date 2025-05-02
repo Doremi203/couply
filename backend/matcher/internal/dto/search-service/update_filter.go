@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type CreateFilterV1Request struct {
+type UpdateFilterV1Request struct {
 	UserID         int64
 	GenderPriority search.GenderPriority
 	MinAge         int32
@@ -27,12 +27,12 @@ type CreateFilterV1Request struct {
 	OnlyPremium    bool
 }
 
-type CreateFilterV1Response struct {
+type UpdateFilterV1Response struct {
 	Filter *search.Filter
 }
 
-func CreateFilterRequestToPB(req *CreateFilterV1Request) *desc.CreateFilterV1Request {
-	return &desc.CreateFilterV1Request{
+func UpdateFilterRequestToPB(req *UpdateFilterV1Request) *desc.UpdateFilterV1Request {
+	return &desc.UpdateFilterV1Request{
 		UserId:         req.UserID,
 		GenderPriority: search.GenderPriorityToPB(req.GenderPriority),
 		MinAge:         req.MinAge,
@@ -52,8 +52,8 @@ func CreateFilterRequestToPB(req *CreateFilterV1Request) *desc.CreateFilterV1Req
 	}
 }
 
-func PBToCreateFilterRequest(req *desc.CreateFilterV1Request) *CreateFilterV1Request {
-	return &CreateFilterV1Request{
+func PBToUpdateFilterRequest(req *desc.UpdateFilterV1Request) *UpdateFilterV1Request {
+	return &UpdateFilterV1Request{
 		UserID:         req.GetUserId(),
 		GenderPriority: search.PBToGenderPriority(req.GetGenderPriority()),
 		MinAge:         req.GetMinAge(),
@@ -73,19 +73,19 @@ func PBToCreateFilterRequest(req *desc.CreateFilterV1Request) *CreateFilterV1Req
 	}
 }
 
-func CreateFilterResponseToPB(resp *CreateFilterV1Response) *desc.CreateFilterV1Response {
-	return &desc.CreateFilterV1Response{
+func UpdateFilterResponseToPB(resp *UpdateFilterV1Response) *desc.UpdateFilterV1Response {
+	return &desc.UpdateFilterV1Response{
 		Filter: search.FilterToPB(resp.Filter),
 	}
 }
 
-func PBToCreateFilterResponse(resp *desc.CreateFilterV1Response) *CreateFilterV1Response {
-	return &CreateFilterV1Response{
+func PBToUpdateFilterResponse(resp *desc.UpdateFilterV1Response) *UpdateFilterV1Response {
+	return &UpdateFilterV1Response{
 		Filter: search.PBToFilter(resp.GetFilter()),
 	}
 }
 
-func CreateFilterRequestToFilter(req *CreateFilterV1Request) *search.Filter {
+func UpdateFilterRequestToFilter(req *UpdateFilterV1Request) *search.Filter {
 	return &search.Filter{
 		UserID:         req.UserID,
 		GenderPriority: req.GenderPriority,
@@ -103,7 +103,6 @@ func CreateFilterRequestToFilter(req *CreateFilterV1Request) *search.Filter {
 		Interest:       req.Interest,
 		OnlyVerified:   req.OnlyVerified,
 		OnlyPremium:    req.OnlyPremium,
-		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}
 }

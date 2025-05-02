@@ -10,6 +10,7 @@ import (
 
 type searchServiceUseCase interface {
 	CreateFilter(ctx context.Context, in *dto.CreateFilterV1Request) (*dto.CreateFilterV1Response, error)
+	UpdateFilter(ctx context.Context, in *dto.UpdateFilterV1Request) (*dto.UpdateFilterV1Response, error)
 }
 
 type Implementation struct {

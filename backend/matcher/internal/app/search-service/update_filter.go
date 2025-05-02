@@ -8,15 +8,15 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *Implementation) CreateFilterV1(ctx context.Context, in *desc.CreateFilterV1Request) (*desc.CreateFilterV1Response, error) {
+func (i *Implementation) UpdateFilterV1(ctx context.Context, in *desc.UpdateFilterV1Request) (*desc.UpdateFilterV1Response, error) {
 	if err := in.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	response, err := i.usecase.CreateFilter(ctx, dto.PBToCreateFilterRequest(in))
+	response, err := i.usecase.UpdateFilter(ctx, dto.PBToUpdateFilterRequest(in))
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return dto.CreateFilterResponseToPB(response), nil
+	return dto.UpdateFilterResponseToPB(response), nil
 }

@@ -49,61 +49,131 @@ service SearchService {
       }
     };
   }
+  rpc UpdateFilterV1 (UpdateFilterV1Request) returns (UpdateFilterV1Response) {
+    option (google.api.http) = {
+      post: "/v1/UpdateFilterV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Обновление фильтра";
+      description: "Принимает важные поля для обновления фильтра";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateFilterV1Request {
-  GenderPriority gender_priority = 1 [
+  int64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64.gte = 0
+  ];
+  GenderPriority gender_priority = 2 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).enum.defined_only = true
   ];
-  int32 min_age = 2 [
+  int32 min_age = 3 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 18, lte: 100}
   ];
-  int32 max_age = 3 [
+  int32 max_age = 4 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 18, lte: 100}
   ];
-  int32 min_height = 4 [
+  int32 min_height = 5 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  int32 max_height = 5 [
+  int32 max_height = 6 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  Range height_range = 6 [
+  Range height_range = 7 [
     (google.api.field_behavior) = REQUIRED
   ];
-  int32 distance = 7 [
+  int32 distance = 8 [
     (google.api.field_behavior) = REQUIRED,
-    (validate.rules).int32.gte = 0,
-    (validate.rules).int32.lte = 99
+    (validate.rules).int32 = {gte: 1, lte: 100}
   ];
-  common.v1.Goal goal = 8 [
+  common.v1.Goal goal = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Zodiac zodiac = 9 [
+  common.v1.Zodiac zodiac = 10 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Education education = 10 [
+  common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 11 [
+  common.v1.Children children = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 12 [
+  common.v1.Alcohol alcohol = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 13 [
+  common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 14;
-  bool only_verified = 15;
-  bool only_premium = 16;
+  common.v1.Interest interest = 15;
+  bool only_verified = 16;
+  bool only_premium = 17;
 }
 
 message CreateFilterV1Response {
+  Filter filter = 1;
+}
+
+message UpdateFilterV1Request {
+  int64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64.gte = 0
+  ];
+  GenderPriority gender_priority = 2 [
+    (validate.rules).enum.defined_only = true
+  ];
+  int32 min_age = 3 [
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 max_age = 4 [
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 min_height = 5 [
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  int32 max_height = 6 [
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  Range height_range = 7;
+  int32 distance = 8 [
+    (validate.rules).int32 = {gte: 1, lte: 100}
+  ];
+  common.v1.Goal goal = 9 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Zodiac zodiac = 10 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Education education = 11 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Children children = 12 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Alcohol alcohol = 13 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Smoking smoking = 14 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Interest interest = 15;
+  bool only_verified = 16;
+  bool only_premium = 17;
+}
+
+message UpdateFilterV1Response {
   Filter filter = 1;
 }
 
