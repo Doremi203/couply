@@ -3,9 +3,9 @@ package user_service
 import (
 	"context"
 	"fmt"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
 )
 
 func (f *StorageFacadeUser) GetUserTx(ctx context.Context, userID int64) (*user.User, error) {

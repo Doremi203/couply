@@ -10,7 +10,7 @@ import (
 func (s *PgStorageUser) GetPhotos(ctx context.Context, userID int64) ([]*user.Photo, error) {
 	photoSQL := `
 		SELECT order_number, url, mime_type, uploaded_at, updated_at
-		FROM Photos 
+		FROM photos 
 		WHERE user_id = $1
 	`
 

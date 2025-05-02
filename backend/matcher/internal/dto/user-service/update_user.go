@@ -1,12 +1,12 @@
 package user_service
 
 import (
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"time"
 
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
-
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
 type UpdateUserV1Request struct {
@@ -16,14 +16,14 @@ type UpdateUserV1Request struct {
 	Gender    user.Gender
 	Location  string
 	Bio       string
-	Goal      user.Goal
+	Goal      common.Goal
 	Interest  *interest.Interest
-	Zodiac    user.Zodiac
+	Zodiac    common.Zodiac
 	Height    int32
-	Education user.Education
-	Children  user.Children
-	Alcohol   user.Alcohol
-	Smoking   user.Smoking
+	Education common.Education
+	Children  common.Children
+	Alcohol   common.Alcohol
+	Smoking   common.Smoking
 	Hidden    bool
 	Verified  bool
 	Photos    []*user.Photo
@@ -41,14 +41,14 @@ func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
 		Gender:    user.GenderToPB(req.Gender),
 		Location:  req.Location,
 		Bio:       req.Bio,
-		Goal:      user.GoalToPB(req.Goal),
+		Goal:      common.GoalToPB(req.Goal),
 		Interest:  interest.InterestToPB(req.Interest),
-		Zodiac:    user.ZodiacToPB(req.Zodiac),
+		Zodiac:    common.ZodiacToPB(req.Zodiac),
 		Height:    req.Height,
-		Education: user.EducationToPB(req.Education),
-		Children:  user.ChildrenToPB(req.Children),
-		Alcohol:   user.AlcoholToPB(req.Alcohol),
-		Smoking:   user.SmokingToPB(req.Smoking),
+		Education: common.EducationToPB(req.Education),
+		Children:  common.ChildrenToPB(req.Children),
+		Alcohol:   common.AlcoholToPB(req.Alcohol),
+		Smoking:   common.SmokingToPB(req.Smoking),
 		Hidden:    req.Hidden,
 		Verified:  req.Verified,
 		Photos:    user.PhotoSliceToPB(req.Photos),
@@ -57,23 +57,23 @@ func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 	return &UpdateUserV1Request{
-		ID:        req.GetId(),
-		Name:      req.GetName(),
-		Age:       req.GetAge(),
-		Gender:    user.PBToGender(req.GetGender()),
-		Location:  req.GetLocation(),
-		Bio:       req.GetBio(),
-		Goal:      user.PBToGoal(req.GetGoal()),
-		Interest:  interest.PBToInterest(req.GetInterest()),
-		Zodiac:    user.PBToZodiac(req.GetZodiac()),
-		Height:    req.GetHeight(),
-		Education: user.PBToEducation(req.GetEducation()),
-		Children:  user.PBToChildren(req.GetChildren()),
-		Alcohol:   user.PBToAlcohol(req.GetAlcohol()),
-		Smoking:   user.PBToSmoking(req.GetSmoking()),
-		Hidden:    req.GetHidden(),
-		Verified:  req.GetVerified(),
-		Photos:    user.PBToPhotoSlice(req.GetPhotos()),
+		ID:        req.Id,
+		Name:      req.Name,
+		Age:       req.Age,
+		Gender:    user.PBToGender(req.Gender),
+		Location:  req.Location,
+		Bio:       req.Bio,
+		Goal:      common.PBToGoal(req.Goal),
+		Interest:  interest.PBToInterest(req.Interest),
+		Zodiac:    common.PBToZodiac(req.Zodiac),
+		Height:    req.Height,
+		Education: common.PBToEducation(req.Education),
+		Children:  common.PBToChildren(req.Children),
+		Alcohol:   common.PBToAlcohol(req.Alcohol),
+		Smoking:   common.PBToSmoking(req.Smoking),
+		Hidden:    req.Hidden,
+		Verified:  req.Verified,
+		Photos:    user.PBToPhotoSlice(req.Photos),
 	}
 }
 
@@ -108,6 +108,6 @@ func UpdateUserResponseToPB(resp *UpdateUserV1Response) *desc.UpdateUserV1Respon
 
 func PBToUpdateUserResponse(resp *desc.UpdateUserV1Response) *UpdateUserV1Response {
 	return &UpdateUserV1Response{
-		User: user.PBToUser(resp.GetUser()),
+		User: user.PBToUser(resp.User),
 	}
 }

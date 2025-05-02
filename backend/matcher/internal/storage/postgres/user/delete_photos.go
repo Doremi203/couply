@@ -7,7 +7,7 @@ import (
 
 func (s *PgStorageUser) DeletePhotos(ctx context.Context, id int64) error {
 	photoSQL := `
-		DELETE FROM Photos
+		DELETE FROM photos
 		WHERE user_id = $1
 	`
 

@@ -13,7 +13,7 @@ func (s *PgStorageUser) GetUser(ctx context.Context, userID int64) (*user.User, 
 			id, name, age, gender, location, bio, goal, zodiac, height, 
 			education, children, alcohol, smoking, hidden, verified, 
 			created_at, updated_at
-		FROM Users 
+		FROM users 
 		WHERE id = $1
 	`
 

@@ -9,7 +9,7 @@ import (
 
 func (s *PgStorageUser) AddPhoto(ctx context.Context, photo *user.Photo, userID int64) error {
 	photoSQL := `
-		INSERT INTO Photos (user_id, order_number, url, mime_type, uploaded_at, updated_at)
+		INSERT INTO photos (user_id, order_number, url, mime_type, uploaded_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6)
 	`
 

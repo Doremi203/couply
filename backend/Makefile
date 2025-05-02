@@ -84,7 +84,7 @@ auth/start: auth/generate
 auth/generate:
 	cd auth && go generate ./...
 
-AUTH_MIGRATIONS = file://auth/migrations
+AUTH_MIGRATIONS = auth/migrations
 
 auth/migrate/up:
 	migrate -verbose -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" up
@@ -117,6 +117,7 @@ matcher/generate:
 	cd matcher && go generate ./...
 
 MATCHER_MIGRATIONS = file://matcher/migrations
+name = create_filter_interests_table
 
 matcher/migrate/up:
 	migrate -verbose -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" up

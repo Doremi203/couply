@@ -3,21 +3,21 @@ package user
 import (
 	"context"
 	"fmt"
+	interest2 "github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"log"
 	"strings"
 
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
 	"github.com/jackc/pgx/v5"
 )
 
-func (s *PgStorageUser) GetInterests(ctx context.Context, userID int64) (*interest.Interest, error) {
+func (s *PgStorageUser) GetInterests(ctx context.Context, userID int64) (*interest2.Interest, error) {
 	rows, err := s.queryInterests(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	i := interest.NewInterest()
+	i := interest2.NewInterest()
 	for rows.Next() {
 		if err = s.processInterestRow(rows, i); err != nil {
 			return nil, err
@@ -30,7 +30,7 @@ func (s *PgStorageUser) GetInterests(ctx context.Context, userID int64) (*intere
 func (s *PgStorageUser) queryInterests(ctx context.Context, userID int64) (pgx.Rows, error) {
 	interestsSQL := `
 		SELECT type, value 
-		FROM Interests 
+		FROM interests 
 		WHERE user_id = $1
 	`
 
@@ -41,7 +41,7 @@ func (s *PgStorageUser) queryInterests(ctx context.Context, userID int64) (pgx.R
 	return rows, nil
 }
 
-func (s *PgStorageUser) processInterestRow(rows pgx.Rows, i *interest.Interest) error {
+func (s *PgStorageUser) processInterestRow(rows pgx.Rows, i *interest2.Interest) error {
 	var interestType, value string
 	if err := rows.Scan(&interestType, &value); err != nil {
 		return fmt.Errorf("GetInterests: %w", err)
@@ -52,7 +52,7 @@ func (s *PgStorageUser) processInterestRow(rows pgx.Rows, i *interest.Interest) 
 	return nil
 }
 
-func (s *PgStorageUser) parseInterestValue(i *interest.Interest, interestType, value string) {
+func (s *PgStorageUser) parseInterestValue(i *interest2.Interest, interestType, value string) {
 	switch interestType {
 	case "sport":
 		addSportInterest(i, value)
@@ -72,38 +72,38 @@ func (s *PgStorageUser) parseInterestValue(i *interest.Interest, interestType, v
 }
 
 // Обработчики для каждого типа интересов
-func addSportInterest(i *interest.Interest, value string) {
+func addSportInterest(i *interest2.Interest, value string) {
 	for _, c := range value {
-		i.Sport = append(i.Sport, interest.Sport(c-'0'))
+		i.Sport = append(i.Sport, interest2.Sport(c-'0'))
 	}
 }
 
-func addSelfDevelopmentInterest(i *interest.Interest, value string) {
+func addSelfDevelopmentInterest(i *interest2.Interest, value string) {
 	for _, c := range value {
-		i.SelfDevelopment = append(i.SelfDevelopment, interest.SelfDevelopment(c-'0'))
+		i.SelfDevelopment = append(i.SelfDevelopment, interest2.SelfDevelopment(c-'0'))
 	}
 }
 
-func addArtInterest(i *interest.Interest, value string) {
+func addArtInterest(i *interest2.Interest, value string) {
 	for _, c := range value {
-		i.Art = append(i.Art, interest.Art(c-'0'))
+		i.Art = append(i.Art, interest2.Art(c-'0'))
 	}
 }
 
-func addSocialInterest(i *interest.Interest, value string) {
+func addSocialInterest(i *interest2.Interest, value string) {
 	for _, c := range value {
-		i.Social = append(i.Social, interest.Social(c-'0'))
+		i.Social = append(i.Social, interest2.Social(c-'0'))
 	}
 }
 
-func addHobbyInterest(i *interest.Interest, value string) {
+func addHobbyInterest(i *interest2.Interest, value string) {
 	for _, c := range value {
-		i.Hobby = append(i.Hobby, interest.Hobby(c-'0'))
+		i.Hobby = append(i.Hobby, interest2.Hobby(c-'0'))
 	}
 }
 
-func addGastronomyInterest(i *interest.Interest, value string) {
+func addGastronomyInterest(i *interest2.Interest, value string) {
 	for _, c := range value {
-		i.Gastronomy = append(i.Gastronomy, interest.Gastronomy(c-'0'))
+		i.Gastronomy = append(i.Gastronomy, interest2.Gastronomy(c-'0'))
 	}
 }

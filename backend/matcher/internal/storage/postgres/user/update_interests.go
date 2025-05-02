@@ -3,13 +3,12 @@ package user
 import (
 	"context"
 	"fmt"
-
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 )
 
 func (s *PgStorageUser) UpdateInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
 	interestSQL := `
-        UPDATE Interests
+        UPDATE interests
         SET value = $3
         WHERE user_id = $1 AND type = $2
     `

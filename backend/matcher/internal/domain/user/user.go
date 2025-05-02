@@ -1,9 +1,9 @@
 package user
 
 import (
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"time"
-
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -16,14 +16,14 @@ type User struct {
 	Gender    Gender             `db:"gender"`
 	Location  string             `db:"location"`
 	BIO       string             `db:"bio"`
-	Goal      Goal               `db:"goal"`
+	Goal      common.Goal        `db:"goal"`
 	Interest  *interest.Interest `db:"interest"`
-	Zodiac    Zodiac             `db:"zodiac"`
+	Zodiac    common.Zodiac      `db:"zodiac"`
 	Height    int32              `db:"height"`
-	Education Education          `db:"education"`
-	Children  Children           `db:"children"`
-	Alcohol   Alcohol            `db:"alcohol"`
-	Smoking   Smoking            `db:"smoking"`
+	Education common.Education   `db:"education"`
+	Children  common.Children    `db:"children"`
+	Alcohol   common.Alcohol     `db:"alcohol"`
+	Smoking   common.Smoking     `db:"smoking"`
 	Hidden    bool               `db:"hidden"`
 	Verified  bool               `db:"verified"`
 	Photos    []*Photo           `db:"photos"`
@@ -69,7 +69,7 @@ func (b *UserBuilder) SetBIO(bio string) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetGoal(goal Goal) *UserBuilder {
+func (b *UserBuilder) SetGoal(goal common.Goal) *UserBuilder {
 	b.user.Goal = goal
 	return b
 }
@@ -79,7 +79,7 @@ func (b *UserBuilder) SetInterest(interest *interest.Interest) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetZodiac(zodiac Zodiac) *UserBuilder {
+func (b *UserBuilder) SetZodiac(zodiac common.Zodiac) *UserBuilder {
 	b.user.Zodiac = zodiac
 	return b
 }
@@ -89,22 +89,22 @@ func (b *UserBuilder) SetHeight(height int32) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetEducation(education Education) *UserBuilder {
+func (b *UserBuilder) SetEducation(education common.Education) *UserBuilder {
 	b.user.Education = education
 	return b
 }
 
-func (b *UserBuilder) SetChildren(children Children) *UserBuilder {
+func (b *UserBuilder) SetChildren(children common.Children) *UserBuilder {
 	b.user.Children = children
 	return b
 }
 
-func (b *UserBuilder) SetAlcohol(alcohol Alcohol) *UserBuilder {
+func (b *UserBuilder) SetAlcohol(alcohol common.Alcohol) *UserBuilder {
 	b.user.Alcohol = alcohol
 	return b
 }
 
-func (b *UserBuilder) SetSmoking(smoking Smoking) *UserBuilder {
+func (b *UserBuilder) SetSmoking(smoking common.Smoking) *UserBuilder {
 	b.user.Smoking = smoking
 	return b
 }
@@ -146,14 +146,14 @@ func UserToPB(user *User) *desc.User {
 		Gender:    GenderToPB(user.Gender),
 		Location:  user.Location,
 		Bio:       user.BIO,
-		Goal:      GoalToPB(user.Goal),
+		Goal:      common.GoalToPB(user.Goal),
 		Interest:  interest.InterestToPB(user.Interest),
-		Zodiac:    ZodiacToPB(user.Zodiac),
+		Zodiac:    common.ZodiacToPB(user.Zodiac),
 		Height:    user.Height,
-		Education: EducationToPB(user.Education),
-		Children:  ChildrenToPB(user.Children),
-		Alcohol:   AlcoholToPB(user.Alcohol),
-		Smoking:   SmokingToPB(user.Smoking),
+		Education: common.EducationToPB(user.Education),
+		Children:  common.ChildrenToPB(user.Children),
+		Alcohol:   common.AlcoholToPB(user.Alcohol),
+		Smoking:   common.SmokingToPB(user.Smoking),
 		Hidden:    user.Hidden,
 		Verified:  user.Verified,
 		Photos:    PhotoSliceToPB(user.Photos),
@@ -170,14 +170,14 @@ func PBToUser(user *desc.User) *User {
 		Gender:    PBToGender(user.GetGender()),
 		Location:  user.GetLocation(),
 		BIO:       user.GetBio(),
-		Goal:      PBToGoal(user.GetGoal()),
+		Goal:      common.PBToGoal(user.GetGoal()),
 		Interest:  interest.PBToInterest(user.GetInterest()),
-		Zodiac:    PBToZodiac(user.GetZodiac()),
+		Zodiac:    common.PBToZodiac(user.GetZodiac()),
 		Height:    user.GetHeight(),
-		Education: PBToEducation(user.GetEducation()),
-		Children:  PBToChildren(user.GetChildren()),
-		Alcohol:   PBToAlcohol(user.GetAlcohol()),
-		Smoking:   PBToSmoking(user.GetSmoking()),
+		Education: common.PBToEducation(user.GetEducation()),
+		Children:  common.PBToChildren(user.GetChildren()),
+		Alcohol:   common.PBToAlcohol(user.GetAlcohol()),
+		Smoking:   common.PBToSmoking(user.GetSmoking()),
 		Hidden:    user.GetHidden(),
 		Verified:  user.GetVerified(),
 		Photos:    PBToPhotoSlice(user.GetPhotos()),

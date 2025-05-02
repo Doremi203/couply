@@ -1,4 +1,4 @@
-package user
+package search
 
 import (
 	"context"
@@ -7,19 +7,19 @@ import (
 	"strconv"
 )
 
-func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
+func (s *PgStorageSearch) AddFilterInterests(ctx context.Context, userID int64, filterInterests *interest.Interest) error {
 	interestSQL := `
 		INSERT INTO interests (user_id, type, value)
 		VALUES ($1, $2, $3)
 	`
 
 	interestMap := map[string]string{
-		"social":           toString(interests.Social),
-		"sport":            toString(interests.Sport),
-		"self_development": toString(interests.SelfDevelopment),
-		"art":              toString(interests.Art),
-		"hobby":            toString(interests.Hobby),
-		"gastronomy":       toString(interests.Gastronomy),
+		"social":           toString(filterInterests.Social),
+		"sport":            toString(filterInterests.Sport),
+		"self_development": toString(filterInterests.SelfDevelopment),
+		"art":              toString(filterInterests.Art),
+		"hobby":            toString(filterInterests.Hobby),
+		"gastronomy":       toString(filterInterests.Gastronomy),
 	}
 
 	for interestType, value := range interestMap {
@@ -31,7 +31,7 @@ func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interest
 			value,
 		)
 		if err != nil {
-			return fmt.Errorf("AddInterests: %w", err)
+			return fmt.Errorf("AddFilterInterests: %w", err)
 		}
 	}
 

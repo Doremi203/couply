@@ -9,7 +9,7 @@ import (
 
 func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match) error {
 	matchSQL := `
-		INSERT INTO Matches (main_user_id, chosen_user_id, approved)
+		INSERT INTO matches (main_user_id, chosen_user_id, approved)
 		VALUES ($1, $2, $3)
 	`
 
