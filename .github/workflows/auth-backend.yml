@@ -5,12 +5,6 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - 'backend/auth/**'
-      - '.github/workflows/auth-backend.yml'
-      - '.github/actions/codegen/**'
   pull_request:
     branches: ["main"]
     paths:
