@@ -39,7 +39,7 @@ jobs:
           path: backend
 
       - name: Run tests
-        run: MIGRATIONS_PATH=${{ github.workspace }}/backend/matcher/migrations go test ./... -race
+        run: BASE_MIGRATIONS_PATH=${{ github.workspace }}/backend go test ./... -race
 
       - name: Docker compose
         run: cd .. && docker compose -f docker-compose.tests.yml up -d
