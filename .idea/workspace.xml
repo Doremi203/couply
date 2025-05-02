@@ -4,60 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: fix: code generation works now; feat: update project structure; update filter entities">
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/app/search-service/create_filter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/app/search-service/implementation.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/create_filter_tx.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/storage.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/add_filter_interest.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/storage.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/create_filter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/usecase.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/api/common/v1/common.proto" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/api/common/v1/common.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/search/filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/search/filter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/search/search_tape.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/alcohol.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/alcohol.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/children.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/children.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/education.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/education.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/goal.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/goal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/interest/art.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/art.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/interest/gastronomy.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/gastronomy.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/interest/hobby.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/hobby.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/interest/interest.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/interest.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/interest/self_development.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/self_development.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/interest/social.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/social.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/interest/sport.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/sport.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/smoking.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/smoking.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/user/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/zodiac.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/zodiac.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/create_filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/create_filter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/create_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/create_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/update_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/update_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/user-service/get_user_tx.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/user-service/get_user_tx.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/add_match.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/add_match.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/fetch_incoming_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/fetch_incoming_matches.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/fetch_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/fetch_matches.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/fetch_outgoing_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/fetch_outgoing_matches.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/update_match.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/matching/update_match.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/add_filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/add_filter.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_interests.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_photo.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_photo.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/delete_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/delete_interests.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/delete_photos.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/delete_photos.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/delete_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/delete_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_interests.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_photos.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_photos.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/update_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/update_interests.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/update_photo.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/update_photo.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/update_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/update_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/migrations/20250104190400_create_users_table.up.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/migrations/20250104190400_create_users_table.up.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/migrations/20250104192523_create_interests_table.up.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/migrations/20250104192523_create_interests_table.up.sql" afterDir="false" />
-    </list>
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: finish create filter rpc" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -284,7 +231,8 @@
     <MESSAGE value="[COUPLY-12]: feat: some filter entities" />
     <MESSAGE value="[COUPLY-12]: feat: add .idea to gitignore" />
     <MESSAGE value="[COUPLY-15]: fix: code generation works now; feat: update project structure; update filter entities" />
-    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: fix: code generation works now; feat: update project structure; update filter entities" />
+    <MESSAGE value="[COUPLY-15]: feat: finish create filter rpc" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: finish create filter rpc" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
