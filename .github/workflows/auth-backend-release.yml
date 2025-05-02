@@ -2,11 +2,28 @@ name: Auth Service Release Flow
 on:
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
 
 jobs:
+  codegen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/codegen
+      - name: Upload codegen results
+        uses: actions/upload-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
   test:
+    needs: codegen
     runs-on: ubuntu-latest
     timeout-minutes: 10
     defaults:
@@ -15,10 +32,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/codegen
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
 
       - name: Run tests
-        run: MIGRATIONS_PATH=${{ github.workspace }}/backend/auth/migrations go test ./... -race
+        run: BASE_MIGRATIONS_PATH=${{ github.workspace }}/backend go test ./... -race
 
       - name: Docker compose
         run: cd .. && docker compose -f docker-compose.tests.yml up -d
@@ -70,7 +91,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: ./.github/actions/codegen
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
 
       - name: Set release version
         run: echo "RELEASE_VERSION=${{ github.run_number }}" >> $GITHUB_ENV

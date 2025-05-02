@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 
@@ -21,7 +22,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func SetupTests(m *testing.M, tester *Tester) {
+func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 	start := time.Now()
 	ctx := context.Background()
 
@@ -83,13 +84,13 @@ func SetupTests(m *testing.M, tester *Tester) {
 		log.Fatalf("couldn't create db driver: %v", err)
 	}
 
-	migrationsPath := os.Getenv("MIGRATIONS_PATH")
-	if migrationsPath == "" {
-		log.Fatalf("env variable MIGRATIONS_PATH not set")
+	baseMigrationsPath := os.Getenv("BASE_MIGRATIONS_PATH")
+	if baseMigrationsPath == "" {
+		log.Fatalf("env variable BASE_MIGRATIONS_PATH not set")
 	}
 
 	migrator, err := migrate.NewWithDatabaseInstance(
-		fmt.Sprintf("file://%s", migrationsPath),
+		fmt.Sprintf("file://%s", filepath.Join(baseMigrationsPath, migrationsDir)),
 		"postgres", driver)
 	if err != nil {
 		log.Fatalf("couldn't create migrator: %v", err)
