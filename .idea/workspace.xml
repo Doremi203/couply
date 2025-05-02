@@ -4,7 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: finish create filter rpc" />
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: fix: interest migration is right now">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/user-service/update_user_tx.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/user-service/update_user_tx.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/add_filter_interest.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/add_filter_interest.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/add_interests.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/get_interests.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/user/update_interests.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/migrations/20250104192523_create_interests_table.up.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/migrations/20250104192523_create_interests_table.up.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/migrations/20250501133858_create_filter_interests_table.up.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/migrations/20250501133858_create_filter_interests_table.up.sql" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -113,7 +122,7 @@
       <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/matching-service" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.matcher/generate">
+  <component name="RunManager" selected="Makefile Target.matcher/migrate/up">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="Couply" />
       <working_directory value="$PROJECT_DIR$" />
@@ -176,8 +185,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile Target.matcher/generate" />
         <item itemvalue="Makefile Target.matcher/migrate/up" />
+        <item itemvalue="Makefile Target.matcher/generate" />
         <item itemvalue="Makefile Target.matcher/run" />
         <item itemvalue="Makefile Target.matcher/start" />
         <item itemvalue="Makefile Target.matcher/local-build" />
@@ -232,7 +241,8 @@
     <MESSAGE value="[COUPLY-12]: feat: add .idea to gitignore" />
     <MESSAGE value="[COUPLY-15]: fix: code generation works now; feat: update project structure; update filter entities" />
     <MESSAGE value="[COUPLY-15]: feat: finish create filter rpc" />
-    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: finish create filter rpc" />
+    <MESSAGE value="[COUPLY-15]: fix: interest migration is right now" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: fix: interest migration is right now" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

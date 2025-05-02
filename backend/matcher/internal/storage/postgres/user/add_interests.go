@@ -4,45 +4,49 @@ import (
 	"context"
 	"fmt"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
-	"strconv"
 )
 
 func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
 	interestSQL := `
-		INSERT INTO interests (user_id, type, value)
-		VALUES ($1, $2, $3)
-	`
+        INSERT INTO interests (user_id, type, value)
+        VALUES ($1, $2, $3)
+    `
 
-	interestMap := map[string]string{
-		"social":           toString(interests.Social),
-		"sport":            toString(interests.Sport),
-		"self_development": toString(interests.SelfDevelopment),
-		"art":              toString(interests.Art),
-		"hobby":            toString(interests.Hobby),
-		"gastronomy":       toString(interests.Gastronomy),
+	interestGroups := map[string][]int{
+		"social":           convertSlice(interests.Social),
+		"sport":            convertSlice(interests.Sport),
+		"self_development": convertSlice(interests.SelfDevelopment),
+		"art":              convertSlice(interests.Art),
+		"hobby":            convertSlice(interests.Hobby),
+		"gastronomy":       convertSlice(interests.Gastronomy),
 	}
 
-	for interestType, value := range interestMap {
-		_, err := s.txManager.GetQueryEngine(ctx).Exec(
-			ctx,
-			interestSQL,
-			userID,
-			interestType,
-			value,
-		)
-		if err != nil {
-			return fmt.Errorf("AddInterests: %w", err)
+	for interestType, values := range interestGroups {
+		if len(values) == 0 {
+			continue
+		}
+
+		for _, value := range values {
+			_, err := s.txManager.GetQueryEngine(ctx).Exec(
+				ctx,
+				interestSQL,
+				userID,
+				interestType,
+				value,
+			)
+			if err != nil {
+				return fmt.Errorf("AddInterests: %w", err)
+			}
 		}
 	}
 
 	return nil
 }
 
-// вспомогательная функция для преобразования срезов enum в срезы int
-func toString[T ~int](slice []T) string {
-	result := ""
+func convertSlice[T ~int](slice []T) []int {
+	result := make([]int, 0, len(slice))
 	for _, v := range slice {
-		result += strconv.Itoa(int(v))
+		result = append(result, int(v))
 	}
 	return result
 }

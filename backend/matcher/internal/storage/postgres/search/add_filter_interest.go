@@ -4,45 +4,49 @@ import (
 	"context"
 	"fmt"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
-	"strconv"
 )
 
 func (s *PgStorageSearch) AddFilterInterests(ctx context.Context, userID int64, filterInterests *interest.Interest) error {
-	interestSQL := `
-		INSERT INTO interests (user_id, type, value)
-		VALUES ($1, $2, $3)
-	`
+	filterInterestsSQL := `
+        INSERT INTO filter_interests (user_id, type, value)
+        VALUES ($1, $2, $3)
+    `
 
-	interestMap := map[string]string{
-		"social":           toString(filterInterests.Social),
-		"sport":            toString(filterInterests.Sport),
-		"self_development": toString(filterInterests.SelfDevelopment),
-		"art":              toString(filterInterests.Art),
-		"hobby":            toString(filterInterests.Hobby),
-		"gastronomy":       toString(filterInterests.Gastronomy),
+	interestGroups := map[string][]int{
+		"social":           convertSlice(filterInterests.Social),
+		"sport":            convertSlice(filterInterests.Sport),
+		"self_development": convertSlice(filterInterests.SelfDevelopment),
+		"art":              convertSlice(filterInterests.Art),
+		"hobby":            convertSlice(filterInterests.Hobby),
+		"gastronomy":       convertSlice(filterInterests.Gastronomy),
 	}
 
-	for interestType, value := range interestMap {
-		_, err := s.txManager.GetQueryEngine(ctx).Exec(
-			ctx,
-			interestSQL,
-			userID,
-			interestType,
-			value,
-		)
-		if err != nil {
-			return fmt.Errorf("AddFilterInterests: %w", err)
+	for interestType, values := range interestGroups {
+		if len(values) == 0 {
+			continue
+		}
+
+		for _, value := range values {
+			_, err := s.txManager.GetQueryEngine(ctx).Exec(
+				ctx,
+				filterInterestsSQL,
+				userID,
+				interestType,
+				value,
+			)
+			if err != nil {
+				return fmt.Errorf("AddFilterInterests: %w", err)
+			}
 		}
 	}
 
 	return nil
 }
 
-// вспомогательная функция для преобразования срезов enum в срезы int
-func toString[T ~int](slice []T) string {
-	result := ""
+func convertSlice[T ~int](slice []T) []int {
+	result := make([]int, 0, len(slice))
 	for _, v := range slice {
-		result += strconv.Itoa(int(v))
+		result = append(result, int(v))
 	}
 	return result
 }
