@@ -3,6 +3,8 @@ DB = postgres://user:pass@localhost:5432/
 DB_PARAMS = ?sslmode=disable
 
 MIGRATE_CREATE = migrate create -ext sql -dir
+export TESTCONTAINERS_RYUK_DISABLED=true
+export BASE_MIGRATIONS_PATH=$(PWD)
 
 deps: deps/migrate deps/go-test-coverage deps/buf deps/mockgen deps/protoc deps/linters
 
@@ -63,7 +65,7 @@ lint:
 
 ### Auth service targets
 auth/check-coverage:
-	-cd auth && MIGRATIONS_PATH=$(PWD)/auth/migrations go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd auth && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
 	-cd auth && go-test-coverage --config=.local.testcoverage.yml
 	@rm auth/cover.out
 
@@ -92,7 +94,7 @@ auth/migrate/create:
 
 ### Matcher service targets
 matcher/check-coverage:
-	-cd matcher && MIGRATIONS_PATH=$(PWD)/matcher/migrations go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd matcher && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
 	-cd matcher && go-test-coverage --config=.local.testcoverage.yml
 	@rm matcher/cover.out
 
