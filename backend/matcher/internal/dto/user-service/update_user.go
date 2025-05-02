@@ -58,23 +58,23 @@ func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 	return &UpdateUserV1Request{
-		ID:        req.Id,
-		Name:      req.Name,
-		Age:       req.Age,
-		Gender:    user.PBToGender(req.Gender),
-		Location:  req.Location,
-		Bio:       req.Bio,
-		Goal:      common.PBToGoal(req.Goal),
-		Interest:  interest.PBToInterest(req.Interest),
-		Zodiac:    common.PBToZodiac(req.Zodiac),
-		Height:    req.Height,
-		Education: common.PBToEducation(req.Education),
-		Children:  common.PBToChildren(req.Children),
-		Alcohol:   common.PBToAlcohol(req.Alcohol),
-		Smoking:   common.PBToSmoking(req.Smoking),
-		Hidden:    req.Hidden,
-		Verified:  req.Verified,
-		Photos:    user.PBToPhotoSlice(req.Photos),
+		ID:        req.GetId(),
+		Name:      req.GetName(),
+		Age:       req.GetAge(),
+		Gender:    user.PBToGender(req.GetGender()),
+		Location:  req.GetLocation(),
+		Bio:       req.GetBio(),
+		Goal:      common.PBToGoal(req.GetGoal()),
+		Interest:  interest.PBToInterest(req.GetInterest()),
+		Zodiac:    common.PBToZodiac(req.GetZodiac()),
+		Height:    req.GetHeight(),
+		Education: common.PBToEducation(req.GetEducation()),
+		Children:  common.PBToChildren(req.GetChildren()),
+		Alcohol:   common.PBToAlcohol(req.GetAlcohol()),
+		Smoking:   common.PBToSmoking(req.GetSmoking()),
+		Hidden:    req.GetHidden(),
+		Verified:  req.GetVerified(),
+		Photos:    user.PBToPhotoSlice(req.GetPhotos()),
 	}
 }
 
@@ -109,6 +109,6 @@ func UpdateUserResponseToPB(resp *UpdateUserV1Response) *desc.UpdateUserV1Respon
 
 func PBToUpdateUserResponse(resp *desc.UpdateUserV1Response) *UpdateUserV1Response {
 	return &UpdateUserV1Response{
-		User: user.PBToUser(resp.User),
+		User: user.PBToUser(resp.GetUser()),
 	}
 }

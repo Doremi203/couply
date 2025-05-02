@@ -4,9 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: add update filter rpc">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" afterDir="false" />
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: register search service and fmt includes">
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/create_match.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/create_match.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_incoming_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_incoming_matches.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_matches.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_outcoming_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_outcoming_matches.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/update_match.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/update_match.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/create_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/create_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/delete_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/delete_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/get_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/get_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/update_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/update_user.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,12 +38,20 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
-  <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
-    &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;previak&quot;
-  }
-}</component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {}
+}]]></component>
+  <component name="GitHubPullRequestState"><![CDATA[{
+  "prStates": [
+    {
+      "id": {
+        "id": "PR_kwDOM_VVBs6UzWy_",
+        "number": 7
+      },
+      "lastSeen": 1746226933855
+    }
+  ]
+}]]></component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;git@github.com:Doremi203/Couply.git&quot;,
@@ -211,7 +226,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[COUPLY-12]: feat: add main files for dev" />
     <MESSAGE value="[COUPLY-12]: fix: Makefile" />
     <MESSAGE value="[COUPLY-12]: feat: add user service proto file; feat: add logger" />
     <MESSAGE value="[COUPLY-12]: fix: Makefile; feat: generate code based on user_service.proto" />
@@ -236,7 +250,8 @@
     <MESSAGE value="[COUPLY-15]: fix: interest migration is right now" />
     <MESSAGE value="[COUPLY-15]: feat: better db structure for filters" />
     <MESSAGE value="[COUPLY-15]: feat: add update filter rpc" />
-    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: add update filter rpc" />
+    <MESSAGE value="[COUPLY-15]: feat: register search service and fmt includes" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: register search service and fmt includes" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
