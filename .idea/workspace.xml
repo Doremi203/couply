@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: better db structure for filters">
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/delete_filter_interests.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/get_filter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/get_filter_interests.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/update_filter.go" afterDir="false" />
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: add update filter rpc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/create_filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/create_filter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -216,7 +211,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[COUPLY-12]: feat: init" />
     <MESSAGE value="[COUPLY-12]: feat: add main files for dev" />
     <MESSAGE value="[COUPLY-12]: fix: Makefile" />
     <MESSAGE value="[COUPLY-12]: feat: add user service proto file; feat: add logger" />
@@ -241,7 +235,8 @@
     <MESSAGE value="[COUPLY-15]: feat: finish create filter rpc" />
     <MESSAGE value="[COUPLY-15]: fix: interest migration is right now" />
     <MESSAGE value="[COUPLY-15]: feat: better db structure for filters" />
-    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: better db structure for filters" />
+    <MESSAGE value="[COUPLY-15]: feat: add update filter rpc" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: add update filter rpc" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

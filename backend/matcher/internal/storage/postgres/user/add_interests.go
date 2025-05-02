@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 )
 

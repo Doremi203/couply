@@ -1,11 +1,12 @@
 package search
 
 import (
+	"time"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 type Filter struct {
