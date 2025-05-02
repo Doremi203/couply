@@ -1,10 +1,11 @@
+import VerifiedIcon from '@mui/icons-material/Verified';
 import { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 
-import { ProfileView } from '../../../../pages/LikesPage/components/ProfileView';
+// import { ProfileView } from '../../../../pages/LikesPage/components/ProfileView';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
 import { LikeButton } from '../../../../shared/components/LikeButton';
-// import { ProfileView } from '../../../../widgets/ProfileView';
+import { ProfileView } from '../../../../widgets/ProfileView';
 
 import styles from './profileSlider.module.css';
 
@@ -16,6 +17,7 @@ const profiles = [
     bio: 'Люблю путешествовать и заниматься спортом.',
     imageUrl: 'man1.jpg',
     location: 'Москва, Россия',
+    verified: true,
     interests: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
     lifestyle: {
       kids: 'Нет детей',
@@ -32,6 +34,7 @@ const profiles = [
     bio: 'Пишу музыку и люблю кататься на велосипеде.',
     imageUrl: 'photo1.png',
     location: 'Санкт-Петербург, Россия',
+    verified: false,
     interests: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
     lifestyle: {
       kids: 'Нет детей',
@@ -48,6 +51,7 @@ const profiles = [
     bio: 'Увлекаюсь фотографией и кулинарией.',
     imageUrl: 'woman1.jpg',
     location: 'Казань, Россия',
+    verified: true,
     interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
     lifestyle: {
       kids: 'Нет детей',
@@ -88,9 +92,7 @@ export const ProfileSlider = () => {
     setSelectedProfile(null);
   };
 
-  const handleLike = (id: number) => {
-    // Handle like functionality if needed
-    console.log(`Liked profile with id: ${id}`);
+  const handleLike = () => {
     handleCloseProfile();
   };
 
@@ -104,6 +106,11 @@ export const ProfileSlider = () => {
         />
         <h2 className={styles.name}>
           {currentProfile.name}, {currentProfile.age}
+          {currentProfile.verified && (
+            <div className={styles.verifiedBadge}>
+              <VerifiedIcon />
+            </div>
+          )}
         </h2>
         {/* <p>{currentProfile.bio}</p> */}
       </div>
@@ -121,6 +128,7 @@ export const ProfileSlider = () => {
             imageUrl: selectedProfile.imageUrl,
             bio: selectedProfile.bio,
             location: selectedProfile.location,
+            verified: selectedProfile.verified,
             interests: selectedProfile.interests,
             lifestyle: selectedProfile.lifestyle,
             passion: selectedProfile.passion,

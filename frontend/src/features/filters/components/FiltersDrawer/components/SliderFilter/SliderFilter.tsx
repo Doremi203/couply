@@ -22,10 +22,7 @@ const SliderFilter: React.FC<SliderFilterProps> = ({
   unit = '',
   valueLabelDisplay = 'off',
 }) => {
-  // Format the display value based on whether it's a single value or range
-  const displayValue = Array.isArray(value) 
-    ? `${value[0]}-${value[1]}${unit}` 
-    : `${value}${unit}`;
+  const displayValue = Array.isArray(value) ? `${value[0]}-${value[1]}${unit}` : `${value}${unit}`;
 
   return (
     <div className={styles.section}>

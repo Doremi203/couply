@@ -3,25 +3,27 @@
   max-width: 500px;
   margin: 0 auto;
   margin-top: 1.25rem; /* 20px in rem */
-  padding: 0 0.625rem; /* 10px in rem */
+  /*padding: 0 0.625rem;*/ /* 10px in rem */
   box-sizing: border-box;
+  /* height: 600px; */
 }
 
 .profileСard {
-  padding: 0.625rem; /* 10px in rem */
-  margin-bottom: 0.625rem; /* 10px in rem */
+  /* padding: 0.625rem;  */
+  /* margin-bottom: 0.625rem;  */
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  /* height: 600px; */
 }
 
 .profileImage {
   width: 100%;
   max-width: 350px;
-  height: auto;
+  height: 560px;
   aspect-ratio: 2/3; /* Maintain aspect ratio instead of fixed height */
   object-fit: cover;
   border-radius: 2.188rem; /* 35px in rem */
@@ -40,7 +42,7 @@
   justify-content: space-around;
   width: 100%;
   max-width: 300px;
-  margin: -1.875rem auto 0; /* -30px auto 0 in rem */
+  margin: -1rem auto 0; /* -30px auto 0 in rem */
   position: relative;
   z-index: 10;
 }
@@ -71,13 +73,30 @@
   text-align: center;
   font-size: 1.5rem;
   margin-top: 0.625rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  background-color: white;
+  color: #1da1f2;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: bold;
 }
 
 /* Responsive adjustments */
-@media (max-width: 480px) {
+/* @media (max-width: 480px) {
   .profileImage {
     max-width: 100%;
-    border-radius: 1.5rem; /* Smaller border radius on mobile */
+    border-radius: 1.5rem;
   }
 
   .controls {
@@ -86,8 +105,8 @@
 
   .likeButton,
   .dislikeButton {
-    width: 4rem; /* Smaller on mobile */
-    height: 4rem; /* Smaller on mobile */
+    width: 4rem;
+    height: 4rem; 
   }
 }
 
@@ -97,6 +116,6 @@
   }
 
   .profileImage {
-    max-width: 400px; /* Larger on desktop */
+    max-width: 400px; 
   }
-}
+} */

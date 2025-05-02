@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
 import ActivityHistory from '../../../../widgets/ActivityHistory';
-// import { ProfileView } from '../../../../widgets/ProfileView';
 import { EditProfile } from '../../../../widgets/EditProfile';
+// import { ProfileView } from '../../../LikesPage/components/ProfileView';
 import { ProfileData, ActivityItem } from '../../types';
 import { ProfilePreview } from '../ProfilePreview';
 import { ProfileView } from '../ProfileView';
@@ -21,13 +21,11 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   initialEditMode = false,
   initialVerified = false,
 }) => {
-  // State for edit mode
   const [isEditMode, setIsEditMode] = useState(initialEditMode);
   const [activeTab, setActiveTab] = useState(initialTab);
   const [isProfileHidden, setIsProfileHidden] = useState(false);
   const [isVerified, setIsVerified] = useState(initialVerified);
 
-  // User profile data
   const [profileData, setProfileData] = useState<ProfileData>({
     name: 'Jenny',
     age: 22,
@@ -45,7 +43,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     photos: ['/photo1.png', '/woman1.jpg'],
   });
 
-  // Activity history
   const [activityHistory] = useState<ActivityItem[]>([
     { type: 'view', user: 'Alex', date: '2025-03-28T14:30:00' },
     { type: 'like', user: 'Michael', date: '2025-03-27T10:15:00' },
@@ -79,7 +76,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   const handleArrayInputChange = (field: string, value: string) => {
-    // Split by commas and trim whitespace
     const values = value.split(',').map(item => item.trim());
     setProfileData({
       ...profileData,
@@ -192,7 +188,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   return (
     <div className={styles.pageContainer}>
       {renderContent()}
-      <NavBar />
+      <div style={{ position: 'relative', zIndex: 1010 }}>
+        <NavBar />
+      </div>
     </div>
   );
 };

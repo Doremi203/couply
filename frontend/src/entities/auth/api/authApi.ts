@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { baseApi } from '../../../shared/api/baseApi';
-import { AuthResponse, LoginParams, RegisterParams, User } from '../types';
+import { AuthResponse, LoginParams, RegisterParams } from '../types';
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: builder => ({
@@ -16,7 +16,6 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    // Вход пользователя
     login: builder.mutation<AuthResponse, LoginParams>({
       query: credentials => ({
         url: '/auth/login',
@@ -25,47 +24,46 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    // Выход пользователя
-    logout: builder.mutation<void, void>({
-      query: () => ({
-        url: '/auth/logout',
-        method: 'POST',
-      }),
-    }),
+    // logout: builder.mutation<void, void>({
+    //   query: () => ({
+    //     url: '/auth/logout',
+    //     method: 'POST',
+    //   }),
+    // }),
 
-    // Получение текущего пользователя
-    getCurrentUser: builder.query<User, void>({
-      query: () => '/auth/me',
-      providesTags: ['User'],
-    }),
+    // // Получение текущего пользователя
+    // getCurrentUser: builder.query<User, void>({
+    //   query: () => '/auth/me',
+    //   providesTags: ['User'],
+    // }),
 
-    // Обновление профиля пользователя после регистрации
-    updateUserProfile: builder.mutation<User, Partial<User>>({
-      query: userData => ({
-        url: '/auth/profile',
-        method: 'PATCH',
-        body: userData,
-      }),
-      invalidatesTags: ['User'],
-    }),
+    // // Обновление профиля пользователя после регистрации
+    // updateUserProfile: builder.mutation<User, Partial<User>>({
+    //   query: userData => ({
+    //     url: '/auth/profile',
+    //     method: 'PATCH',
+    //     body: userData,
+    //   }),
+    //   invalidatesTags: ['User'],
+    // }),
 
-    // Запрос на сброс пароля
-    requestPasswordReset: builder.mutation<void, { email: string } | { phone: string }>({
-      query: data => ({
-        url: '/auth/reset-password',
-        method: 'POST',
-        body: data,
-      }),
-    }),
+    // // Запрос на сброс пароля
+    // requestPasswordReset: builder.mutation<void, { email: string } | { phone: string }>({
+    //   query: data => ({
+    //     url: '/auth/reset-password',
+    //     method: 'POST',
+    //     body: data,
+    //   }),
+    // }),
 
-    // Подтверждение сброса пароля
-    confirmPasswordReset: builder.mutation<void, { token: string; password: string }>({
-      query: data => ({
-        url: '/auth/reset-password/confirm',
-        method: 'POST',
-        body: data,
-      }),
-    }),
+    // // Подтверждение сброса пароля
+    // confirmPasswordReset: builder.mutation<void, { token: string; password: string }>({
+    //   query: data => ({
+    //     url: '/auth/reset-password/confirm',
+    //     method: 'POST',
+    //     body: data,
+    //   }),
+    // }),
   }),
 });
 
@@ -73,9 +71,9 @@ export const authApi = baseApi.injectEndpoints({
 export const {
   useRegisterMutation,
   useLoginMutation,
-  useLogoutMutation,
-  useGetCurrentUserQuery,
-  useUpdateUserProfileMutation,
-  useRequestPasswordResetMutation,
-  useConfirmPasswordResetMutation,
+  // useLogoutMutation,
+  // useGetCurrentUserQuery,
+  // useUpdateUserProfileMutation,
+  // useRequestPasswordResetMutation,
+  // useConfirmPasswordResetMutation,
 } = authApi;

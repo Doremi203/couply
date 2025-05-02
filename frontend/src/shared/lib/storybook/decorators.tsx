@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import React, { ComponentType, ReactElement } from 'react';
+import { ComponentType, ReactElement } from 'react';
 import { Provider } from 'react-redux';
 
 import { baseApi } from '../../api/baseApi';

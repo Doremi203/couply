@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 import { LikeProfile, MatchProfile } from '../types';
 
+// TODO
 export const useProfileView = () => {
   const [selectedProfile, setSelectedProfile] = useState<LikeProfile | null>(null);
 
-  const handleProfileClick = (profile: LikeProfile) => {
+  const handleProfileClick = useCallback((profile: LikeProfile) => {
     // When clicking on a profile, open the ProfileView
     setSelectedProfile(profile);
-  };
+  }, []);
 
-  const handleMatchClick = (match: MatchProfile) => {
+  const handleMatchClick = useCallback((match: MatchProfile) => {
     // Convert match to a profile format that ProfileView can use
     const matchAsProfile = {
       id: match.id,
@@ -31,16 +32,35 @@ export const useProfileView = () => {
       passion: ['Match', 'Connection'],
     };
     setSelectedProfile(matchAsProfile);
-  };
+  }, []);
 
-  const handleCloseProfile = () => {
+  const handleCloseProfile = useCallback(() => {
+    // First set the profile to null to remove it from the DOM
     setSelectedProfile(null);
-  };
 
-  return {
-    selectedProfile,
-    handleProfileClick,
-    handleMatchClick,
-    handleCloseProfile,
-  };
+    // Then ensure any body styles or other side effects are cleaned up
+    document.body.style.overflow = 'auto'; // Re-enable scrolling
+
+    // Force a re-render of the NavBar by triggering a small timeout
+    setTimeout(() => {
+      const navBar = document.querySelector('.navBarContainer');
+      if (navBar) {
+        // Temporarily modify a style to force a repaint
+        navBar.classList.add('force-repaint');
+        setTimeout(() => {
+          navBar.classList.remove('force-repaint');
+        }, 10);
+      }
+    }, 100);
+  }, []);
+
+  return useMemo(
+    () => ({
+      selectedProfile,
+      handleProfileClick,
+      handleMatchClick,
+      handleCloseProfile,
+    }),
+    [selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile],
+  );
 };

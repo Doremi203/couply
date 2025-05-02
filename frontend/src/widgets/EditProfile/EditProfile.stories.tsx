@@ -58,7 +58,7 @@ export const Default: Story = {
     onSave: () => console.log('Save button clicked'),
     onInputChange: (field, value) => console.log(`Field ${field} changed to: ${value}`),
     onArrayInputChange: (field, value) => console.log(`Array field ${field} changed to: ${value}`),
-    onPhotoAdd: (file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
+    onPhotoAdd: (_file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
     onPhotoRemove: index => console.log(`Photo removed at index: ${index}`),
   },
 };
@@ -85,7 +85,7 @@ export const EmptyProfile: Story = {
     onSave: () => console.log('Save button clicked'),
     onInputChange: (field, value) => console.log(`Field ${field} changed to: ${value}`),
     onArrayInputChange: (field, value) => console.log(`Array field ${field} changed to: ${value}`),
-    onPhotoAdd: (file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
+    onPhotoAdd: (_file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
     onPhotoRemove: index => console.log(`Photo removed at index: ${index}`),
   },
 };
@@ -100,7 +100,7 @@ export const HiddenProfile: Story = {
     onSave: () => console.log('Save button clicked'),
     onInputChange: (field, value) => console.log(`Field ${field} changed to: ${value}`),
     onArrayInputChange: (field, value) => console.log(`Array field ${field} changed to: ${value}`),
-    onPhotoAdd: (file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
+    onPhotoAdd: (_file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
     onPhotoRemove: index => console.log(`Photo removed at index: ${index}`),
   },
 };

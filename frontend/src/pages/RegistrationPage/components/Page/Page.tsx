@@ -36,7 +36,7 @@ export const RegistrationPage = () => {
   const [register, { isLoading }] = useRegisterMutation();
 
   const goBack = () => {
-    navigate('/auth');
+    navigate('/');
   };
 
   const validateForm = () => {
@@ -70,13 +70,13 @@ export const RegistrationPage = () => {
     }
 
     // Validate confirm password
-    if (!confirmPassword) {
-      newErrors.confirmPassword = 'Пожалуйста, подтвердите пароль';
-      isValid = false;
-    } else if (confirmPassword !== password) {
-      newErrors.confirmPassword = 'Пароли не совпадают';
-      isValid = false;
-    }
+    // if (!confirmPassword) {
+    //   newErrors.confirmPassword = 'Пожалуйста, подтвердите пароль';
+    //   isValid = false;
+    // } else if (confirmPassword !== password) {
+    //   newErrors.confirmPassword = 'Пароли не совпадают';
+    //   isValid = false;
+    // }
 
     setErrors(newErrors);
     return isValid;
@@ -143,7 +143,7 @@ export const RegistrationPage = () => {
           {errors.password && <span className={styles.errorText}>{errors.password}</span>}
         </div>
 
-        <div className={styles.inputGroup}>
+        {/* <div className={styles.inputGroup}>
           <label>Подтверждение пароля</label>
           <CustomInput
             type="password"
@@ -154,12 +154,12 @@ export const RegistrationPage = () => {
           {errors.confirmPassword && (
             <span className={styles.errorText}>{errors.confirmPassword}</span>
           )}
-        </div>
+        </div> */}
       </div>
 
       <CustomButton
         onClick={handleSubmit}
-        text={isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
+        text={isLoading ? 'Регистрация...' : 'Войти'}
         disabled={isLoading}
         className={styles.submitButton}
       />

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styles from './tabsSection.module.css';
 
 interface TabsSectionProps<T extends string> {

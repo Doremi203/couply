@@ -28,23 +28,25 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const sampleProfile = {
-  id: 1,
-  name: 'Anna',
-  age: 28,
-  imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
-  location: 'Moscow, Russia',
-  bio: 'Love hiking and photography',
-  interests: ['hiking', 'photography', 'travel'],
-  lifestyle: {
-    exercise: 'Regular',
-    drinking: 'Social',
-    smoking: 'Never',
+  user: {
+    id: 1,
+    name: 'Anna',
+    age: 28,
+    imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
+    location: 'Moscow, Russia',
+    bio: 'Love hiking and photography',
+    interests: ['hiking', 'photography', 'travel'],
+    lifestyle: {
+      exercise: 'Regular',
+      drinking: 'Social',
+      smoking: 'Never',
+    },
+    passion: ['Nature', 'Art'],
+    photos: [
+      'https://randomuser.me/api/portraits/women/68.jpg',
+      'https://randomuser.me/api/portraits/women/69.jpg',
+    ],
   },
-  passion: ['Nature', 'Art'],
-  photos: [
-    'https://randomuser.me/api/portraits/women/68.jpg',
-    'https://randomuser.me/api/portraits/women/69.jpg',
-  ],
 };
 
 export const Default: Story = {
@@ -66,7 +68,7 @@ export const HasLikedYou: Story = {
   args: {
     profile: {
       ...sampleProfile,
-      hasLikedYou: true,
+      //hasLikedYou: true,
     },
     onClick: () => console.log('Profile card clicked'),
     onLike: id => console.log(`Liked profile with id: ${id}`),
@@ -84,10 +86,12 @@ export const WithCustomClass: Story = {
 export const MinimalProfile: Story = {
   args: {
     profile: {
-      id: 2,
-      name: 'John',
-      age: 32,
-      imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
+      user: {
+        id: 2,
+        name: 'John',
+        age: 32,
+        imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
+      },
     },
     onClick: () => console.log('Profile card clicked'),
   },

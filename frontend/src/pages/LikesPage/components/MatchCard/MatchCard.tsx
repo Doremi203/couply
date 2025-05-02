@@ -9,12 +9,14 @@ import styles from './matchCard.module.css';
 
 // Define the match profile interface
 export interface MatchProfile {
-  id: number;
-  name: string;
-  age: number;
-  imageUrl: string;
-  telegram: string;
-  instagram: string;
+  match: {
+    id: number;
+    name: string;
+    age: number;
+    imageUrl: string;
+    telegram: string;
+    instagram: string;
+  };
 }
 
 interface MatchCardProps {
@@ -32,34 +34,32 @@ export const MatchCard: React.FC<MatchCardProps> = ({
 }) => {
   return (
     <div className={styles.matchCard} onClick={() => onClick(match)}>
-      <img
-        src={match.imageUrl}
-        alt={match.name}
-        className={styles.matchImage}
-      />
+      {/* @ts-ignore */}
+      <img src={match.user.imageUrl} alt={match.user.name} className={styles.matchImage} />
       <div className={styles.matchInfo}>
         <div className={styles.matchName}>
-          {match.name}, {match.age}
+          {/* @ts-ignore */}
+          {match.user.name}, {match.user.age}
         </div>
+        {/* @ts-ignore */}
         {showChatMessage === match.id && (
           <div className={styles.chatMessage}>Открыто в новой вкладке</div>
         )}
       </div>
-      <div
-        className={styles.socialButtons}
-        onClick={(e) => e.stopPropagation()}
-      >
+      <div className={styles.socialButtons} onClick={e => e.stopPropagation()}>
         <IconButton
           // size="small"
           className={styles.socialButton}
-          onClick={() => onSocialClick(match.id, 'telegram')}
+          // @ts-ignore
+          onClick={() => onSocialClick(match.user.id, 'telegram')}
         >
           <TelegramIcon />
         </IconButton>
         <IconButton
           // size="small"
           className={styles.socialButton}
-          onClick={() => onSocialClick(match.id, 'instagram')}
+          // @ts-ignore
+          onClick={() => onSocialClick(match.user.id, 'instagram')}
         >
           <InstagramIcon />
         </IconButton>

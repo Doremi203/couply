@@ -83,16 +83,16 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const handleClearFilters = () => {
     setInterestedIn('Both');
     setDistance(40);
-    setAgeRange([20, 28]);
+    setAgeRange([18, 28]);
     setSelectedInterests([]);
     setSelectedMusicPreferences([]);
     setVerificationStatus(false);
   };
 
   const genderOptions = [
-    { label: 'Girls', value: 'Girls' },
-    { label: 'Boys', value: 'Boys' },
-    { label: 'Both', value: 'Both' },
+    { label: 'Женщины', value: 'Girls' },
+    { label: 'Мужчины', value: 'Boys' },
+    { label: 'Оба', value: 'Both' },
   ];
 
   if (!open) return null;
@@ -101,19 +101,16 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
         <Box className={styles.content}>
-          {/* Header */}
           <FilterHeader onBack={onClose} onClear={handleClearFilters} />
 
-          {/* Gender Preference */}
           <GenderFilter
             value={interestedIn}
             options={genderOptions}
             onChange={handleGenderSelect}
           />
 
-          {/* Distance Slider */}
           <SliderFilter
-            title="Distance"
+            title="Дистанция"
             value={distance}
             min={1}
             max={100}
@@ -121,9 +118,8 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             unit="km"
           />
 
-          {/* Age Range Slider */}
           <SliderFilter
-            title="Age"
+            title="Возраст"
             value={ageRange}
             min={18}
             max={65}
@@ -131,31 +127,27 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             valueLabelDisplay="auto"
           />
 
-          {/* Interests */}
           <ChipFilter
-            title="Interests"
+            title="Интересы"
             options={interestOptions}
             selectedOptions={selectedInterests}
             onToggle={toggleInterest}
           />
 
-          {/* Music Preferences */}
           <ChipFilter
-            title="Music Preferences"
+            title="Музыкальные предпочтения"
             options={musicOptions}
             selectedOptions={selectedMusicPreferences}
             onToggle={toggleMusicPreference}
           />
 
-          {/* Verification Status */}
           <ToggleFilter
-            title="Verification Status"
-            description="Only show verified profiles"
+            title="Статус верификации"
+            description="Показывать только верифицированных пользователей"
             value={verificationStatus}
             onChange={handleVerificationToggle}
           />
 
-          {/* Continue Button */}
           <FilterActions onContinue={onClose} />
         </Box>
       </div>

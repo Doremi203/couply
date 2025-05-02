@@ -17,12 +17,8 @@ type GenderFilterProps = {
 const GenderFilter: React.FC<GenderFilterProps> = ({ value, options, onChange }) => {
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>Interested in</h3>
-      <ToggleButtons
-        options={options}
-        onSelect={onChange}
-        value={value}
-      />
+      <h3 className={styles.sectionTitle}>Заинтересован в</h3>
+      <ToggleButtons options={options} onSelect={onChange} value={value} />
     </div>
   );
 };

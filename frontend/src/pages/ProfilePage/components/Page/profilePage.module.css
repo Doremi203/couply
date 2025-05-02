@@ -1,18 +1,11 @@
-/* Page container */
 .pageContainer {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   background-color: var(--background-color);
   color: var(--text-color);
-  padding-bottom: 70px; /* Space for navbar */
+  padding-bottom: 70px;
 }
-
-/* .profileHeader h5 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 500;
-} */
 
 .backButton {
   position: absolute;
@@ -28,7 +21,6 @@
   justify-content: center;
 }
 
-/* Profile info */
 .profileInfo {
   display: flex;
   flex-direction: column;
@@ -54,7 +46,7 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  background-color: #4cd137;
+  background-color: #1da1f2;
   color: white;
   border-radius: 50%;
   padding: 5px;
@@ -94,7 +86,6 @@
   font-weight: 500;
 }
 
-/* Content sections */
 .profileContent,
 .editContent,
 .activityContent,
@@ -102,7 +93,6 @@
   padding: 0 15px 20px;
 }
 
-/* Section headers with edit links */
 .sectionHeader {
   display: flex;
   justify-content: space-between;
@@ -127,7 +117,6 @@
   text-decoration: underline;
 }
 
-/* Photo gallery */
 .photoGallery,
 .photoGalleryEdit {
   margin-top: 20px;
@@ -195,7 +184,6 @@
   color: #6c5ce7;
 }
 
-/* Profile sections */
 .profileSection {
   margin-top: 25px;
   background-color: var(--section-background);
@@ -218,7 +206,6 @@
   line-height: 1.5;
 }
 
-/* Info grid */
 .infoGrid {
   display: grid;
   grid-template-columns: 1fr;
@@ -237,7 +224,6 @@
   color: #666;
 }
 
-/* Tags list */
 .tagsList {
   display: flex;
   flex-wrap: wrap;
@@ -270,7 +256,6 @@
   border-radius: 10px;
 }
 
-/* Edit mode */
 .photoEditSection {
   margin-top: 20px;
   display: flex;
@@ -352,7 +337,6 @@
   color: white;
 }
 
-/* Activity history */
 .activityList {
   margin-top: 20px;
 }
@@ -398,7 +382,6 @@
   color: #999;
 }
 
-/* Preview mode */
 .previewBadge {
   position: absolute;
   top: 20px;
@@ -410,7 +393,6 @@
   font-size: 12px;
 }
 
-/* Profile actions */
 .profileActions {
   margin-top: 30px;
   display: flex;
@@ -428,7 +410,6 @@
   font-size: 13px;
 }
 
-/* Logout and delete buttons */
 .logoutButton,
 .deleteAccountButton {
   margin-top: 20px;
@@ -451,12 +432,10 @@
   color: white;
 }
 
-/* Profile header */
 .profileHeader {
   background-color: var(--header-background);
   color: var(--header-text-color);
   text-align: center;
-  /* padding: 30px; */
   position: relative;
   border-bottom-left-radius: 20px;
   border-bottom-right-radius: 20px;
@@ -474,28 +453,20 @@
   font-size: 40px;
   font-family: 'Jost', sans-serif;
   font-weight: medium;
-  /* margin-left: 135px; */
   margin-top: 10px;
 }
 
 .profileActions {
   display: flex;
   position: absolute;
-  /* right: 80px; */
-  /* margin-right: 10px; */
   margin-left: 200px;
   top: 20px;
-  /* Increase gap between buttons for better spacing */
-  /* gap: 10px; */
-  /* Add padding to increase the overall clickable area */
   padding: -20px;
 }
 
 .actionIcon {
   margin-left: 15px;
   cursor: pointer;
-  /* width: 20px;
-  height: 20px; */
 }
 
 .editIcon {

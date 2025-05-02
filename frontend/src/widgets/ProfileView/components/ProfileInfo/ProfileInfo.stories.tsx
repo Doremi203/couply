@@ -60,11 +60,13 @@ type Story = StoryObj<typeof ProfileInfoWrapper>;
 
 // Sample profile data
 const sampleProfile = {
-  id: 1,
-  name: 'Anna Smith',
-  age: 28,
-  imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
-  hasLikedYou: false,
+  user: {
+    id: 1,
+    name: 'Anna Smith',
+    age: 28,
+    imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
+    hasLikedYou: false,
+  },
 };
 
 // Sample profile details
@@ -124,11 +126,13 @@ export const Expanded: Story = {
 export const MinimalProfile: Story = {
   args: {
     profile: {
-      id: 2,
-      name: 'John Doe',
-      age: 32,
-      imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
-      hasLikedYou: false,
+      user: {
+        id: 2,
+        name: 'John Doe',
+        age: 32,
+        imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
+        hasLikedYou: false,
+      },
     },
     profileDetails: {
       bio: 'Just a simple bio.',

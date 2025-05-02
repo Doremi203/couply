@@ -14,9 +14,9 @@ const FilterHeader: React.FC<FilterHeaderProps> = ({ onBack, onClear }) => {
       <button className={styles.backButton} onClick={onBack}>
         <KeyboardBackspaceIcon />
       </button>
-      <h2 className={styles.title}>Filters</h2>
+      <h2 className={styles.title}>Фильтры</h2>
       <button className={styles.clearButton} onClick={onClear}>
-        Clear
+        Очистить
       </button>
     </div>
   );

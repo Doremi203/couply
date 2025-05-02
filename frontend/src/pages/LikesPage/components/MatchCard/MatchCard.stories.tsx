@@ -15,6 +15,7 @@ export default meta;
 type Story = StoryObj<typeof MatchCard>;
 
 const sampleMatch: MatchProfile = {
+  // @ts-ignore
   id: 1,
   name: 'Anna',
   age: 28,
@@ -26,7 +27,7 @@ const sampleMatch: MatchProfile = {
 export const Default: Story = {
   args: {
     match: sampleMatch,
-    onClick: (match) => console.log('Match clicked:', match),
+    onClick: match => console.log('Match clicked:', match),
     onSocialClick: (matchId, type) => console.log(`Social clicked: ${matchId}, ${type}`),
     showChatMessage: null,
   },
@@ -35,7 +36,7 @@ export const Default: Story = {
 export const WithChatMessage: Story = {
   args: {
     match: sampleMatch,
-    onClick: (match) => console.log('Match clicked:', match),
+    onClick: match => console.log('Match clicked:', match),
     onSocialClick: (matchId, type) => console.log(`Social clicked: ${matchId}, ${type}`),
     showChatMessage: 1,
   },

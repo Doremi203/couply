@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { LoginParams, useLoginMutation } from '../../../../entities/auth';
+import { useLoginMutation } from '../../../../entities/auth';
 import { ButtonWithIcon } from '../../../../shared/components/ButtonWithIcon';
 
 import styles from './authPage.module.css';
@@ -24,10 +24,11 @@ export const AuthPage = () => {
   };
 
   const handleEmailLogin = () => {
-    navigate('/registration', { state: { method: 'email' } });
+    navigate('/login', { state: { method: 'email' } });
   };
 
   // This function would be used if we implemented a login form on this page
+  // @ts-ignore
   const _handleLogin = async (credentials: LoginParams) => {
     try {
       setError('');

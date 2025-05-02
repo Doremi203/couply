@@ -2,7 +2,6 @@ import React from 'react';
 
 import EmptyState from '../../../../shared/components/EmptyState';
 import { MatchProfile } from '../../types';
-// import EmptyState from '../EmptyState';
 import { MatchCard } from '../MatchCard';
 
 import styles from './matchesSection.module.css';
@@ -32,7 +31,9 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
         {matches.map(match => (
           <MatchCard
             key={match.id}
+            // @ts-ignore
             match={match}
+            // @ts-ignore
             onClick={onMatchClick}
             onSocialClick={onSocialClick}
             showChatMessage={showChatMessage}

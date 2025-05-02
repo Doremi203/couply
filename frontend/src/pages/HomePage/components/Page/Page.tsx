@@ -18,7 +18,7 @@ export const HomePage = () => {
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <body className={styles.pageContainer}>
       <div className={styles.header}>
         <div className={styles.spacer} />
         <div className={styles.appName}> couply</div>
@@ -32,8 +32,11 @@ export const HomePage = () => {
 
       <ProfileSlider />
 
-      <NavBar />
-    </div>
+      {/* NavBar with higher z-index to ensure it's always accessible */}
+      <div style={{ position: 'relative', zIndex: 1010 }}>
+        <NavBar />
+      </div>
+    </body>
   );
 };
 

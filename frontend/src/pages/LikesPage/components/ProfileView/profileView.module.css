@@ -24,6 +24,7 @@
   touch-action: pan-y; /* Allow vertical touch scrolling */
   width: 100%;
   max-width: 100vw;
+  pointer-events: auto; /* Ensure clicks are captured by this container */
 }
 
 /* Header with navigation elements - fixed at the top */
@@ -111,6 +112,22 @@
   font-weight: bold;
   margin: 0;
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); /* Shadow for better readability */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  background-color: white;
+  color: #1da1f2;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: bold;
 }
 
 /* User info (age, location) styling on the photo */
@@ -436,13 +453,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 100; /* Increased z-index to ensure it's above other elements */
   width: 3.75rem; /* 60px in rem */
   height: 3.75rem; /* 60px in rem */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); /* Enhanced shadow for better visibility */
   transition:
     opacity 0.3s ease,
     transform 0.2s ease;
+  pointer-events: auto !important; /* Ensure clicks are always captured */
+}
+
+.likeButton:hover {
+  transform: translateX(50%) scale(1.1);
+}
+
+.likeButton:active {
+  transform: translateX(50%) scale(0.95);
 }
 
 /* Responsive adjustments for buttons */
@@ -467,11 +493,11 @@
   }
 } */
 
-/* Hide buttons when profile info is displayed */
-.profileImageContainer:not(.expanded) .likeButton,
-.profileImageContainer:not(.expanded) .dislikeButton {
-  opacity: 0;
-  pointer-events: none;
+/* Make buttons always visible */
+.profileImageContainer .likeButton,
+.profileImageContainer .dislikeButton {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Container for interest tags */

@@ -1,24 +1,24 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
+import userReducer from '../../entities/user/model/userSlice';
 import filtersReducer from '../../features/filters/model/filtersSlice';
-import { baseApi } from '../../shared/api/baseApi';
+import { baseApi, matcherApi } from '../../shared/api/baseApi';
 
 export const store = configureStore({
   reducer: {
-    // API reducers
     [baseApi.reducerPath]: baseApi.reducer,
-    // Feature reducers
+    [matcherApi.reducerPath]: matcherApi.reducer,
+
     filters: filtersReducer,
-    // Feature reducers будут добавляться здесь
+    user: userReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware().concat(baseApi.middleware, matcherApi.middleware),
 });
 
 // Необходимо для refetchOnFocus/refetchOnReconnect
 setupListeners(store.dispatch);
 
-// Типы для использования в приложении
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
