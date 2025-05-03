@@ -8,8 +8,8 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (s *PgStorageSearch) GetInterests(ctx context.Context, userID int64) (*interest.Interest, error) {
-	rows, err := s.queryInterests(ctx, userID)
+func (s *PgStorageSearch) GetFilterInterests(ctx context.Context, userID int64) (*interest.Interest, error) {
+	rows, err := s.queryFilterInterests(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +17,7 @@ func (s *PgStorageSearch) GetInterests(ctx context.Context, userID int64) (*inte
 
 	i := interest.NewInterest()
 	for rows.Next() {
-		if err = s.processInterestRow(rows, i); err != nil {
+		if err = s.processFilterInterestRow(rows, i); err != nil {
 			return nil, err
 		}
 	}
@@ -29,7 +29,7 @@ func (s *PgStorageSearch) GetInterests(ctx context.Context, userID int64) (*inte
 	return i, nil
 }
 
-func (s *PgStorageSearch) queryInterests(ctx context.Context, userID int64) (pgx.Rows, error) {
+func (s *PgStorageSearch) queryFilterInterests(ctx context.Context, userID int64) (pgx.Rows, error) {
 	interestsSQL := `
         SELECT type, value 
         FROM interests 
@@ -48,7 +48,7 @@ func (s *PgStorageSearch) queryInterests(ctx context.Context, userID int64) (pgx
 	return rows, nil
 }
 
-func (s *PgStorageSearch) processInterestRow(rows pgx.Rows, i *interest.Interest) error {
+func (s *PgStorageSearch) processFilterInterestRow(rows pgx.Rows, i *interest.Interest) error {
 	var (
 		interestType string
 		value        int

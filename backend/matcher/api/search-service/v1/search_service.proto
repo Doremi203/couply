@@ -65,6 +65,22 @@ service SearchService {
       }
     };
   }
+  rpc GetFilterV1 (GetFilterV1Request) returns (GetFilterV1Response) {
+    option (google.api.http) = {
+      post: "/v1/GetFilterV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение фильтра";
+      description: "Принимает важные поля для получения фильтра";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateFilterV1Request {
@@ -174,6 +190,17 @@ message UpdateFilterV1Request {
 }
 
 message UpdateFilterV1Response {
+  Filter filter = 1;
+}
+
+message GetFilterV1Request {
+  int64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64.gte = 0
+  ];
+}
+
+message GetFilterV1Response {
   Filter filter = 1;
 }
 
