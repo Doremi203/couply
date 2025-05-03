@@ -20,3 +20,7 @@
   transform: scale(0.95);
   transition: transform 0.1s ease;
 }
+
+.like {
+  margin-top: 5px;
+}

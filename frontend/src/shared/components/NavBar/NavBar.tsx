@@ -17,6 +17,8 @@ export const NavBar = () => {
             style={{
               color:
                 currentPath === '/home' ? 'var(--primary-color)' : 'var(--secondary-text-color)',
+              width: '1.6rem',
+              height: '1.6rem',
             }}
           />
         </Link>
@@ -25,6 +27,8 @@ export const NavBar = () => {
             style={{
               color:
                 currentPath === '/likes' ? 'var(--primary-color)' : 'var(--secondary-text-color)',
+              width: '1.6rem',
+              height: '1.6rem',
             }}
           />
         </Link>
@@ -33,6 +37,8 @@ export const NavBar = () => {
             style={{
               color:
                 currentPath === '/profile' ? 'var(--primary-color)' : 'var(--secondary-text-color)',
+              width: '1.6rem',
+              height: '1.6rem',
             }}
           />
         </Link>

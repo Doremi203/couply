@@ -104,14 +104,14 @@ export const ProfileSlider = () => {
           alt={currentProfile.name}
           className={styles.profileImage}
         />
-        <h2 className={styles.name}>
+        <div className={styles.name}>
           {currentProfile.name}, {currentProfile.age}
           {currentProfile.verified && (
             <div className={styles.verifiedBadge}>
               <VerifiedIcon />
             </div>
           )}
-        </h2>
+        </div>
         {/* <p>{currentProfile.bio}</p> */}
       </div>
       <div className={styles.controls}>

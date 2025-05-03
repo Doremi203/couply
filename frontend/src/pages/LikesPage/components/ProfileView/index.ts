@@ -4,4 +4,4 @@
  * @block Компонент страницы лайков
  */
 
-export { ProfileView } from './ProfileView';
+// export { ProfileView } from './ProfileView';
