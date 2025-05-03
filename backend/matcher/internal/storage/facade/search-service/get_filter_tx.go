@@ -9,13 +9,13 @@ import (
 
 func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID int64) (*search.Filter, error) {
 	var (
-		u   *search.Filter
+		fil *search.Filter
 		i   *interest.Interest
 		err error
 	)
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		u, err = f.storage.GetFilter(ctxTx, userID)
+		fil, err = f.storage.GetFilter(ctxTx, userID)
 		if err != nil {
 			return fmt.Errorf("GetFilterTx: get user failed: %w", err)
 		}
@@ -25,7 +25,7 @@ func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID int64) (*s
 			return fmt.Errorf("GetFilterTx: get interests failed: %w", err)
 		}
 
-		u.Interest = i
+		fil.Interest = i
 
 		return nil
 	})
@@ -33,5 +33,5 @@ func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID int64) (*s
 	if err != nil {
 		return nil, fmt.Errorf("GetFilterTx: user transaction failed: %w", err)
 	}
-	return u, nil
+	return fil, nil
 }

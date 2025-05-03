@@ -163,6 +163,15 @@ func UserToPB(user *User) *desc.User {
 	}
 }
 
+func UsersToPB(users []*User) []*desc.User {
+	pbUsers := make([]*desc.User, len(users))
+	for _, u := range users {
+		pbUsers = append(pbUsers, UserToPB(u))
+	}
+
+	return pbUsers
+}
+
 func PBToUser(user *desc.User) *User {
 	return &User{
 		ID:        user.GetId(),
@@ -185,4 +194,13 @@ func PBToUser(user *desc.User) *User {
 		CreatedAt: user.GetCreatedAt().AsTime(),
 		UpdatedAt: user.GetUpdatedAt().AsTime(),
 	}
+}
+
+func PBToUsers(users []*desc.User) []*User {
+	domainUsers := make([]*User, len(users))
+	for _, u := range users {
+		domainUsers = append(domainUsers, PBToUser(u))
+	}
+
+	return domainUsers
 }

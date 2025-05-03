@@ -4,13 +4,17 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: fix: merge conflicts; feat: use getters in dto">
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/get_filter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/get_filter_tx.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/get_filter.go" afterDir="false" />
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: add get filter rpc">
+      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/search_users.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/search_users.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/search_users.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/search_users.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/backend/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/backend/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/get_filter_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/get_filter_interests.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/user/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/get_filter_tx.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/get_filter_tx.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/usecase.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,6 +60,9 @@
     &quot;accountId&quot;: &quot;d15386b3-9a5c-4275-917a-3dcfd9f41020&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 4
 }</component>
@@ -112,6 +119,9 @@
     "DatabaseDriversLRU": [
       "redis",
       "postgresql"
+    ],
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
+      "PostgreSQL"
     ]
   }
 }]]></component>
@@ -224,7 +234,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[COUPLY-12]: feat: add user service proto file; feat: add logger" />
     <MESSAGE value="[COUPLY-12]: fix: Makefile; feat: generate code based on user_service.proto" />
     <MESSAGE value="[COUPLY-12]: feat: add template" />
     <MESSAGE value="[COUPLY-12]: feat: add main" />
@@ -249,7 +258,8 @@
     <MESSAGE value="[COUPLY-15]: feat: add update filter rpc" />
     <MESSAGE value="[COUPLY-15]: feat: register search service and fmt includes" />
     <MESSAGE value="[COUPLY-15]: fix: merge conflicts; feat: use getters in dto" />
-    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: fix: merge conflicts; feat: use getters in dto" />
+    <MESSAGE value="[COUPLY-15]: feat: add get filter rpc" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: add get filter rpc" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

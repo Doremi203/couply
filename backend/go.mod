@@ -3,6 +3,8 @@ module github.com/Doremi203/couply/backend
 go 1.24.2
 
 require (
+	github.com/lib/pq v1.10.9
+	github.com/Masterminds/squirrel v1.5.4
 	github.com/envoyproxy/protoc-gen-validate v1.2.1
 	github.com/goccy/go-json v0.10.5
 	github.com/golang-migrate/migrate/v4 v4.18.3

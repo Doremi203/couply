@@ -1,0 +1,210 @@
+package search
+
+import (
+	"context"
+	"fmt"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+	sq "github.com/Masterminds/squirrel"
+	"github.com/jackc/pgx/v5"
+)
+
+func (s *PgStorageSearch) SearchUsers(
+	ctx context.Context,
+	filter *search.Filter,
+	interests *interest.Interest,
+	page, limit int32,
+) ([]*user.User, error) {
+	query, args, err := buildSearchQuery(filter, interests, page, limit)
+	if err != nil {
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	rows, err := s.txManager.GetQueryEngine(ctx).Query(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("query failed: %w", err)
+	}
+	defer rows.Close()
+
+	return scanUsers(rows)
+}
+
+func scanUsers(rows pgx.Rows) ([]*user.User, error) {
+	var users []*user.User
+	for rows.Next() {
+		user, err := scanUser(rows)
+		if err != nil {
+			return nil, fmt.Errorf("scan failed: %w", err)
+		}
+		users = append(users, user)
+	}
+	return users, rows.Err()
+}
+
+func scanUser(row pgx.Row) (*user.User, error) {
+	var u user.User
+	err := row.Scan(
+		&u.ID,
+		&u.Name,
+		&u.Age,
+		&u.Gender,
+		&u.Location,
+		&u.BIO,
+		&u.Goal,
+		&u.Zodiac,
+		&u.Height,
+		&u.Education,
+		&u.Children,
+		&u.Alcohol,
+		&u.Smoking,
+		&u.Hidden,
+		&u.Verified,
+		&u.CreatedAt,
+		&u.UpdatedAt,
+	)
+	return &u, err
+}
+
+func buildSearchQuery(
+	filter *search.Filter,
+	interests *interest.Interest,
+	page, limit int32,
+) (string, []any, error) {
+	qb := baseQuery().Where(baseConditions(filter))
+
+	applyMainFilters(qb, filter)
+	applyInterestFilters(qb, interests)
+	applyPagination(qb, page, limit)
+
+	return qb.ToSql()
+}
+
+func baseQuery() sq.SelectBuilder {
+	return sq.Select(
+		"id", "name", "age", "gender", "location",
+		"bio", "goal", "zodiac", "height", "education",
+		"children", "alcohol", "smoking", "hidden",
+		"verified", "created_at", "updated_at",
+	).From("users u").
+		PlaceholderFormat(sq.Dollar)
+}
+
+func baseConditions(filter *search.Filter) sq.Sqlizer {
+	return sq.And{
+		sq.Eq{"hidden": false},
+		sq.NotEq{"id": filter.UserID},
+	}
+}
+
+func applyMainFilters(qb sq.SelectBuilder, filter *search.Filter) sq.SelectBuilder {
+	qb = applyRangeFilter(qb, "age", filter.MinAge, filter.MaxAge)
+	qb = applyRangeFilter(qb, "height", filter.MinHeight, filter.MaxHeight)
+
+	if filter.GenderPriority != 3 { // 3 - ANY
+		qb = qb.Where(sq.Eq{"gender": filter.GenderPriority})
+	}
+
+	filters := map[string]int{
+		"goal":      int(filter.Goal),
+		"zodiac":    int(filter.Zodiac),
+		"education": int(filter.Education),
+		"children":  int(filter.Children),
+		"alcohol":   int(filter.Alcohol),
+		"smoking":   int(filter.Smoking),
+	}
+
+	for field, value := range filters {
+		if value != 0 {
+			qb = qb.Where(sq.Eq{field: value})
+		}
+	}
+
+	return qb
+}
+
+// applyRangeFilter добавляет фильтр по диапазону
+func applyRangeFilter(
+	qb sq.SelectBuilder,
+	field string,
+	min, max int32,
+) sq.SelectBuilder {
+	if min > 0 && max >= min {
+		qb = qb.Where(sq.And{
+			sq.GtOrEq{field: min},
+			sq.LtOrEq{field: max},
+		})
+	}
+	return qb
+}
+
+// applyInterestFilters добавляет условия по интересам
+func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) {
+	filterInterests := extractInterestPairs(interests)
+	if len(filterInterests) == 0 {
+		return
+	}
+
+	sub := sq.Select("i.user_id").
+		From("interests i").
+		Where(buildInterestConditions(filterInterests)).
+		GroupBy("i.user_id").
+		Having("COUNT(DISTINCT i.type, i.value) = ?", len(filterInterests))
+
+	qb.Where(sq.Expr("EXISTS (?)", sub))
+}
+
+// extractInterestPairs извлекает пары (type, value) из интересов
+func extractInterestPairs(interests *interest.Interest) []struct {
+	Type  string
+	Value int
+} {
+	interestGroups := map[string][]int{
+		"social":           convertSlice(interests.Social),
+		"sport":            convertSlice(interests.Sport),
+		"self_development": convertSlice(interests.SelfDevelopment),
+		"art":              convertSlice(interests.Art),
+		"hobby":            convertSlice(interests.Hobby),
+		"gastronomy":       convertSlice(interests.Gastronomy),
+	}
+
+	var pairs []struct {
+		Type  string
+		Value int
+	}
+	for t, values := range interestGroups {
+		for _, v := range values {
+			pairs = append(pairs, struct {
+				Type  string
+				Value int
+			}{t, v})
+		}
+	}
+	return pairs
+}
+
+// buildInterestConditions создает условия для фильтрации интересов
+func buildInterestConditions(pairs []struct {
+	Type  string
+	Value int
+}) sq.Sqlizer {
+	var conditions []sq.Sqlizer
+	for _, p := range pairs {
+		conditions = append(conditions, sq.And{
+			sq.Eq{"type": p.Type},
+			sq.Eq{"value": p.Value},
+		})
+	}
+	return sq.Or(conditions...)
+}
+
+// applyPagination добавляет пагинацию
+func applyPagination(qb sq.SelectBuilder, page, limit int32) sq.SelectBuilder {
+	if limit > 0 {
+		qb = qb.Limit(uint64(limit))
+	}
+	if page > 1 {
+		qb = qb.Offset(uint64((page - 1) * limit))
+	}
+	return qb.OrderBy("created_at DESC")
+}
