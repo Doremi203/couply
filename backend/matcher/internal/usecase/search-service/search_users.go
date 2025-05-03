@@ -6,7 +6,7 @@ import (
 )
 
 func (c *UseCase) SearchUsers(ctx context.Context, in *dto.SearchUsersV1Request) (*dto.SearchUsersV1Response, error) {
-	users, err := c.searchStorageFacade.SearchUsersTx(ctx, in.UserID, in.Page, in.Limit)
+	users, err := c.searchStorageFacade.SearchUsersTx(ctx, in.UserID, in.Offset, in.Limit)
 	if err != nil {
 		return nil, err
 	}
