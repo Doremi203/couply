@@ -9,7 +9,7 @@ import (
 
 func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, userID int64) error {
 	photoSQL := `
-        UPDATE Photos 
+        UPDATE photos 
         SET url = $1, mime_type = $2, updated_at = $3
         WHERE user_id = $4 AND order_number = $5
     `

@@ -8,11 +8,32 @@ type Match struct {
 	Approved     bool
 }
 
+func (x *Match) GetMainUserID() int64 {
+	if x != nil {
+		return x.MainUserID
+	}
+	return 0
+}
+
+func (x *Match) GetChosenUserID() int64 {
+	if x != nil {
+		return x.ChosenUserID
+	}
+	return 0
+}
+
+func (x *Match) GetApproved() bool {
+	if x != nil {
+		return x.Approved
+	}
+	return false
+}
+
 func MatchToPB(match *Match) *desc.Match {
 	return &desc.Match{
-		MainUserId:   match.MainUserID,
-		ChosenUserId: match.ChosenUserID,
-		Approved:     match.Approved,
+		MainUserId:   match.GetMainUserID(),
+		ChosenUserId: match.GetChosenUserID(),
+		Approved:     match.GetApproved(),
 	}
 }
 

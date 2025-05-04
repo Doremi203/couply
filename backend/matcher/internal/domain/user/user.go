@@ -3,7 +3,8 @@ package user
 import (
 	"time"
 
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -16,19 +17,152 @@ type User struct {
 	Gender    Gender             `db:"gender"`
 	Location  string             `db:"location"`
 	BIO       string             `db:"bio"`
-	Goal      Goal               `db:"goal"`
+	Goal      common.Goal        `db:"goal"`
 	Interest  *interest.Interest `db:"interest"`
-	Zodiac    Zodiac             `db:"zodiac"`
+	Zodiac    common.Zodiac      `db:"zodiac"`
 	Height    int32              `db:"height"`
-	Education Education          `db:"education"`
-	Children  Children           `db:"children"`
-	Alcohol   Alcohol            `db:"alcohol"`
-	Smoking   Smoking            `db:"smoking"`
+	Education common.Education   `db:"education"`
+	Children  common.Children    `db:"children"`
+	Alcohol   common.Alcohol     `db:"alcohol"`
+	Smoking   common.Smoking     `db:"smoking"`
 	Hidden    bool               `db:"hidden"`
 	Verified  bool               `db:"verified"`
 	Photos    []*Photo           `db:"photos"`
 	CreatedAt time.Time          `db:"created_at"`
 	UpdatedAt time.Time          `db:"updated_at"`
+}
+
+func (x *User) GetID() int64 {
+	if x != nil {
+		return x.ID
+	}
+	return 0
+}
+
+func (x *User) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *User) GetAge() int32 {
+	if x != nil {
+		return x.Age
+	}
+	return 0
+}
+
+func (x *User) GetGender() Gender {
+	if x != nil {
+		return x.Gender
+	}
+	return 0
+}
+
+func (x *User) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+func (x *User) GetBIO() string {
+	if x != nil {
+		return x.BIO
+	}
+	return ""
+}
+
+func (x *User) GetGoal() common.Goal {
+	if x != nil {
+		return x.Goal
+	}
+	return 0
+}
+
+func (x *User) GetInterest() *interest.Interest {
+	if x != nil {
+		return x.Interest
+	}
+	return nil
+}
+
+func (x *User) GetZodiac() common.Zodiac {
+	if x != nil {
+		return x.Zodiac
+	}
+	return 0
+}
+
+func (x *User) GetHeight() int32 {
+	if x != nil {
+		return x.Height
+	}
+	return 0
+}
+
+func (x *User) GetEducation() common.Education {
+	if x != nil {
+		return x.Education
+	}
+	return 0
+}
+
+func (x *User) GetChildren() common.Children {
+	if x != nil {
+		return x.Children
+	}
+	return 0
+}
+
+func (x *User) GetAlcohol() common.Alcohol {
+	if x != nil {
+		return x.Alcohol
+	}
+	return 0
+}
+
+func (x *User) GetSmoking() common.Smoking {
+	if x != nil {
+		return x.Smoking
+	}
+	return 0
+}
+
+func (x *User) GetHidden() bool {
+	if x != nil {
+		return x.Hidden
+	}
+	return false
+}
+
+func (x *User) GetVerified() bool {
+	if x != nil {
+		return x.Verified
+	}
+	return false
+}
+
+func (x *User) GetPhotos() []*Photo {
+	if x != nil {
+		return x.Photos
+	}
+	return nil
+}
+
+func (x *User) GetCreatedAt() time.Time {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return time.Time{}
+}
+
+func (x *User) GetUpdatedAt() time.Time {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return time.Time{}
 }
 
 type UserBuilder struct {
@@ -69,7 +203,7 @@ func (b *UserBuilder) SetBIO(bio string) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetGoal(goal Goal) *UserBuilder {
+func (b *UserBuilder) SetGoal(goal common.Goal) *UserBuilder {
 	b.user.Goal = goal
 	return b
 }
@@ -79,7 +213,7 @@ func (b *UserBuilder) SetInterest(interest *interest.Interest) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetZodiac(zodiac Zodiac) *UserBuilder {
+func (b *UserBuilder) SetZodiac(zodiac common.Zodiac) *UserBuilder {
 	b.user.Zodiac = zodiac
 	return b
 }
@@ -89,22 +223,22 @@ func (b *UserBuilder) SetHeight(height int32) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetEducation(education Education) *UserBuilder {
+func (b *UserBuilder) SetEducation(education common.Education) *UserBuilder {
 	b.user.Education = education
 	return b
 }
 
-func (b *UserBuilder) SetChildren(children Children) *UserBuilder {
+func (b *UserBuilder) SetChildren(children common.Children) *UserBuilder {
 	b.user.Children = children
 	return b
 }
 
-func (b *UserBuilder) SetAlcohol(alcohol Alcohol) *UserBuilder {
+func (b *UserBuilder) SetAlcohol(alcohol common.Alcohol) *UserBuilder {
 	b.user.Alcohol = alcohol
 	return b
 }
 
-func (b *UserBuilder) SetSmoking(smoking Smoking) *UserBuilder {
+func (b *UserBuilder) SetSmoking(smoking common.Smoking) *UserBuilder {
 	b.user.Smoking = smoking
 	return b
 }
@@ -140,26 +274,36 @@ func (b *UserBuilder) Build() *User {
 
 func UserToPB(user *User) *desc.User {
 	return &desc.User{
-		Id:        user.ID,
-		Name:      user.Name,
-		Age:       user.Age,
-		Gender:    GenderToPB(user.Gender),
-		Location:  user.Location,
-		Bio:       user.BIO,
-		Goal:      GoalToPB(user.Goal),
-		Interest:  interest.InterestToPB(user.Interest),
-		Zodiac:    ZodiacToPB(user.Zodiac),
-		Height:    user.Height,
-		Education: EducationToPB(user.Education),
-		Children:  ChildrenToPB(user.Children),
-		Alcohol:   AlcoholToPB(user.Alcohol),
-		Smoking:   SmokingToPB(user.Smoking),
-		Hidden:    user.Hidden,
-		Verified:  user.Verified,
-		Photos:    PhotoSliceToPB(user.Photos),
-		CreatedAt: timestamppb.New(user.CreatedAt),
-		UpdatedAt: timestamppb.New(user.UpdatedAt),
+		Id:        user.GetID(),
+		Name:      user.GetName(),
+		Age:       user.GetAge(),
+		Gender:    GenderToPB(user.GetGender()),
+		Location:  user.GetLocation(),
+		Bio:       user.GetBIO(),
+		Goal:      common.GoalToPB(user.GetGoal()),
+		Interest:  interest.InterestToPB(user.GetInterest()),
+		Zodiac:    common.ZodiacToPB(user.GetZodiac()),
+		Height:    user.GetHeight(),
+		Education: common.EducationToPB(user.GetEducation()),
+		Children:  common.ChildrenToPB(user.GetChildren()),
+		Alcohol:   common.AlcoholToPB(user.GetAlcohol()),
+		Smoking:   common.SmokingToPB(user.GetSmoking()),
+		Hidden:    user.GetHidden(),
+		Verified:  user.GetVerified(),
+		Photos:    PhotoSliceToPB(user.GetPhotos()),
+		CreatedAt: timestamppb.New(user.GetCreatedAt()),
+		UpdatedAt: timestamppb.New(user.GetUpdatedAt()),
 	}
+}
+
+func UsersToPB(users []*User) []*desc.User {
+	pbUsers := make([]*desc.User, 0, len(users))
+	for _, u := range users {
+		if u != nil {
+			pbUsers = append(pbUsers, UserToPB(u))
+		}
+	}
+	return pbUsers
 }
 
 func PBToUser(user *desc.User) *User {
@@ -170,18 +314,28 @@ func PBToUser(user *desc.User) *User {
 		Gender:    PBToGender(user.GetGender()),
 		Location:  user.GetLocation(),
 		BIO:       user.GetBio(),
-		Goal:      PBToGoal(user.GetGoal()),
+		Goal:      common.PBToGoal(user.GetGoal()),
 		Interest:  interest.PBToInterest(user.GetInterest()),
-		Zodiac:    PBToZodiac(user.GetZodiac()),
+		Zodiac:    common.PBToZodiac(user.GetZodiac()),
 		Height:    user.GetHeight(),
-		Education: PBToEducation(user.GetEducation()),
-		Children:  PBToChildren(user.GetChildren()),
-		Alcohol:   PBToAlcohol(user.GetAlcohol()),
-		Smoking:   PBToSmoking(user.GetSmoking()),
+		Education: common.PBToEducation(user.GetEducation()),
+		Children:  common.PBToChildren(user.GetChildren()),
+		Alcohol:   common.PBToAlcohol(user.GetAlcohol()),
+		Smoking:   common.PBToSmoking(user.GetSmoking()),
 		Hidden:    user.GetHidden(),
 		Verified:  user.GetVerified(),
 		Photos:    PBToPhotoSlice(user.GetPhotos()),
 		CreatedAt: user.GetCreatedAt().AsTime(),
 		UpdatedAt: user.GetUpdatedAt().AsTime(),
 	}
+}
+
+func PBToUsers(users []*desc.User) []*User {
+	domainUsers := make([]*User, 0, len(users))
+	for _, u := range users {
+		if u != nil {
+			domainUsers = append(domainUsers, PBToUser(u))
+		}
+	}
+	return domainUsers
 }

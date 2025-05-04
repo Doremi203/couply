@@ -4,6 +4,11 @@ import (
 	"context"
 	"strings"
 
+	search_service "github.com/Doremi203/couply/backend/matcher/internal/app/search-service"
+	search_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/search-service"
+	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/search"
+	search_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/search-service"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
@@ -55,8 +60,13 @@ func main() {
 		useCaseMatchingService := matching_service_usecase.NewUseCase(storageFacadeMatching)
 		implMatchingService := matching_service.NewImplementation(useCaseMatchingService)
 
-		app.RegisterGRPCServices(implUserService, implMatchingService)
-		app.AddGatewayHandlers(implUserService, implMatchingService)
+		pgStorageSearch := search.NewPgStorageSearch(txManager)
+		storageFacadeSearch := search_service_facade.NewStorageFacadeSearch(txManager, pgStorageSearch, pgStorageUser)
+		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch)
+		implSearchService := search_service.NewImplementation(useCaseSearchService)
+
+		app.RegisterGRPCServices(implUserService, implMatchingService, implSearchService)
+		app.AddGatewayHandlers(implUserService, implMatchingService, implSearchService)
 
 		return nil
 	})

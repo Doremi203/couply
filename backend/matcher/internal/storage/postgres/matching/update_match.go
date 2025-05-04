@@ -9,7 +9,7 @@ import (
 
 func (s *PgStorageMatching) UpdateMatch(ctx context.Context, match *matching.Match) error {
 	matchSQL := `
-        UPDATE Matches 
+        UPDATE matches 
         SET approved = $3
         WHERE main_user_id = $1 AND chosen_user_id = $2
     `

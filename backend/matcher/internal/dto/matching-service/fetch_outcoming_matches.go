@@ -11,15 +11,43 @@ type FetchOutgoingMatchesV1Request struct {
 	Offset     int32
 }
 
+func (x *FetchOutgoingMatchesV1Request) GetMainUserID() int64 {
+	if x != nil {
+		return x.MainUserID
+	}
+	return 0
+}
+
+func (x *FetchOutgoingMatchesV1Request) GetLimit() int32 {
+	if x != nil {
+		return x.Limit
+	}
+	return 0
+}
+
+func (x *FetchOutgoingMatchesV1Request) GetOffset() int32 {
+	if x != nil {
+		return x.Offset
+	}
+	return 0
+}
+
 type FetchOutgoingMatchesV1Response struct {
 	Matches []*matching.Match
 }
 
+func (x *FetchOutgoingMatchesV1Response) GetMatches() []*matching.Match {
+	if x != nil {
+		return x.Matches
+	}
+	return nil
+}
+
 func FetchOutgoingMatchesRequestToPB(req *FetchOutgoingMatchesV1Request) *desc.FetchOutgoingMatchesV1Request {
 	return &desc.FetchOutgoingMatchesV1Request{
-		MainUserId: req.MainUserID,
-		Limit:      req.Limit,
-		Offset:     req.Offset,
+		MainUserId: req.GetMainUserID(),
+		Limit:      req.GetLimit(),
+		Offset:     req.GetOffset(),
 	}
 }
 
@@ -33,11 +61,11 @@ func PBToFetchOutgoingMatchesRequest(req *desc.FetchOutgoingMatchesV1Request) *F
 
 func FetchOutgoingMatchesResponseToPB(resp *FetchOutgoingMatchesV1Response) *desc.FetchOutgoingMatchesV1Response {
 	return &desc.FetchOutgoingMatchesV1Response{
-		Match: matching.MatchSliceToPB(resp.Matches),
+		Match: matching.MatchSliceToPB(resp.GetMatches()),
 	}
 }
 
-func PBToFetchOutgoingMatchesResponseSlice(resp *desc.FetchOutgoingMatchesV1Response) *FetchOutgoingMatchesV1Response {
+func PBToFetchOutgoingMatchesResponse(resp *desc.FetchOutgoingMatchesV1Response) *FetchOutgoingMatchesV1Response {
 	return &FetchOutgoingMatchesV1Response{
 		Matches: matching.PBToMatchSlice(resp.GetMatch()),
 	}

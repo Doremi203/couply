@@ -1,13 +1,16 @@
 syntax = "proto3";
 
-package matcher;
+package search_service.v1;
 
-option go_package = "github.com/Doremi203/couply/backend/matcher/api/search-service/v1";
+option go_package = "github.com/Doremi203/Couply/backend/matcher/gen/api/search-service;search_service";
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "validate/validate.proto";
+import "api/common/v1/common.proto";
+import "api/user-service/v1/user_service.proto";
 
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
@@ -30,7 +33,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   }
 };
 
-service SearchingService {
+service SearchService {
   rpc CreateFilterV1 (CreateFilterV1Request) returns (CreateFilterV1Response) {
     option (google.api.http) = {
       post: "/v1/CreateFilterV1"
@@ -47,9 +50,217 @@ service SearchingService {
       }
     };
   }
+  rpc UpdateFilterV1 (UpdateFilterV1Request) returns (UpdateFilterV1Response) {
+    option (google.api.http) = {
+      post: "/v1/UpdateFilterV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Обновление фильтра";
+      description: "Принимает важные поля для обновления фильтра";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+  rpc GetFilterV1 (GetFilterV1Request) returns (GetFilterV1Response) {
+    option (google.api.http) = {
+      post: "/v1/GetFilterV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение фильтра";
+      description: "Принимает важные поля для получения фильтра";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+  rpc SearchUsersV1 (SearchUsersV1Request) returns (SearchUsersV1Response) {
+    option (google.api.http) = {
+      post: "/v1/SearchUsersV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Поиск пользователей по фильтру";
+      description: "Возвращает список пользователей, соответствующих фильтру текущего пользователя";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
-message CreateFilterV1Request {}
+message CreateFilterV1Request {
+  int64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64.gte = 0
+  ];
+  GenderPriority gender_priority = 2 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).enum.defined_only = true
+  ];
+  int32 min_age = 3 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 max_age = 4 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 min_height = 5 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  int32 max_height = 6 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  int32 distance = 7 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 1, lte: 100}
+  ];
+  common.v1.Goal goal = 8 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Zodiac zodiac = 9 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Education education = 10 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Children children = 11 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Alcohol alcohol = 12 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Smoking smoking = 13 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Interest interest = 14;
+  bool only_verified = 15;
+  bool only_premium = 16;
+}
 
-message CreateFilterV1Response {}
+message CreateFilterV1Response {
+  Filter filter = 1;
+}
 
+message UpdateFilterV1Request {
+  int64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64.gte = 0
+  ];
+  GenderPriority gender_priority = 2 [
+    (validate.rules).enum.defined_only = true
+  ];
+  int32 min_age = 3 [
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 max_age = 4 [
+    (validate.rules).int32 = {gte: 18, lte: 100}
+  ];
+  int32 min_height = 5 [
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  int32 max_height = 6 [
+    (validate.rules).int32 = {gte: 100, lte: 250}
+  ];
+  int32 distance = 7 [
+    (validate.rules).int32 = {gte: 1, lte: 100}
+  ];
+  common.v1.Goal goal = 8 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Zodiac zodiac = 9 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Education education = 10 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Children children = 11 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Alcohol alcohol = 12 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Smoking smoking = 13 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Interest interest = 14;
+  bool only_verified = 15;
+  bool only_premium = 16;
+}
+
+message UpdateFilterV1Response {
+  Filter filter = 1;
+}
+
+message GetFilterV1Request {
+  int64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64.gte = 0
+  ];
+}
+
+message GetFilterV1Response {
+  Filter filter = 1;
+}
+
+message SearchUsersV1Request {
+  int64 user_id = 1 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int64.gte = 0
+  ];
+  int32 offset = 2 [
+    (validate.rules).int32.gte = 0
+  ];
+  int32 limit = 3 [
+    (validate.rules).int32 = {gte: 1, lte: 100}
+  ];
+}
+
+message SearchUsersV1Response {
+  repeated user_service.v1.User users = 1;
+}
+
+message Filter {
+  int64 user_id = 1;
+  GenderPriority gender_priority = 2;
+  Range age_range = 3;
+  Range height_range = 4;
+  int32 distance = 5;
+  common.v1.Goal goal = 6;
+  common.v1.Zodiac zodiac = 7;
+  common.v1.Education education = 8;
+  common.v1.Children children = 9;
+  common.v1.Alcohol alcohol = 10;
+  common.v1.Smoking smoking = 11;
+  common.v1.Interest interest = 12;
+  bool only_verified = 13;
+  bool only_premium = 14;
+  google.protobuf.Timestamp created_at = 15;
+  google.protobuf.Timestamp updated_at = 16;
+}
+
+message Range {
+  int32 min = 1;
+  int32 max = 2;
+}
+
+enum GenderPriority {
+  GENDERPRIORITY_UNSPECIFIED = 0;
+  GENDERPRIORITY_MALE = 1;
+  GENDERPRIORITY_FEMALE = 2;
+  GENDERPRIORITY_ANY = 3;
+}

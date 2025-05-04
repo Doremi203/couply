@@ -3,10 +3,11 @@ package user_service
 import (
 	"time"
 
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user/interest"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
 type CreateUserV1Request struct {
@@ -15,41 +16,160 @@ type CreateUserV1Request struct {
 	Gender    user.Gender
 	Location  string
 	Bio       string
-	Goal      user.Goal
+	Goal      common.Goal
 	Interest  *interest.Interest
-	Zodiac    user.Zodiac
+	Zodiac    common.Zodiac
 	Height    int32
-	Education user.Education
-	Children  user.Children
-	Alcohol   user.Alcohol
-	Smoking   user.Smoking
+	Education common.Education
+	Children  common.Children
+	Alcohol   common.Alcohol
+	Smoking   common.Smoking
 	Hidden    bool
 	Verified  bool
 	Photos    []*user.Photo
+}
+
+func (x *CreateUserV1Request) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *CreateUserV1Request) GetAge() int32 {
+	if x != nil {
+		return x.Age
+	}
+	return 0
+}
+
+func (x *CreateUserV1Request) GetGender() user.Gender {
+	if x != nil {
+		return x.Gender
+	}
+	return user.Gender(0)
+}
+
+func (x *CreateUserV1Request) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+func (x *CreateUserV1Request) GetBio() string {
+	if x != nil {
+		return x.Bio
+	}
+	return ""
+}
+
+func (x *CreateUserV1Request) GetGoal() common.Goal {
+	if x != nil {
+		return x.Goal
+	}
+	return common.Goal(0)
+}
+
+func (x *CreateUserV1Request) GetInterest() *interest.Interest {
+	if x != nil {
+		return x.Interest
+	}
+	return nil
+}
+
+func (x *CreateUserV1Request) GetZodiac() common.Zodiac {
+	if x != nil {
+		return x.Zodiac
+	}
+	return common.Zodiac(0)
+}
+
+func (x *CreateUserV1Request) GetHeight() int32 {
+	if x != nil {
+		return x.Height
+	}
+	return 0
+}
+
+func (x *CreateUserV1Request) GetEducation() common.Education {
+	if x != nil {
+		return x.Education
+	}
+	return common.Education(0)
+}
+
+func (x *CreateUserV1Request) GetChildren() common.Children {
+	if x != nil {
+		return x.Children
+	}
+	return common.Children(0)
+}
+
+func (x *CreateUserV1Request) GetAlcohol() common.Alcohol {
+	if x != nil {
+		return x.Alcohol
+	}
+	return common.Alcohol(0)
+}
+
+func (x *CreateUserV1Request) GetSmoking() common.Smoking {
+	if x != nil {
+		return x.Smoking
+	}
+	return common.Smoking(0)
+}
+
+func (x *CreateUserV1Request) GetHidden() bool {
+	if x != nil {
+		return x.Hidden
+	}
+	return false
+}
+
+func (x *CreateUserV1Request) GetVerified() bool {
+	if x != nil {
+		return x.Verified
+	}
+	return false
+}
+
+func (x *CreateUserV1Request) GetPhotos() []*user.Photo {
+	if x != nil {
+		return x.Photos
+	}
+	return nil
 }
 
 type CreateUserV1Response struct {
 	User *user.User
 }
 
+func (x *CreateUserV1Response) GetUser() *user.User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 func CreateUserRequestToPB(req *CreateUserV1Request) *desc.CreateUserV1Request {
 	return &desc.CreateUserV1Request{
-		Name:      req.Name,
-		Age:       req.Age,
-		Gender:    user.GenderToPB(req.Gender),
-		Location:  req.Location,
-		Bio:       req.Bio,
-		Goal:      user.GoalToPB(req.Goal),
-		Interest:  interest.InterestToPB(req.Interest),
-		Zodiac:    user.ZodiacToPB(req.Zodiac),
-		Height:    req.Height,
-		Education: user.EducationToPB(req.Education),
-		Children:  user.ChildrenToPB(req.Children),
-		Alcohol:   user.AlcoholToPB(req.Alcohol),
-		Smoking:   user.SmokingToPB(req.Smoking),
-		Hidden:    req.Hidden,
-		Verified:  req.Verified,
-		Photos:    user.PhotoSliceToPB(req.Photos),
+		Name:      req.GetName(),
+		Age:       req.GetAge(),
+		Gender:    user.GenderToPB(req.GetGender()),
+		Location:  req.GetLocation(),
+		Bio:       req.GetBio(),
+		Goal:      common.GoalToPB(req.GetGoal()),
+		Interest:  interest.InterestToPB(req.GetInterest()),
+		Zodiac:    common.ZodiacToPB(req.GetZodiac()),
+		Height:    req.GetHeight(),
+		Education: common.EducationToPB(req.GetEducation()),
+		Children:  common.ChildrenToPB(req.GetChildren()),
+		Alcohol:   common.AlcoholToPB(req.GetAlcohol()),
+		Smoking:   common.SmokingToPB(req.GetSmoking()),
+		Hidden:    req.GetHidden(),
+		Verified:  req.GetVerified(),
+		Photos:    user.PhotoSliceToPB(req.GetPhotos()),
 	}
 }
 
@@ -60,14 +180,14 @@ func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 		Gender:    user.PBToGender(req.GetGender()),
 		Location:  req.GetLocation(),
 		Bio:       req.GetBio(),
-		Goal:      user.PBToGoal(req.GetGoal()),
+		Goal:      common.PBToGoal(req.GetGoal()),
 		Interest:  interest.PBToInterest(req.GetInterest()),
-		Zodiac:    user.PBToZodiac(req.GetZodiac()),
+		Zodiac:    common.PBToZodiac(req.GetZodiac()),
 		Height:    req.GetHeight(),
-		Education: user.PBToEducation(req.GetEducation()),
-		Children:  user.PBToChildren(req.GetChildren()),
-		Alcohol:   user.PBToAlcohol(req.GetAlcohol()),
-		Smoking:   user.PBToSmoking(req.GetSmoking()),
+		Education: common.PBToEducation(req.GetEducation()),
+		Children:  common.PBToChildren(req.GetChildren()),
+		Alcohol:   common.PBToAlcohol(req.GetAlcohol()),
+		Smoking:   common.PBToSmoking(req.GetSmoking()),
 		Hidden:    req.GetHidden(),
 		Verified:  req.GetVerified(),
 		Photos:    user.PBToPhotoSlice(req.GetPhotos()),
@@ -76,22 +196,22 @@ func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 
 func CreateUserRequestToUser(req *CreateUserV1Request) *user.User {
 	return user.NewUserBuilder().
-		SetName(req.Name).
-		SetAge(req.Age).
-		SetGender(req.Gender).
-		SetLocation(req.Location).
-		SetBIO(req.Bio).
-		SetGoal(req.Goal).
-		SetInterest(req.Interest).
-		SetZodiac(req.Zodiac).
-		SetHeight(req.Height).
-		SetEducation(req.Education).
-		SetChildren(req.Children).
-		SetAlcohol(req.Alcohol).
-		SetSmoking(req.Smoking).
-		SetHidden(req.Hidden).
-		SetVerified(req.Verified).
-		SetPhotos(req.Photos).
+		SetName(req.GetName()).
+		SetAge(req.GetAge()).
+		SetGender(req.GetGender()).
+		SetLocation(req.GetLocation()).
+		SetBIO(req.GetBio()).
+		SetGoal(req.GetGoal()).
+		SetInterest(req.GetInterest()).
+		SetZodiac(req.GetZodiac()).
+		SetHeight(req.GetHeight()).
+		SetEducation(req.GetEducation()).
+		SetChildren(req.GetChildren()).
+		SetAlcohol(req.GetAlcohol()).
+		SetSmoking(req.GetSmoking()).
+		SetHidden(req.GetHidden()).
+		SetVerified(req.GetVerified()).
+		SetPhotos(req.GetPhotos()).
 		SetCreatedAt(time.Now()).
 		SetUpdatedAt(time.Now()).
 		Build()
@@ -99,7 +219,7 @@ func CreateUserRequestToUser(req *CreateUserV1Request) *user.User {
 
 func CreateUserResponseToPB(resp *CreateUserV1Response) *desc.CreateUserV1Response {
 	return &desc.CreateUserV1Response{
-		User: user.UserToPB(resp.User),
+		User: user.UserToPB(resp.GetUser()),
 	}
 }
 

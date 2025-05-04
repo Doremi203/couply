@@ -9,7 +9,7 @@ import (
 
 func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.User, error) {
 	userSQL := `
-		INSERT INTO Users (name, age, gender, location, bio, goal, zodiac, height, education, children, alcohol,
+		INSERT INTO users (name, age, gender, location, bio, goal, zodiac, height, education, children, alcohol,
 		                   smoking, hidden, verified, created_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
 		RETURNING id

@@ -11,7 +11,7 @@ import (
 func (s *PgStorageMatching) FetchMatches(ctx context.Context, userID int64, limit, offset int32) ([]*matching.Match, error) {
 	matchSQL := `
 		SELECT *
-		FROM Matches
+		FROM matches
 		WHERE (main_user_id = $1 OR chosen_user_id = $1) AND approved = $2
 		LIMIT $3 OFFSET $4
 	`

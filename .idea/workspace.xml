@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: search users work now">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Docker.backend.couply_db: Compose Deployment.executor": "Run",
+    "Docker.backend.matcher debug.executor": "Run",
+    "Docker.backend: Compose Deployment.executor": "Run",
+    "Docker.user-service.couply_db: Compose Deployment.executor": "Run",
+    "Docker.user-service: Compose Deployment.executor": "Run",
+    "Go Build.go build github.com/Doremi203/Couply/backend/cmd.executor": "Run",
+    "Go Build.go build github.com/Doremi203/couply/backend/matcher/cmd/matcher.executor": "Run",
+    "Go Remote.matcher debug.executor": "Debug",
+    "Makefile Target..vendor-proto.executor": "Run",
+    "Makefile Target.bin-deps.executor": "Run",
+    "Makefile Target.deps.executor": "Run",
+    "Makefile Target.deps/linters.executor": "Run",
+    "Makefile Target.generate (1).executor": "Run",
+    "Makefile Target.generate.executor": "Run",
+    "Makefile Target.goose-add.executor": "Run",
+    "Makefile Target.goose-down.executor": "Run",
+    "Makefile Target.goose-up (1).executor": "Run",
+    "Makefile Target.goose-up.executor": "Run",
+    "Makefile Target.lint (1).executor": "Run",
+    "Makefile Target.lint.executor": "Run",
+    "Makefile Target.matcher/generate.executor": "Run",
+    "Makefile Target.matcher/lint.executor": "Run",
+    "Makefile Target.matcher/local-build.executor": "Run",
+    "Makefile Target.matcher/migrate/create.executor": "Run",
+    "Makefile Target.matcher/migrate/up.executor": "Run",
+    "Makefile Target.matcher/run.executor": "Run",
+    "Makefile Target.matcher/start.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "#7 on dkunashev/COUPLY-15",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/danilkunashev",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "go.sdk"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "redis",
+      "postgresql"
+    ],
+    "com.intellij.ide.scratch.LRUPopupBuilder$1/SQL Dialect": [
+      "PostgreSQL"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/internal/storage/facade/matching-service" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/matching-service" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/matcher/migrations" />
+      <recent name="$PROJECT_DIR$/backend/matcher/internal/domain/common" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/facade/matching-service" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/facade/user-service" />
+      <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/user" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Makefile Target.matcher/migrate/create">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="Couply" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/Doremi203/couply/backend/matcher/cmd/matcher" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Couply" />
+      <working_directory value="$PROJECT_DIR$/backend" />
+      <kind value="PACKAGE" />
+      <package value="github.com/Doremi203/couply/backend/matcher/cmd/matcher" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="matcher debug" type="GoRemoteDebugConfigurationType" factoryName="Go Remote" port="40000">
+      <option name="disconnectOption" value="ASK" />
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="backend.matcher debug" run_configuration_type="docker-deploy" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="Couply" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <configuration name="matcher/local-build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/local-build" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="matcher/migrate/create" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/migrate/create" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="matcher/run" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/run" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="matcher/start" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/start" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <configuration name="backend.matcher debug" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="commandLineOptions" value="--build" />
+          <option name="secondarySourceFiles">
+            <list>
+              <option value="backend/matcher/docker-compose.debug.yml" />
+            </list>
+          </option>
+          <option name="services">
+            <list>
+              <option value="matcher" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="backend/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Docker.backend.matcher debug" />
+      <item itemvalue="Go Build.go build github.com/Doremi203/couply/backend/matcher/cmd/matcher" />
+      <item itemvalue="Go Remote.matcher debug" />
+      <item itemvalue="Makefile Target.matcher/migrate/create" />
+      <item itemvalue="Makefile Target.matcher/local-build" />
+      <item itemvalue="Makefile Target.matcher/run" />
+      <item itemvalue="Makefile Target.matcher/start" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile Target.matcher/migrate/create" />
+        <item itemvalue="Makefile Target.matcher/start" />
+        <item itemvalue="Go Build.go build github.com/Doremi203/couply/backend/matcher/cmd/matcher" />
+        <item itemvalue="Makefile Target.matcher/local-build" />
+        <item itemvalue="Makefile Target.matcher/run" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-33c477a475b1-e0158606a674-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-241.18034.61" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-GO-241.18034.61" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[COUPLY-12]: feat: add main" />
+    <MESSAGE value="[COUPLY-12]: feat: add migrations" />
+    <MESSAGE value="[COUPLY-12]: feat: add domain entities" />
+    <MESSAGE value="[COUPLY-12]: feat: mkdir domain/interest" />
+    <MESSAGE value="[COUPLY-12]: feat: add main logic for create user" />
+    <MESSAGE value="[COUPLY-12]: fix: create user works now" />
+    <MESSAGE value="[COUPLY-12]: feat: add update user rpc" />
+    <MESSAGE value="[COUPLY-12]: feat: add delete user rpc; feat: different improvements" />
+    <MESSAGE value="[COUPLY-12]: feat: add matching service" />
+    <MESSAGE value="[COUPLY-12]: fix: go mod" />
+    <MESSAGE value="[COUPLY-12]: feat: add get user" />
+    <MESSAGE value="[COUPLY-12]: fix: diff fixes after testing" />
+    <MESSAGE value="[COUPLY-12]: feat: add gitignore" />
+    <MESSAGE value="[COUPLY-12]: feat: some filter entities" />
+    <MESSAGE value="[COUPLY-12]: feat: add .idea to gitignore" />
+    <MESSAGE value="[COUPLY-15]: fix: code generation works now; feat: update project structure; update filter entities" />
+    <MESSAGE value="[COUPLY-15]: feat: finish create filter rpc" />
+    <MESSAGE value="[COUPLY-15]: fix: interest migration is right now" />
+    <MESSAGE value="[COUPLY-15]: feat: better db structure for filters" />
+    <MESSAGE value="[COUPLY-15]: feat: add update filter rpc" />
+    <MESSAGE value="[COUPLY-15]: feat: register search service and fmt includes" />
+    <MESSAGE value="[COUPLY-15]: fix: merge conflicts; feat: use getters in dto" />
+    <MESSAGE value="[COUPLY-15]: feat: add get filter rpc" />
+    <MESSAGE value="[COUPLY-15]: feat: add search users rpc (didnt test, just code that might not work)" />
+    <MESSAGE value="[COUPLY-15]: feat: search users work now" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: search users work now" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>

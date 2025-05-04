@@ -125,4 +125,4 @@ matcher/migrate/down:
 	migrate -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" down -all
 
 matcher/migrate/create:
-	$(MIGRATE_CREATE) $(MATCHER_MIGRATIONS) $(name)
+	$(MIGRATE_CREATE) $(MATCHER_MIGRATIONS) alter_interests_value_type

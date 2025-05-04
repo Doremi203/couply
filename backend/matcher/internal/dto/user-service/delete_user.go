@@ -8,12 +8,19 @@ type DeleteUserV1Request struct {
 	ID int64
 }
 
+func (x *DeleteUserV1Request) GetID() int64 {
+	if x != nil {
+		return x.ID
+	}
+	return 0
+}
+
 type DeleteUserV1Response struct {
 }
 
 func DeleteUserRequestToPB(req *DeleteUserV1Request) *desc.DeleteUserV1Request {
 	return &desc.DeleteUserV1Request{
-		Id: req.ID,
+		Id: req.GetID(),
 	}
 }
 
