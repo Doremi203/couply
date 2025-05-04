@@ -61,7 +61,7 @@ func main() {
 		implMatchingService := matching_service.NewImplementation(useCaseMatchingService)
 
 		pgStorageSearch := search.NewPgStorageSearch(txManager)
-		storageFacadeSearch := search_service_facade.NewStorageFacadeSearch(txManager, pgStorageSearch)
+		storageFacadeSearch := search_service_facade.NewStorageFacadeSearch(txManager, pgStorageSearch, pgStorageUser)
 		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch)
 		implSearchService := search_service.NewImplementation(useCaseSearchService)
 

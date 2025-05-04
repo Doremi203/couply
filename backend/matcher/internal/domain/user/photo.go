@@ -15,13 +15,48 @@ type Photo struct {
 	UpdatedAt   time.Time `db:"updated_at"`
 }
 
+func (x *Photo) GetOrderNumber() int32 {
+	if x != nil {
+		return x.OrderNumber
+	}
+	return 0
+}
+
+func (x *Photo) GetURL() string {
+	if x != nil {
+		return x.URL
+	}
+	return ""
+}
+
+func (x *Photo) GetMimeType() string {
+	if x != nil {
+		return x.MimeType
+	}
+	return ""
+}
+
+func (x *Photo) GetUploadedAt() time.Time {
+	if x != nil {
+		return x.UploadedAt
+	}
+	return time.Time{}
+}
+
+func (x *Photo) GetUpdatedAt() time.Time {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return time.Time{}
+}
+
 func PhotoToPB(photo *Photo) *desc.Photo {
 	return &desc.Photo{
-		OrderNumber: photo.OrderNumber,
-		Url:         photo.URL,
-		MimeType:    photo.MimeType,
-		UploadedAt:  timestamppb.New(photo.UploadedAt),
-		UpdatedAt:   timestamppb.New(photo.UpdatedAt),
+		OrderNumber: photo.GetOrderNumber(),
+		Url:         photo.GetURL(),
+		MimeType:    photo.GetMimeType(),
+		UploadedAt:  timestamppb.New(photo.GetUploadedAt()),
+		UpdatedAt:   timestamppb.New(photo.GetUpdatedAt()),
 	}
 }
 

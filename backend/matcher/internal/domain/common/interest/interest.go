@@ -22,14 +22,56 @@ func NewInterest() *Interest {
 	}
 }
 
+func (x *Interest) GetSport() []Sport {
+	if x != nil {
+		return x.Sport
+	}
+	return nil
+}
+
+func (x *Interest) GetSelfDevelopment() []SelfDevelopment {
+	if x != nil {
+		return x.SelfDevelopment
+	}
+	return nil
+}
+
+func (x *Interest) GetArt() []Art {
+	if x != nil {
+		return x.Art
+	}
+	return nil
+}
+
+func (x *Interest) GetSocial() []Social {
+	if x != nil {
+		return x.Social
+	}
+	return nil
+}
+
+func (x *Interest) GetHobby() []Hobby {
+	if x != nil {
+		return x.Hobby
+	}
+	return nil
+}
+
+func (x *Interest) GetGastronomy() []Gastronomy {
+	if x != nil {
+		return x.Gastronomy
+	}
+	return nil
+}
+
 func InterestToPB(interest *Interest) *desc.Interest {
 	return &desc.Interest{
-		Sport:           SportSliceToPB(interest.Sport),
-		SelfDevelopment: SelfDevelopmentSliceToPB(interest.SelfDevelopment),
-		Art:             ArtSliceToPB(interest.Art),
-		Social:          SocialSliceToPB(interest.Social),
-		Hobby:           HobbySliceToPB(interest.Hobby),
-		Gastronomy:      GastronomySliceToPB(interest.Gastronomy),
+		Sport:           SportSliceToPB(interest.GetSport()),
+		SelfDevelopment: SelfDevelopmentSliceToPB(interest.GetSelfDevelopment()),
+		Art:             ArtSliceToPB(interest.GetArt()),
+		Social:          SocialSliceToPB(interest.GetSocial()),
+		Hobby:           HobbySliceToPB(interest.GetHobby()),
+		Gastronomy:      GastronomySliceToPB(interest.GetGastronomy()),
 	}
 }
 

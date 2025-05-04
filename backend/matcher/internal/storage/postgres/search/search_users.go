@@ -73,9 +73,9 @@ func buildSearchQuery(
 ) (string, []any, error) {
 	qb := baseQuery().Where(baseConditions(filter))
 
-	applyMainFilters(qb, filter)
-	applyInterestFilters(qb, interests)
-	applyPagination(qb, page, limit)
+	qb = applyMainFilters(qb, filter)
+	qb = applyInterestFilters(qb, interests)
+	qb = applyPagination(qb, page, limit)
 
 	return qb.ToSql()
 }
@@ -102,7 +102,7 @@ func applyMainFilters(qb sq.SelectBuilder, filter *search.Filter) sq.SelectBuild
 	qb = applyRangeFilter(qb, "height", filter.MinHeight, filter.MaxHeight)
 
 	if filter.GenderPriority != 3 { // 3 - ANY
-		qb = qb.Where(sq.Eq{"gender": filter.GenderPriority})
+		qb = qb.Where(sq.Eq{"gender": int(filter.GenderPriority)})
 	}
 
 	filters := map[string]int{
@@ -123,7 +123,6 @@ func applyMainFilters(qb sq.SelectBuilder, filter *search.Filter) sq.SelectBuild
 	return qb
 }
 
-// applyRangeFilter добавляет фильтр по диапазону
 func applyRangeFilter(
 	qb sq.SelectBuilder,
 	field string,
@@ -138,11 +137,10 @@ func applyRangeFilter(
 	return qb
 }
 
-// applyInterestFilters добавляет условия по интересам
-func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) {
+func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) sq.SelectBuilder {
 	filterInterests := extractInterestPairs(interests)
 	if len(filterInterests) == 0 {
-		return
+		return qb
 	}
 
 	sub := sq.Select("i.user_id").
@@ -152,9 +150,10 @@ func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) {
 		Having("COUNT(DISTINCT i.type, i.value) = ?", len(filterInterests))
 
 	qb.Where(sq.Expr("EXISTS (?)", sub))
+
+	return qb
 }
 
-// extractInterestPairs извлекает пары (type, value) из интересов
 func extractInterestPairs(interests *interest.Interest) []struct {
 	Type  string
 	Value int
@@ -183,7 +182,6 @@ func extractInterestPairs(interests *interest.Interest) []struct {
 	return pairs
 }
 
-// buildInterestConditions создает условия для фильтрации интересов
 func buildInterestConditions(pairs []struct {
 	Type  string
 	Value int
@@ -195,16 +193,15 @@ func buildInterestConditions(pairs []struct {
 			sq.Eq{"value": p.Value},
 		})
 	}
-	return sq.Or(conditions...)
+	return sq.Or(conditions)
 }
 
-// applyPagination добавляет пагинацию
-func applyPagination(qb sq.SelectBuilder, page, limit int32) sq.SelectBuilder {
+func applyPagination(qb sq.SelectBuilder, offset, limit int32) sq.SelectBuilder {
 	if limit > 0 {
 		qb = qb.Limit(uint64(limit))
 	}
-	if page > 1 {
-		qb = qb.Offset(uint64((page - 1) * limit))
+	if offset > 0 {
+		qb = qb.Offset(uint64(offset))
 	}
 	return qb.OrderBy("created_at DESC")
 }

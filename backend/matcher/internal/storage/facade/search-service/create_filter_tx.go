@@ -11,12 +11,12 @@ func (f *StorageFacadeSearch) CreateFilterTx(ctx context.Context, newFilter *sea
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.storage.AddFilter(ctxTx, newFilter)
+		err = f.searchStorage.AddFilter(ctxTx, newFilter)
 		if err != nil {
 			return fmt.Errorf("failed to add filter: %w", err)
 		}
 
-		if err = f.storage.AddFilterInterests(ctxTx, newFilter.UserID, newFilter.Interest); err != nil {
+		if err = f.searchStorage.AddFilterInterests(ctxTx, newFilter.UserID, newFilter.Interest); err != nil {
 			return fmt.Errorf("failed to add filter interests: %w", err)
 		}
 

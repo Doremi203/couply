@@ -9,15 +9,15 @@ import (
 
 func (f *StorageFacadeSearch) UpdateFilterTx(ctx context.Context, filter *search.Filter) (*search.Filter, error) {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		if err := f.storage.UpdateFilter(ctxTx, filter); err != nil {
+		if err := f.searchStorage.UpdateFilter(ctxTx, filter); err != nil {
 			return fmt.Errorf("failed to update filter: %w", err)
 		}
 
-		if err := f.storage.DeleteFilterInterests(ctxTx, filter.UserID); err != nil {
+		if err := f.searchStorage.DeleteFilterInterests(ctxTx, filter.UserID); err != nil {
 			return fmt.Errorf("failed to delete old filter interests: %w", err)
 		}
 
-		if err := f.storage.AddFilterInterests(ctxTx, filter.UserID, filter.Interest); err != nil {
+		if err := f.searchStorage.AddFilterInterests(ctxTx, filter.UserID, filter.Interest); err != nil {
 			return fmt.Errorf("failed to add new filter interests: %w", err)
 		}
 

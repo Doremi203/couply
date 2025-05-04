@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package user_service.v1;
 
-option go_package = "github.com/Doremi203/couply/backend/matcher/gen/api/user-service;user_service";
+option go_package = "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1;user_service";
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";

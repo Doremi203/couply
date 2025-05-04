@@ -32,7 +32,7 @@ func (s *PgStorageSearch) GetFilterInterests(ctx context.Context, userID int64) 
 func (s *PgStorageSearch) queryFilterInterests(ctx context.Context, userID int64) (pgx.Rows, error) {
 	interestsSQL := `
         SELECT type, value 
-        FROM interests 
+        FROM filter_interests 
         WHERE user_id = $1
         ORDER BY type 
     `

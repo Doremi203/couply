@@ -4,18 +4,42 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: add get filter rpc">
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/search_users.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/search_users.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/search_users.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/search_users.go" afterDir="false" />
+    <list default="true" id="41554faa-69e3-40c3-b6bd-32454447c5c3" name="Changes" comment="[COUPLY-15]: feat: search users work now">
+      <change afterPath="$PROJECT_DIR$/backend/matcher/migrations/20250504185125_alter_interests_value_type.down.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/matcher/migrations/20250504185125_alter_interests_value_type.up.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/backend/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/backend/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/api/search-service/v1/search_service.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/api/user-service/v1/user_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/api/user-service/v1/user_service.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/interest.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/common/interest/interest.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/matching/match.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/matching/match.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/search/filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/search/filter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/photo.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/user/photo.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/matcher/internal/domain/user/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/domain/user/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/create_match.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/create_match.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_incoming_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_incoming_matches.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_matches.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_outcoming_matches.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/fetch_outcoming_matches.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/update_match.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/matching-service/update_match.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/create_filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/create_filter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/get_filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/get_filter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/search_users.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/search_users.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/update_filter.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/search-service/update_filter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/create_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/create_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/delete_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/delete_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/get_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/get_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/update_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/dto/user-service/update_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/create_filter_tx.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/create_filter_tx.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/get_filter_tx.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/get_filter_tx.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/usecase.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/usecase/search-service/usecase.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/search_users.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/search_users_tx.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/storage.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/storage.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/update_filter_tx.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/facade/search-service/update_filter_tx.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/get_filter_interests.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/get_filter_interests.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/search_users.go" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/internal/storage/postgres/search/search_users.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/matcher/migrations/20250104192523_create_interests_table.up.sql" beforeDir="false" afterPath="$PROJECT_DIR$/backend/matcher/migrations/20250104192523_create_interests_table.up.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +54,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.24.2/libexec" />
+  <component name="GOROOT" url="file:///opt/homebrew/opt/go/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -78,10 +102,13 @@
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
     "Docker.backend.couply_db: Compose Deployment.executor": "Run",
+    "Docker.backend.matcher debug.executor": "Run",
     "Docker.backend: Compose Deployment.executor": "Run",
     "Docker.user-service.couply_db: Compose Deployment.executor": "Run",
     "Docker.user-service: Compose Deployment.executor": "Run",
     "Go Build.go build github.com/Doremi203/Couply/backend/cmd.executor": "Run",
+    "Go Build.go build github.com/Doremi203/couply/backend/matcher/cmd/matcher.executor": "Run",
+    "Go Remote.matcher debug.executor": "Debug",
     "Makefile Target..vendor-proto.executor": "Run",
     "Makefile Target.bin-deps.executor": "Run",
     "Makefile Target.deps.executor": "Run",
@@ -113,7 +140,7 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "go.sdk"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
@@ -132,14 +159,14 @@
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/backend/matcher/migrations" />
       <recent name="$PROJECT_DIR$/backend/matcher/internal/domain/common" />
       <recent name="$PROJECT_DIR$/backend/internal/storage/facade/matching-service" />
       <recent name="$PROJECT_DIR$/backend/internal/storage/facade/user-service" />
       <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/user" />
-      <recent name="$PROJECT_DIR$/backend/internal/storage/postgres/matching-service" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.matcher/generate">
+  <component name="RunManager" selected="Makefile Target.matcher/migrate/create">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="Couply" />
       <working_directory value="$PROJECT_DIR$" />
@@ -147,6 +174,21 @@
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/Doremi203/couply/backend/matcher/cmd/matcher" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Couply" />
+      <working_directory value="$PROJECT_DIR$/backend" />
+      <kind value="PACKAGE" />
+      <package value="github.com/Doremi203/couply/backend/matcher/cmd/matcher" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/backend/matcher/cmd/matcher/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="matcher debug" type="GoRemoteDebugConfigurationType" factoryName="Go Remote" port="40000">
+      <option name="disconnectOption" value="ASK" />
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="backend.matcher debug" run_configuration_type="docker-deploy" />
+      </method>
     </configuration>
     <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
       <module name="Couply" />
@@ -157,20 +199,14 @@
       <framework value="gotest" />
       <method v="2" />
     </configuration>
-    <configuration name="matcher/generate" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/generate" workingDirectory="" arguments="">
+    <configuration name="matcher/local-build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/local-build" workingDirectory="" arguments="">
         <envs />
       </makefile>
       <method v="2" />
     </configuration>
-    <configuration name="matcher/lint" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/lint" workingDirectory="" arguments="">
-        <envs />
-      </makefile>
-      <method v="2" />
-    </configuration>
-    <configuration name="matcher/migrate/up" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
-      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/migrate/up" workingDirectory="" arguments="">
+    <configuration name="matcher/migrate/create" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/backend/Makefile" target="matcher/migrate/create" workingDirectory="" arguments="">
         <envs />
       </makefile>
       <method v="2" />
@@ -193,20 +229,42 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <configuration name="backend.matcher debug" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+      <deployment type="docker-compose.yml">
+        <settings>
+          <option name="envFilePath" value="" />
+          <option name="commandLineOptions" value="--build" />
+          <option name="secondarySourceFiles">
+            <list>
+              <option value="backend/matcher/docker-compose.debug.yml" />
+            </list>
+          </option>
+          <option name="services">
+            <list>
+              <option value="matcher" />
+            </list>
+          </option>
+          <option name="sourceFilePath" value="backend/docker-compose.yml" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <list>
-      <item itemvalue="Makefile Target.matcher/generate" />
-      <item itemvalue="Makefile Target.matcher/lint" />
-      <item itemvalue="Makefile Target.matcher/migrate/up" />
+      <item itemvalue="Docker.backend.matcher debug" />
+      <item itemvalue="Go Build.go build github.com/Doremi203/couply/backend/matcher/cmd/matcher" />
+      <item itemvalue="Go Remote.matcher debug" />
+      <item itemvalue="Makefile Target.matcher/migrate/create" />
+      <item itemvalue="Makefile Target.matcher/local-build" />
       <item itemvalue="Makefile Target.matcher/run" />
       <item itemvalue="Makefile Target.matcher/start" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile Target.matcher/generate" />
-        <item itemvalue="Makefile Target.matcher/lint" />
-        <item itemvalue="Makefile Target.matcher/migrate/up" />
-        <item itemvalue="Makefile Target.matcher/run" />
+        <item itemvalue="Makefile Target.matcher/migrate/create" />
         <item itemvalue="Makefile Target.matcher/start" />
+        <item itemvalue="Go Build.go build github.com/Doremi203/couply/backend/matcher/cmd/matcher" />
+        <item itemvalue="Makefile Target.matcher/local-build" />
+        <item itemvalue="Makefile Target.matcher/run" />
       </list>
     </recent_temporary>
   </component>
@@ -234,8 +292,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[COUPLY-12]: fix: Makefile; feat: generate code based on user_service.proto" />
-    <MESSAGE value="[COUPLY-12]: feat: add template" />
     <MESSAGE value="[COUPLY-12]: feat: add main" />
     <MESSAGE value="[COUPLY-12]: feat: add migrations" />
     <MESSAGE value="[COUPLY-12]: feat: add domain entities" />
@@ -259,7 +315,9 @@
     <MESSAGE value="[COUPLY-15]: feat: register search service and fmt includes" />
     <MESSAGE value="[COUPLY-15]: fix: merge conflicts; feat: use getters in dto" />
     <MESSAGE value="[COUPLY-15]: feat: add get filter rpc" />
-    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: add get filter rpc" />
+    <MESSAGE value="[COUPLY-15]: feat: add search users rpc (didnt test, just code that might not work)" />
+    <MESSAGE value="[COUPLY-15]: feat: search users work now" />
+    <option name="LAST_COMMIT_MESSAGE" value="[COUPLY-15]: feat: search users work now" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

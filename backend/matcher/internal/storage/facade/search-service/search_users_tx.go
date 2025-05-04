@@ -11,25 +11,34 @@ import (
 func (f *StorageFacadeSearch) SearchUsersTx(ctx context.Context, userID int64, page, limit int32) ([]*user.User, error) {
 	var (
 		fil   *search.Filter
-		i     *interest.Interest
+		filI  *interest.Interest
 		users []*user.User
 		err   error
 	)
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		fil, err = f.storage.GetFilter(ctxTx, userID)
+		fil, err = f.searchStorage.GetFilter(ctxTx, userID)
 		if err != nil {
 			return fmt.Errorf("SearchUsersTx: get user failed: %w", err)
 		}
 
-		i, err = f.storage.GetFilterInterests(ctxTx, userID)
+		filI, err = f.searchStorage.GetFilterInterests(ctxTx, userID)
 		if err != nil {
 			return fmt.Errorf("SearchUsersTx: get interests failed: %w", err)
 		}
 
-		users, err = f.storage.SearchUsers(ctx, fil, i, page, limit)
+		users, err = f.searchStorage.SearchUsers(ctx, fil, filI, page, limit)
 		if err != nil {
 			return fmt.Errorf("SearchUsersTx: search failed: %w", err)
+		}
+
+		for _, u := range users {
+			userInterest, err := f.userStorage.GetInterests(ctx, u.GetID())
+			if err != nil {
+				return fmt.Errorf("SearchUsersTx: get interests failed: %w", err)
+			}
+
+			u.Interest = userInterest
 		}
 
 		return nil

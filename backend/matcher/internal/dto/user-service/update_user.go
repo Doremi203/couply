@@ -30,29 +30,155 @@ type UpdateUserV1Request struct {
 	Photos    []*user.Photo
 }
 
+func (x *UpdateUserV1Request) GetID() int64 {
+	if x != nil {
+		return x.ID
+	}
+	return 0
+}
+
+func (x *UpdateUserV1Request) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *UpdateUserV1Request) GetAge() int32 {
+	if x != nil {
+		return x.Age
+	}
+	return 0
+}
+
+func (x *UpdateUserV1Request) GetGender() user.Gender {
+	if x != nil {
+		return x.Gender
+	}
+	return user.Gender(0)
+}
+
+func (x *UpdateUserV1Request) GetLocation() string {
+	if x != nil {
+		return x.Location
+	}
+	return ""
+}
+
+func (x *UpdateUserV1Request) GetBio() string {
+	if x != nil {
+		return x.Bio
+	}
+	return ""
+}
+
+func (x *UpdateUserV1Request) GetGoal() common.Goal {
+	if x != nil {
+		return x.Goal
+	}
+	return common.Goal(0)
+}
+
+func (x *UpdateUserV1Request) GetInterest() *interest.Interest {
+	if x != nil {
+		return x.Interest
+	}
+	return nil
+}
+
+func (x *UpdateUserV1Request) GetZodiac() common.Zodiac {
+	if x != nil {
+		return x.Zodiac
+	}
+	return common.Zodiac(0)
+}
+
+func (x *UpdateUserV1Request) GetHeight() int32 {
+	if x != nil {
+		return x.Height
+	}
+	return 0
+}
+
+func (x *UpdateUserV1Request) GetEducation() common.Education {
+	if x != nil {
+		return x.Education
+	}
+	return common.Education(0)
+}
+
+func (x *UpdateUserV1Request) GetChildren() common.Children {
+	if x != nil {
+		return x.Children
+	}
+	return common.Children(0)
+}
+
+func (x *UpdateUserV1Request) GetAlcohol() common.Alcohol {
+	if x != nil {
+		return x.Alcohol
+	}
+	return common.Alcohol(0)
+}
+
+func (x *UpdateUserV1Request) GetSmoking() common.Smoking {
+	if x != nil {
+		return x.Smoking
+	}
+	return common.Smoking(0)
+}
+
+func (x *UpdateUserV1Request) GetHidden() bool {
+	if x != nil {
+		return x.Hidden
+	}
+	return false
+}
+
+func (x *UpdateUserV1Request) GetVerified() bool {
+	if x != nil {
+		return x.Verified
+	}
+	return false
+}
+
+func (x *UpdateUserV1Request) GetPhotos() []*user.Photo {
+	if x != nil {
+		return x.Photos
+	}
+	return nil
+}
+
 type UpdateUserV1Response struct {
 	User *user.User
 }
 
+func (x *UpdateUserV1Response) GetUser() *user.User {
+	if x != nil {
+		return x.User
+	}
+	return nil
+}
+
 func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
 	return &desc.UpdateUserV1Request{
-		Id:        req.ID,
-		Name:      req.Name,
-		Age:       req.Age,
-		Gender:    user.GenderToPB(req.Gender),
-		Location:  req.Location,
-		Bio:       req.Bio,
-		Goal:      common.GoalToPB(req.Goal),
-		Interest:  interest.InterestToPB(req.Interest),
-		Zodiac:    common.ZodiacToPB(req.Zodiac),
-		Height:    req.Height,
-		Education: common.EducationToPB(req.Education),
-		Children:  common.ChildrenToPB(req.Children),
-		Alcohol:   common.AlcoholToPB(req.Alcohol),
-		Smoking:   common.SmokingToPB(req.Smoking),
-		Hidden:    req.Hidden,
-		Verified:  req.Verified,
-		Photos:    user.PhotoSliceToPB(req.Photos),
+		Id:        req.GetID(),
+		Name:      req.GetName(),
+		Age:       req.GetAge(),
+		Gender:    user.GenderToPB(req.GetGender()),
+		Location:  req.GetLocation(),
+		Bio:       req.GetBio(),
+		Goal:      common.GoalToPB(req.GetGoal()),
+		Interest:  interest.InterestToPB(req.GetInterest()),
+		Zodiac:    common.ZodiacToPB(req.GetZodiac()),
+		Height:    req.GetHeight(),
+		Education: common.EducationToPB(req.GetEducation()),
+		Children:  common.ChildrenToPB(req.GetChildren()),
+		Alcohol:   common.AlcoholToPB(req.GetAlcohol()),
+		Smoking:   common.SmokingToPB(req.GetSmoking()),
+		Hidden:    req.GetHidden(),
+		Verified:  req.GetVerified(),
+		Photos:    user.PhotoSliceToPB(req.GetPhotos()),
 	}
 }
 
@@ -80,30 +206,30 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 
 func UpdateUserRequestToUser(req *UpdateUserV1Request) *user.User {
 	return user.NewUserBuilder().
-		SetID(req.ID).
-		SetName(req.Name).
-		SetAge(req.Age).
-		SetGender(req.Gender).
-		SetLocation(req.Location).
-		SetBIO(req.Bio).
-		SetGoal(req.Goal).
-		SetInterest(req.Interest).
-		SetZodiac(req.Zodiac).
-		SetHeight(req.Height).
-		SetEducation(req.Education).
-		SetChildren(req.Children).
-		SetAlcohol(req.Alcohol).
-		SetSmoking(req.Smoking).
-		SetHidden(req.Hidden).
-		SetVerified(req.Verified).
-		SetPhotos(req.Photos).
+		SetID(req.GetID()).
+		SetName(req.GetName()).
+		SetAge(req.GetAge()).
+		SetGender(req.GetGender()).
+		SetLocation(req.GetLocation()).
+		SetBIO(req.GetBio()).
+		SetGoal(req.GetGoal()).
+		SetInterest(req.GetInterest()).
+		SetZodiac(req.GetZodiac()).
+		SetHeight(req.GetHeight()).
+		SetEducation(req.GetEducation()).
+		SetChildren(req.GetChildren()).
+		SetAlcohol(req.GetAlcohol()).
+		SetSmoking(req.GetSmoking()).
+		SetHidden(req.GetHidden()).
+		SetVerified(req.GetVerified()).
+		SetPhotos(req.GetPhotos()).
 		SetUpdatedAt(time.Now()).
 		Build()
 }
 
 func UpdateUserResponseToPB(resp *UpdateUserV1Response) *desc.UpdateUserV1Response {
 	return &desc.UpdateUserV1Response{
-		User: user.UserToPB(resp.User),
+		User: user.UserToPB(resp.GetUser()),
 	}
 }
 

@@ -15,12 +15,12 @@ func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID int64) (*s
 	)
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		fil, err = f.storage.GetFilter(ctxTx, userID)
+		fil, err = f.searchStorage.GetFilter(ctxTx, userID)
 		if err != nil {
 			return fmt.Errorf("GetFilterTx: get user failed: %w", err)
 		}
 
-		i, err = f.storage.GetFilterInterests(ctxTx, userID)
+		i, err = f.searchStorage.GetFilterInterests(ctxTx, userID)
 		if err != nil {
 			return fmt.Errorf("GetFilterTx: get interests failed: %w", err)
 		}
