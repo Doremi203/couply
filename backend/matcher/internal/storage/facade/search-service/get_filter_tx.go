@@ -3,6 +3,7 @@ package search_service
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 )

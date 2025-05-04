@@ -2,6 +2,7 @@ package search_service
 
 import (
 	"context"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
 	"google.golang.org/grpc/codes"
