@@ -57,17 +57,17 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         onVerificationRequest={onVerificationRequest}
       />
 
-      <ProfileSection title="Photos">
+      <ProfileSection title="Фото">
         <PhotoGallery photos={profileData.photos} />
       </ProfileSection>
 
-      <ProfileSection title="About Me">
+      <ProfileSection title="Обо мне">
         <p>{profileData.about}</p>
       </ProfileSection>
 
-      <ProfileSection title="Basic Information">
+      {/* <ProfileSection title="Basic Information">
         <InfoGrid infoItems={basicInfoItems} />
-      </ProfileSection>
+      </ProfileSection> */}
 
       <ProfileSection title="Interests">
         <TagsList items={profileData.interests} />
@@ -75,14 +75,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
       <ProfileSection title="Music">
         <TagsList items={profileData.music} />
-      </ProfileSection>
-
-      <ProfileSection title="Movies">
-        <TagsList items={profileData.movies} />
-      </ProfileSection>
-
-      <ProfileSection title="Books">
-        <TagsList items={profileData.books} />
       </ProfileSection>
 
       <ProfileSection title="Hobbies">

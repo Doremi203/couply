@@ -21,27 +21,37 @@
   --button-active-background: #202c83;
   --button-active-color: #ffffff;
   --shadow-color: rgba(0, 0, 0, 0.05);
+  --border-color: #ccc;
+  --text-input: #fff;
+  --text-input-border: #e0e0e0;
+  --icon-color: rgba(255, 255, 255, 0.8);
+  --custom-input: #f5f7fa;
 }
 
 /* Dark theme variables */
 body[data-theme='dark'] {
-  --background-color: #000000;
+  --background-color: #151515;
   --text-color: #ffffff;
   --secondary-text-color: #cccccc;
   --tertiary-text-color: #999999;
-  --primary-color: #4fd1c5;
-  --secondary-color: #38b2ac;
-  --section-background: #121212;
+  --primary-color: #2435b2;
+  --secondary-color: #6c5ce7;
+  --section-background: #202020;
   --border-color: #222222;
-  --tag-background: #222222;
+  --tag-background: #3b3a3a;
   --tag-color: #ffffff;
-  --header-background: #4fd1c5;
-  --header-text-color: #ffffff;
-  --button-background: #222222;
+  --header-background: #2435b2;
+  --header-text-color: #040404;
+  --button-background: #3b3a3a;
   --button-color: #cccccc;
-  --button-active-background: #4fd1c5;
+  --button-active-background: #202c83;
   --button-active-color: #ffffff;
   --shadow-color: rgba(0, 0, 0, 0.4);
+  --border-color: #7b7a7a;
+  --text-input: #3b3a3a;
+  --text-input-border: #3b3a3a;
+  --icon-color: #7b7a7a;
+  --custom-input: #3b3a3a;
 }
 
 /*a {

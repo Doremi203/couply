@@ -1,6 +1,6 @@
 .editSection {
   margin-top: 25px;
-  background-color: white;
+  background-color: var(--section-background);
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
@@ -14,7 +14,7 @@
   margin-bottom: 15px;
   font-size: 18px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-color);
 }
 
 .textareaInput {
@@ -22,7 +22,7 @@
   min-height: 100px;
   max-width: 100%;
   padding: 15px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--text-input-border);
   border-radius: 15px;
   font-family: inherit;
   font-size: 16px;
@@ -32,8 +32,8 @@
   transition:
     border-color 0.2s,
     box-shadow 0.2s;
-  background-color: #fff;
-  color: #333;
+  background-color: var(--text-input);
+  color: var(--text-color);
   line-height: 1.5;
   box-sizing: border-box;
   overflow: hidden;

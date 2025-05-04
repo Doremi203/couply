@@ -94,7 +94,6 @@ export const LikesPage = () => {
           // matchImage={matchedProfile.user.imageUrl}
           matchImage="djdj"
           matchName={matchedProfile.user.name}
-          onSendMessage={handleSendMessageAndSwitchTab}
           onKeepSwiping={handleKeepSwiping}
         />
       )}

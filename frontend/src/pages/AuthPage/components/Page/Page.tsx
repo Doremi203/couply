@@ -84,13 +84,6 @@ export const AuthPage = () => {
           />
 
           <ButtonWithIcon
-            onClick={handlePhoneLogin}
-            icon={<img src="phone.png" width="20px" height="20px" alt="Phone" />}
-            text="login with phone"
-            disabled={isLoading}
-          />
-
-          <ButtonWithIcon
             onClick={handleEmailLogin}
             icon={<EmailIcon style={{ width: '20px', height: '20px' }} />}
             text="login with email"

@@ -35,9 +35,6 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <IconButton onClick={onVisibilityToggle}>
           {isProfileHidden ? <VisibilityOffIcon /> : <VisibilityIcon />}
         </IconButton>
-        <IconButton onClick={onActivityClick} touchFriendly={true}>
-          <HistoryIcon />
-        </IconButton>
         <ThemeToggle />
       </div>
       <div className={styles.previewButtonContainer}>

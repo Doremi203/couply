@@ -528,6 +528,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
     setTouchEnd(null);
   };
 
+  console.log('widget');
+
   return (
     <div
       className={styles.profileViewContainer}

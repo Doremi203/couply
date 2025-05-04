@@ -21,7 +21,6 @@ body {
   overflow: hidden;
   height: 100vh; /* Фиксированная высота на весь экран */
   margin: 0;
-  padding: 0;
 }
 
 .personCard {
@@ -33,7 +32,7 @@ body {
   justify-content: space-between;
   align-items: center;
   position: relative;
-  margin-top: 1.5rem;
+  /* margin-top: 1.5rem; */
   padding: 0 1rem;
   max-width: 1200px;
   margin-left: auto;

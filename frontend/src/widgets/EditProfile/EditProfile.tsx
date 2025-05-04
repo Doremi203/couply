@@ -68,7 +68,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         onAddPhotoClick={() => handleCameraClick(false)}
       />
 
-      <BasicInfoForm profileData={profileData} onInputChange={onInputChange} />
+      {/* <BasicInfoForm profileData={profileData} onInputChange={onInputChange} /> */}
 
       <AboutMeSection about={profileData.about} onInputChange={onInputChange} />
 
