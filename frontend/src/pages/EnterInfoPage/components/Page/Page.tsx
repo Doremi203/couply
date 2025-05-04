@@ -112,7 +112,7 @@ export const EnterInfoPage = () => {
     if (currentStep > 0) {
       setCurrentStep(prevStep => prevStep - 1);
     } else {
-      navigate('/');
+      navigate('/auth');
     }
   };
 

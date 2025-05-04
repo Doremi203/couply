@@ -11,12 +11,13 @@ import { LikesPage } from './pages/LikesPage';
 import LoginPage from './pages/LoginPage';
 import { ProfilePage } from './pages/ProfilePage';
 import RegistrationPage from './pages/RegistrationPage';
+import { SplashPage } from './pages/SplashPage';
 import { ThemeProvider } from './shared/lib/context/ThemeContext';
 import { usePushNotifications } from './shared/lib/hooks/usePushNotifications';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/auth',
     element: <AuthPage />,
   },
   {
@@ -31,10 +32,10 @@ const router = createBrowserRouter([
     path: 'enterInfo',
     element: <EnterInfoPage />,
   },
-  // {
-  //   path: '/',
-  //   element: <SplashPage />,
-  // },
+  {
+    path: '/',
+    element: <SplashPage />,
+  },
   {
     path: 'home',
     element: <HomePage key="home-page" />,

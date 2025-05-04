@@ -36,7 +36,7 @@ export const RegistrationPage = () => {
   const [register, { isLoading }] = useRegisterMutation();
 
   const goBack = () => {
-    navigate('/');
+    navigate('/auth');
   };
 
   const validateForm = () => {
