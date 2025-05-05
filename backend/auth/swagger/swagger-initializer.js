@@ -3,6 +3,7 @@ window.onload = function() {
     // Можно указать несколько JSON-файлов и дать им названия
     urls: [
       { url: "api/registration/registration.swagger.json", name: "Registration API" },
+      { url: "api/login/login.swagger.json", name: "Login API" },
     ],
     dom_id: '#swagger-ui',
     deepLinking: true,

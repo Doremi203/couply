@@ -31,8 +31,8 @@ services:
 
   auth:
     build:
-      context: auth
-      dockerfile: dev.Dockerfile
+      context: .
+      dockerfile: auth/dev.Dockerfile
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs

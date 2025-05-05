@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package login;
+
+option go_package = "github.com/Doremi203/couply/backend/auth/api/login";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service Login {
+  rpc BasicLoginV1(BasicLoginRequestV1) returns (BasicLoginResponseV1) {
+    option (google.api.http) = {
+      post: "/v1/login/basic"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Вход с помощью почты/телефона и пароля";
+      description: "Выдает токен пользователя в обмен на почту/телефон и пароль";
+    };
+  }
+}
+
+message BasicLoginRequestV1 {
+  string email = 1;
+  string password = 2;
+}
+
+message BasicLoginResponseV1 {
+  string token = 1;
+  int32 expires_in = 2;
+}

@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/token"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
 	userpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
@@ -45,15 +46,24 @@ func main() {
 
 		userRepo := userpostgres.NewRepo(dbClient)
 
-		registrationUseCase := usecase.NewRegistration(
-			userRepo,
-			pswrd.NewDefaultHasher(
-				salt.DefaultProvider{},
-				argon.V2Provider{},
-			),
-			uuid.DefaultProvider{},
+		passwordHasher := pswrd.NewDefaultHasher(
+			salt.DefaultProvider{},
+			argon.V2Provider{},
 		)
 
+		jwtTokenConfig := token.JWTConfig{}
+		err = app.Config.ReadSection("jwt", &jwtTokenConfig)
+		if err != nil {
+			return err
+		}
+
+		tokenIssuer := token.NewJWTIssuer(jwtTokenConfig)
+
+		registrationUseCase := usecase.NewRegistration(
+			userRepo,
+			passwordHasher,
+			uuid.DefaultProvider{},
+		)
 		registrationService := grpc.NewRegistrationService(
 			registrationUseCase,
 			app.Log,
@@ -61,8 +71,18 @@ func main() {
 			idempotencypostgres.NewRepo(dbClient),
 		)
 
-		app.RegisterGRPCServices(registrationService)
-		app.AddGatewayHandlers(registrationService)
+		loginUseCase := usecase.NewLogin(
+			userRepo,
+			passwordHasher,
+			tokenIssuer,
+		)
+		loginService := grpc.NewLoginService(
+			loginUseCase,
+			app.Log,
+		)
+
+		app.RegisterGRPCServices(registrationService, loginService)
+		app.AddGatewayHandlers(registrationService, loginService)
 
 		return nil
 	})

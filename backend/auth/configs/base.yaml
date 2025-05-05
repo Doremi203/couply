@@ -19,3 +19,7 @@ database:
   password: pass
   database: auth
   options: sslmode=disable
+
+jwt:
+  secretKey: test
+  tokenLifetime: 5m

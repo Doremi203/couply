@@ -17,6 +17,8 @@ func (id ID) String() string {
 
 type Email string
 
+type Phone string
+
 type CreatedAt time.Time
 
 func New(
@@ -39,5 +41,6 @@ func New(
 type User struct {
 	ID       ID
 	Email    Email
+	Phone    Phone
 	Password pswrd.HashedPassword
 }

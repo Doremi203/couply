@@ -1,3 +1,16 @@
 package token
 
-type Token string
+import "time"
+
+type Token struct {
+	signedString string
+	expiresIn    time.Duration
+}
+
+func (t Token) SignedString() string {
+	return t.signedString
+}
+
+func (t Token) ExpiresIn() time.Duration {
+	return t.expiresIn
+}
