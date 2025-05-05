@@ -16,9 +16,9 @@ func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match)
 	_, err := s.txManager.GetQueryEngine(ctx).Exec(
 		ctx,
 		matchSQL,
-		match.MainUserID,
-		match.ChosenUserID,
-		match.Approved,
+		match.GetMainUserID(),
+		match.GetChosenUserID(),
+		match.GetApproved(),
 	)
 	if err != nil {
 		return fmt.Errorf("AddMatch: %w", err)

@@ -13,11 +13,11 @@ func (f *StorageFacadeSearch) UpdateFilterTx(ctx context.Context, filter *search
 			return fmt.Errorf("failed to update filter: %w", err)
 		}
 
-		if err := f.searchStorage.DeleteFilterInterests(ctxTx, filter.UserID); err != nil {
+		if err := f.searchStorage.DeleteFilterInterests(ctxTx, filter.GetUserID()); err != nil {
 			return fmt.Errorf("failed to delete old filter interests: %w", err)
 		}
 
-		if err := f.searchStorage.AddFilterInterests(ctxTx, filter.UserID, filter.Interest); err != nil {
+		if err := f.searchStorage.AddFilterInterests(ctxTx, filter.GetUserID(), filter.GetInterest()); err != nil {
 			return fmt.Errorf("failed to add new filter interests: %w", err)
 		}
 

@@ -17,11 +17,11 @@ func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, user
 	_, err := s.txManager.GetQueryEngine(ctx).Exec(
 		ctx,
 		photoSQL,
-		photo.URL,
-		photo.MimeType,
-		photo.UpdatedAt,
+		photo.GetURL(),
+		photo.GetMimeType(),
+		photo.GetUpdatedAt(),
 		userID,
-		photo.OrderNumber,
+		photo.GetOrderNumber(),
 	)
 	if err != nil {
 		return fmt.Errorf("UpdatePhoto: %w", err)

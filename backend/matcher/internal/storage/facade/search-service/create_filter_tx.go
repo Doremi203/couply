@@ -16,7 +16,7 @@ func (f *StorageFacadeSearch) CreateFilterTx(ctx context.Context, newFilter *sea
 			return fmt.Errorf("failed to add filter: %w", err)
 		}
 
-		if err = f.searchStorage.AddFilterInterests(ctxTx, newFilter.UserID, newFilter.Interest); err != nil {
+		if err = f.searchStorage.AddFilterInterests(ctxTx, newFilter.GetUserID(), newFilter.GetInterest()); err != nil {
 			return fmt.Errorf("failed to add filter interests: %w", err)
 		}
 
