@@ -94,25 +94,25 @@ func baseQuery() sq.SelectBuilder {
 func baseConditions(filter *search.Filter) sq.Sqlizer {
 	return sq.And{
 		sq.Eq{"hidden": false},
-		sq.NotEq{"id": filter.UserID},
+		sq.NotEq{"id": filter.GetUserID()},
 	}
 }
 
 func applyMainFilters(qb sq.SelectBuilder, filter *search.Filter) sq.SelectBuilder {
-	qb = applyRangeFilter(qb, "age", filter.MinAge, filter.MaxAge)
-	qb = applyRangeFilter(qb, "height", filter.MinHeight, filter.MaxHeight)
+	qb = applyRangeFilter(qb, "age", filter.GetMinAge(), filter.GetMaxAge())
+	qb = applyRangeFilter(qb, "height", filter.GetMinHeight(), filter.GetMaxHeight())
 
-	if filter.GenderPriority != 3 { // 3 - ANY
-		qb = qb.Where(sq.Eq{"gender": int(filter.GenderPriority)})
+	if filter.GetGenderPriority() != 3 { // 3 - ANY
+		qb = qb.Where(sq.Eq{"gender": int(filter.GetGenderPriority())})
 	}
 
 	filters := map[string]int{
-		"goal":      int(filter.Goal),
-		"zodiac":    int(filter.Zodiac),
-		"education": int(filter.Education),
-		"children":  int(filter.Children),
-		"alcohol":   int(filter.Alcohol),
-		"smoking":   int(filter.Smoking),
+		"goal":      int(filter.GetGoal()),
+		"zodiac":    int(filter.GetZodiac()),
+		"education": int(filter.GetEducation()),
+		"children":  int(filter.GetChildren()),
+		"alcohol":   int(filter.GetAlcohol()),
+		"smoking":   int(filter.GetSmoking()),
 	}
 
 	for field, value := range filters {
@@ -160,12 +160,12 @@ func extractInterestPairs(interests *interest.Interest) []struct {
 	Value int
 } {
 	interestGroups := map[string][]int{
-		"social":           convertSlice(interests.Social),
-		"sport":            convertSlice(interests.Sport),
-		"self_development": convertSlice(interests.SelfDevelopment),
-		"art":              convertSlice(interests.Art),
-		"hobby":            convertSlice(interests.Hobby),
-		"gastronomy":       convertSlice(interests.Gastronomy),
+		"social":           convertSlice(interests.GetSocial()),
+		"sport":            convertSlice(interests.GetSport()),
+		"self_development": convertSlice(interests.GetSelfDevelopment()),
+		"art":              convertSlice(interests.GetArt()),
+		"hobby":            convertSlice(interests.GetHobby()),
+		"gastronomy":       convertSlice(interests.GetGastronomy()),
 	}
 
 	var pairs []struct {
@@ -174,10 +174,12 @@ func extractInterestPairs(interests *interest.Interest) []struct {
 	}
 	for t, values := range interestGroups {
 		for _, v := range values {
-			pairs = append(pairs, struct {
-				Type  string
-				Value int
-			}{t, v})
+			if v != 0 {
+				pairs = append(pairs, struct {
+					Type  string
+					Value int
+				}{t, v})
+			}
 		}
 	}
 	return pairs
