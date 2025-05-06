@@ -1,32 +1,28 @@
 .iconCircle {
-  width: 2.5rem; /* 40px in rem */
-  height: 2.5rem; /* 40px in rem */
+  width: 2.5rem;
+  height: 2.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: background-color 0.3s;
-  /* Add padding to increase the clickable area */
-  padding: 0.5rem; /* 8px in rem */
+  padding: 0.5rem;
   border-radius: 50%;
 }
 
-/* Special class for touch-friendly buttons with larger hit area */
 .touchFriendly {
-  width: 2.75rem; /* 44px in rem */
-  height: 2.75rem; /* 44px in rem */
-  /* Add a larger invisible touch area around the button */
+  width: 2.75rem;
+  height: 2.75rem;
   position: relative;
 }
 
-/* Create a pseudo-element with a larger clickable area */
 .touchFriendly::before {
   content: '';
   position: absolute;
-  top: -0.5rem; /* -8px in rem */
-  left: -0.5rem; /* -8px in rem */
-  right: -0.5rem; /* -8px in rem */
-  bottom: -0.5rem; /* -8px in rem */
+  top: -0.5rem;
+  left: -0.5rem;
+  right: -0.5rem;
+  bottom: -0.5rem;
   border-radius: 50%;
 }
 
@@ -38,6 +34,4 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  /* width: 100%;
-  height: 100%; */
 }

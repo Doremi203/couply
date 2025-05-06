@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 
 import { baseApi } from '../../api/baseApi';
 
-// Create a mock store for Storybook
 export const mockStore = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
@@ -12,7 +11,6 @@ export const mockStore = configureStore({
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(baseApi.middleware),
 });
 
-// Redux Provider decorator for Storybook
 export const withReduxProvider = (Story: ComponentType): ReactElement => (
   <Provider store={mockStore}>
     <Story />

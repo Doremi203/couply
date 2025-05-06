@@ -33,22 +33,19 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onLike,
   className,
 }) => {
-  // Create a wrapper function to handle the like button click
   const handleLikeClick = () => {
     if (onLike) {
       onLike(profile.user.id);
     }
   };
 
-  // Handle card click with event propagation control
   const handleCardClick = () => {
     if (onClick) {
       onClick();
     }
   };
 
-  // console.log(profile.user.photos[0].url);
-
+  //TODO photo
   return (
     <div className={`${styles.profileCard} ${className || ''}`} onClick={handleCardClick}>
       <img

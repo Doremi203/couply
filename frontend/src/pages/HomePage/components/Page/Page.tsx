@@ -32,7 +32,6 @@ export const HomePage = () => {
 
       <ProfileSlider />
 
-      {/* NavBar with higher z-index to ensure it's always accessible */}
       <div style={{ position: 'relative', zIndex: 1010 }}>
         <NavBar />
       </div>

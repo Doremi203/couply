@@ -12,6 +12,7 @@ import {
   Zodiac,
 } from '../types';
 
+//TODO
 const basicData = {
   location: 'Москва, Россия',
   bio: 'dfg',
@@ -25,7 +26,7 @@ const basicData = {
   hidden: false,
   verified: false,
   interest: null, //TODO
-  //photos: null,
+  //photos: null, //TODO
 };
 
 export const userApiExtended = matcherApi.injectEndpoints({

@@ -5,11 +5,10 @@
   right: 0;
   background-color: var(--section-background);
   box-shadow: 0px -2px 4px var(--shadow-color);
-  z-index: 1010; /* Increased z-index to be higher than ProfileView */
+  z-index: 1010;
   width: 100%;
 }
 
-/* Force repaint class to help with rendering issues */
 .navBarContainer.force-repaint {
   transform: translateZ(0);
 }
@@ -18,10 +17,10 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 4rem; /* Using rem instead of fixed pixels */
+  height: 4rem;
   padding: 0 1rem;
-  max-width: 768px; /* Maximum width for larger screens */
-  margin: 0 auto; /* Center the navbar on larger screens */
+  max-width: 768px;
+  margin: 0 auto;
 }
 
 .navItem {
@@ -40,28 +39,9 @@
   color: var(--primary-color);
 }
 
-/* Remove any transitions */
 .navItem,
 .navItem svg,
 .navItem.active,
 .navItem.active svg {
   transition: none !important;
 }
-
-/* Responsive adjustments */
-/* @media (max-width: 480px) {
-  .navBarContent {
-    padding: 0 0.5rem;
-  }
-
-  .navItem {
-    padding: 1rem;
-  }
-}
-
-@media (min-width: 769px) {
-  .navBarContainer {
-    bottom: 0;
-    border-radius: 1rem 1rem 0 0;
-  }
-} */

@@ -12,10 +12,7 @@ export const SplashPage = () => {
   return (
     <div className={styles.page}>
       <body>
-        {/* <img src="logo.png" width="200px" height="150px" className={styles.logo} /> */}
-
         <div className={styles.loader} />
-
         <section>
           <div className={styles.content}>
             <h2>couply</h2>

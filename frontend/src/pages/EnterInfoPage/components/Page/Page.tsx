@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { Gender } from '../../../../entities/user';
 import { useCreateUserMutation } from '../../../../entities/user/api/userApi';
 import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
@@ -19,60 +20,44 @@ import {
 
 import styles from './enterInfo.module.css';
 
-// function generateS3Url(fileName, bucketName, regionName) {
-//   // Формируем базовый URL
-//   return `https://${bucketName}.s3.${regionName}.amazonaws.com/${fileName}`;
-// }
-
 export const EnterInfoPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Initialize the createUser mutation
   const [createUser, { isLoading }] = useCreateUserMutation();
 
-  // State for form values
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [userGender, setUserGender] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // State for notification permission
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
   const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
 
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
-      // If we're on the last step, submit user data
       try {
-        // Create user data object with default values according to UserRequest interface
+        //TODO
         const userData = {
           name,
           age: 20,
-          gender: userGender,
-          birthDate, // This is not in the UserRequest interface but might be used elsewhere
-          photos: [{ url: profilePhoto }], // Set to null as expected by the API
+          gender: Gender.male,
+          birthDate,
+          photos: [{ url: profilePhoto }],
         };
 
-        // Store the profile photo URL in localStorage for later use
+        // TODO
         if (profilePhoto) {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
 
-        // Send data to the API
         const response = await createUser(userData).unwrap();
-        console.log('Response:', response);
-        console.log('Response type:', typeof response);
-        console.log('Response keys:', Object.keys(response));
 
-        // Store the user ID if available in the response
+        // надо ли сохранять в локал TODO
         if (response && response.user && response.user.id) {
-          console.log('User ID:', response.user.id);
-          // Save user ID to Redux store
           dispatch(setUserId(response.user.id));
-          // Also save to localStorage for persistence across page reloads
           localStorage.setItem('userId', response.user.id);
         }
 
@@ -103,7 +88,6 @@ export const EnterInfoPage = () => {
         }
       }
     } else {
-      // Otherwise, go to the next step
       setCurrentStep(prevStep => prevStep + 1);
     }
   };
@@ -131,7 +115,6 @@ export const EnterInfoPage = () => {
     if (files && files.length > 0) {
       const file = files[0];
 
-      // Create a URL for the file
       const fileUrl = URL.createObjectURL(file);
       setProfilePhoto(fileUrl);
 
@@ -139,7 +122,6 @@ export const EnterInfoPage = () => {
     }
   };
 
-  // Handle notification permission request
   const handleRequestPermission = async () => {
     setNotificationPermissionRequested(true);
     setShowNotificationPrompt(false);
@@ -154,7 +136,6 @@ export const EnterInfoPage = () => {
           const subscription = await createPushSubscription(registration);
 
           if (subscription) {
-            // Use the userId from localStorage, or fallback to a default
             const userIdFromStorage = localStorage.getItem('userId');
             const userIdToUse = userIdFromStorage || 'user123';
             await sendSubscriptionToServer(subscription, userIdToUse);
@@ -162,7 +143,6 @@ export const EnterInfoPage = () => {
         }
       }
 
-      // Navigate to home page regardless of permission result
       navigate('/home');
     } catch (error) {
       console.error('Error requesting notification permission:', error);
@@ -176,7 +156,6 @@ export const EnterInfoPage = () => {
     navigate('/home');
   };
 
-  // Check if the current step's form is valid
   const isCurrentStepValid = () => {
     switch (currentStep) {
       case 0:

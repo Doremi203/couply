@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
-// Import components
 import ChipFilter from './components/ChipFilter';
 import FilterActions from './components/FilterActions';
 import FilterHeader from './components/FilterHeader';
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
-  // Prevent body scrolling when modal is open
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -28,24 +26,14 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     };
   }, [open]);
 
-  // Gender preference
   const [interestedIn, setInterestedIn] = useState<string>('Girls');
-
-  // Distance
   const [distance, setDistance] = useState<number>(40);
-
-  // Age range
   const [ageRange, setAgeRange] = useState<number[]>([20, 28]);
-
-  // Interests
   const interestOptions = ['Sports', 'Travel', 'Music', 'Art', 'Food'];
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-
-  // Music preferences
   const musicOptions = ['Rock', 'Pop', 'Hip Hop', 'Jazz', 'Classical'];
   const [selectedMusicPreferences, setSelectedMusicPreferences] = useState<string[]>([]);
 
-  // Verification status
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
 
   const handleDistanceChange = (_event: Event, newValue: number | number[]) => {

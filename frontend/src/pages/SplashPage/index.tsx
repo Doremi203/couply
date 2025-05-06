@@ -1,7 +1,5 @@
 /**
- * Стартовая страница приложения (сплэш-скрин)
- * @module
- * @block Страница
+ * Стартовая страница приложения
  */
 
 export { SplashPage } from './components/Page/Page';

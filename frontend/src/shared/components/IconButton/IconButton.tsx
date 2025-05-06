@@ -3,11 +3,11 @@ import { ReactNode } from 'react';
 import styles from './iconButton.module.css';
 
 interface CircleIconButtonProps {
-  onClick: () => void
-  className?: string
-  iconClassName?: string
-  children: ReactNode
-  touchFriendly?: boolean // Add option for larger touch area
+  onClick: () => void;
+  className?: string;
+  iconClassName?: string;
+  children: ReactNode;
+  touchFriendly?: boolean;
 }
 
 export const IconButton = ({
@@ -26,9 +26,7 @@ export const IconButton = ({
       `}
       onClick={onClick}
     >
-      <div className={`${styles.iconContainer} ${iconClassName || ''}`}>
-        {children}
-      </div>
+      <div className={`${styles.iconContainer} ${iconClassName || ''}`}>{children}</div>
     </div>
   );
 };

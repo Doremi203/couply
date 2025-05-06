@@ -1,6 +1,5 @@
 import { Slider, styled } from '@mui/material';
 
-// Custom styled slider that adapts to theme
 export const CustomSlider = styled(Slider)({
   color: 'var(--primary-color)',
   height: 8,

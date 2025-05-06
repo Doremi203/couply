@@ -1,9 +1,7 @@
-/* Activity history content */
 .activityContent {
   padding: 0 15px 20px;
 }
 
-/* Header */
 .header {
   background-color: var(--header-background);
   color: var(--header-text-color);
@@ -42,7 +40,6 @@
   justify-content: center;
 }
 
-/* Activity list */
 .list {
   margin-top: 20px;
 }

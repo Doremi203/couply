@@ -53,6 +53,7 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch();
 
+  //TODO
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);
   const { isSupported, permission, initialize, isInitializing } = usePushNotifications();

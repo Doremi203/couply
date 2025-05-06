@@ -7,27 +7,29 @@
 }
 
 .buttonWithIcon {
-  padding: 0.625rem 1.25rem; /* 10px 20px in rem */
+  padding: 0.625rem 1.25rem;
   background-color: white;
   color: black;
   border: 1px solid #e0e0e0;
-  border-radius: 1.875rem; /* 30px in rem */
+  border-radius: 1.875rem;
   font-size: 1rem;
   font-weight: 500;
-  font-family: "Jost", sans-serif;
+  font-family: 'Jost', sans-serif;
   cursor: pointer;
-  transition: background-color 0.3s, opacity 0.3s;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
   outline: none;
   text-align: center;
-  height: 3.125rem; /* 50px in rem */
+  height: 3.125rem;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align items to the left */
-  width: 100%; /* Make it responsive */
-  max-width: 290px; /* Maximum width */
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 290px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  position: relative; /* For positioning children */
-  padding-left: 1.5rem; /* Consistent left padding */
+  position: relative;
+  padding-left: 1.5rem;
 }
 
 .buttonWithIcon:hover {
@@ -49,7 +51,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 1rem; /* Fixed margin for consistent spacing */
+  margin-right: 1rem;
   width: 24px;
   height: 24px;
   flex-shrink: 0;
@@ -59,14 +61,13 @@
   font-weight: 500;
   flex: 1;
   text-align: center;
-  margin-right: 1.5rem; /* Balance the button text position */
+  margin-right: 1.5rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 480px) {
   .buttonWithIcon {
     max-width: 100%;
     padding: 0.5rem 1rem;
-    height: 2.75rem; /* Slightly smaller on mobile */
+    height: 2.75rem;
   }
 }

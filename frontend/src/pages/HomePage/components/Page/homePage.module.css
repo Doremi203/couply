@@ -1,14 +1,3 @@
-/* .pageContainer {
-  background-color: var(--background-color);
-  color: var(--text-color);
-  min-height: 100vh;
-} */
-
-/* html,
-body {
-  overflow: hidden;
-} */
-
 .pageContainer {
   padding: 20px;
   padding-bottom: 70px;
@@ -19,12 +8,12 @@ body {
   color: var(--text-color);
   min-height: 100vh;
   overflow: hidden;
-  height: 100vh; /* Фиксированная высота на весь экран */
+  height: 100vh;
   margin: 0;
 }
 
 .personCard {
-  margin-top: 8.75rem; /* 140px in rem */
+  margin-top: 8.75rem;
 }
 
 .header {
@@ -32,13 +21,11 @@ body {
   justify-content: space-between;
   align-items: center;
   position: relative;
-  /* margin-top: 1.5rem; */
   padding: 0 1rem;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  /* margin-top: 1rem; */
 }
 
 .appName {
@@ -46,7 +33,7 @@ body {
   justify-content: center;
   align-items: center;
   color: var(--primary-color);
-  font-size: 4rem; /* 40px in rem */
+  font-size: 4rem;
   font-family: 'Jost', sans-serif;
   font-weight: medium;
   position: absolute;
@@ -56,21 +43,20 @@ body {
 }
 
 .spacer {
-  width: 2.5rem; /* 40px in rem */
+  width: 2.5rem;
 }
 
 .filtersIcon {
-  margin-right: 0.938rem; /* 15px in rem */
-  margin-top: 0.625rem; /* 10px in rem */
+  margin-right: 0.938rem;
+  margin-top: 0.625rem;
   display: flex;
   align-items: center;
-  width: 2.5rem; /* 40px in rem */
+  width: 2.5rem;
 }
 
-/* Responsive adjustments */
 @media (max-width: 480px) {
   .appName {
-    font-size: 3rem; /* Smaller on mobile */
+    font-size: 3rem;
   }
 
   .header {
@@ -93,6 +79,6 @@ body {
   }
 
   .personCard {
-    margin-top: 9.375rem; /* Larger on desktop */
+    margin-top: 9.375rem;
   }
 }

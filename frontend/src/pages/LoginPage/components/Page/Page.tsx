@@ -1,66 +1,53 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
+import { Link } from '@mui/material';
 import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { useRegisterMutation } from '../../../../entities/auth';
+import { useLoginMutation } from '../../../../entities/auth';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
+// import { setToken } from '../../../../shared/lib/services/TokenService';
 
 import styles from './loginPage.module.css';
 
-interface LocationState {
-  method: 'phone' | 'email';
-}
-
 export const LoginPage = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const state = location.state as LocationState;
 
-  // Default to phone if method is not specified
-  const method = state?.method || 'phone';
-
-  // State for form values
-  const [contactValue, setContactValue] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
 
-  // State for form validation
   const [errors, setErrors] = useState({
-    contactValue: '',
+    email: '',
     password: '',
     confirmPassword: '',
   });
 
-  // RTK Query mutation hook for registration
-  const [register, { isLoading }] = useRegisterMutation();
+  const [login, { isLoading }] = useLoginMutation();
 
   const goBack = () => {
     navigate('/auth');
   };
 
+  const onRegister = () => {
+    navigate('/registration');
+  };
+
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
-      contactValue: '',
+      email: '',
       password: '',
       confirmPassword: '',
     };
 
-    // Validate contact value (phone or email)
-    if (!contactValue) {
-      newErrors.contactValue =
-        method === 'phone' ? 'Пожалуйста, введите номер телефона' : 'Пожалуйста, введите email';
+    if (!email) {
+      newErrors.email = 'Пожалуйста, введите email';
       isValid = false;
-    } else if (method === 'email' && !/\S+@\S+\.\S+/.test(contactValue)) {
-      newErrors.contactValue = 'Пожалуйста, введите корректный email';
-      isValid = false;
-    } else if (method === 'phone' && !/^\+?[0-9]{10,15}$/.test(contactValue)) {
-      newErrors.contactValue = 'Пожалуйста, введите корректный номер телефона';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Пожалуйста, введите корректный email';
       isValid = false;
     }
 
-    // Validate password
     if (!password) {
       newErrors.password = 'Пожалуйста, введите пароль';
       isValid = false;
@@ -69,15 +56,6 @@ export const LoginPage = () => {
       isValid = false;
     }
 
-    // Validate confirm password
-    // if (!confirmPassword) {
-    //   newErrors.confirmPassword = 'Пожалуйста, подтвердите пароль';
-    //   isValid = false;
-    // } else if (confirmPassword !== password) {
-    //   newErrors.confirmPassword = 'Пароли не совпадают';
-    //   isValid = false;
-    // }
-
     setErrors(newErrors);
     return isValid;
   };
@@ -85,28 +63,28 @@ export const LoginPage = () => {
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
-        // Prepare registration data based on method
         const registrationData = {
           password,
-          ...(method === 'phone' ? { phone: contactValue } : { email: contactValue }),
+          ...{ email: email },
         };
 
-        // Call the register mutation
-        const result = await register(registrationData).unwrap();
+        const result = await login(registrationData).unwrap();
 
-        // Store the token in localStorage
-        localStorage.setItem('token', result.token);
+        // Store the token and its expiration time using TokenService
+        // setToken(result.token, result.expiresIn);
 
-        // Navigate to the enter info page
-        navigate('/enterInfo');
+        if (result.token) {
+          navigate('/home');
+        } else {
+          navigate('/registration');
+        }
       } catch (error) {
-        // Handle registration errors
+        //TODO
+        // navigate('/registration');
         console.error('Registration failed:', error);
-
-        // You could set specific error messages based on the error response
         setErrors({
           ...errors,
-          contactValue: 'Ошибка регистрации. Пожалуйста, попробуйте снова.',
+          email: 'Такого аккаунта не существует',
         });
       }
     }
@@ -122,14 +100,14 @@ export const LoginPage = () => {
 
       <div className={styles.form}>
         <div className={styles.inputGroup}>
-          <label>{method === 'phone' ? 'Номер телефона' : 'Email'}</label>
+          <label>Email</label>
           <CustomInput
-            type={method === 'phone' ? 'tel' : 'email'}
-            placeholder={method === 'phone' ? '+7 (999) 123-45-67' : 'example@email.com'}
-            value={contactValue}
-            onChange={e => setContactValue(e.target.value)}
+            type="email"
+            placeholder="example@email.com"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
           />
-          {errors.contactValue && <span className={styles.errorText}>{errors.contactValue}</span>}
+          {errors.email && <span className={styles.errorText}>{errors.email}</span>}
         </div>
 
         <div className={styles.inputGroup}>
@@ -142,27 +120,17 @@ export const LoginPage = () => {
           />
           {errors.password && <span className={styles.errorText}>{errors.password}</span>}
         </div>
-
-        {/* <div className={styles.inputGroup}>
-          <label>Подтверждение пароля</label>
-          <CustomInput
-            type="password"
-            placeholder="Повторите пароль"
-            value={confirmPassword}
-            onChange={e => setConfirmPassword(e.target.value)}
-          />
-          {errors.confirmPassword && (
-            <span className={styles.errorText}>{errors.confirmPassword}</span>
-          )}
-        </div> */}
       </div>
 
       <CustomButton
         onClick={handleSubmit}
-        text={isLoading ? 'Регистрация...' : 'Войти'}
+        text="Войти"
         disabled={isLoading}
         className={styles.submitButton}
       />
+      <Link onClick={onRegister} className={styles.regLink}>
+        Зарегистрироваться
+      </Link>
     </div>
   );
 };

@@ -130,11 +130,17 @@ export enum Smoking {
   positively = 'SMOKING_POSITIVELY',
 }
 
+export enum Gender {
+  unspecified = 'GENDER_UNSPECIFIED',
+  male = 'GENDER_MALE',
+  female = 'GENDER_FEMALE',
+}
+
 export interface UserRequest {
   id?: string;
   name: string;
   age: number;
-  gender: string;
+  gender: Gender;
   location: string;
   bio: string;
   goal: Goal;
@@ -155,7 +161,7 @@ export interface UserResponse {
     id: string;
     name: string;
     age: number;
-    gender: string;
+    gender: Gender;
     location: string;
     bio: string;
     goal: Goal;
