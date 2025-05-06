@@ -29,9 +29,9 @@ type Registration struct {
 
 var ErrAlreadyRegistered = errors.Error("user already registered")
 
-// BasicV1 создает аккаунт пользователя с переданным user.Email и pswrd.Password.
+// BasicV1 создает аккаунт пользователя с переданным user.UserEmail и pswrd.Password.
 //
-// Если пользователь с таким user.Email уже существует, возвращает ошибку ErrAlreadyRegistered.
+// Если пользователь с таким user.UserEmail уже существует, возвращает ошибку ErrAlreadyRegistered.
 func (u Registration) BasicV1(
 	ctx context.Context,
 	email user.Email,

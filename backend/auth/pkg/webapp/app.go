@@ -53,10 +53,11 @@ type App struct {
 	healthCheckFunc   func() bool
 	livenessCheckFunc func() bool
 
-	grpcServer      *grpc.Server
-	gatewayOptions  []runtime.ServeMuxOption
-	gatewayHandlers []grpcGatewayService
-	httpServer      *http.Server
+	grpcUnaryInterceptors []grpc.UnaryServerInterceptor
+	gatewayOptions        []runtime.ServeMuxOption
+	grpcServices          []grpcService
+	gatewayHandlers       []grpcGatewayService
+	httpServer            *http.Server
 
 	backgroundProcesses  []BackgroundProcess
 	backgroundCtx        context.Context
@@ -89,18 +90,12 @@ func initApp() *App {
 
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
 
-	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(NewUnaryPanicInterceptor(logger)),
-	)
-	reflection.Register(grpcServer)
-
 	return &App{
 		Env:                  env,
 		Config:               cfg,
 		Log:                  logger,
 		backgroundCtx:        backgroundCtx,
 		backgroundCancelFunc: backgroundCancelFunc,
-		grpcServer:           grpcServer,
 		httpServer: &http.Server{
 			Addr:              fmt.Sprintf(":%d", cfg.http.Port),
 			ReadHeaderTimeout: 5 * time.Second,
@@ -122,37 +117,36 @@ func initApp() *App {
 //
 // Также необходимо указать переменную окружения CONFIGS_PATH, которая указывает путь к директории с конфигурационными файлами.
 func Run(setupFunc func(ctx context.Context, app *App) error) {
+	a := initApp()
+
+	err := run(a, setupFunc)
+	if err != nil {
+		a.Log.Error(err)
+		a.shutDown()
+		os.Exit(1)
+	}
+
+	a.shutDown()
+}
+
+func run(a *App, setupFunc func(ctx context.Context, app *App) error) (err error) {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGTERM, syscall.SIGINT)
 	defer cancel()
 
-	a := initApp()
-
 	defer func() {
-		if err := recover(); err != nil {
-			a.Log.Error(
-				errors.Wrapf(err.(error), "app crashed with panic %v", errors.Token("stack", string(debug.Stack()))),
-			)
-			os.Exit(1)
+		if panicErr := recover(); panicErr != nil {
+			err = errors.Wrapf(panicErr.(error), "app crashed with panic %v", errors.Token("stack", string(debug.Stack())))
 		}
 	}()
 
-	err := setupFunc(ctx, a)
+	err = setupFunc(ctx, a)
 	if err != nil {
-		a.Log.Error(errors.Wrap(err, "app setup failed"))
-		os.Exit(1)
+		return errors.Wrap(err, "app setup failed")
 	}
 
 	grpcMux := runtime.NewServeMux(a.gatewayOptions...)
 
-	for _, service := range a.gatewayHandlers {
-		err := a.registerGatewayHandler(grpcMux, service)
-		if err != nil {
-			a.Log.Error(errors.WrapFail(err, "register grpc gateway handler"))
-			os.Exit(1)
-		}
-	}
-
-	a.initGRPCServer()
+	grpcServer, err := a.initGRPCServer(grpcMux)
 	a.initHTTPServer(grpcMux)
 
 	a.startBackgroundProcesses()
@@ -162,12 +156,11 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 	}
 
 	<-ctx.Done()
-	cancel()
 
 	a.Log.Info("shutting down app")
 	a.Log.Info("shutting down servers")
 
-	a.grpcServer.GracefulStop()
+	grpcServer.GracefulStop()
 
 	const httpServerShutdownTimeout = 5 * time.Second
 	httpShutdownCtx, httpCancel := context.WithTimeout(context.Background(), httpServerShutdownTimeout)
@@ -176,7 +169,7 @@ func Run(setupFunc func(ctx context.Context, app *App) error) {
 		a.Log.Error(errors.WrapFailf(err, "shutdown http server within %v", errors.Token("timeout", httpServerShutdownTimeout)))
 	}
 
-	a.shutDown()
+	return nil
 }
 
 func (a *App) AddGatewayOptions(opts ...runtime.ServeMuxOption) {
@@ -206,12 +199,14 @@ func (a *App) AddBackgroundProcess(processor BackgroundProcess) {
 	a.backgroundProcesses = append(a.backgroundProcesses, processor)
 }
 
+// AddGRPCUnaryInterceptor добавляет в gRPC-сервер указанные interceptors в переданном порядке.
+func (a *App) AddGRPCUnaryInterceptor(interceptors ...grpc.UnaryServerInterceptor) {
+	a.grpcUnaryInterceptors = append(a.grpcUnaryInterceptors, interceptors...)
+}
+
 // RegisterGRPCServices регистрирует gRPC-сервис в приложении.
 func (a *App) RegisterGRPCServices(services ...grpcService) {
-	for _, service := range services {
-		a.Log.Info("grpc service registered", "service", a.serviceName(service))
-		service.RegisterToServer(a.grpcServer)
-	}
+	a.grpcServices = append(a.grpcServices, services...)
 }
 
 func (a *App) AddGatewayHandlers(
@@ -242,7 +237,24 @@ func (a *App) registerGatewayHandler(
 	return nil
 }
 
-func (a *App) initGRPCServer() {
+func (a *App) initGRPCServer(grpcMux *runtime.ServeMux) (*grpc.Server, error) {
+	grpcServer := grpc.NewServer(
+		grpc.ChainUnaryInterceptor(NewUnaryPanicInterceptor(a.Log)),
+		grpc.ChainUnaryInterceptor(a.grpcUnaryInterceptors...),
+	)
+	reflection.Register(grpcServer)
+	for _, service := range a.grpcServices {
+		a.Log.Info("grpc service registered", "service", a.serviceName(service))
+		service.RegisterToServer(grpcServer)
+	}
+
+	for _, service := range a.gatewayHandlers {
+		err := a.registerGatewayHandler(grpcMux, service)
+		if err != nil {
+			return nil, errors.WrapFail(err, "register grpc gateway handler")
+		}
+	}
+
 	a.AddBackgroundProcess(func(ctx context.Context) error {
 		a.Log.Info("starting listen on", "port", a.Config.grpc.Port)
 		listener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.Config.grpc.Port))
@@ -251,13 +263,15 @@ func (a *App) initGRPCServer() {
 		}
 		a.Log.Info("starting grpc server on", "port", a.Config.grpc.Port)
 
-		err = a.grpcServer.Serve(listener)
+		err = grpcServer.Serve(listener)
 		if err != nil {
 			return errors.WrapFail(err, "serve grpc")
 		}
 
 		return nil
 	})
+
+	return grpcServer, nil
 }
 
 func (a *App) initHTTPServer(grpcMux *runtime.ServeMux) {

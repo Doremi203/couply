@@ -93,7 +93,7 @@ auth/migrate/down:
 	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down -all
 
 auth/migrate/create:
-	$(MIGRATE_CREATE) $(AUTH_MIGRATIONS) $(name)
+	$(MIGRATE_CREATE) auth/migrations $(name)
 
 ### Matcher service targets
 matcher/check-coverage:
@@ -125,4 +125,4 @@ matcher/migrate/down:
 	migrate -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" down -all
 
 matcher/migrate/create:
-	$(MIGRATE_CREATE) $(MATCHER_MIGRATIONS) alter_interests_value_type
+	$(MIGRATE_CREATE) matcher/migrations $(name)

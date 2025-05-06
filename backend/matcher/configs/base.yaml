@@ -19,3 +19,6 @@ database:
   password: pass
   database: matcher
   options: sslmode=disable
+
+user-token:
+  secretKey: GBONX7AaWWslx5JVihS3q1xIMLhzqF3R3rD5cyPeygg=
