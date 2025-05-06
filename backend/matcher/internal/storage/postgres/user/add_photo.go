@@ -17,11 +17,11 @@ func (s *PgStorageUser) AddPhoto(ctx context.Context, photo *user.Photo, userID 
 		ctx,
 		photoSQL,
 		userID,
-		photo.OrderNumber,
-		photo.URL,
-		photo.MimeType,
-		photo.UploadedAt,
-		photo.UpdatedAt,
+		photo.GetOrderNumber(),
+		photo.GetURL(),
+		photo.GetMimeType(),
+		photo.GetUploadedAt(),
+		photo.GetUpdatedAt(),
 	)
 	if err != nil {
 		return fmt.Errorf("AddPhoto: %w", err)

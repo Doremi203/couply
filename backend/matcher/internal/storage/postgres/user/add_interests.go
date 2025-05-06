@@ -14,12 +14,12 @@ func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interest
     `
 
 	interestGroups := map[string][]int{
-		"social":           convertSlice(interests.Social),
-		"sport":            convertSlice(interests.Sport),
-		"self_development": convertSlice(interests.SelfDevelopment),
-		"art":              convertSlice(interests.Art),
-		"hobby":            convertSlice(interests.Hobby),
-		"gastronomy":       convertSlice(interests.Gastronomy),
+		"social":           convertSlice(interests.GetSocial()),
+		"sport":            convertSlice(interests.GetSport()),
+		"self_development": convertSlice(interests.GetSelfDevelopment()),
+		"art":              convertSlice(interests.GetArt()),
+		"hobby":            convertSlice(interests.GetHobby()),
+		"gastronomy":       convertSlice(interests.GetGastronomy()),
 	}
 
 	for interestType, values := range interestGroups {

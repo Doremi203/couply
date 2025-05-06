@@ -17,9 +17,9 @@ func (s *PgStorageMatching) UpdateMatch(ctx context.Context, match *matching.Mat
 	_, err := s.txManager.GetQueryEngine(ctx).Exec(
 		ctx,
 		matchSQL,
-		match.MainUserID,
-		match.ChosenUserID,
-		match.Approved,
+		match.GetMainUserID(),
+		match.GetChosenUserID(),
+		match.GetApproved(),
 	)
 	if err != nil {
 		return errors.WrapFail(err, "update match")
