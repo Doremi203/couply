@@ -1,20 +1,15 @@
 package token
 
 import (
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/user"
 )
-
-type Provider interface {
-	Parse(string) (Token, error)
-}
 
 type Token struct {
 	userID    user.ID
 	userEmail user.Email
 }
-
-var ErrInvalidToken = errors.Error("invalid token")
 
 func (t Token) GetUserID() user.ID {
 	return t.userID
@@ -22,4 +17,14 @@ func (t Token) GetUserID() user.ID {
 
 func (t Token) GetEmail() user.Email {
 	return t.userEmail
+}
+
+type tokenKey struct{}
+
+func contextWithToken(ctx context.Context, token Token) context.Context {
+	return context.WithValue(ctx, tokenKey{}, token)
+}
+func FromContext(ctx context.Context) (Token, bool) {
+	tx, ok := ctx.Value(tokenKey{}).(Token)
+	return tx, ok
 }

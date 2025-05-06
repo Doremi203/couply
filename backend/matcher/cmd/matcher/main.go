@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	search_service "github.com/Doremi203/couply/backend/matcher/internal/app/search-service"
 	search_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/search-service"
 	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/search"
@@ -29,7 +30,7 @@ func main() {
 		app.AddGatewayOptions(
 			runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
 				switch s = strings.ToLower(s); s {
-				case "x-api-key":
+				case "x-api-key", "user-token":
 					return s, true
 				default:
 					return runtime.DefaultHeaderMatcher(s)
@@ -37,8 +38,16 @@ func main() {
 			}),
 		)
 
+		tokenConfig := token.Config{}
+		err := app.Config.ReadSection("user-token", &tokenConfig)
+		if err != nil {
+			return err
+		}
+
+		app.AddGRPCUnaryInterceptor(token.NewUnaryTokenInterceptor(token.NewJWTProvider(tokenConfig)))
+
 		dbConfig := postgrespkg.Config{}
-		err := app.Config.ReadSection("database", &dbConfig)
+		err = app.Config.ReadSection("database", &dbConfig)
 		if err != nil {
 			return err
 		}

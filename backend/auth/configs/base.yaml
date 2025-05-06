@@ -21,5 +21,5 @@ database:
   options: sslmode=disable
 
 jwt:
-  secretKey: test
-  tokenLifetime: 5m
+  secretKey: GBONX7AaWWslx5JVihS3q1xIMLhzqF3R3rD5cyPeygg=
+  tokenLifetime: 30m

@@ -6,6 +6,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/user"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
 )
 
 func NewJWTProvider(cfg Config) *jwtProvider {
@@ -18,23 +19,18 @@ type jwtProvider struct {
 	cfg Config
 }
 
-type Config struct {
-	SecretKey string
-}
-
 type сustomClaims struct {
 	UserID    user.ID    `json:"user_id"`
 	UserEmail user.Email `json:"useremail"`
 	jwt.RegisteredClaims
 }
 
-// Parse parses a token string and returns the token object
 func (p *jwtProvider) Parse(tokenString string) (Token, error) {
-	jwtToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	jwtToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.Error("unexpected signing method")
 		}
-		return p.cfg.SecretKey, nil
+		return []byte(p.cfg.SecretKey), nil
 	},
 		jwt.WithExpirationRequired(),
 		jwt.WithLeeway(time.Second*5))
@@ -42,12 +38,12 @@ func (p *jwtProvider) Parse(tokenString string) (Token, error) {
 		return Token{}, errors.WrapFail(err, "parse token")
 	}
 	if !jwtToken.Valid {
-		return Token{}, ErrInvalidToken
+		return Token{}, errors.Error("token is not valid")
 	}
 
 	claims, err := getJWTClaims(jwtToken)
 	if err != nil {
-		return Token{}, errors.WrapFailf(ErrInvalidToken, "%v", errors.Token("cause", err.Error()))
+		return Token{}, errors.WrapFail(err, "get claims")
 	}
 
 	return Token{
@@ -62,12 +58,17 @@ func getJWTClaims(t *jwt.Token) (сustomClaims, error) {
 		return сustomClaims{}, errors.Error("invalid claims format")
 	}
 
-	userID, ok := claims["user_id"].(user.ID)
+	userIDStr, ok := claims["user_id"].(string)
 	if !ok {
 		return сustomClaims{}, errors.Error("user_id claim not found or invalid format")
 	}
 
-	email, ok := claims["user_email"].(user.Email)
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		return сustomClaims{}, errors.Wrap(err, "user id is not uuid")
+	}
+
+	email, ok := claims["user_email"].(string)
 	if !ok {
 		return сustomClaims{}, errors.Error("email claim not found or invalid format")
 	}
@@ -99,8 +100,8 @@ func getJWTClaims(t *jwt.Token) (сustomClaims, error) {
 	}
 
 	return сustomClaims{
-		UserID:           userID,
-		UserEmail:        email,
+		UserID:           user.ID(userID),
+		UserEmail:        user.Email(email),
 		RegisteredClaims: registeredClaims,
 	}, nil
 }

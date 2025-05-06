@@ -57,7 +57,10 @@ func main() {
 			return err
 		}
 
-		tokenIssuer := token.NewJWTIssuer(jwtTokenConfig)
+		tokenIssuer, err := token.NewJWTIssuer(jwtTokenConfig)
+		if err != nil {
+			return err
+		}
 
 		registrationUseCase := usecase.NewRegistration(
 			userRepo,
