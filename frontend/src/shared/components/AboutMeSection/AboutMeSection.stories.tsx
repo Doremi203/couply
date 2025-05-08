@@ -16,7 +16,7 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '500px' }}>
+      <div style={{ width: '350px', maxWidth: '500px', marginTop: '20px' }}>
         <Story />
       </div>
     ),
@@ -54,21 +54,5 @@ export const CustomPlaceholder: Story = {
     about: '',
     onInputChange: (field, value) => console.log(`${field} changed to: ${value}`),
     placeholder: 'Share your interests, hobbies, and what makes you unique...',
-  },
-};
-
-export const SmallerMaxLength: Story = {
-  args: {
-    about: 'This is a short bio with a smaller character limit.',
-    onInputChange: (field, value) => console.log(`${field} changed to: ${value}`),
-    maxLength: 100,
-  },
-};
-
-export const LongText: Story = {
-  args: {
-    about:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.',
-    onInputChange: (field, value) => console.log(`${field} changed to: ${value}`),
   },
 };

@@ -63,11 +63,8 @@ const preview: Preview = {
                 width: '375px',
                 height: '812px',
                 margin: '0 auto',
-                border: '1px solid #ddd',
-                borderRadius: '32px',
                 overflow: 'hidden',
                 position: 'relative',
-                boxShadow: '0 0 10px rgba(0,0,0,0.1)',
               }}
             >
               <Story />

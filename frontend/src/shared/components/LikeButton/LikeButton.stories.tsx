@@ -19,30 +19,3 @@ export const Default: Story = {
     onClick: () => console.log('LikeButton clicked'),
   },
 };
-
-export const WithCustomClass: Story = {
-  args: {
-    onClick: () => console.log('LikeButton clicked'),
-    className: 'customLikeButton',
-    likeClassName: 'customLike',
-  },
-  decorators: [
-    Story => (
-      <div style={{ padding: '1rem' }}>
-        <style>
-          {`
-            .customLikeButton {
-              width: 70px;
-              height: 70px;
-              background-color: #ffebf2;
-            }
-            .customLike {
-              transform: scale(1.2);
-            }
-          `}
-        </style>
-        <Story />
-      </div>
-    ),
-  ],
-};

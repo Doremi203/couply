@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
-import ActivityHistory from '../../../../widgets/ActivityHistory';
 import { EditProfile } from '../../../../widgets/EditProfile';
 // import { ProfileView } from '../../../LikesPage/components/ProfileView';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -159,14 +158,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             onArrayInputChange={handleArrayInputChange}
             onPhotoAdd={handlePhotoAdd}
             onPhotoRemove={handlePhotoRemove}
-          />
-        );
-      case 'activity':
-        return (
-          <ActivityHistory
-            activityHistory={activityHistory}
-            onBack={() => setActiveTab('profile')}
-            formatDate={formatDate}
           />
         );
       case 'preview':

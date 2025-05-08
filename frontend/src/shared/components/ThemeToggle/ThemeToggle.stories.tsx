@@ -31,9 +31,3 @@ export const Default: Story = {
     className: '',
   },
 };
-
-export const WithCustomClass: Story = {
-  args: {
-    className: 'custom-theme-toggle',
-  },
-};

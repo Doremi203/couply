@@ -9,6 +9,13 @@ const meta: Meta<typeof MatchModal> = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', maxWidth: '400px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;
@@ -18,7 +25,6 @@ export const Default: Story = {
   args: {
     userImage: '/woman1.jpg',
     matchImage: '/man1.jpg',
-    matchName: 'Alex',
     onSendMessage: () => console.log('Send message clicked'),
     onKeepSwiping: () => console.log('Keep swiping clicked'),
   },

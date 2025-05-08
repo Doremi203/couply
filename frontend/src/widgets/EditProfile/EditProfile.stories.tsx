@@ -18,7 +18,7 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '500px' }}>
+      <div style={{ width: '350px', maxWidth: '500px' }}>
         <Story />
       </div>
     ),
@@ -43,11 +43,7 @@ const sampleProfileData: ProfileData = {
   movies: ['sci-fi', 'drama', 'documentaries'],
   books: ['fiction', 'science', 'biographies'],
   hobbies: ['cooking', 'yoga', 'painting'],
-  photos: [
-    'https://randomuser.me/api/portraits/women/68.jpg',
-    'https://randomuser.me/api/portraits/women/69.jpg',
-    'https://randomuser.me/api/portraits/women/70.jpg',
-  ],
+  photos: ['man1.jpg', 'woman1.jpg'],
   isHidden: false,
 };
 
@@ -80,21 +76,6 @@ export const EmptyProfile: Story = {
       hobbies: [],
       photos: [],
       isHidden: false,
-    },
-    onBack: () => console.log('Back button clicked'),
-    onSave: () => console.log('Save button clicked'),
-    onInputChange: (field, value) => console.log(`Field ${field} changed to: ${value}`),
-    onArrayInputChange: (field, value) => console.log(`Array field ${field} changed to: ${value}`),
-    onPhotoAdd: (_file, isAvatar) => console.log(`Photo added, isAvatar: ${isAvatar}`),
-    onPhotoRemove: index => console.log(`Photo removed at index: ${index}`),
-  },
-};
-
-export const HiddenProfile: Story = {
-  args: {
-    profileData: {
-      ...sampleProfileData,
-      isHidden: true,
     },
     onBack: () => console.log('Back button clicked'),
     onSave: () => console.log('Save button clicked'),

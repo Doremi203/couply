@@ -9,6 +9,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', marginTop: '20px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof TagsList>;
 
 export default meta;
@@ -24,22 +31,5 @@ export const WithCommonInterests: Story = {
   args: {
     items: ['Travel', 'Photography', 'Cooking', 'Reading', 'Hiking', 'Music'],
     commonItems: ['Photography', 'Music'],
-  },
-};
-
-export const SingleItem: Story = {
-  args: {
-    items: ['Photography'],
-  },
-};
-
-export const ManyItems: Story = {
-  args: {
-    items: [
-      'Travel', 'Photography', 'Cooking', 'Reading', 'Hiking', 'Music',
-      'Movies', 'Art', 'Dancing', 'Swimming', 'Yoga', 'Running',
-      'Gaming', 'Painting', 'Writing', 'Gardening',
-    ],
-    commonItems: ['Photography', 'Music', 'Art', 'Gaming'],
   },
 };

@@ -5,10 +5,14 @@ import { Dislike } from './Dislike';
 const meta = {
   title: 'Shared/Dislike',
   component: Dislike,
-  parameters: {
-    layout: 'centered',
-  },
   tags: ['autodocs'],
+  parameters: {
+    // layout: 'centered',
+    backgrounds: {
+      default: 'dark',
+      values: [{ name: 'dark', value: '#202C83' }],
+    },
+  },
 } satisfies Meta<typeof Dislike>;
 
 export default meta;

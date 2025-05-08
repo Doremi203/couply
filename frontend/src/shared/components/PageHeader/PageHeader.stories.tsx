@@ -16,7 +16,7 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '400px' }}>
+      <div style={{ width: '350px', maxWidth: '400px' }}>
         <Story />
       </div>
     ),
@@ -29,26 +29,5 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     onBack: () => console.log('Back button clicked'),
-  },
-};
-
-export const WithCustomTitle: Story = {
-  args: {
-    onBack: () => console.log('Back button clicked'),
-    title: 'Profile Settings',
-  },
-};
-
-export const ShortTitle: Story = {
-  args: {
-    onBack: () => console.log('Back button clicked'),
-    title: 'Home',
-  },
-};
-
-export const LongTitle: Story = {
-  args: {
-    onBack: () => console.log('Back button clicked'),
-    title: 'Notification Preferences and Privacy Settings',
   },
 };

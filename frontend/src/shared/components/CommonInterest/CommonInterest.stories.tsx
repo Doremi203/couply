@@ -9,6 +9,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', marginTop: '20px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof CommonInterest>;
 
 export default meta;

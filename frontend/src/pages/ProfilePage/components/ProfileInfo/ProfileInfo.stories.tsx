@@ -11,6 +11,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', marginTop: '40px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof ProfileInfo>;
 
 export default meta;

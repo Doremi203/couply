@@ -19,5 +19,4 @@ export interface MatchProfile {
   age: number;
   imageUrl: string;
   telegram: string;
-  instagram: string;
 }

@@ -22,7 +22,7 @@
 .matchInfo {
   flex: 1;
   position: relative;
-  min-width: 0; /* Prevents flex item from overflowing */
+  min-width: 0;
 }
 
 .matchName {
@@ -58,19 +58,8 @@
   }
 }
 
-.socialButtons {
-  display: flex;
-  gap: 20px;
-  margin-left: auto;
-  flex-shrink: 0;
-  align-items: center;
-}
-
 .socialButton {
-  /* background-color: white !important;
-  border: 1px solid #e0e0e0 !important;
-  padding: 6px !important;
-  transition: transform 0.2s ease, box-shadow 0.2s ease !important; */
+  margin-right: 10px;
 }
 
 .socialButton:hover {

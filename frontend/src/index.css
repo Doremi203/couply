@@ -26,6 +26,7 @@
   --text-input-border: #e0e0e0;
   --icon-color: rgba(255, 255, 255, 0.8);
   --custom-input: #f5f7fa;
+  --custom-input-enter: #f0f0f0;
 }
 
 /* Dark theme variables */
@@ -52,6 +53,7 @@ body[data-theme='dark'] {
   --text-input-border: #3b3a3a;
   --icon-color: #7b7a7a;
   --custom-input: #3b3a3a;
+  --custom-input-enter: #3b3a3a;
 }
 
 /*a {

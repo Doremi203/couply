@@ -14,7 +14,7 @@ import styles from './likesPage.module.css';
 const likes = [
   {
     id: 1,
-    name: 'Константин',
+    name: 'Анна',
     age: 25,
     imageUrl: 'woman1.jpg',
     liked: false,
@@ -61,7 +61,6 @@ const matchesUsers = [
     age: 27,
     imageUrl: 'woman1.jpg',
     telegram: '@maria_27',
-    instagram: '@maria_insta',
   },
   {
     id: 102, // Using different ID range for matches
@@ -69,7 +68,6 @@ const matchesUsers = [
     age: 31,
     imageUrl: 'man1.jpg',
     telegram: '@dmitry_31',
-    instagram: '@dmitry_insta',
   },
 ];
 

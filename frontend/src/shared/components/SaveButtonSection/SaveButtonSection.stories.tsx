@@ -31,24 +31,3 @@ export const Default: Story = {
     onSave: () => console.log('Save button clicked'),
   },
 };
-
-export const CustomText: Story = {
-  args: {
-    onSave: () => console.log('Save button clicked'),
-    text: 'Update Profile',
-  },
-};
-
-export const SubmitForm: Story = {
-  args: {
-    onSave: () => console.log('Form submitted'),
-    text: 'Submit',
-  },
-};
-
-export const ContinueButton: Story = {
-  args: {
-    onSave: () => console.log('Continue to next step'),
-    text: 'Continue',
-  },
-};

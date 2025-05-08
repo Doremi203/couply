@@ -96,3 +96,5 @@ export const MinimalProfile: Story = {
     onClick: () => console.log('Profile card clicked'),
   },
 };
+
+// TODO

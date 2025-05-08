@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { IconButton } from '../../../../shared/components/IconButton';
-import { InstagramIcon } from '../../../../shared/components/InstagramIcon';
 import { TelegramIcon } from '../../../../shared/components/TelegramIcon';
 
 import styles from './matchCard.module.css';
@@ -48,7 +47,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
           <div className={styles.chatMessage}>Открыто в новой вкладке</div>
         )}
       </div>
-      <div className={styles.socialButtons} onClick={e => e.stopPropagation()}>
+      <div onClick={e => e.stopPropagation()}>
         <IconButton
           // size="small"
           className={styles.socialButton}
@@ -56,14 +55,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({
           onClick={() => onSocialClick(match.id, 'telegram')}
         >
           <TelegramIcon />
-        </IconButton>
-        <IconButton
-          // size="small"
-          className={styles.socialButton}
-          // @ts-ignore
-          onClick={() => onSocialClick(match.id, 'instagram')}
-        >
-          <InstagramIcon />
         </IconButton>
       </div>
     </div>
