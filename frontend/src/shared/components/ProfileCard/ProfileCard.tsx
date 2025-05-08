@@ -35,7 +35,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 }) => {
   const handleLikeClick = () => {
     if (onLike) {
-      onLike(profile.user.id);
+      onLike(profile.id);
     }
   };
 
@@ -45,17 +45,14 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
     }
   };
 
+  //TODO вернуть profile.user
   //TODO photo
   return (
     <div className={`${styles.profileCard} ${className || ''}`} onClick={handleCardClick}>
-      <img
-        // src={profile.user.photos[0].url}
-        alt={profile.user.name}
-        className={styles.profileImage}
-      />
+      <img src={profile.imageUrl} alt={profile.name} className={styles.profileImage} />
       <div className={styles.profileInfo}>
         <div className={styles.profileName}>
-          {profile.user.name}, {profile.user.age}
+          {profile.name}, {profile.age}
         </div>
       </div>
       {onLike && (

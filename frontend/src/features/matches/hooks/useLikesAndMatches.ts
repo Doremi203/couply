@@ -11,7 +11,8 @@ import { getUserId } from '../../../entities/user/model/userSlice';
 import { LikeProfile, MatchProfile } from '../types';
 
 export const useMatches = () => {
-  const userId = useSelector(getUserId);
+  //const userId = useSelector(getUserId);
+  const userId = 1;
 
   const [fetchMatches] = useFetchMatchesMutation();
   const [fetchIncomingMatches, { isLoading: isLoadingIncoming }] =
@@ -22,40 +23,40 @@ export const useMatches = () => {
 
   const [incomingMatches, setIncomingMatches] = useState<LikeProfile[]>([]);
 
-  useEffect(() => {
-    if (!userId) return;
+  // useEffect(() => {
+  //   if (!userId) return;
 
-    const loadData = async () => {
-      try {
-        const matchesResult = await fetchMatches({
-          mainUserId: userId,
-          limit: 10,
-          offset: 0,
-        }).unwrap();
+  //   const loadData = async () => {
+  //     try {
+  //       const matchesResult = await fetchMatches({
+  //         mainUserId: userId,
+  //         limit: 10,
+  //         offset: 0,
+  //       }).unwrap();
 
-        // @ts-ignore
-        setMatches(matchesResult.match.map(el => el.mainUserId));
+  //       // @ts-ignore
+  //       setMatches(matchesResult.match.map(el => el.mainUserId));
 
-        const incomingResult = await fetchIncomingMatches({
-          chosenUserId: userId,
-          limit: 10,
-          offset: 0,
-        }).unwrap();
+  //       const incomingResult = await fetchIncomingMatches({
+  //         chosenUserId: userId,
+  //         limit: 10,
+  //         offset: 0,
+  //       }).unwrap();
 
-        // @ts-ignore
-        const incomingMatches = incomingResult.match.map(el => el.mainUserId);
+  //       // @ts-ignore
+  //       const incomingMatches = incomingResult.match.map(el => el.mainUserId);
 
-        setIncomingMatches(incomingMatches);
-      } catch (error) {
-        console.error('Error loading matches data:', error);
-      }
-    };
+  //       setIncomingMatches(incomingMatches);
+  //     } catch (error) {
+  //       console.error('Error loading matches data:', error);
+  //     }
+  //   };
 
-    if (!isInitialized.current) {
-      loadData();
-      isInitialized.current = true;
-    }
-  }, [userId, fetchMatches, fetchIncomingMatches]);
+  //   if (!isInitialized.current) {
+  //     loadData();
+  //     isInitialized.current = true;
+  //   }
+  // }, [userId, fetchMatches, fetchIncomingMatches]);
 
   const [updateMatch] = useUpdateMatchMutation();
 
@@ -130,7 +131,7 @@ export const useMatches = () => {
 
   return useMemo(
     () => ({
-      matches,
+      // matches,
       showMatchModal,
       matchedProfile,
       showChatMessage,
@@ -139,7 +140,7 @@ export const useMatches = () => {
       handleKeepSwiping,
       handleSocialClick,
       isLoading: isLoadingIncoming || false,
-      incomingMatches,
+      // incomingMatches,
     }),
     [
       matches,

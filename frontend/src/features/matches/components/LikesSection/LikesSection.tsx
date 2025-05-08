@@ -18,12 +18,14 @@ export const LikesSection: React.FC<LikesSectionProps> = ({ likes, onProfileClic
     );
   }
 
+  //TODO вернуть profile.user
+
   return (
     <div className={styles.section}>
       <div className={styles.profilesGrid}>
         {likes.map(profile => (
           <ProfileCard
-            key={profile.user.id}
+            key={profile.id}
             profile={profile}
             onClick={() => onProfileClick(profile)}
             onLike={onLike}

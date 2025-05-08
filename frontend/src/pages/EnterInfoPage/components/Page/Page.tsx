@@ -53,13 +53,14 @@ export const EnterInfoPage = () => {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
 
-        const response = await createUser(userData).unwrap();
+        //ВЕРНУТЬ
+        //const response = await createUser(userData).unwrap();
 
         // надо ли сохранять в локал TODO
-        if (response && response.user && response.user.id) {
-          dispatch(setUserId(response.user.id));
-          localStorage.setItem('userId', response.user.id);
-        }
+        // if (response && response.user && response.user.id) {
+        //   dispatch(setUserId(response.user.id));
+        //   localStorage.setItem('userId', response.user.id);
+        // }
 
         // After creating user, check if we should show notification prompt
         if (

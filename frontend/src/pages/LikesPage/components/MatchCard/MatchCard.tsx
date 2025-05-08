@@ -26,6 +26,8 @@ interface MatchCardProps {
   showChatMessage: number | null;
 }
 
+//TODO вернуть profile.user
+
 export const MatchCard: React.FC<MatchCardProps> = ({
   match,
   onClick,
@@ -35,11 +37,11 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   return (
     <div className={styles.matchCard} onClick={() => onClick(match)}>
       {/* @ts-ignore */}
-      <img src={match.user.imageUrl} alt={match.user.name} className={styles.matchImage} />
+      <img src={match.imageUrl} alt={match.name} className={styles.matchImage} />
       <div className={styles.matchInfo}>
         <div className={styles.matchName}>
           {/* @ts-ignore */}
-          {match.user.name}, {match.user.age}
+          {match.name}, {match.age}
         </div>
         {/* @ts-ignore */}
         {showChatMessage === match.id && (
@@ -51,7 +53,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
           // size="small"
           className={styles.socialButton}
           // @ts-ignore
-          onClick={() => onSocialClick(match.user.id, 'telegram')}
+          onClick={() => onSocialClick(match.id, 'telegram')}
         >
           <TelegramIcon />
         </IconButton>
@@ -59,7 +61,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
           // size="small"
           className={styles.socialButton}
           // @ts-ignore
-          onClick={() => onSocialClick(match.user.id, 'instagram')}
+          onClick={() => onSocialClick(match.id, 'instagram')}
         >
           <InstagramIcon />
         </IconButton>
