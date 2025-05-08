@@ -43,9 +43,6 @@ func main() {
 			return err
 		}
 
-		// temporary
-		app.Log.Info("db user %v", dbConfig.User)
-
 		tokenConfig := token.Config{}
 		err = app.Config.ReadSection("user-token", &tokenConfig)
 		if err != nil {
@@ -62,17 +59,17 @@ func main() {
 		pgStorageUser := user.NewPgStorageUser(txManager)
 		storageFacadeUser := user_service_facade.NewStorageFacadeUser(txManager, pgStorageUser)
 		useCaseUserService := user_service_usecase.NewUseCase(storageFacadeUser)
-		implUserService := user_service.NewImplementation(useCaseUserService)
+		implUserService := user_service.NewImplementation(app.Log, useCaseUserService)
 
 		pgStorageMatching := matching.NewPgStorageMatching(txManager)
 		storageFacadeMatching := matching_service_facade.NewStorageFacadeMatching(txManager, pgStorageMatching)
 		useCaseMatchingService := matching_service_usecase.NewUseCase(storageFacadeMatching)
-		implMatchingService := matching_service.NewImplementation(useCaseMatchingService)
+		implMatchingService := matching_service.NewImplementation(app.Log, useCaseMatchingService)
 
 		pgStorageSearch := search.NewPgStorageSearch(txManager)
 		storageFacadeSearch := search_service_facade.NewStorageFacadeSearch(txManager, pgStorageSearch, pgStorageUser)
 		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch)
-		implSearchService := search_service.NewImplementation(useCaseSearchService)
+		implSearchService := search_service.NewImplementation(app.Log, useCaseSearchService)
 
 		app.AddGRPCUnaryInterceptor(token.NewUnaryTokenInterceptor(token.NewJWTProvider(tokenConfig)))
 		app.RegisterGRPCServices(implUserService, implMatchingService, implSearchService)

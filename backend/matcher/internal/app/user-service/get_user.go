@@ -16,7 +16,8 @@ func (i *Implementation) GetUserV1(ctx context.Context, in *desc.GetUserV1Reques
 
 	response, err := i.usecase.GetUser(ctx, user_service.PBToGetUserRequest(in))
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		i.logger.Error(err)
+		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
 	return user_service.GetUserResponseToPB(response), nil

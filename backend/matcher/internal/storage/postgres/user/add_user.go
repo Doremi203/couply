@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
@@ -37,7 +37,7 @@ func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.Use
 		user.GetUpdatedAt(),
 	).Scan(&userID)
 	if err != nil {
-		return nil, fmt.Errorf("AddUser: %w", err)
+		return nil, errors.WrapFail(err, "AddUser")
 	}
 
 	user.ID = userID

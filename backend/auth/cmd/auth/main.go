@@ -44,9 +44,6 @@ func main() {
 			return err
 		}
 
-		// temporary
-		app.Log.Info("db user %v", dbConfig.User)
-
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")

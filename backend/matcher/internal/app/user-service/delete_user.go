@@ -16,7 +16,8 @@ func (i *Implementation) DeleteUserV1(ctx context.Context, in *desc.DeleteUserV1
 
 	response, err := i.usecase.DeleteUser(ctx, user_service.PBToDeleteUserRequest(in))
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		i.logger.Error(err)
+		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
 	return user_service.DeleteUserResponseToPB(response), nil

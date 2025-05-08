@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
@@ -16,7 +16,7 @@ func (s *PgStorageUser) GetPhotos(ctx context.Context, userID int64) ([]*user.Ph
 
 	rows, err := s.txManager.GetQueryEngine(ctx).Query(ctx, photoSQL, userID)
 	if err != nil {
-		return nil, fmt.Errorf("GetPhotos: %w", err)
+		return nil, errors.Wrap(err, "GetPhotos")
 	}
 	defer rows.Close()
 
@@ -24,7 +24,7 @@ func (s *PgStorageUser) GetPhotos(ctx context.Context, userID int64) ([]*user.Ph
 	for rows.Next() {
 		var p user.Photo
 		if err = rows.Scan(&p.OrderNumber, &p.URL, &p.MimeType, &p.UploadedAt, &p.UpdatedAt); err != nil {
-			return nil, fmt.Errorf("GetPhotos scan: %w", err)
+			return nil, errors.Wrap(err, "GetPhotos scan")
 		}
 		photos = append(photos, &p)
 	}

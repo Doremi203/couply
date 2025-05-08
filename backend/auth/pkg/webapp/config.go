@@ -53,7 +53,7 @@ func (c *Config) ReadSection(name string, cfg any) error {
 	if err != nil {
 		return err
 	}
-	c.logger.Info("loaded custom config", "section", name)
+	c.logger.Infof("loaded custom config %v", errors.Token("section", name))
 
 	return nil
 }

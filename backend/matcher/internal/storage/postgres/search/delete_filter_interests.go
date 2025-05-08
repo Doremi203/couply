@@ -2,7 +2,8 @@ package search
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 
 func (s *PgStorageSearch) DeleteFilterInterests(ctx context.Context, id int64) error {
@@ -17,7 +18,7 @@ func (s *PgStorageSearch) DeleteFilterInterests(ctx context.Context, id int64) e
 		id,
 	)
 	if err != nil {
-		return fmt.Errorf("DeleteFilterInterests: %w", err)
+		return errors.Wrap(err, "DeleteFilterInterests")
 	}
 
 	return nil

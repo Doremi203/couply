@@ -16,7 +16,8 @@ func (i *Implementation) UpdateUserV1(ctx context.Context, in *desc.UpdateUserV1
 
 	response, err := i.usecase.UpdateUser(ctx, user_service.PBToUpdateUserRequest(in))
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		i.logger.Error(err)
+		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
 	return user_service.UpdateUserResponseToPB(response), nil

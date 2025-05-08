@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 )
 
@@ -36,7 +36,7 @@ func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interest
 				value,
 			)
 			if err != nil {
-				return fmt.Errorf("AddInterests: %w", err)
+				return errors.Wrap(err, "AddInterests")
 			}
 		}
 	}

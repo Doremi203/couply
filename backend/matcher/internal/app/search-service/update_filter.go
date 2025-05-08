@@ -16,7 +16,8 @@ func (i *Implementation) UpdateFilterV1(ctx context.Context, in *desc.UpdateFilt
 
 	response, err := i.usecase.UpdateFilter(ctx, dto.PBToUpdateFilterRequest(in))
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		i.logger.Error(err)
+		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
 	return dto.UpdateFilterResponseToPB(response), nil

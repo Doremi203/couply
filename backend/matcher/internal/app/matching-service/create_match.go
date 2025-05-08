@@ -16,7 +16,8 @@ func (i *Implementation) CreateMatchV1(ctx context.Context, in *desc.CreateMatch
 
 	response, err := i.usecase.CreateMatch(ctx, dto.PBToCreateMatchRequest(in))
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		i.logger.Error(err)
+		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
 	return dto.CreateMatchResponseToPB(response), nil

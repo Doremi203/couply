@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
@@ -37,7 +37,7 @@ func (s *PgStorageUser) UpdateUser(ctx context.Context, user *user.User) (*user.
 		user.GetID(),
 	)
 	if err != nil {
-		return nil, fmt.Errorf("UpdateUser: %w", err)
+		return nil, errors.Wrap(err, "UpdateUser")
 	}
 
 	return user, nil

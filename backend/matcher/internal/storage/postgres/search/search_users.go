@@ -2,8 +2,8 @@ package search
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -19,12 +19,12 @@ func (s *PgStorageSearch) SearchUsers(
 ) ([]*user.User, error) {
 	query, args, err := buildSearchQuery(filter, interests, page, limit)
 	if err != nil {
-		return nil, fmt.Errorf("failed to build query: %w", err)
+		return nil, errors.WrapFail(err, "build query")
 	}
 
 	rows, err := s.txManager.GetQueryEngine(ctx).Query(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("query failed: %w", err)
+		return nil, errors.WrapFail(err, "query")
 	}
 	defer rows.Close()
 
@@ -36,7 +36,7 @@ func scanUsers(rows pgx.Rows) ([]*user.User, error) {
 	for rows.Next() {
 		user, err := scanUser(rows)
 		if err != nil {
-			return nil, fmt.Errorf("scan failed: %w", err)
+			return nil, errors.WrapFail(err, "scan rows")
 		}
 		users = append(users, user)
 	}

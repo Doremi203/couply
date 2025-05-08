@@ -2,7 +2,8 @@ package user
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 
 func (s *PgStorageUser) DeletePhotos(ctx context.Context, id int64) error {
@@ -17,7 +18,7 @@ func (s *PgStorageUser) DeletePhotos(ctx context.Context, id int64) error {
 		id,
 	)
 	if err != nil {
-		return fmt.Errorf("DeletePhotos: %w", err)
+		return errors.Wrap(err, "DeletePhotos")
 	}
 
 	return nil

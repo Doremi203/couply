@@ -16,7 +16,8 @@ func (i *Implementation) FetchMatchesV1(ctx context.Context, in *desc.FetchMatch
 
 	response, err := i.usecase.FetchMatches(ctx, dto.PBToFetchMatchesRequest(in))
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		i.logger.Error(err)
+		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
 	return dto.FetchMatchesResponseToPB(response), nil
