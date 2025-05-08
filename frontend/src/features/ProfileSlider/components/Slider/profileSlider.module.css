@@ -128,7 +128,7 @@
 
 .bio {
   position: absolute;
-  bottom: 25px;
+  bottom: 30px;
   left: 20px;
   color: white;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.9);
@@ -159,7 +159,7 @@
   font-size: 2rem;
   font-weight: medium;
   margin-left: 1rem;
-  bottom: 45px;
+  bottom: 50px;
 }
 
 .nameWithBioTwo {
@@ -173,6 +173,19 @@
   font-weight: medium;
   margin-left: 1rem;
   bottom: 70px;
+}
+
+.nameWithGoal {
+  position: absolute;
+  left: 20px;
+  color: white;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+
+  font-family: 'Jost';
+  font-size: 2rem;
+  font-weight: medium;
+  margin-left: 1rem;
+  bottom: 50px;
 }
 
 .lifestyle,
@@ -216,4 +229,40 @@
 
 .like {
   margin-top: 5px;
+}
+
+.distance {
+  position: absolute;
+  bottom: 560px;
+  left: 20px;
+  color: white;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
+
+  font-family: 'Jost';
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-left: 1rem;
+}
+
+.goal {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-size: 1em;
+  margin-top: 530px;
+  padding: 10px;
+  border-radius: 10px;
+  color: white;
+  z-index: 1;
+  position: absolute;
+  left: 30px;
+  display: flex;
+  gap: 5px;
+  height: 30px;
+  align-items: center;
+  font-weight: 300;
+}
+
+.goalIcon {
+  margin-top: 2px;
 }

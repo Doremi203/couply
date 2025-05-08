@@ -186,6 +186,8 @@
 
 /* 2 */
 
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
@@ -399,7 +401,6 @@ export const ProfileSlider = () => {
   const renderProfileInfo = () => {
     switch (currentPhotoIndex) {
       case 0: {
-        // Первая фотография - показываем био
         let bioLines = 0;
 
         if (currentProfile.bio.length > 0 && currentProfile.bio.length <= 50) {
@@ -423,27 +424,19 @@ export const ProfileSlider = () => {
         );
       }
       case 1: {
-        // Вторая фотография - показываем lifestyle
-        const nameClass = styles.name;
+        const nameClass = styles.nameWithGoal;
         return (
           <>
             {renderName(nameClass)}
-            {/* <div className={styles.lifestyle}>
-              <h4>Образ жизни</h4>
-              <ul>
-                {Object.entries(currentProfile.lifestyle).map(([key, value]) => (
-                  <li key={key}>
-                    <strong>{key}:</strong> {value}
-                  </li>
-                ))}
-              </ul>
-            </div> */}
+            <div className={styles.goal}>
+              <FavoriteBorderOutlinedIcon className={styles.goalIcon} />
+              <span>Отношения</span>
+            </div>
           </>
         );
       }
       case 2: {
-        // Третья фотография - показываем интересы
-        const nameClass = styles.nameWithBioOne;
+        const nameClass = styles.nameWithGoal;
         return (
           <>
             {renderName(nameClass)}
@@ -473,6 +466,8 @@ export const ProfileSlider = () => {
           className={styles.profileImage}
           draggable="false"
         />
+
+        <div className={styles.distance}>0 км</div>
 
         {renderProfileInfo()}
 
