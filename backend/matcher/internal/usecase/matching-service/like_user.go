@@ -46,7 +46,7 @@ func (p *likeProcessor) ProcessLike(ctx context.Context, userID, targetUserID uu
 }
 
 func isMutualLike(revertedLike *matching.Like) bool {
-	return revertedLike != nil
+	return revertedLike != nil && revertedLike.GetStatus() == matching.StatusWaiting
 }
 
 func (p *likeProcessor) handleNewLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {
@@ -63,19 +63,9 @@ func (p *likeProcessor) handleNewLike(ctx context.Context, userID, targetUserID 
 }
 
 func (p *likeProcessor) handleMutualLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {
-	updatedLike := matching.NewLike(targetUserID, userID, message, matching.StatusAccepted)
-	if _, err := p.storage.UpdateLikeTx(ctx, updatedLike); err != nil {
-		return nil, fmt.Errorf("failed to update like: %w", err)
-	}
-
-	newLike := matching.NewLike(userID, targetUserID, message, matching.StatusAccepted)
-	if _, err := p.storage.LikeUserTx(ctx, newLike); err != nil {
-		return nil, fmt.Errorf("failed to save like: %w", err)
-	}
-
-	newMatch := matching.NewMatch(userID, targetUserID)
-	if _, err := p.storage.AddMatchTx(ctx, newMatch); err != nil {
-		return nil, fmt.Errorf("failed to create match: %w", err)
+	newMatch, err := p.storage.HandleMutualLikeTx(ctx, userID, targetUserID, message)
+	if err != nil {
+		return nil, fmt.Errorf("failed to handle mutual like: %w", err)
 	}
 
 	return &dto.LikeUserV1Response{

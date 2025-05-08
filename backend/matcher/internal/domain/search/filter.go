@@ -3,6 +3,8 @@ package search
 import (
 	"time"
 
+	"github.com/google/uuid"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
@@ -10,7 +12,7 @@ import (
 )
 
 type Filter struct {
-	UserID         int64
+	UserID         uuid.UUID
 	GenderPriority GenderPriority
 	MinAge         int32
 	MaxAge         int32
@@ -30,11 +32,11 @@ type Filter struct {
 	UpdatedAt      time.Time
 }
 
-func (x *Filter) GetUserID() int64 {
+func (x *Filter) GetUserID() uuid.UUID {
 	if x != nil {
 		return x.UserID
 	}
-	return 0
+	return uuid.Nil
 }
 
 func (x *Filter) GetGenderPriority() GenderPriority {
@@ -158,7 +160,6 @@ func (x *Filter) GetUpdatedAt() time.Time {
 
 func FilterToPB(filter *Filter) *desc.Filter {
 	return &desc.Filter{
-		UserId:         filter.GetUserID(),
 		GenderPriority: GenderPriorityToPB(filter.GetGenderPriority()),
 		AgeRange:       &desc.Range{Min: filter.GetMinAge(), Max: filter.GetMaxAge()},
 		HeightRange:    &desc.Range{Min: filter.GetMinHeight(), Max: filter.GetMaxHeight()},
@@ -179,7 +180,6 @@ func FilterToPB(filter *Filter) *desc.Filter {
 
 func PBToFilter(filter *desc.Filter) *Filter {
 	return &Filter{
-		UserID:         filter.GetUserId(),
 		GenderPriority: PBToGenderPriority(filter.GetGenderPriority()),
 		MinAge:         filter.GetAgeRange().GetMin(),
 		MaxAge:         filter.GetAgeRange().GetMax(),

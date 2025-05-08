@@ -18,12 +18,6 @@ func (x *DislikeUserV1Request) GetTargetUserID() uuid.UUID {
 
 type DislikeUserV1Response struct{}
 
-func DislikeUserRequestToPB(req *DislikeUserV1Request) *desc.DislikeUserV1Request {
-	return &desc.DislikeUserV1Request{
-		TargetUserId: req.GetTargetUserID().String(),
-	}
-}
-
 func PBToDislikeUserRequest(req *desc.DislikeUserV1Request) (*DislikeUserV1Request, error) {
 	targetUserID, err := uuid.Parse(req.GetTargetUserId())
 	if err != nil {
@@ -37,8 +31,4 @@ func PBToDislikeUserRequest(req *desc.DislikeUserV1Request) (*DislikeUserV1Reque
 
 func DislikeUserResponseToPB(_ *DislikeUserV1Response) *desc.DislikeUserV1Response {
 	return &desc.DislikeUserV1Response{}
-}
-
-func PBToDislikeUserResponse(_ *desc.DislikeUserV1Response) *DislikeUserV1Response {
-	return &DislikeUserV1Response{}
 }

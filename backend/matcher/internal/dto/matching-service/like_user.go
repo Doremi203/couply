@@ -46,13 +46,6 @@ func (x *LikeUserV1Response) GetMatch() *matching.Match {
 	return nil
 }
 
-func LikeUserRequestToPB(req *LikeUserV1Request) *desc.LikeUserV1Request {
-	return &desc.LikeUserV1Request{
-		TargetUserId: req.GetTargetUserId().String(),
-		Message:      req.GetMessage(),
-	}
-}
-
 func PBToLikeUserRequest(req *desc.LikeUserV1Request) (*LikeUserV1Request, error) {
 	targetUserID, err := uuid.Parse(req.GetTargetUserId())
 	if err != nil {
@@ -70,16 +63,4 @@ func LikeUserResponseToPB(resp *LikeUserV1Response) *desc.LikeUserV1Response {
 		IsMatch: resp.GetIsMatch(),
 		Match:   matching.MatchToPB(resp.GetMatch()),
 	}
-}
-
-func PBToLikeUserResponse(resp *desc.LikeUserV1Response) (*LikeUserV1Response, error) {
-	match, err := matching.PBToMatch(resp.GetMatch())
-	if err != nil {
-		return nil, err
-	}
-
-	return &LikeUserV1Response{
-		IsMatch: resp.GetIsMatch(),
-		Match:   match,
-	}, nil
 }

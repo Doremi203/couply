@@ -13,6 +13,7 @@ import (
 type matchingServiceUseCase interface {
 	LikeUser(ctx context.Context, in *dto.LikeUserV1Request) (*dto.LikeUserV1Response, error)
 	DislikeUser(ctx context.Context, in *dto.DislikeUserV1Request) (*dto.DislikeUserV1Response, error)
+	DeleteMatch(ctx context.Context, in *dto.DeleteMatchV1Request) (*dto.DeleteMatchV1Response, error)
 	FetchMatches(ctx context.Context, in *dto.FetchMatchesV1Request) (*dto.FetchMatchesV1Response, error)
 	FetchOutgoingLikes(ctx context.Context, in *dto.FetchOutgoingLikesV1Request) (*dto.FetchOutgoingLikesV1Response, error)
 	FetchIncomingLikes(ctx context.Context, in *dto.FetchIncomingLikesV1Request) (*dto.FetchIncomingLikesV1Response, error)

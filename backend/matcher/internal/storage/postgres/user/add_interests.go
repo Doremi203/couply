@@ -4,17 +4,16 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/jackc/pgx/v5/pgconn"
+
+	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 )
 
 func (s *PgStorageUser) AddInterests(ctx context.Context, userID uuid.UUID, interests *interest.Interest) error {
-	interestSQL := `
-        INSERT INTO interests (user_id, type, value)
-        VALUES ($1, $2, $3)
-    `
-
 	interestGroups := map[string][]int{
 		"social":           convertSlice(interests.GetSocial()),
 		"sport":            convertSlice(interests.GetSport()),
@@ -30,15 +29,22 @@ func (s *PgStorageUser) AddInterests(ctx context.Context, userID uuid.UUID, inte
 		}
 
 		for _, value := range values {
-			_, err := s.txManager.GetQueryEngine(ctx).Exec(
-				ctx,
-				interestSQL,
-				userID,
-				interestType,
-				value,
-			)
+			query, args, err := sq.Insert("interests").
+				Columns("user_id", "type", "value").
+				Values(userID, interestType, value).
+				PlaceholderFormat(sq.Dollar).
+				ToSql()
 			if err != nil {
-				return fmt.Errorf("AddInterests: %w", err)
+				return fmt.Errorf("failed to build query: %w", err)
+			}
+
+			_, err = s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+			if err != nil {
+				var pgErr *pgconn.PgError
+				if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+					return ErrDuplicateInterest
+				}
+				return fmt.Errorf("failed to insert interest: %w", err)
 			}
 		}
 	}

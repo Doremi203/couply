@@ -3,6 +3,8 @@ package user_service
 import (
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
@@ -152,27 +154,6 @@ func (x *CreateUserV1Response) GetUser() *user.User {
 	return nil
 }
 
-func CreateUserRequestToPB(req *CreateUserV1Request) *desc.CreateUserV1Request {
-	return &desc.CreateUserV1Request{
-		Name:      req.GetName(),
-		Age:       req.GetAge(),
-		Gender:    user.GenderToPB(req.GetGender()),
-		Location:  req.GetLocation(),
-		Bio:       req.GetBio(),
-		Goal:      common.GoalToPB(req.GetGoal()),
-		Interest:  interest.InterestToPB(req.GetInterest()),
-		Zodiac:    common.ZodiacToPB(req.GetZodiac()),
-		Height:    req.GetHeight(),
-		Education: common.EducationToPB(req.GetEducation()),
-		Children:  common.ChildrenToPB(req.GetChildren()),
-		Alcohol:   common.AlcoholToPB(req.GetAlcohol()),
-		Smoking:   common.SmokingToPB(req.GetSmoking()),
-		Hidden:    req.GetHidden(),
-		Verified:  req.GetVerified(),
-		Photos:    user.PhotoSliceToPB(req.GetPhotos()),
-	}
-}
-
 func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 	return &CreateUserV1Request{
 		Name:      req.GetName(),
@@ -194,8 +175,9 @@ func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 	}
 }
 
-func CreateUserRequestToUser(req *CreateUserV1Request) *user.User {
+func CreateUserRequestToUser(req *CreateUserV1Request, id uuid.UUID) *user.User {
 	return user.NewUserBuilder().
+		SetID(id).
 		SetName(req.GetName()).
 		SetAge(req.GetAge()).
 		SetGender(req.GetGender()).
@@ -220,11 +202,5 @@ func CreateUserRequestToUser(req *CreateUserV1Request) *user.User {
 func CreateUserResponseToPB(resp *CreateUserV1Response) *desc.CreateUserV1Response {
 	return &desc.CreateUserV1Response{
 		User: user.UserToPB(resp.GetUser()),
-	}
-}
-
-func PBToCreateUserResponse(resp *desc.CreateUserV1Response) *CreateUserV1Response {
-	return &CreateUserV1Response{
-		User: user.PBToUser(resp.GetUser()),
 	}
 }

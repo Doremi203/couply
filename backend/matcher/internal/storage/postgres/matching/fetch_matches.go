@@ -27,12 +27,12 @@ func (s *PgStorageMatching) FetchMatches(ctx context.Context, userID uuid.UUID, 
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("FetchMatches: failed to build query: %w", err)
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	rows, err := s.txManager.GetQueryEngine(ctx).Query(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("FetchMatches: %w", err)
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 	defer rows.Close()
 
@@ -45,14 +45,14 @@ func (s *PgStorageMatching) FetchMatches(ctx context.Context, userID uuid.UUID, 
 			&match.CreatedAt,
 		)
 		if err != nil {
-			return nil, fmt.Errorf("FetchMatches: failed to scan row: %w", err)
+			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 
 		matches = append(matches, &match)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("FetchMatches: rows error: %w", err)
+		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
 	return matches, nil

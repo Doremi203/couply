@@ -2,13 +2,15 @@ package search_service
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 )
 
-func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID int64) (*search.Filter, error) {
+func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID uuid.UUID) (*search.Filter, error) {
 	var (
 		fil *search.Filter
 		i   *interest.Interest
@@ -18,12 +20,12 @@ func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID int64) (*s
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
 		fil, err = f.searchStorage.GetFilter(ctxTx, userID)
 		if err != nil {
-			return errors.Wrap(err, "GetFilterTx: get user failed")
+			return fmt.Errorf("GetFilterTx: get user failed: %w", err)
 		}
 
 		i, err = f.searchStorage.GetFilterInterests(ctxTx, userID)
 		if err != nil {
-			return errors.Wrap(err, "GetFilterTx: get interests failed")
+			return fmt.Errorf("GetFilterTx: get interests failed: %w", err)
 		}
 
 		fil.Interest = i
@@ -32,7 +34,7 @@ func (f *StorageFacadeSearch) GetFilterTx(ctx context.Context, userID int64) (*s
 	})
 
 	if err != nil {
-		return nil, errors.Wrap(err, "GetFilterTx: user transaction failed")
+		return nil, fmt.Errorf("GetFilterTx: user transaction failed: %w", err)
 	}
 	return fil, nil
 }

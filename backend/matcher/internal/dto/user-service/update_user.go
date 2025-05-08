@@ -3,6 +3,8 @@ package user_service
 import (
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
@@ -194,8 +196,9 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 	}
 }
 
-func UpdateUserRequestToUser(req *UpdateUserV1Request) *user.User {
+func UpdateUserRequestToUser(req *UpdateUserV1Request, id uuid.UUID) *user.User {
 	return user.NewUserBuilder().
+		SetID(id).
 		SetName(req.GetName()).
 		SetAge(req.GetAge()).
 		SetGender(req.GetGender()).

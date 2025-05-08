@@ -8,14 +8,12 @@ import (
 )
 
 func (c *UseCase) CreateUser(ctx context.Context, in *user_service.CreateUserV1Request) (*user_service.CreateUserV1Response, error) {
-	user := user_service.CreateUserRequestToUser(in)
-
 	userID, err := utils.GetUserIDFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	user.ID = userID
+	user := user_service.CreateUserRequestToUser(in, userID)
 
 	createdUser, err := c.userStorageFacade.CreateUserTx(ctx, user)
 	if err != nil {

@@ -10,10 +10,6 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
-var (
-	ErrDuplicateLike = errors.Error("like already exists between these users")
-)
-
 func (s *PgStorageMatching) AddLike(ctx context.Context, like *matching.Like) error {
 	query, args, err := sq.Insert("likes").
 		Columns("sender_id", "receiver_id", "message", "status", "created_at").
@@ -27,7 +23,7 @@ func (s *PgStorageMatching) AddLike(ctx context.Context, like *matching.Like) er
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("AddLike: failed to build query: %w", err)
+		return fmt.Errorf("failed to build query: %w", err)
 	}
 
 	_, err = s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
@@ -36,7 +32,7 @@ func (s *PgStorageMatching) AddLike(ctx context.Context, like *matching.Like) er
 		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
 			return ErrDuplicateLike
 		}
-		return fmt.Errorf("AddLike: %w", err)
+		return fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	return nil

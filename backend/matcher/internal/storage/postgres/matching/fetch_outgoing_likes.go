@@ -25,12 +25,12 @@ func (s *PgStorageMatching) FetchOutgoingLikes(ctx context.Context, userID uuid.
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("FetchOutgoingLikes: failed to build query: %w", err)
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	rows, err := s.txManager.GetQueryEngine(ctx).Query(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("FetchOutgoingLikes: query error: %w", err)
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 	defer rows.Close()
 
@@ -45,13 +45,13 @@ func (s *PgStorageMatching) FetchOutgoingLikes(ctx context.Context, userID uuid.
 			&like.CreatedAt,
 		)
 		if err != nil {
-			return nil, fmt.Errorf("FetchOutgoingLikes: scan error: %w", err)
+			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 		likes = append(likes, &like)
 	}
 
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("FetchOutgoingLikes: rows error: %w", err)
+		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
 	return likes, nil

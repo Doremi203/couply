@@ -18,12 +18,12 @@ func (s *PgStorageMatching) UpdateLike(ctx context.Context, like *matching.Like)
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("UpdateLike: failed to build query: %w", err)
+		return fmt.Errorf("failed to build query: %w", err)
 	}
 
 	result, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
 	if err != nil {
-		return fmt.Errorf("UpdateLike: %w", err)
+		return fmt.Errorf("failed to execute query: %w", err)
 	}
 
 	rowsAffected := result.RowsAffected()

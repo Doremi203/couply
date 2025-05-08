@@ -28,6 +28,15 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         description: "Токен авторизации";
       }
     }
+    security: {
+      key: "user-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_BASIC;
+        name: "user-token";
+        description: "Токен пользователя для идентификации";
+      }
+    }
   }
 };
 
@@ -43,6 +52,10 @@ service MatchingService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -62,6 +75,31 @@ service MatchingService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
+
+  rpc DeleteMatchV1 (DeleteMatchV1Request) returns (DeleteMatchV1Response) {
+    option (google.api.http) = {
+      post: "/v1/DeleteMatchV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Удаление мэтча";
+      description: "Удаление мэтча из списка";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
@@ -77,6 +115,10 @@ service MatchingService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -96,6 +138,10 @@ service MatchingService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
@@ -111,6 +157,10 @@ service MatchingService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -142,6 +192,14 @@ message DislikeUserV1Request {
 }
 
 message DislikeUserV1Response {}
+
+message DeleteMatchV1Request {
+  string target_user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message DeleteMatchV1Response {}
 
 message FetchMatchesUserIDsV1Request {
   uint64 limit = 1 [

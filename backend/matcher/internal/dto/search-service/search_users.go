@@ -6,16 +6,8 @@ import (
 )
 
 type SearchUsersV1Request struct {
-	UserID int64
 	Offset uint64
 	Limit  uint64
-}
-
-func (x *SearchUsersV1Request) GetUserID() int64 {
-	if x != nil {
-		return x.UserID
-	}
-	return 0
 }
 
 func (x *SearchUsersV1Request) GetOffset() uint64 {
@@ -43,17 +35,8 @@ func (x *SearchUsersV1Response) GetUsers() []*user.User {
 	return nil
 }
 
-func SearchUsersRequestToPB(req *SearchUsersV1Request) *desc.SearchUsersV1Request {
-	return &desc.SearchUsersV1Request{
-		UserId: req.GetUserID(),
-		Offset: req.GetOffset(),
-		Limit:  req.GetLimit(),
-	}
-}
-
 func PBToSearchUsersRequest(req *desc.SearchUsersV1Request) *SearchUsersV1Request {
 	return &SearchUsersV1Request{
-		UserID: req.GetUserId(),
 		Offset: req.GetOffset(),
 		Limit:  req.GetLimit(),
 	}
@@ -62,11 +45,5 @@ func PBToSearchUsersRequest(req *desc.SearchUsersV1Request) *SearchUsersV1Reques
 func SearchUsersResponseToPB(resp *SearchUsersV1Response) *desc.SearchUsersV1Response {
 	return &desc.SearchUsersV1Response{
 		Users: user.UsersToPB(resp.GetUsers()),
-	}
-}
-
-func PBToSearchUsersResponse(resp *desc.SearchUsersV1Response) *SearchUsersV1Response {
-	return &SearchUsersV1Response{
-		Users: user.PBToUsers(resp.GetUsers()),
 	}
 }

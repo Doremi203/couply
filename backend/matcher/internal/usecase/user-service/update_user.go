@@ -8,14 +8,12 @@ import (
 )
 
 func (c *UseCase) UpdateUser(ctx context.Context, in *user_service.UpdateUserV1Request) (*user_service.UpdateUserV1Response, error) {
-	user := user_service.UpdateUserRequestToUser(in)
-
 	userID, err := utils.GetUserIDFromContext(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	user.ID = userID
+	user := user_service.UpdateUserRequestToUser(in, userID)
 
 	updatedUser, err := c.userStorageFacade.UpdateUserTx(ctx, user)
 	if err != nil {

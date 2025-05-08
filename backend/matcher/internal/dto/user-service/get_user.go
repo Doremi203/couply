@@ -18,10 +18,6 @@ func (x *GetUserV1Response) GetUser() *user.User {
 	return nil
 }
 
-func GetUserRequestToPB(_ *GetUserV1Request) *desc.GetUserV1Request {
-	return &desc.GetUserV1Request{}
-}
-
 func PBToGetUserRequest(_ *desc.GetUserV1Request) *GetUserV1Request {
 	return &GetUserV1Request{}
 }
@@ -29,11 +25,5 @@ func PBToGetUserRequest(_ *desc.GetUserV1Request) *GetUserV1Request {
 func GetUserResponseToPB(resp *GetUserV1Response) *desc.GetUserV1Response {
 	return &desc.GetUserV1Response{
 		User: user.UserToPB(resp.GetUser()),
-	}
-}
-
-func PBToGetUserResponse(resp *desc.GetUserV1Response) *GetUserV1Response {
-	return &GetUserV1Response{
-		User: user.PBToUser(resp.GetUser()),
 	}
 }

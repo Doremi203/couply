@@ -11,12 +11,8 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var (
-	ErrLikeNotFound = errors.Error("like not found")
-)
-
 func (s *PgStorageMatching) GetLike(ctx context.Context, senderID, receiverID uuid.UUID) (*matching.Like, error) {
-	query, args, err := sq.Select("sender_id", "receiver_id", "message", "created_at").
+	query, args, err := sq.Select("sender_id", "receiver_id", "message", "status", "created_at").
 		From("likes").
 		Where(sq.Eq{
 			"sender_id":   senderID,
@@ -25,7 +21,7 @@ func (s *PgStorageMatching) GetLike(ctx context.Context, senderID, receiverID uu
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
-		return nil, fmt.Errorf("GetLike: failed to build query: %w", err)
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
 	row := s.txManager.GetQueryEngine(ctx).QueryRow(ctx, query, args...)
@@ -35,13 +31,14 @@ func (s *PgStorageMatching) GetLike(ctx context.Context, senderID, receiverID uu
 		&like.SenderID,
 		&like.ReceiverID,
 		&like.Message,
+		&like.Status,
 		&like.CreatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, ErrLikeNotFound
 		}
-		return nil, fmt.Errorf("GetLike: failed to scan row: %w", err)
+		return nil, fmt.Errorf("failed to scan row: %w", err)
 	}
 
 	return like, nil

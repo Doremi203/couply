@@ -29,6 +29,15 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         description: "Токен авторизации";
       }
     }
+    security: {
+      key: "user-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_BASIC;
+        name: "user-token";
+        description: "Токен пользователя для идентификации";
+      }
+    }
   }
 };
 
@@ -44,6 +53,10 @@ service UserService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -63,6 +76,10 @@ service UserService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
@@ -80,6 +97,10 @@ service UserService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
@@ -95,6 +116,10 @@ service UserService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }

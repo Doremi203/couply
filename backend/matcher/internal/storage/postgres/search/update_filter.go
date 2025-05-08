@@ -2,42 +2,43 @@ package search
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
+	sq "github.com/Masterminds/squirrel"
 )
 
 func (s *PgStorageSearch) UpdateFilter(ctx context.Context, filter *search.Filter) error {
-	filterSQL := `
-		UPDATE filters 
-		SET gender_priority = $1, min_age = $2, max_age = $3, min_height = $4, max_height = $5, distance = $6,
-		    goal = $7, zodiac = $8, education = $9, children = $10, alcohol = $11, smoking = $12, only_verified = $13,
-		    only_premium = $14, updated_at = $15
-		WHERE user_id = $16
-	`
-
-	_, err := s.txManager.GetQueryEngine(ctx).Exec(
-		ctx,
-		filterSQL,
-		filter.GetGenderPriority(),
-		filter.GetMinAge(),
-		filter.GetMaxAge(),
-		filter.GetMinHeight(),
-		filter.GetMaxHeight(),
-		filter.GetDistance(),
-		filter.GetGoal(),
-		filter.GetZodiac(),
-		filter.GetEducation(),
-		filter.GetChildren(),
-		filter.GetAlcohol(),
-		filter.GetSmoking(),
-		filter.GetOnlyVerified(),
-		filter.GetOnlyPremium(),
-		filter.GetUpdatedAt(),
-		filter.GetUserID(),
-	)
+	query, args, err := sq.Update("filters").
+		Set("gender_priority", filter.GetGenderPriority()).
+		Set("min_age", filter.GetMinAge()).
+		Set("max_age", filter.GetMaxAge()).
+		Set("min_height", filter.GetMinHeight()).
+		Set("max_height", filter.GetMaxHeight()).
+		Set("distance", filter.GetDistance()).
+		Set("goal", filter.GetGoal()).
+		Set("zodiac", filter.GetZodiac()).
+		Set("education", filter.GetEducation()).
+		Set("children", filter.GetChildren()).
+		Set("alcohol", filter.GetAlcohol()).
+		Set("smoking", filter.GetSmoking()).
+		Set("only_verified", filter.GetOnlyVerified()).
+		Set("only_premium", filter.GetOnlyPremium()).
+		Set("updated_at", filter.GetUpdatedAt()).
+		Where(sq.Eq{"user_id": filter.GetUserID()}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
-		return errors.Wrap(err, "UpdateFilter")
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	result, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to execute query: %w", err)
+	}
+
+	if result.RowsAffected() == 0 {
+		return ErrFilterNotFound
 	}
 
 	return nil

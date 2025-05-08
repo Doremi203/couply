@@ -3,6 +3,8 @@ package search_service
 import (
 	"time"
 
+	"github.com/google/uuid"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
@@ -10,7 +12,6 @@ import (
 )
 
 type UpdateFilterV1Request struct {
-	UserID         int64
 	GenderPriority search.GenderPriority
 	MinAge         int32
 	MaxAge         int32
@@ -26,13 +27,6 @@ type UpdateFilterV1Request struct {
 	Interest       *interest.Interest
 	OnlyVerified   bool
 	OnlyPremium    bool
-}
-
-func (x *UpdateFilterV1Request) GetUserID() int64 {
-	if x != nil {
-		return x.UserID
-	}
-	return 0
 }
 
 func (x *UpdateFilterV1Request) GetGenderPriority() search.GenderPriority {
@@ -151,30 +145,8 @@ func (x *UpdateFilterV1Response) GetFilter() *search.Filter {
 	return nil
 }
 
-func UpdateFilterRequestToPB(req *UpdateFilterV1Request) *desc.UpdateFilterV1Request {
-	return &desc.UpdateFilterV1Request{
-		UserId:         req.GetUserID(),
-		GenderPriority: search.GenderPriorityToPB(req.GetGenderPriority()),
-		MinAge:         req.GetMinAge(),
-		MaxAge:         req.GetMaxAge(),
-		MinHeight:      req.GetMinHeight(),
-		MaxHeight:      req.GetMaxHeight(),
-		Distance:       req.GetDistance(),
-		Goal:           common.GoalToPB(req.GetGoal()),
-		Zodiac:         common.ZodiacToPB(req.GetZodiac()),
-		Education:      common.EducationToPB(req.GetEducation()),
-		Children:       common.ChildrenToPB(req.GetChildren()),
-		Alcohol:        common.AlcoholToPB(req.GetAlcohol()),
-		Smoking:        common.SmokingToPB(req.GetSmoking()),
-		Interest:       interest.InterestToPB(req.GetInterest()),
-		OnlyVerified:   req.GetOnlyVerified(),
-		OnlyPremium:    req.GetOnlyPremium(),
-	}
-}
-
 func PBToUpdateFilterRequest(req *desc.UpdateFilterV1Request) *UpdateFilterV1Request {
 	return &UpdateFilterV1Request{
-		UserID:         req.GetUserId(),
 		GenderPriority: search.PBToGenderPriority(req.GetGenderPriority()),
 		MinAge:         req.GetMinAge(),
 		MaxAge:         req.GetMaxAge(),
@@ -199,15 +171,9 @@ func UpdateFilterResponseToPB(resp *UpdateFilterV1Response) *desc.UpdateFilterV1
 	}
 }
 
-func PBToUpdateFilterResponse(resp *desc.UpdateFilterV1Response) *UpdateFilterV1Response {
-	return &UpdateFilterV1Response{
-		Filter: search.PBToFilter(resp.GetFilter()),
-	}
-}
-
-func UpdateFilterRequestToFilter(req *UpdateFilterV1Request) *search.Filter {
+func UpdateFilterRequestToFilter(req *UpdateFilterV1Request, userID uuid.UUID) *search.Filter {
 	return &search.Filter{
-		UserID:         req.GetUserID(),
+		UserID:         userID,
 		GenderPriority: req.GetGenderPriority(),
 		MinAge:         req.GetMinAge(),
 		MaxAge:         req.GetMaxAge(),
