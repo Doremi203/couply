@@ -2,8 +2,8 @@ package search
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 )
 
@@ -37,7 +37,7 @@ func (s *PgStorageSearch) UpdateFilter(ctx context.Context, filter *search.Filte
 		filter.GetUserID(),
 	)
 	if err != nil {
-		return fmt.Errorf("UpdateFilter: %w", err)
+		return errors.Wrap(err, "UpdateFilter")
 	}
 
 	return nil

@@ -2,8 +2,8 @@ package matching
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
@@ -21,7 +21,7 @@ func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match)
 		match.GetApproved(),
 	)
 	if err != nil {
-		return fmt.Errorf("AddMatch: %w", err)
+		return errors.Wrap(err, "AddMatch")
 	}
 
 	return nil

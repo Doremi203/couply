@@ -70,7 +70,7 @@ auth/check-coverage:
 	@rm auth/cover.out
 
 auth/local-build:
-	cd auth/cmd/auth && go build -ldflags="-s -w"
+	cd auth/cmd/auth && go build -ldflags="-s -w" -o /dev/null
 
 auth/lint:
 	cd auth && golangci-lint run
@@ -102,7 +102,7 @@ matcher/check-coverage:
 	@rm matcher/cover.out
 
 matcher/local-build:
-	cd matcher/cmd/matcher && go build -ldflags="-s -w"
+	cd matcher/cmd/matcher && go build -ldflags="-s -w" -o /dev/null
 
 matcher/lint:
 	cd matcher && golangci-lint run

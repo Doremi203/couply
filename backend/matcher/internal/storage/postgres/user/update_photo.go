@@ -2,8 +2,8 @@ package user
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
@@ -24,7 +24,7 @@ func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, user
 		photo.GetOrderNumber(),
 	)
 	if err != nil {
-		return fmt.Errorf("UpdatePhoto: %w", err)
+		return errors.Wrap(err, "UpdatePhoto")
 	}
 
 	return nil

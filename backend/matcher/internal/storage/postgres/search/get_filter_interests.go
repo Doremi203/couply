@@ -2,8 +2,8 @@ package search
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"github.com/jackc/pgx/v5"
 )
@@ -23,7 +23,7 @@ func (s *PgStorageSearch) GetFilterInterests(ctx context.Context, userID int64) 
 	}
 
 	if err = rows.Err(); err != nil {
-		return nil, fmt.Errorf("GetFilterInterests: rows error: %w", err)
+		return nil, errors.Wrap(err, "GetFilterInterests: rows error")
 	}
 
 	return i, nil
@@ -43,7 +43,7 @@ func (s *PgStorageSearch) queryFilterInterests(ctx context.Context, userID int64
 		userID,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("GetFilterInterests query failed: %w", err)
+		return nil, errors.Wrap(err, "GetFilterInterests query failed")
 	}
 	return rows, nil
 }
@@ -55,7 +55,7 @@ func (s *PgStorageSearch) processFilterInterestRow(rows pgx.Rows, i *interest.In
 	)
 
 	if err := rows.Scan(&interestType, &value); err != nil {
-		return fmt.Errorf("GetFilterInterests scan failed: %w", err)
+		return errors.WrapFail(err, "GetFilterInterests scan failed")
 	}
 
 	return s.mapInterestValue(i, interestType, value)
@@ -76,7 +76,7 @@ func (s *PgStorageSearch) mapInterestValue(i *interest.Interest, interestType st
 	case "gastronomy":
 		i.Gastronomy = append(i.Gastronomy, interest.Gastronomy(value))
 	default:
-		return fmt.Errorf("unknown interest type: %s", interestType)
+		return errors.Errorf("unknown %v", errors.Token("interest_type", interestType))
 	}
 	return nil
 }

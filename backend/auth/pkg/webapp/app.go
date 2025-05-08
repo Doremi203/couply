@@ -83,13 +83,13 @@ func initApp() *App {
 	}
 
 	logger := newLogger(cfg.logging)
-	logger.Info("starting service with", "env", env)
-	logger.Info(
-		"loaded app config",
-		"grpc_cfg", cfg.grpc,
-		"http_cfg", cfg.http,
-		"logging_cfg", cfg.logging,
-		"swagger-ui", cfg.swaggerUI,
+	logger.Infof("starting service with %v", errors.Token("env", env))
+	logger.Infof(
+		"loaded app config: %v %v %v %v",
+		errors.Token("grpc_cfg", cfg.grpc),
+		errors.Token("http_cfg", cfg.http),
+		errors.Token("logging_cfg", cfg.logging),
+		errors.Token("swagger-ui", cfg.swaggerUI),
 	)
 	cfg.logger = logger
 
@@ -216,8 +216,8 @@ func run(a *App, setupFunc func(ctx context.Context, app *App) error) (err error
 
 	<-ctx.Done()
 
-	a.Log.Info("shutting down app")
-	a.Log.Info("shutting down servers")
+	a.Log.Infof("shutting down app")
+	a.Log.Infof("shutting down servers")
 
 	grpcServer.GracefulStop()
 
@@ -295,7 +295,7 @@ func (a *App) registerGatewayHandler(
 			errors.Token("service", a.serviceName(service)),
 		)
 	}
-	a.Log.Info("gateway handler registered", "service", a.serviceName(service))
+	a.Log.Infof("gateway handler registered for %v", errors.Token("service", a.serviceName(service)))
 
 	return nil
 }
@@ -307,7 +307,7 @@ func (a *App) initGRPCServer(grpcMux *runtime.ServeMux) (*grpc.Server, error) {
 	)
 	reflection.Register(grpcServer)
 	for _, service := range a.grpcServices {
-		a.Log.Info("grpc service registered", "service", a.serviceName(service))
+		a.Log.Infof("%v registered", errors.Token("grpc_service", a.serviceName(service)))
 		service.RegisterToServer(grpcServer)
 	}
 
@@ -319,12 +319,12 @@ func (a *App) initGRPCServer(grpcMux *runtime.ServeMux) (*grpc.Server, error) {
 	}
 
 	a.AddBackgroundProcess(func(ctx context.Context) error {
-		a.Log.Info("starting listen on", "port", a.Config.grpc.Port)
+		a.Log.Infof("starting listen on %v", errors.Token("port", a.Config.grpc.Port))
 		listener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.Config.grpc.Port))
 		if err != nil {
 			return errors.WrapFail(err, "start grpc server listener")
 		}
-		a.Log.Info("starting grpc server on", "port", a.Config.grpc.Port)
+		a.Log.Infof("starting grpc server on %v", errors.Token("port", a.Config.grpc.Port))
 
 		err = grpcServer.Serve(listener)
 		if err != nil {
@@ -376,7 +376,7 @@ func (a *App) initHTTPServer(grpcMux *runtime.ServeMux) {
 		MaxAge:           600,
 	}).Handler(mux)
 	a.AddBackgroundProcess(func(ctx context.Context) error {
-		a.Log.Info("starting http server on", "address", a.httpServer.Addr)
+		a.Log.Infof("starting http server on %v", errors.Token("address", a.httpServer.Addr))
 		if err := a.httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			return errors.WrapFail(err, "serve http")
 		}
@@ -401,16 +401,16 @@ func (a *App) startBackgroundProcesses() {
 var errBackgroundProcessStopped = errors.Error("background process has been stopped")
 
 func (a *App) stopBackgroundProcesses() {
-	a.Log.Info("stopping background processes")
+	a.Log.Infof("stopping background processes")
 
 	a.backgroundCancelFunc(errBackgroundProcessStopped)
 	a.wg.Wait()
 
-	a.Log.Info("background processes stopped")
+	a.Log.Infof("background processes stopped")
 }
 
 func (a *App) closeResources() {
-	a.Log.Info("closing resources")
+	a.Log.Infof("closing resources")
 
 	for i := len(a.closers) - 1; i >= 0; i-- {
 		err := a.closers[i]()
@@ -419,14 +419,14 @@ func (a *App) closeResources() {
 		}
 	}
 
-	a.Log.Info("resources closed")
+	a.Log.Infof("resources closed")
 }
 
 func (a *App) shutDown() {
 	a.stopBackgroundProcesses()
 	a.closeResources()
 
-	a.Log.Info("app shut down")
+	a.Log.Infof("app shut down")
 }
 
 func (a *App) serviceName(service any) string {

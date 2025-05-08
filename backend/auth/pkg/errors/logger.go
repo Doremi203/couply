@@ -16,7 +16,7 @@ type logger struct {
 	base *slog.Logger
 }
 
-func (l *logger) Info(format string, args ...any) {
+func (l *logger) Infof(format string, args ...any) {
 	err := Errorf(format, args...)
 	msg, logArgs := l.msgAndArgs(err)
 	l.base.Info(msg, logArgs...)

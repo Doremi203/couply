@@ -3,6 +3,7 @@ package search_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -19,10 +20,17 @@ type searchServiceUseCase interface {
 type Implementation struct {
 	desc.UnimplementedSearchServiceServer
 	usecase searchServiceUseCase
+	logger  log.Logger
 }
 
-func NewImplementation(usecase searchServiceUseCase) *Implementation {
-	return &Implementation{usecase: usecase}
+func NewImplementation(
+	logger log.Logger,
+	usecase searchServiceUseCase,
+) *Implementation {
+	return &Implementation{
+		logger:  logger,
+		usecase: usecase,
+	}
 }
 
 func (i *Implementation) RegisterToGateway(

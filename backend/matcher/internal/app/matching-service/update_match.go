@@ -16,7 +16,8 @@ func (i *Implementation) UpdateMatchV1(ctx context.Context, in *desc.UpdateMatch
 
 	response, err := i.usecase.UpdateMatch(ctx, dto.PBToUpdateMatchRequest(in))
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		i.logger.Error(err)
+		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
 	return dto.UpdateMatchResponseToPB(response), nil

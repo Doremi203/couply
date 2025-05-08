@@ -2,8 +2,8 @@ package user_service
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -20,17 +20,17 @@ func (f *StorageFacadeUser) GetUserTx(ctx context.Context, userID int64) (*user.
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
 		u, err = f.storage.GetUser(ctxTx, userID)
 		if err != nil {
-			return fmt.Errorf("GetUserTx: get user failed: %w", err)
+			return errors.Wrap(err, "GetUserTx: get user failed")
 		}
 
 		p, err = f.storage.GetPhotos(ctxTx, userID)
 		if err != nil {
-			return fmt.Errorf("GetUserTx: get photos failed: %w", err)
+			return errors.Wrap(err, "GetUserTx: get photos failed")
 		}
 
 		i, err = f.storage.GetInterests(ctxTx, userID)
 		if err != nil {
-			return fmt.Errorf("GetUserTx: get interests failed: %w", err)
+			return errors.Wrap(err, "GetUserTx: get interests failed")
 		}
 
 		u.Photos = p
@@ -40,7 +40,7 @@ func (f *StorageFacadeUser) GetUserTx(ctx context.Context, userID int64) (*user.
 	})
 
 	if err != nil {
-		return nil, fmt.Errorf("GetUserTx: user transaction failed: %w", err)
+		return nil, errors.Wrap(err, "GetUserTx: user transaction failed")
 	}
 	return u, nil
 }
