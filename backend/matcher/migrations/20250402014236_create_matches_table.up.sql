@@ -1,7 +1,10 @@
-create table if not exists matches (
-    main_user_id bigint,
-    chosen_user_id bigint,
-    approved boolean,
-    foreign key (main_user_id) references Users(id) on delete cascade ,
-    foreign key (chosen_user_id) references Users(id) on delete cascade
+create table if not exists matches
+(
+    first_user_id   uuid        not null,
+    second_user_id   uuid        not null,
+    created_at timestamptz not null default now(),
+    foreign key (first_user_id) references users (id) on delete cascade,
+    foreign key (second_user_id) references users (id) on delete cascade,
+    unique (first_user_id, second_user_id),
+    unique (second_user_id, first_user_id)
 );

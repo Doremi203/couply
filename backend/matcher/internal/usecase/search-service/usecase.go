@@ -12,7 +12,7 @@ type searchStorageFacade interface {
 	CreateFilterTx(ctx context.Context, newFilter *search.Filter) (*search.Filter, error)
 	UpdateFilterTx(ctx context.Context, filter *search.Filter) (*search.Filter, error)
 	GetFilterTx(ctx context.Context, userID int64) (*search.Filter, error)
-	SearchUsersTx(ctx context.Context, userID int64, page, limit int32) ([]*user.User, error)
+	SearchUsersTx(ctx context.Context, userID int64, page, limit uint64) ([]*user.User, error)
 }
 
 type UseCase struct {

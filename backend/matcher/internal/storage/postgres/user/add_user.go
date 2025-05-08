@@ -9,9 +9,9 @@ import (
 
 func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.User, error) {
 	userSQL := `
-		INSERT INTO users (name, age, gender, location, bio, goal, zodiac, height, education, children, alcohol,
+		INSERT INTO users (id, name, age, gender, location, bio, goal, zodiac, height, education, children, alcohol,
 		                   smoking, hidden, verified, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17)
 		RETURNING id
 	`
 
@@ -19,6 +19,7 @@ func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.Use
 	err := s.txManager.GetQueryEngine(ctx).QueryRow(
 		ctx,
 		userSQL,
+		user.GetID(),
 		user.GetName(),
 		user.GetAge(),
 		user.GetGender(),
@@ -39,8 +40,6 @@ func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.Use
 	if err != nil {
 		return nil, errors.WrapFail(err, "AddUser")
 	}
-
-	user.ID = userID
 
 	return user, nil
 }

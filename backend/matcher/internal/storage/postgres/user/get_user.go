@@ -2,12 +2,14 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-func (s *PgStorageUser) GetUser(ctx context.Context, userID int64) (*user.User, error) {
+func (s *PgStorageUser) GetUser(ctx context.Context, userID uuid.UUID) (*user.User, error) {
 	userSQL := `
 		SELECT 
 			id, name, age, gender, location, bio, goal, zodiac, height, 
@@ -43,7 +45,7 @@ func (s *PgStorageUser) GetUser(ctx context.Context, userID int64) (*user.User, 
 		&u.UpdatedAt,
 	)
 	if err != nil {
-		return nil, errors.Wrap(err, "GetUser")
+		return nil, fmt.Errorf("GetUser: %w", err)
 	}
 
 	return u, nil

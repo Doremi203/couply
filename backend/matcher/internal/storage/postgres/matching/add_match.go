@@ -2,26 +2,53 @@ package matching
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	sq "github.com/Masterminds/squirrel"
+	"github.com/jackc/pgx/v5/pgconn"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
-func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match) error {
-	matchSQL := `
-		INSERT INTO matches (main_user_id, chosen_user_id, approved)
-		VALUES ($1, $2, $3)
-	`
+var (
+	ErrMatchAlreadyExists = errors.Error("match already exists between these users")
+	ErrUserNotFound       = errors.Error("one or both users not found")
+)
 
-	_, err := s.txManager.GetQueryEngine(ctx).Exec(
-		ctx,
-		matchSQL,
-		match.GetMainUserID(),
-		match.GetChosenUserID(),
-		match.GetApproved(),
+func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match) error {
+	user1, user2 := orderUserIDs(match.GetFirstUserID(), match.GetSecondUserID())
+
+	query, args, err := sq.Insert("matches").
+		Columns("first_user_id", "second_user_id", "created_at").
+		Values(user1, user2, match.GetCreatedAt()).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("AddMatch: failed to build query: %w", err)
+	}
+
+	var (
+		matchID   int64
+		createdAt time.Time
+	)
+
+	err = s.txManager.GetQueryEngine(ctx).QueryRow(ctx, query, args...).Scan(
+		&matchID,
+		&createdAt,
 	)
 	if err != nil {
-		return errors.Wrap(err, "AddMatch")
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) {
+			switch pgErr.Code {
+			case "23505":
+				return ErrMatchAlreadyExists
+			case "23503":
+				return ErrUserNotFound
+			}
+		}
+		return fmt.Errorf("AddMatch: %w", err)
 	}
 
 	return nil

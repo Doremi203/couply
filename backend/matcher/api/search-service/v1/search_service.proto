@@ -222,11 +222,11 @@ message SearchUsersV1Request {
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int64.gte = 0
   ];
-  int32 offset = 2 [
-    (validate.rules).int32.gte = 0
+  uint64 offset = 2 [
+    (validate.rules).uint64.gte = 0
   ];
-  int32 limit = 3 [
-    (validate.rules).int32 = {gte: 1, lte: 100}
+  uint64 limit = 3 [
+    (validate.rules).uint64 = {gte: 1, lte: 100}
   ];
 }
 

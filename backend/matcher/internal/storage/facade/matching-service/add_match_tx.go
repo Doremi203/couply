@@ -6,7 +6,7 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
-func (f *StorageFacadeMatching) CreateMatchTx(ctx context.Context, match *matching.Match) (*matching.Match, error) {
+func (f *StorageFacadeMatching) AddMatchTx(ctx context.Context, match *matching.Match) (*matching.Match, error) {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctx context.Context) error {
 		err := f.storage.AddMatch(ctx, match)
 		return err

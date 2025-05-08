@@ -6,11 +6,11 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
-func (f *StorageFacadeMatching) UpdateMatchTx(ctx context.Context, match *matching.Match) (*matching.Match, error) {
+func (f *StorageFacadeMatching) UpdateLikeTx(ctx context.Context, like *matching.Like) (*matching.Like, error) {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctx context.Context) error {
-		err := f.storage.UpdateMatch(ctx, match)
+		err := f.storage.UpdateLike(ctx, like)
 		return err
 	})
 
-	return match, err
+	return like, err
 }

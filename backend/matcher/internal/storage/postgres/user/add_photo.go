@@ -2,12 +2,14 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-func (s *PgStorageUser) AddPhoto(ctx context.Context, photo *user.Photo, userID int64) error {
+func (s *PgStorageUser) AddPhoto(ctx context.Context, photo *user.Photo, userID uuid.UUID) error {
 	photoSQL := `
 		INSERT INTO photos (user_id, order_number, url, mime_type, uploaded_at, updated_at)
 		VALUES ($1, $2, $3, $4, $5, $6)
@@ -24,7 +26,7 @@ func (s *PgStorageUser) AddPhoto(ctx context.Context, photo *user.Photo, userID 
 		photo.GetUpdatedAt(),
 	)
 	if err != nil {
-		return errors.Wrap(err, "AddPhoto")
+		return fmt.Errorf("AddPhoto: %w", err)
 	}
 
 	return nil

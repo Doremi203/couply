@@ -7,8 +7,8 @@ import (
 
 type SearchUsersV1Request struct {
 	UserID int64
-	Offset int32
-	Limit  int32
+	Offset uint64
+	Limit  uint64
 }
 
 func (x *SearchUsersV1Request) GetUserID() int64 {
@@ -18,14 +18,14 @@ func (x *SearchUsersV1Request) GetUserID() int64 {
 	return 0
 }
 
-func (x *SearchUsersV1Request) GetOffset() int32 {
+func (x *SearchUsersV1Request) GetOffset() uint64 {
 	if x != nil {
 		return x.Offset
 	}
 	return 0
 }
 
-func (x *SearchUsersV1Request) GetLimit() int32 {
+func (x *SearchUsersV1Request) GetLimit() uint64 {
 	if x != nil {
 		return x.Limit
 	}

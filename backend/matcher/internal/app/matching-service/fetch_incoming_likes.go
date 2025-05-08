@@ -9,16 +9,18 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *Implementation) FetchIncomingMatchesV1(ctx context.Context, in *desc.FetchIncomingMatchesV1Request) (*desc.FetchIncomingMatchesV1Response, error) {
+func (i *Implementation) FetchIncomingLikesV1(ctx context.Context, in *desc.FetchIncomingLikesV1Request) (*desc.FetchIncomingLikesV1Response, error) {
 	if err := in.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	response, err := i.usecase.FetchIncomingMatches(ctx, dto.PBToFetchIncomingMatchesRequest(in))
+	req := dto.PBToFetchIncomingLikesRequest(in)
+
+	response, err := i.usecase.FetchIncomingLikes(ctx, req)
 	if err != nil {
 		i.logger.Error(err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	return dto.FetchIncomingMatchesResponseToPB(response), nil
+	return dto.FetchIncomingLikesResponseToPB(response), nil
 }

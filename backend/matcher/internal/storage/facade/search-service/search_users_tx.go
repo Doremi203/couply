@@ -9,7 +9,7 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-func (f *StorageFacadeSearch) SearchUsersTx(ctx context.Context, userID int64, page, limit int32) ([]*user.User, error) {
+func (f *StorageFacadeSearch) SearchUsersTx(ctx context.Context, userID int64, page, limit uint64) ([]*user.User, error) {
 	var (
 		fil   *search.Filter
 		filI  *interest.Interest

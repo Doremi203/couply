@@ -2,12 +2,14 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, userID int64) error {
+func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, userID uuid.UUID) error {
 	photoSQL := `
         UPDATE photos 
         SET url = $1, mime_type = $2, updated_at = $3
@@ -24,7 +26,7 @@ func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, user
 		photo.GetOrderNumber(),
 	)
 	if err != nil {
-		return errors.Wrap(err, "UpdatePhoto")
+		return fmt.Errorf("UpdatePhoto: %w", err)
 	}
 
 	return nil

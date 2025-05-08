@@ -15,9 +15,9 @@ func (s *PgStorageSearch) SearchUsers(
 	ctx context.Context,
 	filter *search.Filter,
 	interests *interest.Interest,
-	page, limit int32,
+	offset, limit uint64,
 ) ([]*user.User, error) {
-	query, args, err := buildSearchQuery(filter, interests, page, limit)
+	query, args, err := buildSearchQuery(filter, interests, offset, limit)
 	if err != nil {
 		return nil, errors.WrapFail(err, "build query")
 	}
@@ -70,13 +70,13 @@ func scanUser(row pgx.Row) (*user.User, error) {
 func buildSearchQuery(
 	filter *search.Filter,
 	interests *interest.Interest,
-	page, limit int32,
+	offset, limit uint64,
 ) (string, []any, error) {
 	qb := baseQuery().Where(baseConditions(filter))
 
 	qb = applyMainFilters(qb, filter)
 	qb = applyInterestFilters(qb, interests)
-	qb = applyPagination(qb, page, limit)
+	qb = applyPagination(qb, offset, limit)
 
 	return qb.ToSql()
 }
@@ -199,12 +199,12 @@ func buildInterestConditions(pairs []struct {
 	return sq.Or(conditions)
 }
 
-func applyPagination(qb sq.SelectBuilder, offset, limit int32) sq.SelectBuilder {
+func applyPagination(qb sq.SelectBuilder, offset, limit uint64) sq.SelectBuilder {
 	if limit > 0 {
-		qb = qb.Limit(uint64(limit))
+		qb = qb.Limit(limit)
 	}
 	if offset > 0 {
-		qb = qb.Offset(uint64(offset))
+		qb = qb.Offset(offset)
 	}
 	return qb.OrderBy("created_at DESC")
 }

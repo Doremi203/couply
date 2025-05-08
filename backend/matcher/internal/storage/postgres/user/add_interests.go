@@ -2,12 +2,14 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 )
 
-func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interests *interest.Interest) error {
+func (s *PgStorageUser) AddInterests(ctx context.Context, userID uuid.UUID, interests *interest.Interest) error {
 	interestSQL := `
         INSERT INTO interests (user_id, type, value)
         VALUES ($1, $2, $3)
@@ -36,7 +38,7 @@ func (s *PgStorageUser) AddInterests(ctx context.Context, userID int64, interest
 				value,
 			)
 			if err != nil {
-				return errors.Wrap(err, "AddInterests")
+				return fmt.Errorf("AddInterests: %w", err)
 			}
 		}
 	}

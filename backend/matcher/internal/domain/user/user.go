@@ -3,6 +3,8 @@ package user
 import (
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
@@ -11,7 +13,7 @@ import (
 )
 
 type User struct {
-	ID        int64              `db:"id"`
+	ID        uuid.UUID          `db:"id"`
 	Name      string             `db:"name"`
 	Age       int32              `db:"age"`
 	Gender    Gender             `db:"gender"`
@@ -32,11 +34,11 @@ type User struct {
 	UpdatedAt time.Time          `db:"updated_at"`
 }
 
-func (x *User) GetID() int64 {
+func (x *User) GetID() uuid.UUID {
 	if x != nil {
 		return x.ID
 	}
-	return 0
+	return uuid.Nil
 }
 
 func (x *User) GetName() string {
@@ -173,7 +175,7 @@ func NewUserBuilder() *UserBuilder {
 	return &UserBuilder{user: &User{}}
 }
 
-func (b *UserBuilder) SetID(id int64) *UserBuilder {
+func (b *UserBuilder) SetID(id uuid.UUID) *UserBuilder {
 	b.user.ID = id
 	return b
 }
@@ -274,7 +276,7 @@ func (b *UserBuilder) Build() *User {
 
 func UserToPB(user *User) *desc.User {
 	return &desc.User{
-		Id:        user.GetID(),
+		Id:        user.GetID().String(),
 		Name:      user.GetName(),
 		Age:       user.GetAge(),
 		Gender:    GenderToPB(user.GetGender()),
@@ -308,7 +310,6 @@ func UsersToPB(users []*User) []*desc.User {
 
 func PBToUser(user *desc.User) *User {
 	return &User{
-		ID:        user.GetId(),
 		Name:      user.GetName(),
 		Age:       user.GetAge(),
 		Gender:    PBToGender(user.GetGender()),

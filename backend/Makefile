@@ -125,4 +125,4 @@ matcher/migrate/down:
 	migrate -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" down -all
 
 matcher/migrate/create:
-	$(MIGRATE_CREATE) matcher/migrations $(name)
+	$(MIGRATE_CREATE) matcher/migrations create_match_messages_table

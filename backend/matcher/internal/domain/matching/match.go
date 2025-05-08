@@ -1,48 +1,73 @@
 package matching
 
-import desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
+import (
+	"fmt"
+	"time"
+
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
+	"github.com/google/uuid"
+	"google.golang.org/protobuf/types/known/timestamppb"
+)
 
 type Match struct {
-	MainUserID   int64
-	ChosenUserID int64
-	Approved     bool
+	FirstUserID  uuid.UUID
+	SecondUserID uuid.UUID
+	CreatedAt    time.Time
 }
 
-func (x *Match) GetMainUserID() int64 {
-	if x != nil {
-		return x.MainUserID
+func NewMatch(firstUserID, secondUserID uuid.UUID) *Match {
+	return &Match{
+		FirstUserID:  firstUserID,
+		SecondUserID: secondUserID,
+		CreatedAt:    time.Now(),
 	}
-	return 0
 }
 
-func (x *Match) GetChosenUserID() int64 {
+func (x *Match) GetFirstUserID() uuid.UUID {
 	if x != nil {
-		return x.ChosenUserID
+		return x.FirstUserID
 	}
-	return 0
+	return uuid.Nil
 }
 
-func (x *Match) GetApproved() bool {
+func (x *Match) GetSecondUserID() uuid.UUID {
 	if x != nil {
-		return x.Approved
+		return x.SecondUserID
 	}
-	return false
+	return uuid.Nil
+}
+
+func (x *Match) GetCreatedAt() time.Time {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return time.Time{}
 }
 
 func MatchToPB(match *Match) *desc.Match {
 	return &desc.Match{
-		MainUserId:   match.GetMainUserID(),
-		ChosenUserId: match.GetChosenUserID(),
-		Approved:     match.GetApproved(),
+		FirstUserId:  match.GetFirstUserID().String(),
+		SecondUserId: match.GetSecondUserID().String(),
+		CreatedAt:    timestamppb.New(match.GetCreatedAt()),
 	}
 }
 
-func PBToMatch(match *desc.Match) *Match {
-	return &Match{
-		MainUserID:   match.GetMainUserId(),
-		ChosenUserID: match.GetChosenUserId(),
-		Approved:     match.GetApproved(),
+func PBToMatch(match *desc.Match) (*Match, error) {
+	firstUserID, err := uuid.Parse(match.GetFirstUserId())
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse FirstUserID from PB: %v", err)
 	}
+
+	secondUserID, err := uuid.Parse(match.GetSecondUserId())
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse SecondUserID from PB: %v", err)
+	}
+
+	return &Match{
+		FirstUserID:  firstUserID,
+		SecondUserID: secondUserID,
+		CreatedAt:    match.GetCreatedAt().AsTime(),
+	}, nil
 }
 
 func MatchSliceToPB(matches []*Match) []*desc.Match {
@@ -55,12 +80,17 @@ func MatchSliceToPB(matches []*Match) []*desc.Match {
 	return pbMatches
 }
 
-func PBToMatchSlice(pbMatches []*desc.Match) []*Match {
+func PBToMatchSlice(pbMatches []*desc.Match) ([]*Match, error) {
 	matches := make([]*Match, len(pbMatches))
 
 	for i, match := range pbMatches {
-		matches[i] = PBToMatch(match)
+		convertedMatch, err := PBToMatch(match)
+		if err != nil {
+			return nil, err
+		}
+
+		matches[i] = convertedMatch
 	}
 
-	return matches
+	return matches, nil
 }

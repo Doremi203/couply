@@ -3,10 +3,12 @@ package matching_service
 import (
 	"context"
 
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
-func (f *StorageFacadeMatching) FetchMatchesTx(ctx context.Context, userID int64, limit, offset int32) ([]*matching.Match, error) {
+func (f *StorageFacadeMatching) FetchMatchesTx(ctx context.Context, userID uuid.UUID, limit, offset uint64) ([]*matching.Match, error) {
 	var matches []*matching.Match
 	var err error
 

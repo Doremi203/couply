@@ -2,11 +2,12 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/google/uuid"
 )
 
-func (s *PgStorageUser) DeleteInterests(ctx context.Context, id int64) error {
+func (s *PgStorageUser) DeleteInterests(ctx context.Context, id uuid.UUID) error {
 	interestsSQL := `
 		DELETE FROM interests
 		WHERE user_id = $1
@@ -18,7 +19,7 @@ func (s *PgStorageUser) DeleteInterests(ctx context.Context, id int64) error {
 		id,
 	)
 	if err != nil {
-		return errors.Wrap(err, "DeleteInterests")
+		return fmt.Errorf("DeleteInterests: %w", err)
 	}
 
 	return nil
