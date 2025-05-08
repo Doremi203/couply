@@ -72,7 +72,7 @@
 
 .photoContent {
   position: absolute;
-  bottom: 0;
+  bottom: 20px;
   left: 0;
   right: 0;
   padding: 1.25rem;
@@ -89,6 +89,7 @@
   display: flex;
   flex-direction: row;
   gap: 8px;
+  margin-top: 10px;
 }
 
 .photoInfo {
@@ -156,6 +157,7 @@
   left: 0;
   right: 0;
   z-index: 5;
+  min-height: 70vh;
   max-height: 80vh;
   overflow-y: auto;
   transition:
@@ -242,41 +244,6 @@
 
 .closeButton {
   background-color: var(--button-background);
-}
-
-.dislikeButton {
-  background-color: grey;
-  position: fixed;
-  left: 60%;
-  transform: translateX(-50%);
-  bottom: 11rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  width: 3.75rem;
-  height: 3.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition:
-    opacity 0.3s ease,
-    transform 0.2s ease;
-}
-
-.likeButton {
-  position: fixed;
-  right: 15%;
-  transform: translateX(50%);
-  bottom: 11rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  width: 3.75rem;
-  height: 3.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition:
-    opacity 0.3s ease,
-    transform 0.2s ease;
 }
 
 .profileImageContainer:not(.expanded) .likeButton,
@@ -384,4 +351,52 @@
   margin-top: 12px;
   margin-left: 2px;
   box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+}
+
+.empty {
+  height: 30px;
+}
+
+.like {
+  margin-top: 5px;
+}
+
+.dislikeButton {
+  background-color: grey;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 3.75rem;
+  height: 3.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
+}
+
+.likeButton {
+  transform: translateX(50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 3.75rem;
+  height: 3.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
+}
+
+.nameAndButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 20px;
+  max-width: 330px;
+}
+
+.buttons {
+  display: flex;
 }

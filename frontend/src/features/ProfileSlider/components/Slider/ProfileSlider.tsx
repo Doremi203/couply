@@ -313,25 +313,8 @@ export const ProfileSlider = () => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<(typeof profiles)[0] | null>(null);
 
-  // const handleNextUser = () => {
-  //   setCurrentIndex(prevIndex => (prevIndex + 1) % profiles.length);
-  //   setCurrentPhotoIndex(0);
-  // };
-
-  // const handlePrevUser = () => {
-  //   setCurrentIndex(prevIndex => (prevIndex - 1 + profiles.length) % profiles.length);
-  //   setCurrentPhotoIndex(0);
-  // };
-
   const handleNextUser = () => {
-    if (profiles.length === 0) return;
-    setCurrentIndex(prev => (prev + 1) % profiles.length);
-    setCurrentPhotoIndex(0);
-  };
-
-  const handlePrevUser = () => {
-    if (profiles.length === 0) return;
-    setCurrentIndex(prev => (prev - 1 + profiles.length) % profiles.length);
+    setCurrentIndex(prev => prev + 1);
     setCurrentPhotoIndex(0);
   };
 
@@ -347,17 +330,22 @@ export const ProfileSlider = () => {
     );
   };
 
-  // const handlers = useSwipeable({
-  //   onSwipedLeft: handleNextUser,
-  //   onSwipedRight: handlePrevUser,
-  //   trackMouse: true,
-  // });
-
   const handlers = useSwipeable({
-    onSwipedLeft: () => handleNextUser(), // Свайп влево -> следующий
-    onSwipedRight: () => handlePrevUser(), // Свайп вправо -> предыдущий
+    onSwipedLeft: () => handleNextUser(),
+    onSwipedRight: () => handleNextUser(),
     trackMouse: true,
   });
+
+  if (currentIndex >= profiles.length) {
+    return (
+      <div className={styles.slider}>
+        <div className={styles.emptyState}>
+          <h3>Вы просмотрели всех пользователей</h3>
+          <p>Загляните сюда позже</p>
+        </div>
+      </div>
+    );
+  }
 
   const currentProfile = profiles[currentIndex];
 
@@ -395,110 +383,96 @@ export const ProfileSlider = () => {
     handleCloseProfile();
   };
 
-  // const renderProfileInfo = () => {
-  //   if (!currentProfile) return null;
-
-  //   switch (currentPhotoIndex) {
-  //     case 0:
-  //       return <div className={styles.bio}>{currentProfile.bio || 'Нет информации'}</div>;
-  //     case 1:
-  //       return (
-  //         <div className={styles.lifestyle}>
-  //           <h4>Образ жизни</h4>
-  //           <ul>
-  //             {currentProfile.lifestyle &&
-  //               Object.entries(currentProfile.lifestyle).map(([key, value]) => (
-  //                 <li key={key}>
-  //                   <strong>{key}:</strong> {value}
-  //                 </li>
-  //               ))}
-  //           </ul>
-  //         </div>
-  //       );
-  //     case 2:
-  //       return (
-  //         <div className={styles.interests}>
-  //           <div className={styles.interestsList}>
-  //             {currentProfile.interests?.slice(0, 4).map((interest, index) => (
-  //               <span key={index} className={styles.interestTag}>
-  //                 {interest}
-  //               </span>
-  //             ))}
-  //           </div>
-  //         </div>
-  //       );
-  //     default:
-  //       return null;
-  //   }
-  // };
+  const renderName = (nameClass: string) => {
+    return (
+      <div className={nameClass}>
+        {currentProfile.name}, {currentProfile.age}
+        {currentProfile.verified && (
+          <div className={styles.verifiedBadge}>
+            <VerifiedIcon />
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const renderProfileInfo = () => {
     switch (currentPhotoIndex) {
-      case 0: // Первая фотография - показываем био
-        return <div className={styles.bio}>{currentProfile.bio}</div>;
-      case 1: // Вторая фотография - показываем lifestyle
+      case 0: {
+        // Первая фотография - показываем био
+        let bioLines = 0;
+
+        if (currentProfile.bio.length > 0 && currentProfile.bio.length <= 50) {
+          bioLines = 1;
+        } else if (currentProfile.bio.length > 50) {
+          bioLines = 2;
+        }
+
+        const nameClass = [
+          styles.name,
+          bioLines === 1 && styles.nameWithBioOne,
+          bioLines === 2 && styles.nameWithBioTwo,
+        ]
+          .filter(Boolean)
+          .join(' ');
         return (
-          <div className={styles.lifestyle}>
-            <h4>Образ жизни</h4>
-            <ul>
-              {Object.entries(currentProfile.lifestyle).map(([key, value]) => (
-                <li key={key}>
-                  <strong>{key}:</strong> {value}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <>
+            {renderName(nameClass)}
+            <div className={styles.bio}>{currentProfile.bio}</div>
+          </>
         );
-      case 2: // Третья фотография - показываем интересы
+      }
+      case 1: {
+        // Вторая фотография - показываем lifestyle
+        const nameClass = styles.name;
         return (
-          <div className={styles.interests}>
-            <div className={styles.interestsList}>
-              {currentProfile.interests.slice(0, 4).map((interest, index) => (
-                <span key={index} className={styles.interestTag}>
-                  {interest}
-                </span>
-              ))}
+          <>
+            {renderName(nameClass)}
+            {/* <div className={styles.lifestyle}>
+              <h4>Образ жизни</h4>
+              <ul>
+                {Object.entries(currentProfile.lifestyle).map(([key, value]) => (
+                  <li key={key}>
+                    <strong>{key}:</strong> {value}
+                  </li>
+                ))}
+              </ul>
+            </div> */}
+          </>
+        );
+      }
+      case 2: {
+        // Третья фотография - показываем интересы
+        const nameClass = styles.nameWithBioOne;
+        return (
+          <>
+            {renderName(nameClass)}
+            <div className={styles.interests}>
+              <div className={styles.interestsList}>
+                {currentProfile.interests.slice(0, 3).map((interest, index) => (
+                  <span key={index} className={styles.interestTag}>
+                    {interest}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
+          </>
         );
+      }
       default:
         return null;
     }
   };
 
-  let bioLines = 0;
-
-  if (currentProfile.bio.length > 0 && currentProfile.bio.length <= 50) {
-    bioLines = 1;
-  } else if (currentProfile.bio.length > 50) {
-    bioLines = 2;
-  }
-
-  const nameClass = [
-    styles.name,
-    bioLines === 1 && styles.nameWithBioOne,
-    bioLines === 2 && styles.nameWithBioTwo,
-  ]
-    .filter(Boolean)
-    .join(' ');
-
   return (
     <div className={styles.slider}>
-      <div className={styles.profileСard} {...handlers} onClick={handleProfileClick}>
+      <div className={styles.profileCard} {...handlers} onClick={handleProfileClick}>
         <img
           src={currentProfile.images[currentPhotoIndex]}
           alt={currentProfile.name}
           className={styles.profileImage}
           draggable="false"
         />
-        <div className={nameClass}>
-          {currentProfile.name}, {currentProfile.age}
-          {currentProfile.verified && (
-            <div className={styles.verifiedBadge}>
-              <VerifiedIcon />
-            </div>
-          )}
-        </div>
 
         {renderProfileInfo()}
 
@@ -508,7 +482,11 @@ export const ProfileSlider = () => {
       </div>
       <div className={styles.controls}>
         <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
-        <LikeButton onClick={handlePrevUser} className={styles.likeButton} />
+        <LikeButton
+          onClick={handleNextUser}
+          className={styles.likeButton}
+          likeClassName={styles.like}
+        />
       </div>
 
       {selectedProfile && (

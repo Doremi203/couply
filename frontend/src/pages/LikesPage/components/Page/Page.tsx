@@ -8,14 +8,13 @@ import { ProfileView } from '../../../../widgets/ProfileView';
 import { useProfileView } from '../../hooks/useProfileView';
 import MatchesSection from '../MatchesSection';
 import { MatchModal } from '../MatchModal';
-// import { ProfileView } from '../ProfileView';
 
 import styles from './likesPage.module.css';
 
 const likes = [
   {
     id: 1,
-    name: 'Анна',
+    name: 'Константин',
     age: 25,
     imageUrl: 'woman1.jpg',
     liked: false,

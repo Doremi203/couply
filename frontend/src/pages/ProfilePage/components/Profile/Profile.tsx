@@ -9,7 +9,7 @@ import { ProfileInfo } from '../ProfileInfo';
 import { ProfileSection } from '../ProfileSection';
 import { TagsList } from '../TagsList';
 
-import styles from './profileView.module.css';
+import styles from './profile.module.css';
 
 interface ProfileViewProps {
   profileData: ProfileData;
@@ -22,7 +22,7 @@ interface ProfileViewProps {
   onVerificationRequest: () => void;
 }
 
-export const ProfileView: React.FC<ProfileViewProps> = ({
+export const Profile: React.FC<ProfileViewProps> = ({
   profileData,
   isVerified,
   isProfileHidden,
@@ -84,4 +84,4 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   );
 };
 
-export default ProfileView;
+export default Profile;

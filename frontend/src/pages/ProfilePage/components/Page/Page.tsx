@@ -4,9 +4,10 @@ import { NavBar } from '../../../../shared/components/NavBar';
 import ActivityHistory from '../../../../widgets/ActivityHistory';
 import { EditProfile } from '../../../../widgets/EditProfile';
 // import { ProfileView } from '../../../LikesPage/components/ProfileView';
+import { ProfileView } from '../../../../widgets/ProfileView';
 import { ProfileData, ActivityItem } from '../../types';
-import { ProfilePreview } from '../ProfilePreview';
-import { ProfileView } from '../ProfileView';
+import { Profile } from '../Profile';
+// import { ProfilePreview } from '../ProfilePreview';
 
 import styles from './profilePage.module.css';
 
@@ -41,6 +42,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     hobbies: ['Photography', 'Cooking', 'Hiking'],
     isHidden: false,
     photos: ['/photo1.png', '/woman1.jpg'],
+    imageUrl: '/photo1.png',
   });
 
   const [activityHistory] = useState<ActivityItem[]>([
@@ -168,10 +170,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           />
         );
       case 'preview':
-        return <ProfilePreview profileData={profileData} onClose={() => setActiveTab('profile')} />;
+        return <ProfileView profile={profileData} onClose={() => setActiveTab('profile')} />;
       default:
         return (
-          <ProfileView
+          <Profile
             profileData={profileData}
             isVerified={isVerified}
             isProfileHidden={isProfileHidden}
