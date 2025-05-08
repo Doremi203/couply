@@ -74,8 +74,8 @@ jobs:
       - name: Migrate up
         run: |
           echo "Fetching DB_USER from Yandex Cloud Lockbox..."
-          DB_USER=$(/opt/yc/bin/yc lockbox payload get --name testing-db --key user)
-          DB_PASS=$(/opt/yc/bin/yc lockbox payload get --name testing-db --key password)
+          DB_USER=$(/opt/yc/bin/yc lockbox payload get --name testing-db --key db-user)
+          DB_PASS=$(/opt/yc/bin/yc lockbox payload get --name testing-db --key db-password)
           
           mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
           
