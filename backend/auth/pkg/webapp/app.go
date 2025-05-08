@@ -13,11 +13,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
-
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
+	"github.com/go-resty/resty/v2"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/cors"
+	ycsdk "github.com/yandex-cloud/go-sdk"
+	"github.com/yandex-cloud/go-sdk/pkg/retry/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
@@ -47,7 +49,10 @@ type BackgroundProcess func(ctx context.Context) error
 type App struct {
 	wg sync.WaitGroup
 
-	Log     log.Logger
+	Log         log.Logger
+	httpClient  *resty.Client
+	ycSDKClient *ycsdk.SDK
+
 	closers []ResourceCloser
 
 	healthCheckFunc   func() bool
@@ -90,10 +95,19 @@ func initApp() *App {
 
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
 
-	return &App{
+	httpClient := resty.New().SetTimeout(5 * time.Second)
+
+	sdkClient, err := initYCSdk(httpClient, env)
+	if err != nil {
+		panic(errors.WrapFail(err, "init yc sdk"))
+	}
+
+	app := &App{
 		Env:                  env,
 		Config:               cfg,
 		Log:                  logger,
+		ycSDKClient:          sdkClient,
+		httpClient:           httpClient,
 		backgroundCtx:        backgroundCtx,
 		backgroundCancelFunc: backgroundCancelFunc,
 		httpServer: &http.Server{
@@ -109,6 +123,51 @@ func initApp() *App {
 			return true
 		},
 	}
+
+	err = app.loadSecrets()
+	if err != nil {
+		panic(errors.WrapFail(err, "load secrets"))
+	}
+
+	return app
+}
+
+func initYCSdk(httpClient *resty.Client, env Environment) (*ycsdk.SDK, error) {
+	if env != TestingEnvironment && env != ProdEnvironment {
+		return nil, nil
+	}
+	tokenResp := struct {
+		AccessToken string `json:"access_token"`
+		ExpiresIn   int    `json:"expires_in"`
+		TokenType   string `json:"token_type"`
+	}{}
+	resp, err := httpClient.R().
+		SetHeader("Metadata-Flavor", "Google").
+		SetResult(&tokenResp).
+		Get(fmt.Sprintf("http://%s/computeMetadata/v1/instance/service-accounts/default/token", ycsdk.GetMetadataServiceAddr()))
+	if err != nil {
+		return nil, errors.WrapFail(err, "get yc iam token")
+	}
+	if !resp.IsSuccess() {
+		return nil, errors.Error("got unexpected status code from yc iam token")
+	}
+	ycToken := tokenResp.AccessToken
+
+	retriesDialOption, err := retry.DefaultRetryDialOption()
+	if err != nil {
+		return nil, errors.WrapFail(err, "create retry dial option")
+	}
+
+	ycSDKClient, err := ycsdk.Build(
+		context.Background(),
+		ycsdk.Config{Credentials: ycsdk.NewIAMTokenCredentials(ycToken)},
+		retriesDialOption,
+	)
+	if err != nil {
+		return nil, errors.WrapFail(err, "build yc sdk")
+	}
+
+	return ycSDKClient, nil
 }
 
 // Run запускает приложение. Вызов функции блокируется до получения сигнала от OS о завершении приложения.
@@ -170,6 +229,10 @@ func run(a *App, setupFunc func(ctx context.Context, app *App) error) (err error
 	}
 
 	return nil
+}
+
+func (a *App) HTTPClient() *resty.Client {
+	return a.httpClient
 }
 
 func (a *App) AddGatewayOptions(opts ...runtime.ServeMuxOption) {

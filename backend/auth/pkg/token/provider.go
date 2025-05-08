@@ -5,5 +5,5 @@ type Provider interface {
 }
 
 type Config struct {
-	SecretKey string `env:"SECRET_KEY"`
+	SecretKey string `env:"SECRET_KEY" secret:"secret-key"`
 }

@@ -2,8 +2,6 @@ services:
   service:
     image: cr.yandex/crpe9kgeql1v6b7gujfj/{{SERVICE_NAME}}-testing:{{SERVICE_VERSION}}
     restart: always
-    env_file:
-      - /tmp/secrets.env
     environment:
       APP_ENV: testing
       CONFIGS_PATH: /app/configs

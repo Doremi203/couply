@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 
@@ -30,11 +31,18 @@ type swaggerUIConfig struct {
 	Enabled bool
 }
 
+type secretsConfig struct {
+	Ids map[string]string
+}
+
 type Config struct {
 	grpc      grpcConfig
 	http      httpConfig
 	logging   loggingConfig
 	swaggerUI swaggerUIConfig
+	secrets   secretsConfig
+
+	secretsMap map[string]string
 
 	viperLoader *viper.Viper
 	logger      log.Logger
@@ -55,11 +63,54 @@ func (c *Config) readSection(name string, cfg any) error {
 	if err != nil {
 		return errors.WrapFailf(err, "read section %v", errors.Token("name", name))
 	}
+
+	err = c.readFromSecrets(cfg)
+	if err != nil {
+		return errors.WrapFailf(err, "read secrets for config with %v", errors.Token("name", name))
+	}
+
 	err = cleanenv.ReadEnv(cfg)
 	if err != nil {
 		return errors.WrapFailf(err, "read envs for config with %v", errors.Token("name", name))
 	}
 
+	return nil
+}
+
+func (c *Config) readFromSecrets(cfg any) error {
+	if len(c.secretsMap) == 0 {
+		return nil
+	}
+	v := reflect.ValueOf(cfg)
+	if v.Kind() != reflect.Ptr || v.Elem().Kind() != reflect.Struct {
+		return errors.Errorf("want pointer to struct, got %T", cfg)
+	}
+	v = v.Elem()
+	t := v.Type()
+
+	for i := 0; i < t.NumField(); i++ {
+		field := t.Field(i)
+		tagValue := field.Tag.Get("secret")
+		if tagValue == "" {
+			continue
+		}
+
+		secret, ok := c.secretsMap[tagValue]
+		if !ok {
+			continue
+		}
+
+		fv := v.Field(i)
+		if !fv.CanSet() {
+			return errors.Errorf("field %q could not be set", field.Name)
+		}
+		switch fv.Kind() {
+		case reflect.String:
+			fv.SetString(secret)
+		default:
+			return fmt.Errorf("field type %q (%s) not supported", field.Name, fv.Kind())
+		}
+	}
 	return nil
 }
 
@@ -96,6 +147,7 @@ func loadConfig(
 	}
 
 	cfg := Config{
+		secretsMap:  make(map[string]string),
 		viperLoader: v,
 	}
 
@@ -117,6 +169,11 @@ func loadConfig(
 	err = cfg.readSection("swagger-ui", &cfg.swaggerUI)
 	if err != nil {
 		return Config{}, errors.WrapFail(err, "load swagger-ui config")
+	}
+
+	err = cfg.readSection("secrets", &cfg.secrets)
+	if err != nil {
+		return Config{}, errors.WrapFail(err, "load secrets config")
 	}
 
 	return cfg, nil
