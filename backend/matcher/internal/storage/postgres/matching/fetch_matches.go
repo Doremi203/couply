@@ -2,31 +2,57 @@ package matching
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
-	"github.com/jackc/pgx/v5"
+	sq "github.com/Masterminds/squirrel"
 )
 
-func (s *PgStorageMatching) FetchMatches(ctx context.Context, userID int64, limit, offset int32) ([]*matching.Match, error) {
-	matchSQL := `
-		SELECT *
-		FROM matches
-		WHERE (main_user_id = $1 OR chosen_user_id = $1) AND approved = $2
-		LIMIT $3 OFFSET $4
-	`
-
-	tx := s.txManager.GetQueryEngine(ctx)
-
-	rows, err := tx.Query(ctx, matchSQL, userID, true, limit, offset)
+func (s *PgStorageMatching) FetchMatches(ctx context.Context, userID uuid.UUID, limit, offset uint64) ([]*matching.Match, error) {
+	query, args, err := sq.Select(
+		"first_user_id",
+		"second_user_id",
+		"created_at",
+	).
+		From("matches").
+		Where(sq.Or{
+			sq.Eq{"first_user_id": userID},
+			sq.Eq{"second_user_id": userID},
+		}).
+		OrderBy("created_at DESC").
+		Limit(limit).
+		Offset(offset).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
-		return nil, errors.WrapFail(err, "fetch matches")
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	rows, err := s.txManager.GetQueryEngine(ctx).Query(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
 	}
 	defer rows.Close()
 
-	matches, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[matching.Match])
-	if err != nil {
-		return nil, errors.WrapFail(err, "unmarshal matches to struct")
+	var matches []*matching.Match
+	for rows.Next() {
+		var match matching.Match
+		err := rows.Scan(
+			&match.FirstUserID,
+			&match.SecondUserID,
+			&match.CreatedAt,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+
+		matches = append(matches, &match)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows iteration error: %w", err)
 	}
 
 	return matches, nil

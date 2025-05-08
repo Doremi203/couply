@@ -2,17 +2,16 @@ package search
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	sq "github.com/Masterminds/squirrel"
+
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 )
 
-func (s *PgStorageSearch) AddFilterInterests(ctx context.Context, userID int64, filterInterests *interest.Interest) error {
-	filterInterestsSQL := `
-        INSERT INTO filter_interests (user_id, type, value)
-        VALUES ($1, $2, $3)
-    `
-
+func (s *PgStorageSearch) AddFilterInterests(ctx context.Context, userID uuid.UUID, filterInterests *interest.Interest) error {
 	interestGroups := map[string][]int{
 		"social":           convertSlice(filterInterests.GetSocial()),
 		"sport":            convertSlice(filterInterests.GetSport()),
@@ -28,15 +27,18 @@ func (s *PgStorageSearch) AddFilterInterests(ctx context.Context, userID int64, 
 		}
 
 		for _, value := range values {
-			_, err := s.txManager.GetQueryEngine(ctx).Exec(
-				ctx,
-				filterInterestsSQL,
-				userID,
-				interestType,
-				value,
-			)
+			query, args, err := sq.Insert("filter_interests").
+				Columns("user_id", "type", "value").
+				Values(userID, interestType, value).
+				PlaceholderFormat(sq.Dollar).
+				ToSql()
 			if err != nil {
-				return errors.Wrap(err, "AddFilterInterests")
+				return fmt.Errorf("failed to build query: %w", err)
+			}
+
+			_, err = s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+			if err != nil {
+				return fmt.Errorf("failed to insert filter interest: %w", err)
 			}
 		}
 	}

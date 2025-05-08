@@ -2,45 +2,48 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+	sq "github.com/Masterminds/squirrel"
 )
 
 func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.User, error) {
-	userSQL := `
-		INSERT INTO users (name, age, gender, location, bio, goal, zodiac, height, education, children, alcohol,
-		                   smoking, hidden, verified, created_at, updated_at)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-		RETURNING id
-	`
-
-	var userID int64
-	err := s.txManager.GetQueryEngine(ctx).QueryRow(
-		ctx,
-		userSQL,
-		user.GetName(),
-		user.GetAge(),
-		user.GetGender(),
-		user.GetLocation(),
-		user.GetBIO(),
-		user.GetGoal(),
-		user.GetZodiac(),
-		user.GetHeight(),
-		user.GetEducation(),
-		user.GetChildren(),
-		user.GetAlcohol(),
-		user.GetSmoking(),
-		user.GetHidden(),
-		user.GetVerified(),
-		user.GetCreatedAt(),
-		user.GetUpdatedAt(),
-	).Scan(&userID)
+	query, args, err := sq.Insert("users").
+		Columns(
+			"id", "name", "age", "gender", "location", "bio", "goal", "zodiac",
+			"height", "education", "children", "alcohol", "smoking", "hidden",
+			"verified", "created_at", "updated_at",
+		).
+		Values(
+			user.GetID(),
+			user.GetName(),
+			user.GetAge(),
+			user.GetGender(),
+			user.GetLocation(),
+			user.GetBIO(),
+			user.GetGoal(),
+			user.GetZodiac(),
+			user.GetHeight(),
+			user.GetEducation(),
+			user.GetChildren(),
+			user.GetAlcohol(),
+			user.GetSmoking(),
+			user.GetHidden(),
+			user.GetVerified(),
+			user.GetCreatedAt(),
+			user.GetUpdatedAt(),
+		).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
-		return nil, errors.WrapFail(err, "AddUser")
+		return nil, fmt.Errorf("failed to build query: %w", err)
 	}
 
-	user.ID = userID
+	_, err = s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert user: %w", err)
+	}
 
 	return user, nil
 }

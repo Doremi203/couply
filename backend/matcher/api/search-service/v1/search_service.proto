@@ -30,6 +30,15 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         description: "Токен авторизации";
       }
     }
+    security: {
+      key: "user-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_API_KEY;
+        name: "user-token";
+        description: "Токен пользователя для идентификации";
+      }
+    }
   }
 };
 
@@ -45,6 +54,10 @@ service SearchService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -63,6 +76,10 @@ service SearchService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
@@ -77,6 +94,10 @@ service SearchService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -95,61 +116,61 @@ service SearchService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
 }
 
 message CreateFilterV1Request {
-  int64 user_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).int64.gte = 0
-  ];
-  GenderPriority gender_priority = 2 [
+  GenderPriority gender_priority = 1 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).enum.defined_only = true
   ];
-  int32 min_age = 3 [
+  int32 min_age = 2 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 18, lte: 100}
   ];
-  int32 max_age = 4 [
+  int32 max_age = 3 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 18, lte: 100}
   ];
-  int32 min_height = 5 [
+  int32 min_height = 4 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  int32 max_height = 6 [
+  int32 max_height = 5 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  int32 distance = 7 [
+  int32 distance = 6 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 1, lte: 100}
   ];
-  common.v1.Goal goal = 8 [
+  common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Zodiac zodiac = 9 [
+  common.v1.Zodiac zodiac = 8 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Education education = 10 [
+  common.v1.Education education = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 11 [
+  common.v1.Children children = 10 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 12 [
+  common.v1.Alcohol alcohol = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 13 [
+  common.v1.Smoking smoking = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 14;
-  bool only_verified = 15;
-  bool only_premium = 16;
+  common.v1.Interest interest = 13;
+  bool only_verified = 14;
+  bool only_premium = 15;
 }
 
 message CreateFilterV1Response {
@@ -157,49 +178,45 @@ message CreateFilterV1Response {
 }
 
 message UpdateFilterV1Request {
-  int64 user_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).int64.gte = 0
-  ];
-  GenderPriority gender_priority = 2 [
+  GenderPriority gender_priority = 1 [
     (validate.rules).enum.defined_only = true
   ];
-  int32 min_age = 3 [
+  int32 min_age = 2 [
     (validate.rules).int32 = {gte: 18, lte: 100}
   ];
-  int32 max_age = 4 [
+  int32 max_age = 3 [
     (validate.rules).int32 = {gte: 18, lte: 100}
   ];
-  int32 min_height = 5 [
+  int32 min_height = 4 [
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  int32 max_height = 6 [
+  int32 max_height = 5 [
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  int32 distance = 7 [
+  int32 distance = 6 [
     (validate.rules).int32 = {gte: 1, lte: 100}
   ];
-  common.v1.Goal goal = 8 [
+  common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Zodiac zodiac = 9 [
+  common.v1.Zodiac zodiac = 8 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Education education = 10 [
+  common.v1.Education education = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 11 [
+  common.v1.Children children = 10 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 12 [
+  common.v1.Alcohol alcohol = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 13 [
+  common.v1.Smoking smoking = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 14;
-  bool only_verified = 15;
-  bool only_premium = 16;
+  common.v1.Interest interest = 13;
+  bool only_verified = 14;
+  bool only_premium = 15;
 }
 
 message UpdateFilterV1Response {
@@ -207,10 +224,6 @@ message UpdateFilterV1Response {
 }
 
 message GetFilterV1Request {
-  int64 user_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).int64.gte = 0
-  ];
 }
 
 message GetFilterV1Response {
@@ -218,15 +231,11 @@ message GetFilterV1Response {
 }
 
 message SearchUsersV1Request {
-  int64 user_id = 1 [
-    (google.api.field_behavior) = REQUIRED,
-    (validate.rules).int64.gte = 0
+  uint64 offset = 1 [
+    (validate.rules).uint64.gte = 0
   ];
-  int32 offset = 2 [
-    (validate.rules).int32.gte = 0
-  ];
-  int32 limit = 3 [
-    (validate.rules).int32 = {gte: 1, lte: 100}
+  uint64 limit = 2 [
+    (validate.rules).uint64 = {gte: 1, lte: 100}
   ];
 }
 
@@ -235,22 +244,21 @@ message SearchUsersV1Response {
 }
 
 message Filter {
-  int64 user_id = 1;
-  GenderPriority gender_priority = 2;
-  Range age_range = 3;
-  Range height_range = 4;
-  int32 distance = 5;
-  common.v1.Goal goal = 6;
-  common.v1.Zodiac zodiac = 7;
-  common.v1.Education education = 8;
-  common.v1.Children children = 9;
-  common.v1.Alcohol alcohol = 10;
-  common.v1.Smoking smoking = 11;
-  common.v1.Interest interest = 12;
-  bool only_verified = 13;
-  bool only_premium = 14;
-  google.protobuf.Timestamp created_at = 15;
-  google.protobuf.Timestamp updated_at = 16;
+  GenderPriority gender_priority = 1;
+  Range age_range = 2;
+  Range height_range = 3;
+  int32 distance = 4;
+  common.v1.Goal goal = 5;
+  common.v1.Zodiac zodiac = 6;
+  common.v1.Education education = 7;
+  common.v1.Children children = 8;
+  common.v1.Alcohol alcohol = 9;
+  common.v1.Smoking smoking = 10;
+  common.v1.Interest interest = 11;
+  bool only_verified = 12;
+  bool only_premium = 13;
+  google.protobuf.Timestamp created_at = 14;
+  google.protobuf.Timestamp updated_at = 15;
 }
 
 message Range {

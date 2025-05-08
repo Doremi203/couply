@@ -9,16 +9,21 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *Implementation) CreateMatchV1(ctx context.Context, in *desc.CreateMatchV1Request) (*desc.CreateMatchV1Response, error) {
+func (i *Implementation) LikeUserV1(ctx context.Context, in *desc.LikeUserV1Request) (*desc.LikeUserV1Response, error) {
 	if err := in.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	response, err := i.usecase.CreateMatch(ctx, dto.PBToCreateMatchRequest(in))
+	req, err := dto.PBToLikeUserRequest(in)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	response, err := i.usecase.LikeUser(ctx, req)
 	if err != nil {
 		i.logger.Error(err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	return dto.CreateMatchResponseToPB(response), nil
+	return dto.LikeUserResponseToPB(response), nil
 }

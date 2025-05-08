@@ -4,36 +4,14 @@ import (
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 )
 
-type DeleteUserV1Request struct {
-	ID int64
-}
-
-func (x *DeleteUserV1Request) GetID() int64 {
-	if x != nil {
-		return x.ID
-	}
-	return 0
-}
+type DeleteUserV1Request struct{}
 
 type DeleteUserV1Response struct {
 }
 
-func DeleteUserRequestToPB(req *DeleteUserV1Request) *desc.DeleteUserV1Request {
-	return &desc.DeleteUserV1Request{
-		Id: req.GetID(),
-	}
+func PBToDeleteUserRequest(_ *desc.DeleteUserV1Request) *DeleteUserV1Request {
+	return &DeleteUserV1Request{}
 }
-
-func PBToDeleteUserRequest(req *desc.DeleteUserV1Request) *DeleteUserV1Request {
-	return &DeleteUserV1Request{
-		ID: req.GetId(),
-	}
-}
-
 func DeleteUserResponseToPB(_ *DeleteUserV1Response) *desc.DeleteUserV1Response {
 	return &desc.DeleteUserV1Response{}
-}
-
-func PBToDeleteUserResponse(_ *desc.DeleteUserV1Response) *DeleteUserV1Response {
-	return &DeleteUserV1Response{}
 }

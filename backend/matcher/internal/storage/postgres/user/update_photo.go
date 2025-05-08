@@ -2,29 +2,36 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	sq "github.com/Masterminds/squirrel"
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, userID int64) error {
-	photoSQL := `
-        UPDATE photos 
-        SET url = $1, mime_type = $2, updated_at = $3
-        WHERE user_id = $4 AND order_number = $5
-    `
-
-	_, err := s.txManager.GetQueryEngine(ctx).Exec(
-		ctx,
-		photoSQL,
-		photo.GetURL(),
-		photo.GetMimeType(),
-		photo.GetUpdatedAt(),
-		userID,
-		photo.GetOrderNumber(),
-	)
+func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo *user.Photo, userID uuid.UUID) error {
+	query, args, err := sq.Update("photos").
+		Set("url", photo.GetURL()).
+		Set("mime_type", photo.GetMimeType()).
+		Set("updated_at", photo.GetUpdatedAt()).
+		Where(sq.Eq{
+			"user_id":      userID,
+			"order_number": photo.GetOrderNumber(),
+		}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
-		return errors.Wrap(err, "UpdatePhoto")
+		return fmt.Errorf("failed to build query: %w", err)
+	}
+
+	result, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("failed to execute query: %w", err)
+	}
+
+	if result.RowsAffected() == 0 {
+		return ErrPhotoNotFound
 	}
 
 	return nil

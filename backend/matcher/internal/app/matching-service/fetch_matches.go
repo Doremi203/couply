@@ -9,12 +9,14 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *Implementation) FetchMatchesV1(ctx context.Context, in *desc.FetchMatchesV1Request) (*desc.FetchMatchesV1Response, error) {
+func (i *Implementation) FetchMatchesV1(ctx context.Context, in *desc.FetchMatchesUserIDsV1Request) (*desc.FetchMatchesUserIDsV1Response, error) {
 	if err := in.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	response, err := i.usecase.FetchMatches(ctx, dto.PBToFetchMatchesRequest(in))
+	req := dto.PBToFetchMatchesRequest(in)
+
+	response, err := i.usecase.FetchMatches(ctx, req)
 	if err != nil {
 		i.logger.Error(err)
 		return nil, status.Error(codes.Internal, "internal server error")

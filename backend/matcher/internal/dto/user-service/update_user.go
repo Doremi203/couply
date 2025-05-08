@@ -3,6 +3,8 @@ package user_service
 import (
 	"time"
 
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
@@ -11,7 +13,6 @@ import (
 )
 
 type UpdateUserV1Request struct {
-	ID        int64
 	Name      string
 	Age       int32
 	Gender    user.Gender
@@ -28,13 +29,6 @@ type UpdateUserV1Request struct {
 	Hidden    bool
 	Verified  bool
 	Photos    []*user.Photo
-}
-
-func (x *UpdateUserV1Request) GetID() int64 {
-	if x != nil {
-		return x.ID
-	}
-	return 0
 }
 
 func (x *UpdateUserV1Request) GetName() string {
@@ -162,7 +156,6 @@ func (x *UpdateUserV1Response) GetUser() *user.User {
 
 func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
 	return &desc.UpdateUserV1Request{
-		Id:        req.GetID(),
 		Name:      req.GetName(),
 		Age:       req.GetAge(),
 		Gender:    user.GenderToPB(req.GetGender()),
@@ -184,7 +177,6 @@ func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 	return &UpdateUserV1Request{
-		ID:        req.GetId(),
 		Name:      req.GetName(),
 		Age:       req.GetAge(),
 		Gender:    user.PBToGender(req.GetGender()),
@@ -204,9 +196,9 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 	}
 }
 
-func UpdateUserRequestToUser(req *UpdateUserV1Request) *user.User {
+func UpdateUserRequestToUser(req *UpdateUserV1Request, id uuid.UUID) *user.User {
 	return user.NewUserBuilder().
-		SetID(req.GetID()).
+		SetID(id).
 		SetName(req.GetName()).
 		SetAge(req.GetAge()).
 		SetGender(req.GetGender()).

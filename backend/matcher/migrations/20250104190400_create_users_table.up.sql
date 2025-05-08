@@ -1,5 +1,5 @@
 create table if not exists users (
-    id bigserial primary key,
+    id uuid primary key,
     name text not null,
     age int check (age >= 18),
     gender int not null,

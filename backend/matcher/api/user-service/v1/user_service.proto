@@ -29,6 +29,15 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
         description: "Токен авторизации";
       }
     }
+    security: {
+      key: "user-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_API_KEY;
+        name: "user-token";
+        description: "Токен пользователя для идентификации";
+      }
+    }
   }
 };
 
@@ -44,6 +53,10 @@ service UserService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -63,6 +76,10 @@ service UserService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
@@ -80,6 +97,10 @@ service UserService {
           key: "api-token";
           value: {};
         }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
       }
     };
   }
@@ -95,6 +116,10 @@ service UserService {
       security: {
         security_requirement: {
           key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
           value: {};
         }
       }
@@ -159,49 +184,46 @@ message CreateUserV1Response {
 }
 
 message UpdateUserV1Request {
-  int64 id = 1 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  string name = 2 [
+  string name = 1 [
     (validate.rules).string.min_len = 2
   ];
-  int32 age = 3 [
+  int32 age = 2 [
     (validate.rules).int32.gte = 18
   ];
-  Gender gender = 4 [
+  Gender gender = 3 [
     (validate.rules).enum.defined_only = true
   ];
-  string location = 5 [
+  string location = 4 [
     (validate.rules).string.min_len = 2
   ];
-  string bio = 6 [
+  string bio = 5 [
     (validate.rules).string.min_len = 2
   ];
-  common.v1.Goal goal = 7 [
+  common.v1.Goal goal = 6 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 8;
-  common.v1.Zodiac zodiac = 9 [
+  common.v1.Interest interest = 7;
+  common.v1.Zodiac zodiac = 8 [
     (validate.rules).enum.defined_only = true
   ];
-  int32 height = 10 [
+  int32 height = 9 [
     (validate.rules).int32.gt = 0
   ];
-  common.v1.Education education = 11 [
+  common.v1.Education education = 10 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 12 [
+  common.v1.Children children = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 13 [
+  common.v1.Alcohol alcohol = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 14 [
+  common.v1.Smoking smoking = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  bool hidden = 15;
-  bool verified = 16;
-  repeated Photo photos = 17;
+  bool hidden = 14;
+  bool verified = 15;
+  repeated Photo photos = 16;
 }
 
 message UpdateUserV1Response {
@@ -209,17 +231,12 @@ message UpdateUserV1Response {
 }
 
 message DeleteUserV1Request {
-  int64 id = 1 [
-    (google.api.field_behavior) = REQUIRED
-  ];
 }
 
 message DeleteUserV1Response {
-
 }
 
 message GetUserV1Request {
-  int64 id = 1;
 }
 
 message GetUserV1Response {
@@ -227,7 +244,7 @@ message GetUserV1Response {
 }
 
 message User {
-  int64 id = 1;
+  string id = 1;
   string name = 2;
   int32 age = 3;
   Gender gender = 4;

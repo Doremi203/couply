@@ -15,9 +15,9 @@ func (s *PgStorageSearch) SearchUsers(
 	ctx context.Context,
 	filter *search.Filter,
 	interests *interest.Interest,
-	page, limit int32,
+	offset, limit uint64,
 ) ([]*user.User, error) {
-	query, args, err := buildSearchQuery(filter, interests, page, limit)
+	query, args, err := buildSearchQuery(filter, interests, offset, limit)
 	if err != nil {
 		return nil, errors.WrapFail(err, "build query")
 	}
@@ -70,13 +70,13 @@ func scanUser(row pgx.Row) (*user.User, error) {
 func buildSearchQuery(
 	filter *search.Filter,
 	interests *interest.Interest,
-	page, limit int32,
+	offset, limit uint64,
 ) (string, []any, error) {
 	qb := baseQuery().Where(baseConditions(filter))
 
 	qb = applyMainFilters(qb, filter)
 	qb = applyInterestFilters(qb, interests)
-	qb = applyPagination(qb, page, limit)
+	qb = applyPagination(qb, offset, limit)
 
 	return qb.ToSql()
 }
@@ -95,6 +95,7 @@ func baseConditions(filter *search.Filter) sq.Sqlizer {
 	return sq.And{
 		sq.Eq{"hidden": false},
 		sq.NotEq{"id": filter.GetUserID()},
+		sq.Expr("NOT EXISTS (SELECT 1 FROM likes WHERE sender_id = ? AND receiver_id = u.id)", filter.GetUserID()),
 	}
 }
 
@@ -102,7 +103,7 @@ func applyMainFilters(qb sq.SelectBuilder, filter *search.Filter) sq.SelectBuild
 	qb = applyRangeFilter(qb, "age", filter.GetMinAge(), filter.GetMaxAge())
 	qb = applyRangeFilter(qb, "height", filter.GetMinHeight(), filter.GetMaxHeight())
 
-	if filter.GetGenderPriority() != 3 { // 3 - ANY
+	if filter.GetGenderPriority() != 0 && filter.GetGenderPriority() != 3 { // 3 - ANY
 		qb = qb.Where(sq.Eq{"gender": int(filter.GetGenderPriority())})
 	}
 
@@ -173,12 +174,12 @@ func extractInterestPairs(interests *interest.Interest) []struct {
 		Value int
 	}
 	for t, values := range interestGroups {
-		for _, v := range values {
-			if v != 0 {
+		for _, value := range values {
+			if value != 0 {
 				pairs = append(pairs, struct {
 					Type  string
 					Value int
-				}{t, v})
+				}{t, value})
 			}
 		}
 	}
@@ -199,12 +200,12 @@ func buildInterestConditions(pairs []struct {
 	return sq.Or(conditions)
 }
 
-func applyPagination(qb sq.SelectBuilder, offset, limit int32) sq.SelectBuilder {
+func applyPagination(qb sq.SelectBuilder, offset, limit uint64) sq.SelectBuilder {
 	if limit > 0 {
-		qb = qb.Limit(uint64(limit))
+		qb = qb.Limit(limit)
 	}
 	if offset > 0 {
-		qb = qb.Offset(uint64(offset))
+		qb = qb.Offset(offset)
 	}
 	return qb.OrderBy("created_at DESC")
 }

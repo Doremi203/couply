@@ -2,42 +2,43 @@ package user
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+	sq "github.com/Masterminds/squirrel"
 )
 
 func (s *PgStorageUser) UpdateUser(ctx context.Context, user *user.User) (*user.User, error) {
-	userSQL := `
-        UPDATE users 
-        SET name = $1, age = $2, gender = $3, location = $4, bio = $5, goal = $6, zodiac = $7, 
-            height = $8, education = $9, children = $10, alcohol = $11, smoking = $12, 
-            hidden = $13, verified = $14, updated_at = $15
-        WHERE id = $16
-    `
-
-	_, err := s.txManager.GetQueryEngine(ctx).Exec(
-		ctx,
-		userSQL,
-		user.GetName(),
-		user.GetAge(),
-		user.GetGender(),
-		user.GetLocation(),
-		user.GetBIO(),
-		user.GetGoal(),
-		user.GetZodiac(),
-		user.GetHeight(),
-		user.GetEducation(),
-		user.GetChildren(),
-		user.GetAlcohol(),
-		user.GetSmoking(),
-		user.GetHidden(),
-		user.GetVerified(),
-		user.GetUpdatedAt(),
-		user.GetID(),
-	)
+	query, args, err := sq.Update("users").
+		Set("name", user.GetName()).
+		Set("age", user.GetAge()).
+		Set("gender", user.GetGender()).
+		Set("location", user.GetLocation()).
+		Set("bio", user.GetBIO()).
+		Set("goal", user.GetGoal()).
+		Set("zodiac", user.GetZodiac()).
+		Set("height", user.GetHeight()).
+		Set("education", user.GetEducation()).
+		Set("children", user.GetChildren()).
+		Set("alcohol", user.GetAlcohol()).
+		Set("smoking", user.GetSmoking()).
+		Set("hidden", user.GetHidden()).
+		Set("verified", user.GetVerified()).
+		Set("updated_at", user.GetUpdatedAt()).
+		Where(sq.Eq{"id": user.GetID()}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
 	if err != nil {
-		return nil, errors.Wrap(err, "UpdateUser")
+		return nil, fmt.Errorf("failed to build query: %w", err)
+	}
+
+	result, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+
+	if result.RowsAffected() == 0 {
+		return nil, ErrUserNotFound
 	}
 
 	return user, nil

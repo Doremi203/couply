@@ -11,11 +11,12 @@ import (
 )
 
 type matchingServiceUseCase interface {
-	CreateMatch(ctx context.Context, in *dto.CreateMatchV1Request) (*dto.CreateMatchV1Response, error)
-	UpdateMatch(ctx context.Context, in *dto.UpdateMatchV1Request) (*dto.UpdateMatchV1Response, error)
+	LikeUser(ctx context.Context, in *dto.LikeUserV1Request) (*dto.LikeUserV1Response, error)
+	DislikeUser(ctx context.Context, in *dto.DislikeUserV1Request) (*dto.DislikeUserV1Response, error)
+	DeleteMatch(ctx context.Context, in *dto.DeleteMatchV1Request) (*dto.DeleteMatchV1Response, error)
 	FetchMatches(ctx context.Context, in *dto.FetchMatchesV1Request) (*dto.FetchMatchesV1Response, error)
-	FetchIncomingMatches(ctx context.Context, in *dto.FetchIncomingMatchesV1Request) (*dto.FetchIncomingMatchesV1Response, error)
-	FetchOutgoingMatches(ctx context.Context, in *dto.FetchOutgoingMatchesV1Request) (*dto.FetchOutgoingMatchesV1Response, error)
+	FetchOutgoingLikes(ctx context.Context, in *dto.FetchOutgoingLikesV1Request) (*dto.FetchOutgoingLikesV1Response, error)
+	FetchIncomingLikes(ctx context.Context, in *dto.FetchIncomingLikesV1Request) (*dto.FetchIncomingLikesV1Response, error)
 }
 
 type Implementation struct {
