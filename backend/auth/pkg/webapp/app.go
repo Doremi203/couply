@@ -97,7 +97,7 @@ func initApp() *App {
 
 	httpClient := resty.New().SetTimeout(5 * time.Second)
 
-	sdkClient, err := initYCSdk(httpClient)
+	sdkClient, err := initYCSdk(httpClient, env)
 	if err != nil {
 		panic(errors.WrapFail(err, "init yc sdk"))
 	}
@@ -132,7 +132,10 @@ func initApp() *App {
 	return app
 }
 
-func initYCSdk(httpClient *resty.Client) (*ycsdk.SDK, error) {
+func initYCSdk(httpClient *resty.Client, env Environment) (*ycsdk.SDK, error) {
+	if env != TestingEnvironment && env != ProdEnvironment {
+		return nil, nil
+	}
 	tokenResp := struct {
 		AccessToken string `json:"access_token"`
 		ExpiresIn   int    `json:"expires_in"`

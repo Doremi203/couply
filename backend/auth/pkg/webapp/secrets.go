@@ -22,6 +22,9 @@ func (a *App) loadSecrets() error {
 		if err != nil {
 			return errors.WrapFail(err, "get token secret")
 		}
+		if len(secret.GetEntries()) == 0 {
+			return errors.Error("secret required with config but not found in yc")
+		}
 
 		for _, entry := range secret.GetEntries() {
 			_, ok := a.Config.secretsMap[entry.GetKey()]
