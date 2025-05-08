@@ -4,23 +4,22 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/token"
-	search_service "github.com/Doremi203/couply/backend/matcher/internal/app/search-service"
-	search_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/search-service"
-	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/search"
-	search_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/search-service"
-
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
 	matching_service "github.com/Doremi203/couply/backend/matcher/internal/app/matching-service"
+	search_service "github.com/Doremi203/couply/backend/matcher/internal/app/search-service"
 	user_service "github.com/Doremi203/couply/backend/matcher/internal/app/user-service"
 	matching_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/matching-service"
+	search_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/search-service"
 	user_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/user-service"
 	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres"
 	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/matching"
+	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/search"
 	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/user"
 	matching_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/matching-service"
+	search_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/search-service"
 	user_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/user-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
@@ -38,16 +37,17 @@ func main() {
 			}),
 		)
 
-		tokenConfig := token.Config{}
-		err := app.Config.ReadSection("user-token", &tokenConfig)
+		dbConfig := postgrespkg.Config{}
+		err := app.Config.ReadSection("database", &dbConfig)
 		if err != nil {
 			return err
 		}
 
-		app.AddGRPCUnaryInterceptor(token.NewUnaryTokenInterceptor(token.NewJWTProvider(tokenConfig)))
+		// temporary
+		app.Log.Info("db user %v", dbConfig.User)
 
-		dbConfig := postgrespkg.Config{}
-		err = app.Config.ReadSection("database", &dbConfig)
+		tokenConfig := token.Config{}
+		err = app.Config.ReadSection("user-token", &tokenConfig)
 		if err != nil {
 			return err
 		}
@@ -74,6 +74,7 @@ func main() {
 		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch)
 		implSearchService := search_service.NewImplementation(useCaseSearchService)
 
+		app.AddGRPCUnaryInterceptor(token.NewUnaryTokenInterceptor(token.NewJWTProvider(tokenConfig)))
 		app.RegisterGRPCServices(implUserService, implMatchingService, implSearchService)
 		app.AddGatewayHandlers(implUserService, implMatchingService, implSearchService)
 

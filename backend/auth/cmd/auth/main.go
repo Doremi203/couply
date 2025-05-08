@@ -38,6 +38,12 @@ func main() {
 			return err
 		}
 
+		jwtTokenConfig := token.JWTConfig{}
+		err = app.Config.ReadSection("jwt", &jwtTokenConfig)
+		if err != nil {
+			return err
+		}
+
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")
@@ -50,12 +56,6 @@ func main() {
 			salt.DefaultProvider{},
 			argon.V2Provider{},
 		)
-
-		jwtTokenConfig := token.JWTConfig{}
-		err = app.Config.ReadSection("jwt", &jwtTokenConfig)
-		if err != nil {
-			return err
-		}
 
 		tokenIssuer, err := token.NewJWTIssuer(jwtTokenConfig)
 		if err != nil {

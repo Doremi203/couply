@@ -23,7 +23,7 @@ type jwtIssuer struct {
 }
 
 type JWTConfig struct {
-	SecretKey     string `env:"SECRET_KEY"`
+	SecretKey     string `env:"SECRET_KEY" secret:"secret-key"`
 	TokenLifetime time.Duration
 }
 
