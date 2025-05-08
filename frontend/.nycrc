@@ -1,0 +1,4 @@
+{
+  "temp-directory": "./coverage/.nyc_output",
+  "reporter": ["html", "text"]
+}
