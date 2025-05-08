@@ -1,0 +1,29 @@
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 30px;
+  text-align: center;
+  color: var(--secondary-text-color);
+  background-color: var(--background-color);
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.emptyStateIcon {
+  margin-bottom: 20px;
+  opacity: 0.6;
+}
+
+.emptyStateText {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.emptyStateSubtext {
+  font-size: 14px;
+  color: var(--secondary-text-color);
+}

@@ -1,0 +1,475 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  padding-bottom: 70px;
+}
+
+.backButton {
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  background: none;
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: -30px;
+  position: relative;
+}
+
+.profileImageContainer {
+  position: relative;
+}
+
+.profilePic {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid white;
+  object-fit: cover;
+  background-color: #f0f0f0;
+}
+
+.verificationBadge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #1da1f2;
+  color: white;
+  border-radius: 50%;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.verificationBadge svg {
+  font-size: 16px;
+}
+
+.profileInfo h2 {
+  margin: 10px 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.verifyButton {
+  margin-top: 10px;
+  background-color: #4cd137;
+  color: white;
+}
+
+.editProfileButton {
+  margin-top: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.editButton {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.profileContent,
+.editContent,
+.activityContent,
+.previewContent {
+  padding: 0 15px 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sectionHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.editLink {
+  color: #6c5ce7;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.editLink:hover {
+  text-decoration: underline;
+}
+
+.photoGallery,
+.photoGalleryEdit {
+  margin-top: 20px;
+}
+
+.photosGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.photoItem {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.photoItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoItemEdit {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.photoItemEdit img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.removePhotoIcon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.addPhotoItem {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #f8f9fa;
+}
+
+.addPhotoItem svg {
+  font-size: 30px;
+  color: #6c5ce7;
+}
+
+.profileSection {
+  margin-top: 25px;
+  background-color: var(--section-background);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.profileSection h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.profileSection p {
+  margin: 0;
+  color: var(--secondary-text-color);
+  line-height: 1.5;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.infoLabel {
+  font-weight: 500;
+  color: #666;
+}
+
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background-color: var(--tag-background);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: var(--tag-color);
+  position: relative;
+}
+
+.commonInterest {
+  background-color: #d6e4ff;
+  border: 1px solid var(--primary-color);
+  color: var(--secondary-color);
+}
+
+.commonBadge {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.photoEditSection {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profileImageEdit {
+  position: relative;
+  margin-top: 10px;
+}
+
+.photoEditIcon {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.editSection {
+  margin-top: 25px;
+  background-color: var(--section-background);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.editSection h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+.editField {
+  margin-bottom: 15px;
+}
+
+.editField label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #666;
+}
+
+.textareaInput {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 16px;
+  resize: vertical;
+}
+
+.toggleOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.saveButtonContainer {
+  margin-top: 30px;
+  padding-bottom: 20px;
+}
+
+.saveButton {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.activityList {
+  margin-top: 20px;
+}
+
+.activityItem {
+  display: flex;
+  padding: 15px;
+  background-color: white;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.activityIcon {
+  margin-right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+}
+
+.activityDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.activityUser {
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.activityType {
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.activityDate {
+  font-size: 12px;
+  color: #999;
+}
+
+.previewBadge {
+  position: absolute;
+  top: 20px;
+  right: 15px;
+  background-color: #ff9f43;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.profileActions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.previewButton {
+  background-color: #ff2da0;
+  color: white;
+  width: 13px;
+  height: 15px;
+  margin-left: 50px;
+  margin-top: -17px;
+  font-weight: normal;
+  font-size: 13px;
+}
+
+.logoutButton,
+.deleteAccountButton {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.logoutButton {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.deleteAccountButton {
+  background-color: #ff4757;
+  color: white;
+}
+
+.profileHeader {
+  background-color: var(--header-background);
+  color: var(--header-text-color);
+  text-align: center;
+  position: relative;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 120px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 40px;
+  font-family: 'Jost', sans-serif;
+  font-weight: medium;
+  margin-top: 10px;
+}
+
+.profileActions {
+  display: flex;
+  position: absolute;
+  margin-left: 200px;
+  top: 20px;
+  padding: -20px;
+}
+
+.actionIcon {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.editIcon {
+  margin-left: -200px;
+  margin-top: -20px;
+}

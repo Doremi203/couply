@@ -1,0 +1,387 @@
+.profileViewContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-color);
+  z-index: 1000;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  height: 100%;
+  touch-action: pan-y;
+  width: 100%;
+  max-width: 100vw;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+.backButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.profileImageContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  transition: height 0.3s ease;
+  max-width: 100%;
+}
+
+.profileImageContainer.expanded {
+  height: 100vh;
+}
+
+.profileImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  max-width: 100%;
+}
+
+.profileGradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+}
+
+.photoContent {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.25rem;
+  color: white;
+  z-index: 2;
+  width: 100%;
+}
+
+.photoName {
+  font-size: 1.75rem;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.photoInfo {
+  font-size: 1rem;
+  margin: 0.313rem 0 0.938rem;
+  opacity: 0.9;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.photoTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.photoTag {
+  background-color: rgba(255, 255, 255, 0.2);
+  padding: 0.375rem 0.75rem;
+  border-radius: 1.25rem;
+  font-size: 0.875rem;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+
+.photoScrollIndicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 14px;
+  opacity: 0.9;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+}
+
+.photoScrollIndicator.showScrollBack {
+  position: fixed;
+  bottom: 85vh;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 10px 15px;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.profileInfo {
+  padding: 1.25rem;
+  background-color: var(--section-background);
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 5;
+  max-height: 80vh;
+  overflow-y: auto;
+  transition:
+    transform 0.3s ease,
+    max-height 0.3s ease,
+    visibility 0.3s,
+    opacity 0.3s;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+  user-select: none;
+  transform: translateY(100vh);
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+.profileInfo.expanded {
+  transform: translateY(100vh);
+  max-height: 80vh;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    transform 0.3s ease,
+    max-height 0.3s ease,
+    visibility 0.3s,
+    opacity 0.3s;
+}
+
+.profileInfo.collapsed {
+  transform: translateY(50vh);
+  visibility: visible;
+  opacity: 1;
+  transition:
+    transform 0.3s ease,
+    max-height 0.3s ease,
+    visibility 0.3s,
+    opacity 0.3s;
+}
+
+.profileNameContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.profileName {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.profileAge {
+  font-size: 16px;
+  color: var(--secondary-text-color);
+  margin: 0;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.closeButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease;
+}
+
+.closeButton:hover,
+.likeButton:hover,
+.dislikeButton:hover {
+  transform: scale(1.1);
+}
+
+.closeButton {
+  background-color: var(--button-background);
+}
+
+.dislikeButton {
+  background-color: grey;
+  position: fixed;
+  left: 60%;
+  transform: translateX(-50%);
+  bottom: 11rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 3.75rem;
+  height: 3.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
+}
+
+.likeButton {
+  position: fixed;
+  right: 15%;
+  transform: translateX(50%);
+  bottom: 11rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  width: 3.75rem;
+  height: 3.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  transition:
+    opacity 0.3s ease,
+    transform 0.2s ease;
+}
+
+.profileImageContainer:not(.expanded) .likeButton,
+.profileImageContainer:not(.expanded) .dislikeButton {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.interestTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.625rem;
+}
+
+.interestTag {
+  background-color: var(--tag-background);
+  padding: 0.375rem 0.75rem;
+  border-radius: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--tag-color);
+  position: relative;
+  margin-bottom: 0.25rem;
+}
+
+.commonInterest {
+  background-color: #d6e4ff;
+  border: 1px solid #6c5ce7;
+  color: #6c5ce7;
+  padding-top: 1.25rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.commonBadge {
+  position: absolute;
+  top: 0.313rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #6c5ce7;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.detailedInfo {
+  margin-top: 0.625rem;
+  width: 100%;
+}
+
+.infoSection {
+  margin-bottom: 0.938rem;
+  width: 100%;
+}
+
+.infoSection h3 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin-bottom: 0.313rem;
+  color: var(--primary-color);
+}
+
+.infoSection p {
+  margin: 0;
+  margin-bottom: 0.313rem;
+  color: var(--tag-color);
+  line-height: 1.3;
+  font-size: 0.938rem;
+}
+
+.photosGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.625rem;
+}
+
+.photoItem {
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  height: auto;
+  min-height: 5rem;
+}
+
+.photoItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.verifiedBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1rem;
+  height: 1rem;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.875rem;
+  font-weight: bold;
+  margin-top: 12px;
+  margin-left: 2px;
+  box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+}

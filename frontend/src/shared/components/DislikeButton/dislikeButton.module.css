@@ -1,0 +1,10 @@
+.dislikeCircle {
+  width: 62px;
+  height: 62px;
+  background: grey;
+  border-radius: 50%;
+}
+
+.dislike {
+  margin-top: 5px;
+}

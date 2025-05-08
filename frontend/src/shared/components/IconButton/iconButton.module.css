@@ -1,0 +1,37 @@
+.iconCircle {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.touchFriendly {
+  width: 2.75rem;
+  height: 2.75rem;
+  position: relative;
+}
+
+.touchFriendly::before {
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: -0.5rem;
+  right: -0.5rem;
+  bottom: -0.5rem;
+  border-radius: 50%;
+}
+
+.iconCircle:hover {
+  background-color: rgba(26, 37, 112, 0.2);
+}
+
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

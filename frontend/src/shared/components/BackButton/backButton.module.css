@@ -1,0 +1,32 @@
+.backButton {
+  position: absolute;
+  top: 1.25rem;
+  left: -0.625rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+  z-index: 2;
+}
+
+@media (max-width: 480px) {
+  .backButton {
+    width: 2rem;
+    height: 2rem;
+    top: 1rem;
+    left: -0.5rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .backButton {
+    width: 3rem;
+    height: 3rem;
+    top: 1.5rem;
+  }
+}

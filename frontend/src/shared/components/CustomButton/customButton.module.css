@@ -1,0 +1,44 @@
+.customButton {
+  padding: 0.625rem 1.25rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 1.875rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
+  outline: none;
+  text-align: center;
+  height: 3.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 290px;
+}
+
+.customButton:hover {
+  background-color: var(--secondary-color);
+}
+
+.customButton.disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.customButton.disabled:hover {
+  background-color: #cccccc;
+}
+
+.customButtonWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 1rem;
+}

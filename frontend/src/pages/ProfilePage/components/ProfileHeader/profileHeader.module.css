@@ -1,0 +1,56 @@
+.profileHeader {
+  background-color: var(--header-background);
+  color: var(--header-text-color);
+  text-align: center;
+  position: relative;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 120px;
+  box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 40px;
+  font-family: 'Jost', sans-serif;
+  font-weight: medium;
+  margin-top: 10px;
+}
+
+.profileActions {
+  display: flex;
+  position: absolute;
+  margin-left: 200px;
+  top: 60px;
+  padding: -20px;
+}
+
+.actionIcon {
+  margin-left: 15px;
+  cursor: pointer;
+}
+
+.previewButtonContainer {
+  position: absolute;
+  bottom: -15px;
+  right: 15px;
+}
+
+.previewButton {
+  background-color: grey;
+  color: white;
+  /* width: 13px; */
+  width: 4px;
+  height: 20px;
+  font-weight: normal;
+  font-size: 13px;
+  margin-top: -180px;
+  /* margin-left: 59px; */
+  margin-right: -20px;
+}

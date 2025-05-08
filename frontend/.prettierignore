@@ -1,0 +1,33 @@
+# Игнорировать сборки и зависимости
+dist
+node_modules
+build
+coverage
+
+# Игнорировать файлы конфигурации
+.eslintrc
+.prettierrc
+.gitignore
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Игнорировать статические файлы
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.pdf
+*.woff
+*.woff2
+*.eot
+*.ttf
+*.otf
+
+# Игнорировать другие файлы
+.DS_Store
+.env
+.env.*
+!.env.example

@@ -1,0 +1,48 @@
+import VerifiedIcon from '@mui/icons-material/Verified';
+import React from 'react';
+
+import { CustomButton } from '../../../../shared/components/CustomButton';
+import { ProfileData } from '../../types';
+
+import styles from './profileInfo.module.css';
+
+interface ProfileInfoProps {
+  profileData: ProfileData;
+  isVerified: boolean;
+  onVerificationRequest: () => void;
+}
+
+export const ProfileInfo: React.FC<ProfileInfoProps> = ({
+  profileData,
+  isVerified,
+  onVerificationRequest,
+}) => {
+  return (
+    <div className={styles.profileInfo}>
+      <div className={styles.profileImageContainer}>
+        <img
+          src={profileData.photos[0] || '/photo1.png'}
+          alt="Profile"
+          className={styles.profilePic}
+        />
+        {isVerified && (
+          <div className={styles.verificationBadge}>
+            <VerifiedIcon />
+          </div>
+        )}
+      </div>
+      <h2>
+        {profileData.name}, {profileData.age}
+      </h2>
+      {!isVerified && (
+        <CustomButton
+          text="Верифицировать профиль"
+          onClick={onVerificationRequest}
+          className={styles.verifyButton}
+        />
+      )}
+    </div>
+  );
+};
+
+export default ProfileInfo;

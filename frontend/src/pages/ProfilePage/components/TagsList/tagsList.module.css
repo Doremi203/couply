@@ -1,0 +1,31 @@
+.tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background-color: var(--tag-background);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: var(--tag-color);
+  position: relative;
+}
+
+.commonInterest {
+  background-color: rgba(79, 209, 197, 0.2);
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.commonBadge {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+}

@@ -1,0 +1,65 @@
+.editSection {
+  margin-top: 25px;
+  background-color: var(--section-background);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.editSection h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.textareaInput {
+  width: 100%;
+  min-height: 100px;
+  max-width: 100%;
+  padding: 15px;
+  border: 1px solid var(--text-input-border);
+  border-radius: 15px;
+  font-family: inherit;
+  font-size: 16px;
+  resize: vertical;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+  background-color: var(--text-input);
+  color: var(--text-color);
+  line-height: 1.5;
+  box-sizing: border-box;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.textareaInput:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(32, 44, 131, 0.1);
+}
+
+.textareaContainer {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.characterCount {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  font-size: 12px;
+  color: #888;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px 6px;
+  border-radius: 10px;
+}

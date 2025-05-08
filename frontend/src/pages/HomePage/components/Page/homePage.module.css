@@ -1,0 +1,84 @@
+.pageContainer {
+  padding: 20px;
+  padding-bottom: 70px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  min-height: 100vh;
+  overflow: hidden;
+  height: 100vh;
+  margin: 0;
+}
+
+.personCard {
+  margin-top: 8.75rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0 1rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.appName {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--primary-color);
+  font-size: 4rem;
+  font-family: 'Jost', sans-serif;
+  font-weight: medium;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.spacer {
+  width: 2.5rem;
+}
+
+.filtersIcon {
+  margin-right: 0.938rem;
+  margin-top: 0.625rem;
+  display: flex;
+  align-items: center;
+  width: 2.5rem;
+}
+
+@media (max-width: 480px) {
+  .appName {
+    font-size: 3rem;
+  }
+
+  .header {
+    padding: 0 0.5rem;
+  }
+
+  .filtersIcon {
+    margin-right: 0.5rem;
+    width: 2rem;
+  }
+
+  .spacer {
+    width: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .header {
+    margin-top: 1rem;
+  }
+
+  .personCard {
+    margin-top: 9.375rem;
+  }
+}

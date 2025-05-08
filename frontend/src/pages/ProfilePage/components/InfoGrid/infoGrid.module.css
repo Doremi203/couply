@@ -1,0 +1,17 @@
+.infoGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.infoLabel {
+  font-weight: 500;
+  color: var(--secondary-text-color);
+}
