@@ -9,17 +9,17 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func NewProvider(db *pgxpool.Pool) *provider {
-	return &provider{
+func NewTxProvider(db *pgxpool.Pool) *txProvider {
+	return &txProvider{
 		db: db,
 	}
 }
 
-type provider struct {
+type txProvider struct {
 	db *pgxpool.Pool
 }
 
-func (p *provider) ContextWithTx(ctx context.Context, isolation tx.Isolation) (context.Context, error) {
+func (p *txProvider) ContextWithTx(ctx context.Context, isolation tx.Isolation) (context.Context, error) {
 	existingTx, ok := TxFromContext(ctx)
 	if ok {
 		if p.toGeneralIsolation(existingTx.Options.IsoLevel) < isolation {
@@ -44,7 +44,7 @@ func (p *provider) ContextWithTx(ctx context.Context, isolation tx.Isolation) (c
 	return ContextWithTx(ctx, tx, txOptions), nil
 }
 
-func (p *provider) CommitTx(ctx context.Context) error {
+func (p *txProvider) CommitTx(ctx context.Context) error {
 	tx, ok := TxFromContext(ctx)
 	if !ok {
 		return errors.Error("no tx to commit")
@@ -53,7 +53,7 @@ func (p *provider) CommitTx(ctx context.Context) error {
 	return tx.Tx.Commit(ctx)
 }
 
-func (p *provider) RollbackTx(ctx context.Context) error {
+func (p *txProvider) RollbackTx(ctx context.Context) error {
 	tx, ok := TxFromContext(ctx)
 	if !ok {
 		return errors.Error("no tx to rollback")
@@ -62,7 +62,7 @@ func (p *provider) RollbackTx(ctx context.Context) error {
 	return tx.Tx.Rollback(ctx)
 }
 
-func (p *provider) mapIsolation(isolation tx.Isolation) pgx.TxIsoLevel {
+func (p *txProvider) mapIsolation(isolation tx.Isolation) pgx.TxIsoLevel {
 	switch isolation {
 	case tx.IsolationSerializable:
 		return pgx.Serializable
@@ -77,7 +77,7 @@ func (p *provider) mapIsolation(isolation tx.Isolation) pgx.TxIsoLevel {
 	}
 }
 
-func (p *provider) toGeneralIsolation(isolation pgx.TxIsoLevel) tx.Isolation {
+func (p *txProvider) toGeneralIsolation(isolation pgx.TxIsoLevel) tx.Isolation {
 	switch isolation {
 	case pgx.ReadUncommitted:
 		return tx.IsolationReadUncommitted

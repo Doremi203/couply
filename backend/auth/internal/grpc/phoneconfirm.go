@@ -3,7 +3,8 @@ package grpc
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/auth/gen/api/phone-confirm"
+	phoneconfirm "github.com/Doremi203/couply/backend/auth/gen/api/phone-confirm"
+	phoneconfirmdom "github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -60,7 +61,8 @@ func (s *phoneConfirmationService) SendCodeV1(
 
 	confirmReq, err := s.phoneConfirmationUseCase.SendCodeV1(ctx, user.ID(t.GetUserID()), phone)
 	switch {
-	case errors.Is(err, usecase.ErrPendingConfirmationRequestAlreadyExists):
+	case errors.Is(err, usecase.ErrPendingConfirmationRequestAlreadyExists),
+		errors.Is(err, usecase.ErrPhoneAlreadyConfirmed):
 		return nil, status.Error(codes.FailedPrecondition, err.Error())
 	case err != nil:
 		s.logger.Error(errors.Wrap(err, "send code v1 failed"))
@@ -76,5 +78,32 @@ func (s *phoneConfirmationService) ConfirmV1(
 	ctx context.Context,
 	req *phoneconfirm.ConfirmV1Request,
 ) (*phoneconfirm.ConfirmV1Response, error) {
+	phone, err := user.NewPhone(req.GetPhone())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+	t, ok := token.FromContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.Unauthenticated, "missing token")
+	}
+	code, err := phoneconfirmdom.NewCodeValue(req.GetCode())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	err = s.phoneConfirmationUseCase.ConfirmV1(ctx, s.logger, user.ID(t.GetUserID()), phone, code)
+	switch {
+	case errors.Is(err, usecase.ErrNoPendingConfirmRequestExists):
+		return nil, status.Error(codes.NotFound, err.Error())
+	case errors.Is(err, usecase.ErrConfirmCodeExpired),
+		errors.Is(err, usecase.ErrIncorrectConfirmationCode):
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case errors.Is(err, usecase.ErrPhoneAlreadyConfirmed):
+		return nil, status.Error(codes.AlreadyExists, err.Error())
+	case err != nil:
+		s.logger.Error(errors.Wrap(err, "confirm v1 failed"))
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+
 	return &phoneconfirm.ConfirmV1Response{}, nil
 }

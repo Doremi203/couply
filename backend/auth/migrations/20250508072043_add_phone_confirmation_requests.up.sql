@@ -5,5 +5,5 @@ create table phone_confirmation_requests
     code       varchar     not null,
     created_at timestamptz not null default now(),
     expires_in interval    not null,
-    primary key (user_id, phone)
+    primary key (phone, user_id)
 );

@@ -8,5 +8,6 @@ import (
 
 type Repo interface {
 	UpsertRequest(context.Context, Request) error
-	GetRequest(context.Context, user.ID, user.Phone) (*Request, error)
+	GetRequest(context.Context, user.ID, user.Phone) (Request, error)
+	DeleteRequest(context.Context, user.ID, user.Phone) error
 }

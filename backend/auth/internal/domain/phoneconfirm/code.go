@@ -5,16 +5,28 @@ import (
 	"math/big"
 	"strings"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 
 type HashedCode []byte
 
+func NewCodeValue(val string) (CodeValue, error) {
+	if len(val) == 0 {
+		return "", errors.Error("code value should not be empty")
+	}
+
+	return CodeValue(val), nil
+}
+
+type CodeValue string
+
 type Code struct {
-	value     string
+	value     CodeValue
 	ExpiresIn time.Duration
 }
 
-func (c Code) Value() string {
+func (c Code) Value() CodeValue {
 	return c.value
 }
 
@@ -48,7 +60,7 @@ func (g *digitCodeGenerator) Generate() (Code, error) {
 		sb.WriteByte(byte('0' + n.Int64()))
 	}
 	return Code{
-		value:     sb.String(),
+		value:     CodeValue(sb.String()),
 		ExpiresIn: g.cfg.ExpirationTime,
 	}, nil
 }

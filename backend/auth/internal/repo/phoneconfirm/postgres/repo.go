@@ -39,7 +39,7 @@ func (r *repo) UpsertRequest(ctx context.Context, request phoneconfirm.Request) 
 	return nil
 }
 
-func (r *repo) GetRequest(ctx context.Context, userID user.ID, phone user.Phone) (*phoneconfirm.Request, error) {
+func (r *repo) GetRequest(ctx context.Context, userID user.ID, phone user.Phone) (phoneconfirm.Request, error) {
 	query := `
 		SELECT 
 		    user_id,
@@ -62,15 +62,15 @@ func (r *repo) GetRequest(ctx context.Context, userID user.ID, phone user.Phone)
 	)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return nil, nil
+		return phoneconfirm.Request{}, phoneconfirm.ErrRequestNotFound
 	case err != nil:
-		return nil, errors.WrapFail(err, "fetch user by email")
+		return phoneconfirm.Request{}, errors.WrapFail(err, "fetch user by email")
 	}
 
-	return &req, nil
+	return req, nil
 }
 
-func (r *repo) DeleteRequest(ctx context.Context, userID phoneconfirm.ID, phone string) error {
+func (r *repo) DeleteRequest(ctx context.Context, userID user.ID, phone user.Phone) error {
 	const query = `
 		DELETE FROM phone_confirmation_requests
 		WHERE user_id = $1 AND phone = $2
@@ -80,9 +80,7 @@ func (r *repo) DeleteRequest(ctx context.Context, userID phoneconfirm.ID, phone 
 		return errors.WrapFail(err, "delete phone confirmation request")
 	}
 	if res.RowsAffected() == 0 {
-		return errors.Errorf("no phone confirmation request for user %v and phone %v",
-			errors.Token("user_id", userID),
-			errors.Token("phone", phone))
+		return phoneconfirm.ErrRequestNotFound
 	}
 
 	return nil

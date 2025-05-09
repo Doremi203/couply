@@ -80,6 +80,7 @@ func main() {
 		}
 
 		var uuidProvider uuid.DefaultProvider
+		txProvider := postgres.NewTxProvider(dbClient.Pool)
 
 		registrationUseCase := usecase.NewRegistration(
 			userRepo,
@@ -89,7 +90,7 @@ func main() {
 		registrationService := grpc.NewRegistrationService(
 			registrationUseCase,
 			app.Log,
-			postgres.NewProvider(dbClient.Pool),
+			txProvider,
 			idempotencypostgres.NewRepo(dbClient),
 		)
 
@@ -110,6 +111,8 @@ func main() {
 			phoneconfirm.NewDigitCodeGenerator(phoneConfirmationConfig),
 			hashProvider,
 			phoneconfirmpostgres.NewRepo(dbClient),
+			userRepo,
+			txProvider,
 		)
 		phoneConfirmationService := grpc.NewPhoneConfirmationService(
 			phoneConfirmationUseCase,
@@ -123,6 +126,7 @@ func main() {
 				tokenProvider,
 				app.Log,
 				phoneconfirmgrpc.PhoneConfirmation_SendCodeV1_FullMethodName,
+				phoneconfirmgrpc.PhoneConfirmation_ConfirmV1_FullMethodName,
 			),
 		)
 		app.RegisterGRPCServices(

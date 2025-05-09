@@ -7,7 +7,6 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/timeprovider"
-	"github.com/google/uuid"
 )
 
 func NewRequest(
@@ -21,7 +20,7 @@ func NewRequest(
 		return Request{}, errors.WrapFail(err, "generate secure code")
 	}
 
-	hashedCode, err := hashProvider.Hash(code.value)
+	hashedCode, err := hashProvider.Hash(string(code.value))
 	if err != nil {
 		return Request{}, errors.WrapFail(err, "hash code")
 	}
@@ -45,5 +44,3 @@ type Request struct {
 func (r *Request) Expired(provider timeprovider.Provider) bool {
 	return provider.Now().After(r.CreatedAt.Add(r.Code.ExpiresIn))
 }
-
-type ID uuid.UUID
