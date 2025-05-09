@@ -61,9 +61,12 @@ func (s *phoneConfirmationService) SendCodeV1(
 
 	confirmReq, err := s.phoneConfirmationUseCase.SendCodeV1(ctx, user.ID(t.GetUserID()), phone)
 	switch {
-	case errors.Is(err, usecase.ErrPendingConfirmationRequestAlreadyExists),
-		errors.Is(err, usecase.ErrPhoneAlreadyConfirmed):
-		return nil, status.Error(codes.FailedPrecondition, err.Error())
+	case errors.Is(err, usecase.ErrPendingConfirmationRequestAlreadyExists):
+		return nil, status.Error(codes.ResourceExhausted, err.Error())
+
+	case errors.Is(err, usecase.ErrPhoneAlreadyConfirmed):
+		return nil, status.Error(codes.AlreadyExists, err.Error())
+
 	case err != nil:
 		s.logger.Error(errors.Wrap(err, "send code v1 failed"))
 		return nil, status.Error(codes.Internal, "internal error")
@@ -95,11 +98,14 @@ func (s *phoneConfirmationService) ConfirmV1(
 	switch {
 	case errors.Is(err, usecase.ErrNoPendingConfirmRequestExists):
 		return nil, status.Error(codes.NotFound, err.Error())
+
 	case errors.Is(err, usecase.ErrConfirmCodeExpired),
 		errors.Is(err, usecase.ErrIncorrectConfirmationCode):
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.FailedPrecondition, err.Error())
+
 	case errors.Is(err, usecase.ErrPhoneAlreadyConfirmed):
 		return nil, status.Error(codes.AlreadyExists, err.Error())
+
 	case err != nil:
 		s.logger.Error(errors.Wrap(err, "confirm v1 failed"))
 		return nil, status.Error(codes.Internal, "internal error")
