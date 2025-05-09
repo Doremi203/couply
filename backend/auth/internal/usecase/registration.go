@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -11,19 +12,19 @@ import (
 
 func NewRegistration(
 	userRepository user.Repo,
-	hasher pswrd.Hasher,
+	hashProvider hash.Provider,
 	uidGenerator uuid.Provider,
 ) Registration {
 	return Registration{
 		userRepository: userRepository,
-		hasher:         hasher,
+		hashProvider:   hashProvider,
 		uuidProvider:   uidGenerator,
 	}
 }
 
 type Registration struct {
 	userRepository user.Repo
-	hasher         pswrd.Hasher
+	hashProvider   hash.Provider
 	uuidProvider   uuid.Provider
 }
 
@@ -47,7 +48,7 @@ func (u Registration) BasicV1(
 		return errors.WrapFailf(err, "get existing user with %v", errors.Token("email", email))
 	}
 
-	hash, err := u.hasher.Hash(password)
+	hash, err := u.hashProvider.Hash(string(password))
 	if err != nil {
 		return errors.WrapFailf(err, "hash password")
 	}

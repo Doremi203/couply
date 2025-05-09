@@ -92,6 +92,9 @@ auth/migrate/up:
 auth/migrate/down:
 	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down -all
 
+auth/migrate/down-one:
+	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down 1
+
 auth/migrate/create:
 	$(MIGRATE_CREATE) auth/migrations $(name)
 

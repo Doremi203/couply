@@ -2,8 +2,10 @@ package token
 
 import (
 	"context"
+	"slices"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -12,6 +14,8 @@ import (
 
 func NewUnaryTokenInterceptor(
 	provider Provider,
+	logger log.Logger,
+	methods ...string,
 ) grpc.UnaryServerInterceptor {
 	return func(
 		ctx context.Context,
@@ -19,8 +23,13 @@ func NewUnaryTokenInterceptor(
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (resp any, err error) {
+		if !slices.Contains(methods, info.FullMethod) {
+			return handler(ctx, req)
+		}
+
 		token, err := fromGRPCCtx(ctx, provider)
 		if err != nil {
+			logger.Error(errors.WrapFail(err, "extract user token from context"))
 			return nil, status.Error(codes.Unauthenticated, "valid user token is not provided")
 		}
 		return handler(contextWithToken(ctx, token), req)

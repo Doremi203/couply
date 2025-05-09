@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/token"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
@@ -11,20 +12,20 @@ import (
 
 func NewLogin(
 	userRepo user.Repo,
-	hasher pswrd.Hasher,
+	hashProvider hash.Provider,
 	tokenIssuer token.Issuer,
 ) Login {
 	return Login{
-		userRepo:    userRepo,
-		hasher:      hasher,
-		tokenIssuer: tokenIssuer,
+		userRepo:     userRepo,
+		hashProvider: hashProvider,
+		tokenIssuer:  tokenIssuer,
 	}
 }
 
 type Login struct {
-	userRepo    user.Repo
-	hasher      pswrd.Hasher
-	tokenIssuer token.Issuer
+	userRepo     user.Repo
+	hashProvider hash.Provider
+	tokenIssuer  token.Issuer
 }
 
 var ErrInvalidCredentials = errors.Error("invalid credentials")
@@ -39,9 +40,9 @@ func (u Login) BasicV1(
 		return token.Token{}, errors.WrapFailf(err, "get user by %v", errors.Token("error", email))
 	}
 
-	err = u.hasher.Verify(password, usr.Password)
+	err = u.hashProvider.Verify(string(password), usr.Password)
 	switch {
-	case errors.Is(err, pswrd.ErrInvalidPassword):
+	case errors.Is(err, hash.ErrNoMatch):
 		return token.Token{}, ErrInvalidCredentials
 	case err != nil:
 		return token.Token{}, errors.WrapFailf(err, "hash password")

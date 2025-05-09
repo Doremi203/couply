@@ -1,6 +1,7 @@
 package user
 
 import (
+	"regexp"
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
@@ -16,6 +17,15 @@ func (id ID) String() string {
 }
 
 type Email string
+
+func NewPhone(v string) (Phone, error) {
+	re := regexp.MustCompile(`^\+\d{10,15}$`)
+	if !re.MatchString(v) {
+		return "", errors.Error("invalid phone format, must be in E.164 format")
+	}
+
+	return Phone(v), nil
+}
 
 type Phone string
 
