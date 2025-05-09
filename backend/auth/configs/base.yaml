@@ -23,3 +23,6 @@ database:
 phone-confirmation:
   length: 6
   expirationTime: 1m
+
+jwt:
+  tokenLifetime: 30m
