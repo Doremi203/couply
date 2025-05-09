@@ -41,33 +41,32 @@ jobs:
       - name: Run tests
         run: BASE_MIGRATIONS_PATH=${{ github.workspace }}/backend go test ./... -race
 
-  test-functional:
-    needs: codegen
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: backend/matcher
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download codegen results
-        uses: actions/download-artifact@v4
-        with:
-          name: codegen-output
-          path: backend
-
-      - name: Docker compose
-        run: cd .. && docker compose -f docker-compose.tests.yml up -d
-
-      - name: Run functional tests
-        run: echo "Running functional tests"
+#  test-functional:
+#    needs: codegen
+#    runs-on: ubuntu-latest
+#    timeout-minutes: 10
+#    defaults:
+#      run:
+#        working-directory: backend/matcher
+#    steps:
+#      - uses: actions/checkout@v4
+#
+#      - name: Download codegen results
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: codegen-output
+#          path: backend
+#
+#      - name: Docker compose
+#        run: cd .. && docker compose -f docker-compose.tests.yml up -d
+#
+#      - name: Run functional tests
+#        run: echo "Running functional tests"
 
   migrate-testing-up:
     runs-on: ubuntu-latest
     needs:
       - test-unit
-      - test-functional
     timeout-minutes: 10
     defaults:
       run:
