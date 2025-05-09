@@ -16,6 +16,7 @@ type userServiceUseCase interface {
 	UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (*dto.UpdateUserV1Response, error)
 	DeleteUser(ctx context.Context, in *dto.DeleteUserV1Request) (*dto.DeleteUserV1Response, error)
 	GetUser(ctx context.Context, in *dto.GetUserV1Request) (*dto.GetUserV1Response, error)
+	GetUsers(ctx context.Context, in *dto.GetUsersV1Request) (*dto.GetUsersV1Response, error)
 }
 
 type Implementation struct {

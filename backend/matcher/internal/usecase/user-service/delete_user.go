@@ -3,11 +3,12 @@ package user_service
 import (
 	"context"
 
-	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
+	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
+
 	"github.com/Doremi203/couply/backend/matcher/utils"
 )
 
-func (c *UseCase) DeleteUser(ctx context.Context, _ *user_service.DeleteUserV1Request) (*user_service.DeleteUserV1Response, error) {
+func (c *UseCase) DeleteUser(ctx context.Context, _ *dto.DeleteUserV1Request) (*dto.DeleteUserV1Response, error) {
 	userID, err := utils.GetUserIDFromContext(ctx)
 	if err != nil {
 		return nil, err
@@ -18,5 +19,5 @@ func (c *UseCase) DeleteUser(ctx context.Context, _ *user_service.DeleteUserV1Re
 		return nil, err
 	}
 
-	return &user_service.DeleteUserV1Response{}, nil
+	return &dto.DeleteUserV1Response{}, nil
 }
