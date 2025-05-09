@@ -22,7 +22,7 @@ jobs:
           name: codegen-output
           path: backend
 
-  test:
+  test-unit:
     needs: codegen
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -41,6 +41,22 @@ jobs:
       - name: Run tests
         run: BASE_MIGRATIONS_PATH=${{ github.workspace }}/backend go test ./... -race
 
+  test-functional:
+    needs: codegen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/matcher
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
       - name: Docker compose
         run: cd .. && docker compose -f docker-compose.tests.yml up -d
 
@@ -50,7 +66,8 @@ jobs:
   migrate-testing-up:
     runs-on: ubuntu-latest
     needs:
-      - test
+      - test-unit
+      - test-functional
     timeout-minutes: 10
     defaults:
       run:
@@ -82,9 +99,9 @@ jobs:
           ./migrate -source file://migrations -database "postgres://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/matcher?sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/home/runner/.postgresql/root.crt" up
 
   build-testing:
+    needs: codegen
     runs-on: ubuntu-latest
-    needs: migrate-testing-up
-    timeout-minutes: 20
+    timeout-minutes: 10
     defaults:
       run:
         working-directory: backend
@@ -114,6 +131,32 @@ jobs:
       - name: Build Docker image
         run: docker build -t cr.yandex/crpe9kgeql1v6b7gujfj/matcher-testing:${{ env.RELEASE_VERSION }} --push . -f matcher/testing.Dockerfile
 
+  deploy-testing:
+    runs-on: ubuntu-latest
+    needs: migrate-testing-up
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
+      - name: Set release version
+        run: echo "RELEASE_VERSION=${{ github.run_number }}" >> $GITHUB_ENV
+
+      - name: Setup yc
+        run: |
+          curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+          echo '${{ secrets.YC_SERVICE_KEY }}' > sa-key.json
+          /opt/yc/bin/yc config set folder-id b1ggapscf0p06cohndtt
+          /opt/yc/bin/yc config set service-account-key sa-key.json
+
       - name: Generate docker-compose.yml with version
         run: |
           sed -e "s/{{SERVICE_VERSION}}/${{ env.RELEASE_VERSION }}/g" \
@@ -128,7 +171,7 @@ jobs:
 
   publish-release:
     runs-on: ubuntu-latest
-    needs: build-testing
+    needs: deploy-testing
     environment:
       name: Production
     steps:
