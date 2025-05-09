@@ -1,8 +1,0 @@
-services:
-  auth:
-    build:
-      dockerfile: auth/debug.Dockerfile
-    ports:
-      - "40000:40000"
-    security_opt:
-      - seccomp=unconfined
