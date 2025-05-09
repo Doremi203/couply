@@ -65,7 +65,8 @@ func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, err
 	row := r.db.QueryRow(ctx, query, email)
 
 	var u user.User
-	err := row.Scan(&u.ID, &u.Email, &u.Phone, &u.Password)
+	var phone *string
+	err := row.Scan(&u.ID, &u.Email, &phone, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return user.User{}, user.NotFoundError{
@@ -73,6 +74,9 @@ func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, err
 		}
 	case err != nil:
 		return user.User{}, errors.WrapFail(err, "fetch user by email")
+	}
+	if phone != nil {
+		u.Phone = user.Phone(*phone)
 	}
 
 	return u, nil
@@ -87,7 +91,8 @@ func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, err
 	row := r.db.QueryRow(ctx, query, phone)
 
 	var u user.User
-	err := row.Scan(&u.ID, &u.Email, &u.Phone, &u.Password)
+	var p *string
+	err := row.Scan(&u.ID, &u.Email, &p, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return user.User{}, user.NotFoundError{
@@ -95,6 +100,9 @@ func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, err
 		}
 	case err != nil:
 		return user.User{}, errors.WrapFail(err, "fetch user by email")
+	}
+	if p != nil {
+		u.Phone = user.Phone(*p)
 	}
 
 	return u, nil

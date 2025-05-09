@@ -71,7 +71,12 @@ func main() {
 		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch)
 		implSearchService := search_service.NewImplementation(app.Log, useCaseSearchService)
 
-		app.AddGRPCUnaryInterceptor(token.NewUnaryTokenInterceptor(token.NewJWTProvider(tokenConfig), app.Log))
+		app.AddGRPCUnaryInterceptor(
+			token.NewUnaryTokenInterceptor(
+				token.NewJWTProvider(tokenConfig),
+				app.Log,
+			),
+		)
 		app.RegisterGRPCServices(implUserService, implMatchingService, implSearchService)
 		app.AddGatewayHandlers(implUserService, implMatchingService, implSearchService)
 
