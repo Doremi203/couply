@@ -4,7 +4,6 @@ import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Gender } from '../../../../entities/user';
 import { useCreateUserMutation } from '../../../../entities/user/api/userApi';
 import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
@@ -17,6 +16,7 @@ import {
   createPushSubscription,
   sendSubscriptionToServer,
 } from '../../../../shared/lib/services/PushNotificationService';
+import getAge from '../../helpers/getAge';
 
 import styles from './enterInfo.module.css';
 
@@ -39,13 +39,12 @@ export const EnterInfoPage = () => {
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
       try {
-        //TODO
         const userData = {
           name,
-          age: 20,
-          gender: Gender.male,
+          age: getAge(birthDate),
+          gender: userGender,
           birthDate,
-          photos: [{ url: profilePhoto }],
+          photos: [{ url: profilePhoto }], //TODO
         };
 
         // TODO
@@ -54,13 +53,13 @@ export const EnterInfoPage = () => {
         }
 
         //ВЕРНУТЬ
-        //const response = await createUser(userData).unwrap();
+        const response = await createUser(userData).unwrap();
 
         // надо ли сохранять в локал TODO
-        // if (response && response.user && response.user.id) {
-        //   dispatch(setUserId(response.user.id));
-        //   localStorage.setItem('userId', response.user.id);
-        // }
+        if (response && response.user && response.user.id) {
+          dispatch(setUserId(response.user.id));
+          localStorage.setItem('userId', response.user.id);
+        }
 
         // After creating user, check if we should show notification prompt
         if (
@@ -162,7 +161,7 @@ export const EnterInfoPage = () => {
       case 0:
         return name.trim() !== '';
       case 1:
-        return birthDate !== '';
+        return birthDate !== '' && getAge(birthDate) >= 18;
       case 2:
         return userGender !== '' && profilePhoto !== null;
       default:
@@ -178,6 +177,7 @@ export const EnterInfoPage = () => {
         type="text"
         value={name}
         onChange={e => setName(e.target.value)}
+        className={styles.input}
       />
     </div>,
     <div key="birthDateSection">
@@ -187,9 +187,14 @@ export const EnterInfoPage = () => {
         type="date"
         value={birthDate}
         onChange={e => setBirthDate(e.target.value)}
+        className={styles.input}
       />
+
+      {birthDate && getAge(birthDate) < 18 && (
+        <div className={styles.error}>Для регистрации необходимо быть старше 18 лет</div>
+      )}
       <div>
-        <h2>Ваш пол:</h2>
+        <h2 className={styles.genderLabel}>Ваш пол:</h2>
         <ToggleButtons
           options={[
             { label: 'Женский', value: 'female' },
@@ -197,6 +202,7 @@ export const EnterInfoPage = () => {
           ]}
           onSelect={handleUserGenderSelect}
           value={userGender}
+          className={styles.toggleButtons}
         />
       </div>
     </div>,
@@ -222,6 +228,8 @@ export const EnterInfoPage = () => {
       </div>
     </div>,
   ];
+
+  console.log(birthDate);
 
   return (
     <div className={styles.container}>

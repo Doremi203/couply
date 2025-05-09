@@ -28,6 +28,19 @@
   width: 100%;
 }
 
+.headerHidden {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  padding: 0 1rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  top: 45px;
+}
+
 .appName {
   display: flex;
   justify-content: center;

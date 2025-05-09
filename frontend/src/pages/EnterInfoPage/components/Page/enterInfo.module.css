@@ -126,3 +126,37 @@
   color: var(--secondary-text-color);
   text-align: center;
 }
+
+.input {
+  margin-top: 10px;
+}
+
+.genderLabel {
+  margin-top: 10px;
+}
+
+.toggleButtons {
+  margin-top: 10px;
+  margin-left: 14px;
+}
+
+.error {
+  color: #ff4444;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}

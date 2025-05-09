@@ -13,57 +13,9 @@ import {
   Zodiac,
 } from '../../user';
 
-export interface UserRequest {
-  id?: string;
-  name: string;
-  age: number;
-  gender: string;
-  location: string;
-  bio: string;
-  goal: Goal;
-  interest: null; //
-  zodiac: Zodiac;
-  height: number;
-  education: Education;
-  children: Children;
-  alcohol: Alcohol;
-  smoking: Smoking;
-  hidden: boolean;
-  verified: boolean;
-  photos: null; //
-}
-
-export interface UserResponse {
-  user: {
-    id: string;
-    name: string;
-    age: number;
-    gender: string;
-    location: string;
-    bio: string;
-    goal: Goal;
-    interest: null; //
-    zodiac: Zodiac;
-    height: number;
-    education: Education;
-    children: Children;
-    alcohol: Alcohol;
-    smoking: Smoking;
-    hidden: boolean;
-    verified: boolean;
-    photos: null; //
-  };
-}
-
-export enum GenderPriority {
-  unspecified = 'GENDERPRIORITY_UNSPECIFIED',
-  male = 'GENDERPRIORITY_MALE',
-  female = 'GENDERPRIORITY_FEMALE',
-  any = 'GENDERPRIORITY_ANY',
-}
+import { GenderPriority } from './constants';
 
 export interface CreateFilterRequest {
-  userId: string;
   genderPriority: GenderPriority;
   minAge: number;
   maxAge: number;
@@ -88,12 +40,8 @@ export interface CreateFilterRequest {
   onlyPremium: true;
 }
 
-export interface GetFilterRequest {
-  userId: string;
-}
-export interface GetFilterResponse {
+export interface FilterResponse {
   filter: {
-    userId: string;
     genderPriority: GenderPriority;
     ageRange: {
       min: number;
@@ -126,7 +74,6 @@ export interface GetFilterResponse {
 }
 
 export interface SearchRequest {
-  userId: string;
   offset: number;
   limit: number;
 }

@@ -1,64 +1,52 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
 
 import {
-  useFetchIncomingMatchesMutation,
+  useFetchIncomingLikesMutation,
   useFetchMatchesMutation,
-  useUpdateMatchMutation,
+  useLikeUserMutation,
 } from '../../../entities/matches/api/matchesApi';
-import { useGetUserMutation } from '../../../entities/user';
-import { getUserId } from '../../../entities/user/model/userSlice';
 import { LikeProfile, MatchProfile } from '../types';
 
-export const useMatches = () => {
-  //const userId = useSelector(getUserId);
-  const userId = 1;
-
+export const useLikesAndMatches = () => {
   const [fetchMatches] = useFetchMatchesMutation();
-  const [fetchIncomingMatches, { isLoading: isLoadingIncoming }] =
-    useFetchIncomingMatchesMutation();
-  const [getUser] = useGetUserMutation();
+  const [fetchIncomingLikes, { isLoading: isLoadingIncoming }] = useFetchIncomingLikesMutation();
+  const [likeUser] = useLikeUserMutation();
+  //const [getUser] = useGetUserMutation();
 
   const isInitialized = useRef(false);
 
   const [incomingMatches, setIncomingMatches] = useState<LikeProfile[]>([]);
 
-  // useEffect(() => {
-  //   if (!userId) return;
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const matchesResult = await fetchMatches({
+          limit: 10,
+          offset: 0,
+        }).unwrap();
 
-  //   const loadData = async () => {
-  //     try {
-  //       const matchesResult = await fetchMatches({
-  //         mainUserId: userId,
-  //         limit: 10,
-  //         offset: 0,
-  //       }).unwrap();
+        // @ts-ignore
+        setMatches(matchesResult.match.map(el => el.mainUserId));
 
-  //       // @ts-ignore
-  //       setMatches(matchesResult.match.map(el => el.mainUserId));
+        const incomingResult = await fetchIncomingLikes({
+          limit: 10,
+          offset: 0,
+        }).unwrap();
 
-  //       const incomingResult = await fetchIncomingMatches({
-  //         chosenUserId: userId,
-  //         limit: 10,
-  //         offset: 0,
-  //       }).unwrap();
+        // @ts-ignore
+        const incomingMatches = incomingResult.match.map(el => el.mainUserId);
 
-  //       // @ts-ignore
-  //       const incomingMatches = incomingResult.match.map(el => el.mainUserId);
+        setIncomingMatches(incomingMatches);
+      } catch (error) {
+        console.error('Error loading matches data:', error);
+      }
+    };
 
-  //       setIncomingMatches(incomingMatches);
-  //     } catch (error) {
-  //       console.error('Error loading matches data:', error);
-  //     }
-  //   };
-
-  //   if (!isInitialized.current) {
-  //     loadData();
-  //     isInitialized.current = true;
-  //   }
-  // }, [userId, fetchMatches, fetchIncomingMatches]);
-
-  const [updateMatch] = useUpdateMatchMutation();
+    if (!isInitialized.current) {
+      loadData();
+      isInitialized.current = true;
+    }
+  }, [fetchMatches, fetchIncomingLikes]);
 
   const [matches, setMatches] = useState<MatchProfile[]>([]);
   const [showMatchModal, setShowMatchModal] = useState(false);
@@ -72,12 +60,18 @@ export const useMatches = () => {
 
       if (likedProfile) {
         try {
-          await updateMatch({
-            mainUserId: likedProfile,
-            // @ts-ignore
-            chosenUserId: userId,
-            approved: true,
-          });
+          // await updateMatch({
+          //   mainUserId: likedProfile,
+          //   // @ts-ignore
+          //   chosenUserId: userId,
+          //   approved: true,
+          // });
+
+          // await likeUser({
+          //   targetUserId: likedProfile,
+          //   // @ts-ignore
+          //   chosenUserId: userId,
+          // });
 
           setShowMatchModal(true);
 
@@ -105,7 +99,7 @@ export const useMatches = () => {
         }
       }
     },
-    [incomingMatches, updateMatch, userId, getUser, matches],
+    [incomingMatches, matches],
   );
 
   const handleSendMessage = useCallback(() => {
@@ -143,7 +137,6 @@ export const useMatches = () => {
       // incomingMatches,
     }),
     [
-      matches,
       showMatchModal,
       matchedProfile,
       showChatMessage,
@@ -152,7 +145,6 @@ export const useMatches = () => {
       handleKeepSwiping,
       handleSocialClick,
       isLoadingIncoming,
-      incomingMatches,
     ],
   );
 };

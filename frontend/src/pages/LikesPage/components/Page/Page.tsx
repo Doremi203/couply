@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 import useFetchUsers from '../../../../entities/user/hooks/useFetchUsers';
-import { LikesSection, useMatches } from '../../../../features/matches';
+import { LikesSection, useLikesAndMatches, useMatches } from '../../../../features/matches';
 import { NavBar } from '../../../../shared/components/NavBar';
 import TabsSection from '../../../../shared/components/TabsSection';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -84,12 +84,7 @@ export const LikesPage = () => {
     handleKeepSwiping,
     handleSocialClick,
     //   incomingMatches,
-  } = useMatches();
-
-  // @ts-ignore
-  //const likes = useFetchUsers(incomingMatches);
-  // @ts-ignore
-  //const matchesUsers = useFetchUsers(matches);
+  } = useLikesAndMatches();
 
   const { selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile } =
     useProfileView();

@@ -11,12 +11,14 @@ interface ToggleButtonsProps {
   options: ToggleButtonOption[];
   onSelect: (value: string) => void;
   value?: string;
+  className?: string;
 }
 
 export const ToggleButtons: React.FC<ToggleButtonsProps> = ({
   options,
   onSelect,
   value,
+  className,
 }) => {
   const [selected, setSelected] = useState<string>(value || '');
 
@@ -32,8 +34,8 @@ export const ToggleButtons: React.FC<ToggleButtonsProps> = ({
   };
 
   return (
-    <div className={styles.toggleButtons}>
-      {options.map((option) => (
+    <div className={`${styles.toggleButtons} ${className || ''}`}>
+      {options.map(option => (
         <button
           key={option.value}
           className={selected === option.value ? styles.active : styles.button}
