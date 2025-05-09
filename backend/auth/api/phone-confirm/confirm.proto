@@ -16,6 +16,10 @@ service PhoneConfirmation {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Иницирует отправку sms-кода для подтверждения номера телефона";
       description: "Иницирует отправку sms-кода для подтверждения номера телефона и привязки его к аккаунту";
+      external_docs: {
+        description: "Описание возможных ответов"
+        url: "https://github.com/Doremi203/couply/wiki/Phone-confirm-API#v1phonesend-code"
+      }
       parameters: {
         headers: {
           name: "User-Token"
