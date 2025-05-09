@@ -12,6 +12,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+const InterceptAllMethodsOption = "all-methods"
+
 func NewUnaryTokenInterceptor(
 	provider Provider,
 	logger log.Logger,
@@ -23,7 +25,7 @@ func NewUnaryTokenInterceptor(
 		info *grpc.UnaryServerInfo,
 		handler grpc.UnaryHandler,
 	) (resp any, err error) {
-		if !slices.Contains(methods, info.FullMethod) {
+		if !slices.Contains(methods, InterceptAllMethodsOption) && !slices.Contains(methods, info.FullMethod) {
 			return handler(ctx, req)
 		}
 

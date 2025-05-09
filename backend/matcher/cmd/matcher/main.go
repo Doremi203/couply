@@ -75,6 +75,7 @@ func main() {
 			token.NewUnaryTokenInterceptor(
 				token.NewJWTProvider(tokenConfig),
 				app.Log,
+				token.InterceptAllMethodsOption,
 			),
 		)
 		app.RegisterGRPCServices(implUserService, implMatchingService, implSearchService)
