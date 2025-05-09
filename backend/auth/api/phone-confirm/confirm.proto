@@ -39,6 +39,10 @@ service PhoneConfirmation {
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Проверка кода и подтверждение номера телефона";
       description: "Проверяет, что переданный код совпадает с отправленным и, в случае успеха, привязывает номер телефона к аккаунту";
+      external_docs: {
+        description: "Описание возможных ответов"
+        url: "https://github.com/Doremi203/couply/wiki/Phone-confirm-API#v1phoneconfirm"
+      }
       parameters: {
         headers: {
           name: "User-Token"
