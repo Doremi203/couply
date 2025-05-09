@@ -5,44 +5,44 @@ import (
 	"github.com/google/uuid"
 )
 
-type FetchMatchesV1Request struct {
+type FetchMatchesUserIDsV1Request struct {
 	Limit  uint64
 	Offset uint64
 }
 
-func (x *FetchMatchesV1Request) GetLimit() uint64 {
+func (x *FetchMatchesUserIDsV1Request) GetLimit() uint64 {
 	if x != nil {
 		return x.Limit
 	}
 	return 0
 }
 
-func (x *FetchMatchesV1Request) GetOffset() uint64 {
+func (x *FetchMatchesUserIDsV1Request) GetOffset() uint64 {
 	if x != nil {
 		return x.Offset
 	}
 	return 0
 }
 
-type FetchMatchesV1Response struct {
+type FetchMatchesUserIDsV1Response struct {
 	UserIDs []*uuid.UUID
 }
 
-func (x *FetchMatchesV1Response) GetUserIDs() []*uuid.UUID {
+func (x *FetchMatchesUserIDsV1Response) GetUserIDs() []*uuid.UUID {
 	if x != nil {
 		return x.UserIDs
 	}
 	return nil
 }
 
-func PBToFetchMatchesRequest(req *desc.FetchMatchesUserIDsV1Request) *FetchMatchesV1Request {
-	return &FetchMatchesV1Request{
+func PBToFetchMatchesUserIDsRequest(req *desc.FetchMatchesUserIDsV1Request) *FetchMatchesUserIDsV1Request {
+	return &FetchMatchesUserIDsV1Request{
 		Limit:  req.GetLimit(),
 		Offset: req.GetOffset(),
 	}
 }
 
-func FetchMatchesResponseToPB(resp *FetchMatchesV1Response) *desc.FetchMatchesUserIDsV1Response {
+func FetchMatchesUserIDsResponseToPB(resp *FetchMatchesUserIDsV1Response) *desc.FetchMatchesUserIDsV1Response {
 	pbUserIDs := make([]string, len(resp.GetUserIDs()))
 	for i, id := range resp.GetUserIDs() {
 		pbUserIDs[i] = id.String()

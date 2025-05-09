@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (c *UseCase) FetchMatches(ctx context.Context, in *dto.FetchMatchesV1Request) (*dto.FetchMatchesV1Response, error) {
+func (c *UseCase) FetchMatchesUserIDs(ctx context.Context, in *dto.FetchMatchesUserIDsV1Request) (*dto.FetchMatchesUserIDsV1Response, error) {
 	userID, err := utils.GetUserIDFromContext(ctx)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (c *UseCase) FetchMatches(ctx context.Context, in *dto.FetchMatchesV1Reques
 		otherUserIDS = append(otherUserIDS, &otherUserID)
 	}
 
-	return &dto.FetchMatchesV1Response{
+	return &dto.FetchMatchesUserIDsV1Response{
 		UserIDs: otherUserIDS,
 	}, nil
 }

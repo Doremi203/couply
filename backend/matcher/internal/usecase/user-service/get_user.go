@@ -3,11 +3,11 @@ package user_service
 import (
 	"context"
 
-	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
+	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 	"github.com/Doremi203/couply/backend/matcher/utils"
 )
 
-func (c *UseCase) GetUser(ctx context.Context, _ *user_service.GetUserV1Request) (*user_service.GetUserV1Response, error) {
+func (c *UseCase) GetUser(ctx context.Context, _ *dto.GetUserV1Request) (*dto.GetUserV1Response, error) {
 	userID, err := utils.GetUserIDFromContext(ctx)
 	if err != nil {
 		return nil, err
@@ -18,5 +18,5 @@ func (c *UseCase) GetUser(ctx context.Context, _ *user_service.GetUserV1Request)
 		return nil, err
 	}
 
-	return &user_service.GetUserV1Response{User: user}, nil
+	return &dto.GetUserV1Response{User: user}, nil
 }

@@ -3,8 +3,9 @@ package user_service
 import (
 	"context"
 
+	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
-	user_service "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -14,11 +15,11 @@ func (i *Implementation) CreateUserV1(ctx context.Context, in *desc.CreateUserV1
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	response, err := i.usecase.CreateUser(ctx, user_service.PBToCreateUserRequest(in))
+	response, err := i.usecase.CreateUser(ctx, dto.PBToCreateUserRequest(in))
 	if err != nil {
 		i.logger.Error(err)
 		return nil, status.Error(codes.Internal, "internal server error")
 	}
 
-	return user_service.CreateUserResponseToPB(response), nil
+	return dto.CreateUserResponseToPB(response), nil
 }

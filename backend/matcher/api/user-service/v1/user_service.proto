@@ -125,6 +125,27 @@ service UserService {
       }
     };
   }
+
+  rpc GetUsersV1 (GetUsersV1Request) returns (GetUsersV1Response) {
+    option (google.api.http) = {
+      post: "/v1/GetUsersV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение пользователей";
+      description: "Принимает айди пользователей для получения их данных";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateUserV1Request {
@@ -241,6 +262,14 @@ message GetUserV1Request {
 
 message GetUserV1Response {
   User user = 1;
+}
+
+message GetUsersV1Request {
+  repeated string user_ids = 1;
+}
+
+message GetUsersV1Response {
+  repeated User users = 1;
 }
 
 message User {
