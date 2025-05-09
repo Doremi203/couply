@@ -4,9 +4,12 @@ import (
 	"context"
 	"strings"
 
-	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
+	phoneconfirmgrpc "github.com/Doremi203/couply/backend/auth/gen/api/phone-confirm"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/token"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
+	phoneconfirmpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/phoneconfirm/postgres"
 	userpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	"github.com/Doremi203/couply/backend/auth/pkg/argon"
@@ -14,6 +17,8 @@ import (
 	idempotencypostgres "github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
+	"github.com/Doremi203/couply/backend/auth/pkg/sms"
+	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -24,7 +29,7 @@ func main() {
 		app.AddGatewayOptions(
 			runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
 				switch s = strings.ToLower(s); s {
-				case "idempotency-key":
+				case "idempotency-key", "user-token":
 					return s, true
 				default:
 					return runtime.DefaultHeaderMatcher(s)
@@ -44,6 +49,18 @@ func main() {
 			return err
 		}
 
+		pkgTokenConfig := tokenpkg.Config{}
+		err = app.Config.ReadSection("token", &pkgTokenConfig)
+		if err != nil {
+			return err
+		}
+
+		phoneConfirmationConfig := phoneconfirm.Config{}
+		err = app.Config.ReadSection("phone-confirmation", &phoneConfirmationConfig)
+		if err != nil {
+			return err
+		}
+
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")
@@ -52,7 +69,7 @@ func main() {
 
 		userRepo := userpostgres.NewRepo(dbClient)
 
-		passwordHasher := pswrd.NewDefaultHasher(
+		hashProvider := hash.NewDefaultProvider(
 			salt.DefaultProvider{},
 			argon.V2Provider{},
 		)
@@ -62,21 +79,24 @@ func main() {
 			return err
 		}
 
+		var uuidProvider uuid.DefaultProvider
+		txProvider := postgres.NewTxProvider(dbClient.Pool)
+
 		registrationUseCase := usecase.NewRegistration(
 			userRepo,
-			passwordHasher,
-			uuid.DefaultProvider{},
+			hashProvider,
+			uuidProvider,
 		)
 		registrationService := grpc.NewRegistrationService(
 			registrationUseCase,
 			app.Log,
-			postgres.NewProvider(dbClient.Pool),
+			txProvider,
 			idempotencypostgres.NewRepo(dbClient),
 		)
 
 		loginUseCase := usecase.NewLogin(
 			userRepo,
-			passwordHasher,
+			hashProvider,
 			tokenIssuer,
 		)
 		loginService := grpc.NewLoginService(
@@ -84,8 +104,41 @@ func main() {
 			app.Log,
 		)
 
-		app.RegisterGRPCServices(registrationService, loginService)
-		app.AddGatewayHandlers(registrationService, loginService)
+		phoneConfirmationUseCase := usecase.NewPhoneConfirmation(
+			sms.TestSender{
+				Logger: app.Log,
+			},
+			phoneconfirm.NewDigitCodeGenerator(phoneConfirmationConfig),
+			hashProvider,
+			phoneconfirmpostgres.NewRepo(dbClient),
+			userRepo,
+			txProvider,
+		)
+		phoneConfirmationService := grpc.NewPhoneConfirmationService(
+			phoneConfirmationUseCase,
+			app.Log,
+		)
+
+		tokenProvider := tokenpkg.NewJWTProvider(pkgTokenConfig)
+
+		app.AddGRPCUnaryInterceptor(
+			tokenpkg.NewUnaryTokenInterceptor(
+				tokenProvider,
+				app.Log,
+				phoneconfirmgrpc.PhoneConfirmation_SendCodeV1_FullMethodName,
+				phoneconfirmgrpc.PhoneConfirmation_ConfirmV1_FullMethodName,
+			),
+		)
+		app.RegisterGRPCServices(
+			registrationService,
+			loginService,
+			phoneConfirmationService,
+		)
+		app.AddGatewayHandlers(
+			registrationService,
+			loginService,
+			phoneConfirmationService,
+		)
 
 		return nil
 	})

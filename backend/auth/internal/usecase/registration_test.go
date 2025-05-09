@@ -6,7 +6,7 @@ import (
 
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
-	mock_password "github.com/Doremi203/couply/backend/auth/internal/mocks/password"
+	mock_hash "github.com/Doremi203/couply/backend/auth/internal/mocks/hash"
 	mock_user "github.com/Doremi203/couply/backend/auth/internal/mocks/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/idempotency"
 	mock_uuid "github.com/Doremi203/couply/backend/auth/pkg/uuid/mock"
@@ -18,7 +18,7 @@ import (
 func TestUseCase_BasicRegister(t *testing.T) {
 	type mocks struct {
 		userRepository *mock_user.MockRepo
-		hasher         *mock_password.MockHasher
+		hasher         *mock_hash.MockProvider
 		uuidProvider   *mock_uuid.MockProvider
 	}
 	type args struct {
@@ -62,7 +62,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 			name: "hashing password error then error",
 			setup: func(m mocks) {
 				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
-				m.hasher.EXPECT().Hash(pswrd.Password("password")).Return(pswrd.HashedPassword{}, assert.AnError)
+				m.hasher.EXPECT().Hash("password").Return(nil, assert.AnError)
 			},
 			args: args{
 				idempotencyKey: "key",
@@ -75,7 +75,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 			name: "create user error then error",
 			setup: func(m mocks) {
 				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
-				m.hasher.EXPECT().Hash(pswrd.Password("password")).Return(pswrd.HashedPassword{}, nil)
+				m.hasher.EXPECT().Hash("password").Return(nil, nil)
 				m.uuidProvider.EXPECT().GenerateV7().Return(uuid.UUID{}, assert.AnError)
 			},
 			args: args{
@@ -90,7 +90,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 			setup: func(m mocks) {
 				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
 				hashedPassword := pswrd.HashedPassword("password-hash")
-				m.hasher.EXPECT().Hash(pswrd.Password("password")).Return(hashedPassword, nil)
+				m.hasher.EXPECT().Hash("password").Return(hashedPassword, nil)
 				id := uuid.New()
 				m.uuidProvider.EXPECT().GenerateV7().Return(id, nil)
 
@@ -113,7 +113,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 			setup: func(m mocks) {
 				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
 				hashedPassword := pswrd.HashedPassword("password-hash")
-				m.hasher.EXPECT().Hash(pswrd.Password("password")).Return(hashedPassword, nil)
+				m.hasher.EXPECT().Hash("password").Return(hashedPassword, nil)
 				id := uuid.New()
 				m.uuidProvider.EXPECT().GenerateV7().Return(id, nil)
 
@@ -138,7 +138,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 
 			mocks := mocks{
 				userRepository: mock_user.NewMockRepo(ctrl),
-				hasher:         mock_password.NewMockHasher(ctrl),
+				hasher:         mock_hash.NewMockProvider(ctrl),
 				uuidProvider:   mock_uuid.NewMockProvider(ctrl),
 			}
 
@@ -148,7 +148,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 
 			r := Registration{
 				userRepository: mocks.userRepository,
-				hasher:         mocks.hasher,
+				hashProvider:   mocks.hasher,
 				uuidProvider:   mocks.uuidProvider,
 			}
 			err := r.BasicV1(context.Background(), tt.args.email, tt.args.password)

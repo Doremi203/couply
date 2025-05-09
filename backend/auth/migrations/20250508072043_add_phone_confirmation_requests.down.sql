@@ -1,0 +1,1 @@
+drop table phone_confirmation_requests;

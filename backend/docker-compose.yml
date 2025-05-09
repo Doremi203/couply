@@ -36,6 +36,8 @@ services:
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs
+    volumes:
+      - ./auth/swagger/api:/app/swagger-ui/api
     ports:
       - "8080:8080"
       - "9090:9090"

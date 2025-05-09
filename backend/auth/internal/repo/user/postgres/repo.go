@@ -38,20 +38,60 @@ func (r *repo) Create(ctx context.Context, u user.User) error {
 	return nil
 }
 
+func (r *repo) UpdatePhone(ctx context.Context, userID user.ID, phone user.Phone) error {
+	const query = `
+		UPDATE users SET phone = $2
+		WHERE id = $1
+	`
+	res, err := r.db.Exec(ctx, query, userID, phone)
+	if err != nil {
+		return errors.WrapFail(err, "update user phone")
+	}
+	if res.RowsAffected() == 0 {
+		return user.NotFoundError{
+			Err: errors.Errorf("no user rows with %v", errors.Token("id", userID)),
+		}
+	}
+
+	return nil
+}
+
 func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, error) {
 	query := `
-		SELECT id, email, password
+		SELECT id, email, phone, password
 		FROM users
 		WHERE email = $1
 	`
 	row := r.db.QueryRow(ctx, query, email)
 
 	var u user.User
-	err := row.Scan(&u.ID, &u.Email, &u.Password)
+	err := row.Scan(&u.ID, &u.Email, &u.Phone, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return user.User{}, user.NotFoundError{
 			Err: errors.Errorf("no user rows with %v", errors.Token("email", email)),
+		}
+	case err != nil:
+		return user.User{}, errors.WrapFail(err, "fetch user by email")
+	}
+
+	return u, nil
+}
+
+func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, error) {
+	query := `
+		SELECT id, email, phone, password
+		FROM users
+		WHERE phone = $1
+	`
+	row := r.db.QueryRow(ctx, query, phone)
+
+	var u user.User
+	err := row.Scan(&u.ID, &u.Email, &u.Phone, &u.Password)
+	switch {
+	case errors.Is(err, pgx.ErrNoRows):
+		return user.User{}, user.NotFoundError{
+			Err: errors.Errorf("no user rows with %v", errors.Token("phone", phone)),
 		}
 	case err != nil:
 		return user.User{}, errors.WrapFail(err, "fetch user by email")

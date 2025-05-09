@@ -1,6 +1,8 @@
 # ignore vendor
 vendor/*
 
+*.tmp.*
+
 # ignore proto build artifacts
 *cover.out
 *gen/*

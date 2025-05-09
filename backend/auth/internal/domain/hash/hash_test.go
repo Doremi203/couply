@@ -1,4 +1,4 @@
-package pswrd
+package hash
 
 import (
 	"testing"
@@ -9,19 +9,19 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestDefaultHasher_Hash(t *testing.T) {
+func TestDefaultProvider_Hash(t *testing.T) {
 	type mocks struct {
 		saltProvider  *mock_salt.MockProvider
 		argonProvider *mock_argon.MockProvider
 	}
 	type args struct {
-		password Password
+		value string
 	}
 	tests := []struct {
 		name    string
 		setup   func(mocks)
 		args    args
-		want    HashedPassword
+		want    []byte
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
@@ -30,19 +30,19 @@ func TestDefaultHasher_Hash(t *testing.T) {
 				m.saltProvider.EXPECT().Generate(saltLength).Return(nil, assert.AnError)
 			},
 			args:    args{},
-			want:    HashedPassword{},
+			want:    nil,
 			wantErr: assert.Error,
 		},
 		{
 			name: "success",
 			setup: func(m mocks) {
 				m.saltProvider.EXPECT().Generate(saltLength).Return([]byte("salt"), nil)
-				m.argonProvider.EXPECT().Hash([]byte("password"), []byte("salt")).Return([]byte("argon-hash"))
+				m.argonProvider.EXPECT().Hash([]byte("value"), []byte("salt")).Return([]byte("argon-hash"))
 			},
 			args: args{
-				password: "password",
+				value: "value",
 			},
-			want:    HashedPassword("YXJnb24taGFzaA$c2FsdA"),
+			want:    []byte("YXJnb24taGFzaA$c2FsdA"),
 			wantErr: assert.NoError,
 		},
 	}
@@ -59,11 +59,11 @@ func TestDefaultHasher_Hash(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			h := DefaultHasher{
+			h := defaultProvider{
 				saltProvider:  mocks.saltProvider,
 				argonProvider: mocks.argonProvider,
 			}
-			got, err := h.Hash(tt.args.password)
+			got, err := h.Hash(tt.args.value)
 
 			tt.wantErr(t, err)
 			assert.Equal(t, tt.want, got)
@@ -77,8 +77,8 @@ func TestDefaultHasher_Verify(t *testing.T) {
 		argonProvider *mock_argon.MockProvider
 	}
 	type args struct {
-		password       Password
-		hashedPassword HashedPassword
+		value      string
+		saltedHash []byte
 	}
 	tests := []struct {
 		name    string
@@ -87,34 +87,34 @@ func TestDefaultHasher_Verify(t *testing.T) {
 		wantErr assert.ErrorAssertionFunc
 	}{
 		{
-			name: "incorrectly hashed password then error",
+			name: "incorrectly hashed value then error",
 			args: args{
-				password:       "pass",
-				hashedPassword: HashedPassword("part1$part2$part3"),
+				value:      "pass",
+				saltedHash: []byte("part1$part2$part3"),
 			},
 			wantErr: assert.Error,
 		},
 		{
-			name: "password does not match hashed password then invalid password error",
+			name: "value does not match hashed value then invalid value error",
 			setup: func(m mocks) {
 				m.argonProvider.EXPECT().Hash([]byte("incorrect"), []byte("salt")).Return([]byte("incorrect-hash"))
 			},
 			args: args{
-				password:       "incorrect",
-				hashedPassword: HashedPassword("YXJnb24taGFzaA$c2FsdA"),
+				value:      "incorrect",
+				saltedHash: []byte("YXJnb24taGFzaA$c2FsdA"),
 			},
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				return assert.ErrorIs(t, err, ErrInvalidPassword)
+				return assert.ErrorIs(t, err, ErrNoMatch)
 			},
 		},
 		{
-			name: "password match hashed password then no error",
+			name: "value match hashed value then no error",
 			setup: func(m mocks) {
-				m.argonProvider.EXPECT().Hash([]byte("password"), []byte("salt")).Return([]byte("argon-hash"))
+				m.argonProvider.EXPECT().Hash([]byte("value"), []byte("salt")).Return([]byte("argon-hash"))
 			},
 			args: args{
-				password:       "password",
-				hashedPassword: HashedPassword("YXJnb24taGFzaA$c2FsdA"),
+				value:      "value",
+				saltedHash: []byte("YXJnb24taGFzaA$c2FsdA"),
 			},
 			wantErr: assert.NoError,
 		},
@@ -132,12 +132,12 @@ func TestDefaultHasher_Verify(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			h := DefaultHasher{
+			h := defaultProvider{
 				saltProvider:  mocks.saltProvider,
 				argonProvider: mocks.argonProvider,
 			}
 
-			err := h.Verify(tt.args.password, tt.args.hashedPassword)
+			err := h.Verify(tt.args.value, tt.args.saltedHash)
 			tt.wantErr(t, err)
 		})
 	}
