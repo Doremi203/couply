@@ -18,9 +18,9 @@ secrets:
   ids:
     db: e6qoug3fau0c6bhsj20i
     token: e6qo9u8d7n70ciqo8omk
+    aws: e6q98r233qa96qq01il3
 
 s3:
-  endpoint: s3
-  accessKey: minio
-  secretKey: minio123
-  bucket: profile-photos
+  endpoint: storage.yandexcloud.net
+  bucket: testing-couply-profile-photos
+  secure: true

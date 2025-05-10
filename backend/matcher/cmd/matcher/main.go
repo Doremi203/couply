@@ -60,9 +60,10 @@ func main() {
 
 		s3Config := struct {
 			Endpoint  string
-			AccessKey string
-			SecretKey string
+			AccessKey string `secret:"aws-access-key"`
+			SecretKey string `secret:"aws-secret-key"`
 			Bucket    string
+			Secure    bool
 		}{}
 
 		err = app.Config.ReadSection("s3", &s3Config)
@@ -71,7 +72,8 @@ func main() {
 		}
 
 		s3Client, err := minio.New(s3Config.Endpoint, &minio.Options{
-			Creds: credentials.NewStaticV4(s3Config.AccessKey, s3Config.SecretKey, ""),
+			Creds:  credentials.NewStaticV4(s3Config.AccessKey, s3Config.SecretKey, ""),
+			Secure: s3Config.Secure,
 		})
 		if err != nil {
 			return errors.WrapFail(err, "create s3 client")
