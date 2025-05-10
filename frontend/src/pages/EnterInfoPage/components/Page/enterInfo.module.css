@@ -76,7 +76,7 @@
 }
 
 .photoPreview {
-  position: relative;
+  /* position: relative; */
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -92,8 +92,10 @@
 
 .editIcon {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  /* bottom: 0;
+  right: 0; */
+  top: 210px;
+  right: 120px;
   background-color: var(--primary-color);
   color: white;
   width: 40px;

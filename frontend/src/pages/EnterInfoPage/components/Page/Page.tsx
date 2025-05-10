@@ -1,6 +1,6 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -20,6 +20,7 @@ import {
 } from '../../../../shared/lib/services/PushNotificationService';
 import getAge from '../../helpers/getAge';
 import { GeoLocationRequest } from '../GeoLocationRequest';
+import { FixedPhotoGallery } from '../PhotoGallery/PhotoGallery';
 
 import styles from './enterInfo.module.css';
 
@@ -41,6 +42,8 @@ export const EnterInfoPage = () => {
   const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
 
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+
+  const [userPhotos, setUserPhotos] = useState<string[]>([]);
 
   // Handler for when location is received from GeoLocationRequest
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
@@ -153,9 +156,19 @@ export const EnterInfoPage = () => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
-
       const fileUrl = URL.createObjectURL(file);
+
+      // Update the profile photo
       setProfilePhoto(fileUrl);
+
+      // Also update the userPhotos array to include this as the first photo
+      setUserPhotos(prevPhotos => {
+        // Create a new array with the new photo as the first element
+        const newPhotos = [...prevPhotos];
+        // If there's already a photo at index 0, replace it
+        newPhotos[0] = fileUrl;
+        return newPhotos;
+      });
 
       event.target.value = '';
     }
@@ -214,6 +227,34 @@ export const EnterInfoPage = () => {
       default:
         return false;
     }
+  };
+
+  const handleAddPhoto = () => {
+    if (userPhotos.length >= 6) return;
+
+    // Create a new file input for adding additional photos
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = e => {
+      const target = e.target as HTMLInputElement;
+      const files = target.files;
+
+      if (files && files.length > 0) {
+        const file = files[0];
+        const fileUrl = URL.createObjectURL(file);
+
+        // Add the new photo to the userPhotos array
+        setUserPhotos(prevPhotos => [...prevPhotos, fileUrl]);
+      }
+    };
+
+    input.click();
+  };
+
+  const handleRemovePhoto = (index: number) => {
+    const newPhotos = userPhotos.filter((_, i) => i !== index);
+    setUserPhotos(newPhotos);
   };
 
   const sections = [
@@ -289,17 +330,11 @@ export const EnterInfoPage = () => {
             </div>
           )}
         </div>
-      </div>
-    </div>,
-    <div key="datingSettingsSection">
-      <h2>Добавьте фото</h2>
-      <div>
-        <PhotoGalleryEdit
-          //@ts-ignore
-          photos={[profilePhoto]}
-          //onPhotoRemove={onPhotoRemove}
-          //@ts-ignore
-          onAddPhotoClick={() => handleCameraClick(false)}
+        <FixedPhotoGallery
+          photos={userPhotos}
+          onPhotoRemove={index => handleRemovePhoto(index)}
+          onAddPhotoClick={handleAddPhoto}
+          title="Мои фото"
         />
       </div>
     </div>,
