@@ -10,6 +10,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/docker/go-connections/nat"
 	"github.com/jackc/pgx/v5"
 	"github.com/pressly/goose/v3"
 	"github.com/stretchr/testify/require"
@@ -30,6 +31,8 @@ func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 		Options:  "sslmode=disable",
 	}
 
+	dbPort := "5432/tcp"
+
 	req := testcontainers.ContainerRequest{
 		Image:        "postgres",
 		ExposedPorts: []string{"5432/tcp"},
@@ -38,7 +41,16 @@ func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 			"POSTGRES_USER":     cfg.User,
 			"POSTGRES_DB":       cfg.Database,
 		},
-		WaitingFor: wait.ForListeningPort("5432/tcp").WithStartupTimeout(40 * time.Second),
+		WaitingFor: wait.ForSQL(nat.Port(dbPort), "postgres", func(host string, port nat.Port) string {
+			return fmt.Sprintf("postgres://%s:%s@%s:%s/%s?%s",
+				cfg.User,
+				cfg.Password,
+				host,
+				port.Port(),
+				cfg.Database,
+				cfg.Options,
+			)
+		}).WithStartupTimeout(60 * time.Second).WithPollInterval(2 * time.Second),
 	}
 
 	postgresC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
