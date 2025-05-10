@@ -8,8 +8,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 120px;
-  box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+  height: 100px;
+  box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.4);
 }
 
 .header {

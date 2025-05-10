@@ -29,6 +29,7 @@ import { LikeButton } from '../../../../shared/components/LikeButton';
 //@ts-ignore
 import MessageButton from '../../../../shared/components/MessageButton/messageButton';
 import UndoButton from '../../../../shared/components/UndoButton/UndoButton';
+import { PremiumModal } from '../../../../widgets/PremiumModal';
 import { ProfileView } from '../../../../widgets/ProfileView';
 import { ComplaintModal } from '../ComplaintModal/CompliantModal';
 
@@ -129,6 +130,8 @@ export const ProfileSlider = () => {
   const [complaintOpen, setComplaintOpen] = useState(false);
 
   const [messageOpen, setMessageOpen] = useState(false);
+
+  const [premiumOpen, setPremiumOpen] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -336,7 +339,7 @@ export const ProfileSlider = () => {
           className={styles.likeButton}
           likeClassName={styles.like}
         />
-        <MessageButton onClick={() => setMessageOpen(true)} />
+        <MessageButton onClick={() => setPremiumOpen(true)} />
       </div>
 
       {selectedProfile && (
@@ -352,6 +355,7 @@ export const ProfileSlider = () => {
 
       <ComplaintModal isOpen={complaintOpen} onClose={() => setComplaintOpen(false)} />
       <MessageModal isOpen={messageOpen} onClose={() => setMessageOpen(false)} />
+      <PremiumModal isOpen={premiumOpen} onClose={() => setPremiumOpen(false)} />
     </div>
   );
 };

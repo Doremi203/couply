@@ -43,7 +43,7 @@ export const MatchModal: React.FC<MatchModalProps> = ({
           <img src={userImage} alt={matchName} className={styles.profileImage} />
         </div>
       </div>
-      <h1>КАК ДВЕ КАПЛИ</h1>
+      <h1 className={styles.title}>КАК ДВЕ КАПЛИ</h1>
       <div className={styles.dropContainer}>
         <div className={styles.drop} />
       </div>

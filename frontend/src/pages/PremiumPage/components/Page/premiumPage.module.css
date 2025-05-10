@@ -1,0 +1,274 @@
+.pageContainer {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: white;
+  padding-bottom: 70px;
+  position: relative;
+  overflow: hidden;
+}
+
+.content {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.backButton,
+.closeButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.backButton {
+  margin-left: -40px;
+}
+
+.closeButton {
+  margin-right: -40px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 30px 0;
+  z-index: 2;
+  text-align: center;
+}
+
+.benefits {
+  margin: 20px 0 40px;
+}
+
+.benefitItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.benefitIcon {
+  margin-right: 10px;
+  font-size: 20px;
+}
+
+.subscriptionPlans {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.planCard {
+  background-color: white;
+  border-radius: 30px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.planInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.planDuration {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.planTotal {
+  font-size: 14px;
+  color: #999;
+  margin-top: 5px;
+}
+
+.planPrice {
+  display: flex;
+  align-items: center;
+}
+
+.priceAmount {
+  font-size: 18px;
+  font-weight: 600;
+  color: #6c5ce7;
+  margin-right: 5px;
+}
+
+.pricePeriod {
+  font-size: 14px;
+  color: #999;
+  margin-right: 10px;
+}
+
+.arrowIcon {
+  color: #6c5ce7;
+}
+
+.restoreButton {
+  background-color: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 30px;
+  color: white;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 10px 0 30px;
+  transition: background-color 0.2s;
+}
+
+.restoreButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.disclaimer {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.navBarWrapper {
+  position: relative;
+  z-index: 1010;
+}
+
+/* Decorative elements */
+.decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star1 {
+  position: absolute;
+  top: 16%;
+  right: 20%;
+  width: 20px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.7);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.star2 {
+  position: absolute;
+  top: 40%;
+  left: 15%;
+  width: 15px;
+  height: 15px;
+  background-color: rgba(255, 255, 255, 0.7);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.circle {
+  position: absolute;
+  top: 7%;
+  left: 10%;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.wave1 {
+  position: absolute;
+  top: 25%;
+  right: 10%;
+  width: 40px;
+  height: 10px;
+  background: none;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}
+
+.wave2 {
+  position: absolute;
+  bottom: 30%;
+  right: 15%;
+  width: 50px;
+  height: 10px;
+  background: none;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}
+
+.square {
+  position: absolute;
+  bottom: 40%;
+  left: 10%;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transform: rotate(45deg);
+}
+
+/* premiumPage.module.css */
+
+.planCard {
+  /* существующие стили */
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.selectedPlan {
+  /* border-color: #1976d2; */
+  background-color: rgb(56, 12, 177);
+  transform: scale(1.02);
+  box-shadow: 0 0 20px 5px rgba(207, 228, 249, 0.6);
+}
+
+.selectedPlan .planDuration {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+.selectedPlan .priceAmount {
+  color: #ffffff;
+  font-size: 1.2em;
+}

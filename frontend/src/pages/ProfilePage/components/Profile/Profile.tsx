@@ -1,12 +1,10 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { ProfileData } from '../../types';
-// import { PhotoGallery } from '../PhotoGallery';
-import PhotoGallery from '../PhotoGallery';
 import { ProfileHeader } from '../ProfileHeader';
 import { ProfileInfo } from '../ProfileInfo';
-import { ProfileSection } from '../ProfileSection';
-import { TagsList } from '../TagsList';
+import { ProfileMenu } from '../ProfileMenu';
 
 import styles from './profile.module.css';
 
@@ -41,8 +39,29 @@ export const Profile: React.FC<ProfileViewProps> = ({
   //   { label: 'Phone', value: profileData.phone },
   // ];
 
+  const navigate = useNavigate();
+
+  const handleMyStatsClick = () => {
+    // Handle My Stats click
+    console.log('My Stats clicked');
+  };
+
+  const handleSettingsClick = () => {
+    navigate('/settings');
+  };
+
+  const handleInviteFriendClick = () => {
+    // Handle Invite a friend click
+    console.log('Invite a friend clicked');
+  };
+
+  const handleHelpClick = () => {
+    // Handle Help click
+    console.log('Help clicked');
+  };
+
   return (
-    <div className={styles.profileContent}>
+    <div>
       <ProfileHeader
         isProfileHidden={isProfileHidden}
         onEditToggle={onEditToggle}
@@ -51,35 +70,30 @@ export const Profile: React.FC<ProfileViewProps> = ({
         onPreviewClick={onPreviewClick}
       />
 
-      <ProfileInfo
-        profileData={profileData}
-        isVerified={isVerified}
-        onVerificationRequest={onVerificationRequest}
-      />
+      <div className={styles.profileContent}>
+        <ProfileInfo
+          profileData={profileData}
+          isVerified={isVerified}
+          onVerificationRequest={onVerificationRequest}
+          onPreviewClick={onPreviewClick}
+        />
 
-      <ProfileSection title="Фото">
-        <PhotoGallery photos={profileData.photos} />
-      </ProfileSection>
+        <div className={styles.premium}>
+          <div>Оформите премиум подписку</div>
+          <div className={styles.text}>чтобы повысить шансы найти свою каплю</div>
+          <button className={styles.premiumButton} onClick={() => navigate('/premium')}>
+            Подробнее
+          </button>
+        </div>
 
-      <ProfileSection title="Обо мне">
-        <p>{profileData.about}</p>
-      </ProfileSection>
-
-      {/* <ProfileSection title="Basic Information">
-        <InfoGrid infoItems={basicInfoItems} />
-      </ProfileSection> */}
-
-      <ProfileSection title="Interests">
-        <TagsList items={profileData.interests} />
-      </ProfileSection>
-
-      <ProfileSection title="Music">
-        <TagsList items={profileData.music} />
-      </ProfileSection>
-
-      <ProfileSection title="Hobbies">
-        <TagsList items={profileData.hobbies} />
-      </ProfileSection>
+        <ProfileMenu
+          onEditProfileClick={onEditToggle}
+          onMyStatsClick={handleMyStatsClick}
+          onSettingsClick={handleSettingsClick}
+          onInviteFriendClick={handleInviteFriendClick}
+          onHelpClick={handleHelpClick}
+        />
+      </div>
     </div>
   );
 };

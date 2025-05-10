@@ -28,19 +28,19 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 }) => {
   return (
     <div className={styles.profileHeader}>
-      <div className={styles.header}>profile</div>
+      <div className={styles.header}>Профиль</div>
       <div className={styles.profileActions}>
-        <IconButton onClick={onEditToggle} touchFriendly={true}>
+        {/* <IconButton onClick={onEditToggle} touchFriendly={true}>
           <EditIcon />
         </IconButton>
         <IconButton onClick={onVisibilityToggle}>
           {isProfileHidden ? <VisibilityOffIcon /> : <VisibilityIcon />}
-        </IconButton>
-        <ThemeToggle />
+        </IconButton> */}
+        {/* <ThemeToggle /> */}
       </div>
-      <div className={styles.previewButtonContainer}>
+      {/* <div className={styles.previewButtonContainer}>
         <CustomButton text="preview" onClick={onPreviewClick} className={styles.previewButton} />
-      </div>
+      </div> */}
     </div>
   );
 };
