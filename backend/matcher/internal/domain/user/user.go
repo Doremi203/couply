@@ -3,6 +3,7 @@ package user
 import (
 	"time"
 
+	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
@@ -29,7 +30,7 @@ type User struct {
 	Smoking   common.Smoking     `db:"smoking"`
 	Hidden    bool               `db:"hidden"`
 	Verified  bool               `db:"verified"`
-	Photos    []*Photo           `db:"photos"`
+	Photos    []Photo            `db:"photos"`
 	CreatedAt time.Time          `db:"created_at"`
 	UpdatedAt time.Time          `db:"updated_at"`
 }
@@ -146,7 +147,7 @@ func (x *User) GetVerified() bool {
 	return false
 }
 
-func (x *User) GetPhotos() []*Photo {
+func (x *User) GetPhotos() []Photo {
 	if x != nil {
 		return x.Photos
 	}
@@ -255,7 +256,7 @@ func (b *UserBuilder) SetVerified(verified bool) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetPhotos(photos []*Photo) *UserBuilder {
+func (b *UserBuilder) SetPhotos(photos []Photo) *UserBuilder {
 	b.user.Photos = photos
 	return b
 }
@@ -292,7 +293,12 @@ func UserToPB(user *User) *desc.User {
 		Smoking:   common.SmokingToPB(user.GetSmoking()),
 		Hidden:    user.GetHidden(),
 		Verified:  user.GetVerified(),
-		Photos:    PhotoSliceToPB(user.GetPhotos()),
+		Photos: slices.Map(user.GetPhotos(), func(from Photo) *desc.Photo {
+			return &desc.Photo{
+				OrderNumber: from.GetOrderNumber(),
+				Url:         from.DownloadURL,
+			}
+		}),
 		CreatedAt: timestamppb.New(user.GetCreatedAt()),
 		UpdatedAt: timestamppb.New(user.GetUpdatedAt()),
 	}
@@ -306,37 +312,4 @@ func UsersToPB(users []*User) []*desc.User {
 		}
 	}
 	return pbUsers
-}
-
-func PBToUser(user *desc.User) *User {
-	return &User{
-		Name:      user.GetName(),
-		Age:       user.GetAge(),
-		Gender:    PBToGender(user.GetGender()),
-		Location:  user.GetLocation(),
-		BIO:       user.GetBio(),
-		Goal:      common.PBToGoal(user.GetGoal()),
-		Interest:  interest.PBToInterest(user.GetInterest()),
-		Zodiac:    common.PBToZodiac(user.GetZodiac()),
-		Height:    user.GetHeight(),
-		Education: common.PBToEducation(user.GetEducation()),
-		Children:  common.PBToChildren(user.GetChildren()),
-		Alcohol:   common.PBToAlcohol(user.GetAlcohol()),
-		Smoking:   common.PBToSmoking(user.GetSmoking()),
-		Hidden:    user.GetHidden(),
-		Verified:  user.GetVerified(),
-		Photos:    PBToPhotoSlice(user.GetPhotos()),
-		CreatedAt: user.GetCreatedAt().AsTime(),
-		UpdatedAt: user.GetUpdatedAt().AsTime(),
-	}
-}
-
-func PBToUsers(users []*desc.User) []*User {
-	domainUsers := make([]*User, 0, len(users))
-	for _, u := range users {
-		if u != nil {
-			domainUsers = append(domainUsers, PBToUser(u))
-		}
-	}
-	return domainUsers
 }

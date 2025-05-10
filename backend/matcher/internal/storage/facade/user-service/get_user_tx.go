@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
@@ -13,10 +14,10 @@ import (
 
 func (f *StorageFacadeUser) GetUserTx(ctx context.Context, userID uuid.UUID) (*user.User, error) {
 	var (
-		u   *user.User
-		p   []*user.Photo
-		i   *interest.Interest
-		err error
+		u      *user.User
+		photos []user.Photo
+		i      *interest.Interest
+		err    error
 	)
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
@@ -25,9 +26,9 @@ func (f *StorageFacadeUser) GetUserTx(ctx context.Context, userID uuid.UUID) (*u
 			return fmt.Errorf("GetUserTx: get user failed: %w", err)
 		}
 
-		p, err = f.storage.GetPhotos(ctxTx, userID)
+		photos, err = f.storage.GetPhotos(ctxTx, userID)
 		if err != nil {
-			return fmt.Errorf("GetUserTx: get photos failed: %w", err)
+			return errors.Wrap(err, "GetUserTx: get photos failed")
 		}
 
 		i, err = f.storage.GetInterests(ctxTx, userID)
@@ -35,7 +36,7 @@ func (f *StorageFacadeUser) GetUserTx(ctx context.Context, userID uuid.UUID) (*u
 			return fmt.Errorf("GetUserTx: get interests failed: %w", err)
 		}
 
-		u.Photos = p
+		u.Photos = photos
 		u.Interest = i
 
 		return nil

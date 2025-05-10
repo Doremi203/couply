@@ -20,5 +20,8 @@ database:
   database: matcher
   options: sslmode=disable
 
-user-token:
-  secretKey: GBONX7AaWWslx5JVihS3q1xIMLhzqF3R3rD5cyPeygg=
+s3:
+  endpoint: s3:9000
+  accessKey: minio
+  secretKey: minio123
+  bucket: profile-photos

@@ -2,9 +2,12 @@ package user_service
 
 import (
 	"context"
+	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	userpkg "github.com/Doremi203/couply/backend/auth/pkg/user"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
-
 	"github.com/Doremi203/couply/backend/matcher/utils"
 )
 
@@ -14,9 +17,34 @@ func (c *UseCase) CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (
 		return nil, err
 	}
 
-	user := dto.CreateUserRequestToUser(in, userID)
+	photos, err := c.createPhotos(ctx, userpkg.ID(userID), in.GetPhotoUploadRequests())
+	if err != nil {
+		return nil, errors.WrapFail(err, "create photos")
+	}
 
-	createdUser, err := c.userStorageFacade.CreateUserTx(ctx, user)
+	userToCreate := user.NewUserBuilder().
+		SetID(userID).
+		SetName(in.GetName()).
+		SetAge(in.GetAge()).
+		SetGender(in.GetGender()).
+		SetLocation(in.GetLocation()).
+		SetBIO(in.GetBio()).
+		SetGoal(in.GetGoal()).
+		SetInterest(in.GetInterest()).
+		SetZodiac(in.GetZodiac()).
+		SetHeight(in.GetHeight()).
+		SetEducation(in.GetEducation()).
+		SetChildren(in.GetChildren()).
+		SetAlcohol(in.GetAlcohol()).
+		SetSmoking(in.GetSmoking()).
+		SetHidden(in.GetHidden()).
+		SetVerified(in.GetVerified()).
+		SetPhotos(photos).
+		SetCreatedAt(time.Now()).
+		SetUpdatedAt(time.Now()).
+		Build()
+
+	createdUser, err := c.userStorageFacade.CreateUserTx(ctx, userToCreate)
 	if err != nil {
 		return nil, err
 	}

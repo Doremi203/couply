@@ -1,10 +1,7 @@
 package user_service
 
 import (
-	"time"
-
-	"github.com/google/uuid"
-
+	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
@@ -13,22 +10,22 @@ import (
 )
 
 type CreateUserV1Request struct {
-	Name      string
-	Age       int32
-	Gender    user.Gender
-	Location  string
-	Bio       string
-	Goal      common.Goal
-	Interest  *interest.Interest
-	Zodiac    common.Zodiac
-	Height    int32
-	Education common.Education
-	Children  common.Children
-	Alcohol   common.Alcohol
-	Smoking   common.Smoking
-	Hidden    bool
-	Verified  bool
-	Photos    []*user.Photo
+	Name                string
+	Age                 int32
+	Gender              user.Gender
+	Location            string
+	Bio                 string
+	Goal                common.Goal
+	Interest            *interest.Interest
+	Zodiac              common.Zodiac
+	Height              int32
+	Education           common.Education
+	Children            common.Children
+	Alcohol             common.Alcohol
+	Smoking             common.Smoking
+	Hidden              bool
+	Verified            bool
+	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
 func (x *CreateUserV1Request) GetName() string {
@@ -136,9 +133,9 @@ func (x *CreateUserV1Request) GetVerified() bool {
 	return false
 }
 
-func (x *CreateUserV1Request) GetPhotos() []*user.Photo {
+func (x *CreateUserV1Request) GetPhotoUploadRequests() []user.PhotoUploadRequest {
 	if x != nil {
-		return x.Photos
+		return x.PhotoUploadRequests
 	}
 	return nil
 }
@@ -171,36 +168,27 @@ func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 		Smoking:   common.PBToSmoking(req.GetSmoking()),
 		Hidden:    req.GetHidden(),
 		Verified:  req.GetVerified(),
-		Photos:    user.PBToPhotoSlice(req.GetPhotos()),
+		PhotoUploadRequests: slices.Map(req.GetPhotoUploadRequests(), func(from *desc.PhotoUploadRequest) user.PhotoUploadRequest {
+			return user.PhotoUploadRequest{
+				OrderNumber: from.GetOrderNumber(),
+				MimeType:    from.GetMimeType(),
+			}
+		}),
 	}
-}
-
-func CreateUserRequestToUser(req *CreateUserV1Request, id uuid.UUID) *user.User {
-	return user.NewUserBuilder().
-		SetID(id).
-		SetName(req.GetName()).
-		SetAge(req.GetAge()).
-		SetGender(req.GetGender()).
-		SetLocation(req.GetLocation()).
-		SetBIO(req.GetBio()).
-		SetGoal(req.GetGoal()).
-		SetInterest(req.GetInterest()).
-		SetZodiac(req.GetZodiac()).
-		SetHeight(req.GetHeight()).
-		SetEducation(req.GetEducation()).
-		SetChildren(req.GetChildren()).
-		SetAlcohol(req.GetAlcohol()).
-		SetSmoking(req.GetSmoking()).
-		SetHidden(req.GetHidden()).
-		SetVerified(req.GetVerified()).
-		SetPhotos(req.GetPhotos()).
-		SetCreatedAt(time.Now()).
-		SetUpdatedAt(time.Now()).
-		Build()
 }
 
 func CreateUserResponseToPB(resp *CreateUserV1Response) *desc.CreateUserV1Response {
 	return &desc.CreateUserV1Response{
 		User: user.UserToPB(resp.GetUser()),
+		PhotoUploadResponses: slices.Map(resp.GetUser().GetPhotos(), func(from user.Photo) *desc.PhotoUploadResponse {
+			var uploadURL string
+			if from.UploadURL != nil {
+				uploadURL = *from.UploadURL
+			}
+			return &desc.PhotoUploadResponse{
+				OrderNumber: from.GetOrderNumber(),
+				UploadUrl:   uploadURL,
+			}
+		}),
 	}
 }

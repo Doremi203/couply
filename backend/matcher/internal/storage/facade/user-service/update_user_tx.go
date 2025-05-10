@@ -2,7 +2,6 @@ package user_service
 
 import (
 	"context"
-	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -15,7 +14,6 @@ func (f *StorageFacadeUser) UpdateUserTx(ctx context.Context, user *user.User) (
 		}
 
 		for _, photo := range user.GetPhotos() {
-			photo.UpdatedAt = time.Now()
 			if err := f.storage.UpdatePhoto(ctxTx, photo, user.GetID()); err != nil {
 				return errors.WrapFail(err, "update photo")
 			}
