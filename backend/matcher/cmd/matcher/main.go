@@ -11,6 +11,7 @@ import (
 	matching_service "github.com/Doremi203/couply/backend/matcher/internal/app/matching-service"
 	search_service "github.com/Doremi203/couply/backend/matcher/internal/app/search-service"
 	user_service "github.com/Doremi203/couply/backend/matcher/internal/app/user-service"
+	user_domain "github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	matching_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/matching-service"
 	search_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/search-service"
 	user_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/user-service"
@@ -22,6 +23,8 @@ import (
 	search_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/search-service"
 	user_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/user-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/minio/minio-go/v7"
+	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 func main() {
@@ -55,10 +58,31 @@ func main() {
 		}
 		app.AddCloser(dbClient.Close)
 
+		s3Config := struct {
+			Endpoint  string
+			AccessKey string
+			SecretKey string
+			Bucket    string
+		}{}
+
+		err = app.Config.ReadSection("s3", &s3Config)
+		if err != nil {
+			return err
+		}
+
+		s3Client, err := minio.New(s3Config.Endpoint, &minio.Options{
+			Creds: credentials.NewStaticV4(s3Config.AccessKey, s3Config.SecretKey, ""),
+		})
+		if err != nil {
+			return errors.WrapFail(err, "create s3 client")
+		}
+
+		photoURLGenerator := user_domain.NewObjectStoragePhotoURLGenerator(s3Client, s3Config.Bucket)
+
 		txManager := postgres.NewTxManager(dbClient)
 		pgStorageUser := user.NewPgStorageUser(txManager)
 		storageFacadeUser := user_service_facade.NewStorageFacadeUser(txManager, pgStorageUser)
-		useCaseUserService := user_service_usecase.NewUseCase(storageFacadeUser)
+		useCaseUserService := user_service_usecase.NewUseCase(photoURLGenerator, storageFacadeUser)
 		implUserService := user_service.NewImplementation(app.Log, useCaseUserService)
 
 		pgStorageMatching := matching.NewPgStorageMatching(txManager)

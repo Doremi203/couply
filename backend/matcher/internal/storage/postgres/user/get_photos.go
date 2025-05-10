@@ -3,16 +3,29 @@ package user
 import (
 	"context"
 	"fmt"
+	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	userpkg "github.com/Doremi203/couply/backend/auth/pkg/user"
+	"github.com/Doremi203/couply/backend/common/libs/slices"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-func (s *PgStorageUser) GetPhotos(ctx context.Context, userID uuid.UUID) ([]*user.Photo, error) {
+type photoEntity struct {
+	UserID      uuid.UUID  `db:"user_id"`
+	OrderNumber int32      `db:"order_number"`
+	ObjectKey   string     `db:"object_key"`
+	MimeType    string     `db:"mime_type"`
+	UploadedAt  *time.Time `db:"uploaded_at"`
+}
+
+func (s *PgStorageUser) GetPhotos(ctx context.Context, userID uuid.UUID) ([]user.Photo, error) {
 	query, args, err := sq.Select(
-		"order_number", "url", "mime_type", "uploaded_at", "updated_at",
+		"user_id", "order_number", "object_key", "mime_type", "uploaded_at",
 	).
 		From("photos").
 		Where(sq.Eq{"user_id": userID}).
@@ -28,24 +41,18 @@ func (s *PgStorageUser) GetPhotos(ctx context.Context, userID uuid.UUID) ([]*use
 	}
 	defer rows.Close()
 
-	photos := make([]*user.Photo, 0)
-	for rows.Next() {
-		var p user.Photo
-		if err := rows.Scan(
-			&p.OrderNumber,
-			&p.URL,
-			&p.MimeType,
-			&p.UploadedAt,
-			&p.UpdatedAt,
-		); err != nil {
-			return nil, fmt.Errorf("failed to scan row: %w", err)
+	photos, err := pgx.CollectRows(rows, pgx.RowToStructByName[photoEntity])
+	if err != nil {
+		return nil, errors.WrapFail(err, "collect photos rows")
+	}
+
+	return slices.Map(photos, func(from photoEntity) user.Photo {
+		return user.Photo{
+			UserID:      userpkg.ID(from.UserID),
+			OrderNumber: from.OrderNumber,
+			ObjectKey:   from.ObjectKey,
+			MimeType:    from.MimeType,
+			UploadedAt:  from.UploadedAt,
 		}
-		photos = append(photos, &p)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("rows iteration error: %w", err)
-	}
-
-	return photos, nil
+	}), nil
 }

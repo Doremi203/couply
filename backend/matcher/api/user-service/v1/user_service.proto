@@ -146,6 +146,27 @@ service UserService {
       }
     };
   }
+
+  rpc ConfirmPhotosUploadV1 (ConfirmPhotosUploadV1Request) returns (ConfirmPhotosUploadV1Response) {
+    option (google.api.http) = {
+      post: "/v1/ConfirmPhotoUploadV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Подтверждение загрузки фото пользователя";
+      description: "Принимает номера успешно загруженных фотографий";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateUserV1Request {
@@ -197,11 +218,12 @@ message CreateUserV1Request {
   bool verified = 15 [
     (google.api.field_behavior) = REQUIRED
   ];
-  repeated Photo photos = 16;
+  repeated PhotoUploadRequest photo_upload_requests = 16;
 }
 
 message CreateUserV1Response {
   User user = 1;
+  repeated PhotoUploadResponse photo_upload_responses = 2;
 }
 
 message UpdateUserV1Request {
@@ -244,7 +266,7 @@ message UpdateUserV1Request {
   ];
   bool hidden = 14;
   bool verified = 15;
-  repeated Photo photos = 16;
+  repeated PhotoUploadRequest photo_upload_requests = 16;
 }
 
 message UpdateUserV1Response {
@@ -272,6 +294,12 @@ message GetUsersV1Response {
   repeated User users = 1;
 }
 
+message ConfirmPhotosUploadV1Request {
+  repeated int32 order_numbers = 1;
+}
+
+message ConfirmPhotosUploadV1Response {}
+
 message User {
   string id = 1;
   string name = 2;
@@ -294,16 +322,21 @@ message User {
   google.protobuf.Timestamp updated_at = 19;
 }
 
+message PhotoUploadRequest {
+  int32 order_number = 1;
+  string mime_type = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message PhotoUploadResponse {
+  int32 order_number = 1;
+  string upload_url = 2;
+}
+
 message Photo {
   int32 order_number = 1;
-  string url = 2 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  string mime_type = 3 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  google.protobuf.Timestamp uploaded_at = 4;
-  google.protobuf.Timestamp updated_at = 5;
+  optional string url = 2;
 }
 
 enum Gender {
@@ -311,3 +344,4 @@ enum Gender {
   GENDER_MALE = 1;
   GENDER_FEMALE = 2;
 }
+

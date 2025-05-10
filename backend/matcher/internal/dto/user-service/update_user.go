@@ -1,10 +1,7 @@
 package user_service
 
 import (
-	"time"
-
-	"github.com/google/uuid"
-
+	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
@@ -13,22 +10,22 @@ import (
 )
 
 type UpdateUserV1Request struct {
-	Name      string
-	Age       int32
-	Gender    user.Gender
-	Location  string
-	Bio       string
-	Goal      common.Goal
-	Interest  *interest.Interest
-	Zodiac    common.Zodiac
-	Height    int32
-	Education common.Education
-	Children  common.Children
-	Alcohol   common.Alcohol
-	Smoking   common.Smoking
-	Hidden    bool
-	Verified  bool
-	Photos    []*user.Photo
+	Name                string
+	Age                 int32
+	Gender              user.Gender
+	Location            string
+	Bio                 string
+	Goal                common.Goal
+	Interest            *interest.Interest
+	Zodiac              common.Zodiac
+	Height              int32
+	Education           common.Education
+	Children            common.Children
+	Alcohol             common.Alcohol
+	Smoking             common.Smoking
+	Hidden              bool
+	Verified            bool
+	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
 func (x *UpdateUserV1Request) GetName() string {
@@ -136,9 +133,9 @@ func (x *UpdateUserV1Request) GetVerified() bool {
 	return false
 }
 
-func (x *UpdateUserV1Request) GetPhotos() []*user.Photo {
+func (x *UpdateUserV1Request) GetPhotoUploadRequests() []user.PhotoUploadRequest {
 	if x != nil {
-		return x.Photos
+		return x.PhotoUploadRequests
 	}
 	return nil
 }
@@ -152,27 +149,6 @@ func (x *UpdateUserV1Response) GetUser() *user.User {
 		return x.User
 	}
 	return nil
-}
-
-func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
-	return &desc.UpdateUserV1Request{
-		Name:      req.GetName(),
-		Age:       req.GetAge(),
-		Gender:    user.GenderToPB(req.GetGender()),
-		Location:  req.GetLocation(),
-		Bio:       req.GetBio(),
-		Goal:      common.GoalToPB(req.GetGoal()),
-		Interest:  interest.InterestToPB(req.GetInterest()),
-		Zodiac:    common.ZodiacToPB(req.GetZodiac()),
-		Height:    req.GetHeight(),
-		Education: common.EducationToPB(req.GetEducation()),
-		Children:  common.ChildrenToPB(req.GetChildren()),
-		Alcohol:   common.AlcoholToPB(req.GetAlcohol()),
-		Smoking:   common.SmokingToPB(req.GetSmoking()),
-		Hidden:    req.GetHidden(),
-		Verified:  req.GetVerified(),
-		Photos:    user.PhotoSliceToPB(req.GetPhotos()),
-	}
 }
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
@@ -192,41 +168,14 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 		Smoking:   common.PBToSmoking(req.GetSmoking()),
 		Hidden:    req.GetHidden(),
 		Verified:  req.GetVerified(),
-		Photos:    user.PBToPhotoSlice(req.GetPhotos()),
+		PhotoUploadRequests: slices.Map(req.GetPhotoUploadRequests(), func(from *desc.PhotoUploadRequest) user.PhotoUploadRequest {
+			return user.PhotoUploadRequest{}
+		}),
 	}
-}
-
-func UpdateUserRequestToUser(req *UpdateUserV1Request, id uuid.UUID) *user.User {
-	return user.NewUserBuilder().
-		SetID(id).
-		SetName(req.GetName()).
-		SetAge(req.GetAge()).
-		SetGender(req.GetGender()).
-		SetLocation(req.GetLocation()).
-		SetBIO(req.GetBio()).
-		SetGoal(req.GetGoal()).
-		SetInterest(req.GetInterest()).
-		SetZodiac(req.GetZodiac()).
-		SetHeight(req.GetHeight()).
-		SetEducation(req.GetEducation()).
-		SetChildren(req.GetChildren()).
-		SetAlcohol(req.GetAlcohol()).
-		SetSmoking(req.GetSmoking()).
-		SetHidden(req.GetHidden()).
-		SetVerified(req.GetVerified()).
-		SetPhotos(req.GetPhotos()).
-		SetUpdatedAt(time.Now()).
-		Build()
 }
 
 func UpdateUserResponseToPB(resp *UpdateUserV1Response) *desc.UpdateUserV1Response {
 	return &desc.UpdateUserV1Response{
 		User: user.UserToPB(resp.GetUser()),
-	}
-}
-
-func PBToUpdateUserResponse(resp *desc.UpdateUserV1Response) *UpdateUserV1Response {
-	return &UpdateUserV1Response{
-		User: user.PBToUser(resp.GetUser()),
 	}
 }
