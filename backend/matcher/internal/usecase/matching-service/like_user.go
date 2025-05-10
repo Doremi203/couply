@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	matching_storage "github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/matching"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
 	"github.com/Doremi203/couply/backend/matcher/utils"
@@ -35,7 +38,9 @@ func (c *UseCase) LikeUser(ctx context.Context, in *dto.LikeUserV1Request) (*dto
 func (p *likeProcessor) ProcessLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {
 	revertedLike, err := p.storage.GetLikeTx(ctx, targetUserID, userID)
 	if err != nil {
-		return nil, fmt.Errorf("failed to check existing like: %w", err)
+		if !errors.Is(matching_storage.ErrLikeNotFound, err) {
+			return nil, fmt.Errorf("failed to check existing like: %w", err)
+		}
 	}
 
 	if isMutualLike(revertedLike) {

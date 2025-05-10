@@ -18,7 +18,8 @@ type Filter struct {
 	MaxAge         int32
 	MinHeight      int32
 	MaxHeight      int32
-	Distance       int32
+	MinDistanceKM  int32
+	MaxDistanceKM  int32
 	Goal           common.Goal
 	Zodiac         common.Zodiac
 	Education      common.Education
@@ -74,9 +75,16 @@ func (x *Filter) GetMaxHeight() int32 {
 	return 0
 }
 
-func (x *Filter) GetDistance() int32 {
+func (x *Filter) GetMinDistanceKM() int32 {
 	if x != nil {
-		return x.Distance
+		return x.MinDistanceKM
+	}
+	return 0
+}
+
+func (x *Filter) GetMaxDistanceKM() int32 {
+	if x != nil {
+		return x.MaxDistanceKM
 	}
 	return 0
 }
@@ -160,21 +168,21 @@ func (x *Filter) GetUpdatedAt() time.Time {
 
 func FilterToPB(filter *Filter) *desc.Filter {
 	return &desc.Filter{
-		GenderPriority: GenderPriorityToPB(filter.GetGenderPriority()),
-		AgeRange:       &desc.Range{Min: filter.GetMinAge(), Max: filter.GetMaxAge()},
-		HeightRange:    &desc.Range{Min: filter.GetMinHeight(), Max: filter.GetMaxHeight()},
-		Distance:       filter.GetDistance(),
-		Goal:           common.GoalToPB(filter.GetGoal()),
-		Zodiac:         common.ZodiacToPB(filter.GetZodiac()),
-		Education:      common.EducationToPB(filter.GetEducation()),
-		Children:       common.ChildrenToPB(filter.GetChildren()),
-		Alcohol:        common.AlcoholToPB(filter.GetAlcohol()),
-		Smoking:        common.SmokingToPB(filter.GetSmoking()),
-		Interest:       interest.InterestToPB(filter.GetInterest()),
-		OnlyVerified:   filter.GetOnlyVerified(),
-		OnlyPremium:    filter.GetOnlyPremium(),
-		CreatedAt:      timestamppb.New(filter.GetCreatedAt()),
-		UpdatedAt:      timestamppb.New(filter.GetUpdatedAt()),
+		GenderPriority:  GenderPriorityToPB(filter.GetGenderPriority()),
+		AgeRange:        &desc.Range{Min: filter.GetMinAge(), Max: filter.GetMaxAge()},
+		HeightRange:     &desc.Range{Min: filter.GetMinHeight(), Max: filter.GetMaxHeight()},
+		DistanceKmRange: &desc.Range{Min: filter.GetMinDistanceKM(), Max: filter.GetMaxDistanceKM()},
+		Goal:            common.GoalToPB(filter.GetGoal()),
+		Zodiac:          common.ZodiacToPB(filter.GetZodiac()),
+		Education:       common.EducationToPB(filter.GetEducation()),
+		Children:        common.ChildrenToPB(filter.GetChildren()),
+		Alcohol:         common.AlcoholToPB(filter.GetAlcohol()),
+		Smoking:         common.SmokingToPB(filter.GetSmoking()),
+		Interest:        interest.InterestToPB(filter.GetInterest()),
+		OnlyVerified:    filter.GetOnlyVerified(),
+		OnlyPremium:     filter.GetOnlyPremium(),
+		CreatedAt:       timestamppb.New(filter.GetCreatedAt()),
+		UpdatedAt:       timestamppb.New(filter.GetUpdatedAt()),
 	}
 }
 
@@ -185,7 +193,8 @@ func PBToFilter(filter *desc.Filter) *Filter {
 		MaxAge:         filter.GetAgeRange().GetMax(),
 		MinHeight:      filter.GetHeightRange().GetMin(),
 		MaxHeight:      filter.GetHeightRange().GetMax(),
-		Distance:       filter.GetDistance(),
+		MinDistanceKM:  filter.GetDistanceKmRange().GetMin(),
+		MaxDistanceKM:  filter.GetDistanceKmRange().GetMax(),
 		Goal:           common.PBToGoal(filter.GetGoal()),
 		Zodiac:         common.PBToZodiac(filter.GetZodiac()),
 		Education:      common.PBToEducation(filter.GetEducation()),

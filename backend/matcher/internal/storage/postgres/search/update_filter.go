@@ -15,7 +15,8 @@ func (s *PgStorageSearch) UpdateFilter(ctx context.Context, filter *search.Filte
 		Set("max_age", filter.GetMaxAge()).
 		Set("min_height", filter.GetMinHeight()).
 		Set("max_height", filter.GetMaxHeight()).
-		Set("distance", filter.GetDistance()).
+		Set("min_distance_km", filter.GetMinDistanceKM()).
+		Set("max_distance_km", filter.GetMaxDistanceKM()).
 		Set("goal", filter.GetGoal()).
 		Set("zodiac", filter.GetZodiac()).
 		Set("education", filter.GetEducation()).

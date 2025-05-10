@@ -146,27 +146,6 @@ service UserService {
       }
     };
   }
-
-  rpc ConfirmPhotosUploadV1 (ConfirmPhotosUploadV1Request) returns (ConfirmPhotosUploadV1Response) {
-    option (google.api.http) = {
-      post: "/v1/ConfirmPhotoUploadV1"
-      body: "*"
-    };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Подтверждение загрузки фото пользователя";
-      description: "Принимает номера успешно загруженных фотографий";
-      security: {
-        security_requirement: {
-          key: "api-token";
-          value: {};
-        }
-        security_requirement: {
-          key: "user-token";
-          value: {};
-        }
-      }
-    };
-  }
 }
 
 message CreateUserV1Request {
@@ -182,43 +161,45 @@ message CreateUserV1Request {
     (validate.rules).enum.defined_only = true,
     (google.api.field_behavior) = REQUIRED
   ];
-  string location = 4 [
-    (validate.rules).string.min_len = 2,
+  double latitude = 4 [
+    (validate.rules).double = {gte: -90.0, lte: 90.0},
     (google.api.field_behavior) = REQUIRED
   ];
-  string bio = 5 [
+  double longitude = 5 [
+    (validate.rules).double = {gte: -180.0, lte: 180.0},
+    (google.api.field_behavior) = REQUIRED
+  ];
+  string bio = 6 [
     (validate.rules).string.min_len = 2
   ];
-  common.v1.Goal goal = 6 [
+  common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 7;
-  common.v1.Zodiac zodiac = 8 [
+  common.v1.Interest interest = 8;
+  common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  int32 height = 9 [
+  int32 height = 10 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32.gt = 0
   ];
-  common.v1.Education education = 10 [
+  common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 11 [
+  common.v1.Children children = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 12 [
+  common.v1.Alcohol alcohol = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 13 [
+  common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  bool hidden = 14 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  bool verified = 15 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  repeated PhotoUploadRequest photo_upload_requests = 16;
+  bool is_hidden = 15;
+  bool is_verified = 16;
+  bool is_premium = 17;
+  bool is_blocked = 18;
+  repeated PhotoUploadRequest photo_upload_requests = 19;
 }
 
 message CreateUserV1Response {
@@ -236,37 +217,42 @@ message UpdateUserV1Request {
   Gender gender = 3 [
     (validate.rules).enum.defined_only = true
   ];
-  string location = 4 [
+  double latitude = 4 [
+    (validate.rules).double = {gte: -90.0, lte: 90.0}
+  ];
+  double longitude = 5 [
+    (validate.rules).double = {gte: -180.0, lte: 180.0}
+  ];
+  string bio = 6 [
     (validate.rules).string.min_len = 2
   ];
-  string bio = 5 [
-    (validate.rules).string.min_len = 2
-  ];
-  common.v1.Goal goal = 6 [
+  common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 7;
-  common.v1.Zodiac zodiac = 8 [
+  common.v1.Interest interest = 8;
+  common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  int32 height = 9 [
+  int32 height = 10 [
     (validate.rules).int32.gt = 0
   ];
-  common.v1.Education education = 10 [
+  common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 11 [
+  common.v1.Children children = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 12 [
+  common.v1.Alcohol alcohol = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 13 [
+  common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  bool hidden = 14;
-  bool verified = 15;
-  repeated PhotoUploadRequest photo_upload_requests = 16;
+  bool is_hidden = 15;
+  bool is_verified = 16;
+  bool is_premium = 17;
+  bool is_blocked = 18;
+  repeated PhotoUploadRequest photo_upload_requests = 19;
 }
 
 message UpdateUserV1Response {
@@ -305,21 +291,24 @@ message User {
   string name = 2;
   int32 age = 3;
   Gender gender = 4;
-  string location = 5;
-  string bio = 6;
-  common.v1.Goal goal = 7;
-  common.v1.Interest interest = 8;
-  common.v1.Zodiac zodiac = 9;
-  int32 height = 10;
-  common.v1.Education education = 11;
-  common.v1.Children children = 12;
-  common.v1.Alcohol alcohol = 13;
-  common.v1.Smoking smoking = 14;
-  bool hidden = 15;
-  bool verified = 16;
-  repeated Photo photos = 17;
-  google.protobuf.Timestamp created_at = 18;
-  google.protobuf.Timestamp updated_at = 19;
+  double latitude = 5;
+  double longitude = 6;
+  string bio = 7;
+  common.v1.Goal goal = 8;
+  common.v1.Interest interest = 9;
+  common.v1.Zodiac zodiac = 10;
+  int32 height = 11;
+  common.v1.Education education = 12;
+  common.v1.Children children = 13;
+  common.v1.Alcohol alcohol = 14;
+  common.v1.Smoking smoking = 15;
+  bool is_hidden = 16;
+  bool is_verified = 17;
+  bool is_premium = 18;
+  bool is_blocked = 19;
+  repeated Photo photos = 20;
+  google.protobuf.Timestamp created_at = 21;
+  google.protobuf.Timestamp updated_at = 22;
 }
 
 message PhotoUploadRequest {
@@ -344,4 +333,3 @@ enum Gender {
   GENDER_MALE = 1;
   GENDER_FEMALE = 2;
 }
-

@@ -14,7 +14,7 @@ func (s *PgStorageSearch) AddFilter(ctx context.Context, filter *search.Filter) 
 	query, args, err := sq.Insert("filters").
 		Columns(
 			"user_id", "gender_priority", "min_age", "max_age", "min_height", "max_height",
-			"distance", "goal", "zodiac", "education", "children", "alcohol", "smoking",
+			"min_distance_km", "max_distance_km", "goal", "zodiac", "education", "children", "alcohol", "smoking",
 			"only_verified", "only_premium", "created_at", "updated_at",
 		).
 		Values(
@@ -24,7 +24,8 @@ func (s *PgStorageSearch) AddFilter(ctx context.Context, filter *search.Filter) 
 			filter.GetMaxAge(),
 			filter.GetMinHeight(),
 			filter.GetMaxHeight(),
-			filter.GetDistance(),
+			filter.GetMinDistanceKM(),
+			filter.GetMaxDistanceKM(),
 			filter.GetGoal(),
 			filter.GetZodiac(),
 			filter.GetEducation(),

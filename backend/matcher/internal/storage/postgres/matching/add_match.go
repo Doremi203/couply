@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 
@@ -27,15 +26,7 @@ func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match)
 		return fmt.Errorf("failed to build query: %w", err)
 	}
 
-	var (
-		matchID   int64
-		createdAt time.Time
-	)
-
-	err = s.txManager.GetQueryEngine(ctx).QueryRow(ctx, query, args...).Scan(
-		&matchID,
-		&createdAt,
-	)
+	_, err = s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
 	if err != nil {
 		var pgErr *pgconn.PgError
 		if errors.As(err, &pgErr) {

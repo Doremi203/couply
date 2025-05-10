@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/Doremi203/couply/backend/common/libs/slices"
+
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
@@ -14,25 +15,28 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID          `db:"id"`
-	Name      string             `db:"name"`
-	Age       int32              `db:"age"`
-	Gender    Gender             `db:"gender"`
-	Location  string             `db:"location"`
-	BIO       string             `db:"bio"`
-	Goal      common.Goal        `db:"goal"`
-	Interest  *interest.Interest `db:"interest"`
-	Zodiac    common.Zodiac      `db:"zodiac"`
-	Height    int32              `db:"height"`
-	Education common.Education   `db:"education"`
-	Children  common.Children    `db:"children"`
-	Alcohol   common.Alcohol     `db:"alcohol"`
-	Smoking   common.Smoking     `db:"smoking"`
-	Hidden    bool               `db:"hidden"`
-	Verified  bool               `db:"verified"`
-	Photos    []Photo            `db:"photos"`
-	CreatedAt time.Time          `db:"created_at"`
-	UpdatedAt time.Time          `db:"updated_at"`
+	ID         uuid.UUID          `db:"id"`
+	Name       string             `db:"name"`
+	Age        int32              `db:"age"`
+	Gender     Gender             `db:"gender"`
+	Latitude   float64            `db:"latitude"`
+	Longitude  float64            `db:"longitude"`
+	BIO        string             `db:"bio"`
+	Goal       common.Goal        `db:"goal"`
+	Interest   *interest.Interest `db:"interest"`
+	Zodiac     common.Zodiac      `db:"zodiac"`
+	Height     int32              `db:"height"`
+	Education  common.Education   `db:"education"`
+	Children   common.Children    `db:"children"`
+	Alcohol    common.Alcohol     `db:"alcohol"`
+	Smoking    common.Smoking     `db:"smoking"`
+	IsHidden   bool               `db:"is_hidden"`
+	IsVerified bool               `db:"is_verified"`
+	IsPremium  bool               `db:"is_premium"`
+	IsBlocked  bool               `db:"is_blocked"`
+	Photos     []Photo            `db:"photos"`
+	CreatedAt  time.Time          `db:"created_at"`
+	UpdatedAt  time.Time          `db:"updated_at"`
 }
 
 func (x *User) GetID() uuid.UUID {
@@ -63,11 +67,18 @@ func (x *User) GetGender() Gender {
 	return 0
 }
 
-func (x *User) GetLocation() string {
+func (x *User) GetLatitude() float64 {
 	if x != nil {
-		return x.Location
+		return x.Latitude
 	}
-	return ""
+	return 0
+}
+
+func (x *User) GetLongitude() float64 {
+	if x != nil {
+		return x.Longitude
+	}
+	return 0
 }
 
 func (x *User) GetBIO() string {
@@ -133,16 +144,30 @@ func (x *User) GetSmoking() common.Smoking {
 	return 0
 }
 
-func (x *User) GetHidden() bool {
+func (x *User) GetIsHidden() bool {
 	if x != nil {
-		return x.Hidden
+		return x.IsHidden
 	}
 	return false
 }
 
-func (x *User) GetVerified() bool {
+func (x *User) GetIsVerified() bool {
 	if x != nil {
-		return x.Verified
+		return x.IsVerified
+	}
+	return false
+}
+
+func (x *User) GetIsPremium() bool {
+	if x != nil {
+		return x.IsPremium
+	}
+	return false
+}
+
+func (x *User) GetIsBlocked() bool {
+	if x != nil {
+		return x.IsBlocked
 	}
 	return false
 }
@@ -196,8 +221,13 @@ func (b *UserBuilder) SetGender(gender Gender) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetLocation(location string) *UserBuilder {
-	b.user.Location = location
+func (b *UserBuilder) SetLatitude(latitude float64) *UserBuilder {
+	b.user.Latitude = latitude
+	return b
+}
+
+func (b *UserBuilder) SetLongitude(longitude float64) *UserBuilder {
+	b.user.Longitude = longitude
 	return b
 }
 
@@ -246,13 +276,23 @@ func (b *UserBuilder) SetSmoking(smoking common.Smoking) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetHidden(hidden bool) *UserBuilder {
-	b.user.Hidden = hidden
+func (b *UserBuilder) SetIsHidden(isHidden bool) *UserBuilder {
+	b.user.IsHidden = isHidden
 	return b
 }
 
-func (b *UserBuilder) SetVerified(verified bool) *UserBuilder {
-	b.user.Verified = verified
+func (b *UserBuilder) SetIsVerified(isVerified bool) *UserBuilder {
+	b.user.IsVerified = isVerified
+	return b
+}
+
+func (b *UserBuilder) SetIsPremium(isPremium bool) *UserBuilder {
+	b.user.IsPremium = isPremium
+	return b
+}
+
+func (b *UserBuilder) SetIsBlocked(isBlocked bool) *UserBuilder {
+	b.user.IsBlocked = isBlocked
 	return b
 }
 
@@ -277,22 +317,25 @@ func (b *UserBuilder) Build() *User {
 
 func UserToPB(user *User) *desc.User {
 	return &desc.User{
-		Id:        user.GetID().String(),
-		Name:      user.GetName(),
-		Age:       user.GetAge(),
-		Gender:    GenderToPB(user.GetGender()),
-		Location:  user.GetLocation(),
-		Bio:       user.GetBIO(),
-		Goal:      common.GoalToPB(user.GetGoal()),
-		Interest:  interest.InterestToPB(user.GetInterest()),
-		Zodiac:    common.ZodiacToPB(user.GetZodiac()),
-		Height:    user.GetHeight(),
-		Education: common.EducationToPB(user.GetEducation()),
-		Children:  common.ChildrenToPB(user.GetChildren()),
-		Alcohol:   common.AlcoholToPB(user.GetAlcohol()),
-		Smoking:   common.SmokingToPB(user.GetSmoking()),
-		Hidden:    user.GetHidden(),
-		Verified:  user.GetVerified(),
+		Id:         user.GetID().String(),
+		Name:       user.GetName(),
+		Age:        user.GetAge(),
+		Gender:     GenderToPB(user.GetGender()),
+		Latitude:   user.GetLatitude(),
+		Longitude:  user.GetLongitude(),
+		Bio:        user.GetBIO(),
+		Goal:       common.GoalToPB(user.GetGoal()),
+		Interest:   interest.InterestToPB(user.GetInterest()),
+		Zodiac:     common.ZodiacToPB(user.GetZodiac()),
+		Height:     user.GetHeight(),
+		Education:  common.EducationToPB(user.GetEducation()),
+		Children:   common.ChildrenToPB(user.GetChildren()),
+		Alcohol:    common.AlcoholToPB(user.GetAlcohol()),
+		Smoking:    common.SmokingToPB(user.GetSmoking()),
+		IsHidden:   user.GetIsHidden(),
+		IsVerified: user.GetIsVerified(),
+		IsPremium:  user.GetIsPremium(),
+		IsBlocked:  user.GetIsBlocked(),
 		Photos: slices.Map(user.GetPhotos(), func(from Photo) *desc.Photo {
 			return &desc.Photo{
 				OrderNumber: from.GetOrderNumber(),

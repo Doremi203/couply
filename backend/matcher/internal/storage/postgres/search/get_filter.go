@@ -16,7 +16,7 @@ import (
 func (s *PgStorageSearch) GetFilter(ctx context.Context, userID uuid.UUID) (*search.Filter, error) {
 	query, args, err := sq.Select(
 		"user_id", "gender_priority", "min_age", "max_age", "min_height", "max_height",
-		"distance", "goal", "zodiac", "education", "children", "alcohol", "smoking",
+		"min_distance_km", "max_distance_km", "goal", "zodiac", "education", "children", "alcohol", "smoking",
 		"only_verified", "only_premium", "created_at", "updated_at",
 	).
 		From("filters").
@@ -35,7 +35,8 @@ func (s *PgStorageSearch) GetFilter(ctx context.Context, userID uuid.UUID) (*sea
 		&filter.MaxAge,
 		&filter.MinHeight,
 		&filter.MaxHeight,
-		&filter.Distance,
+		&filter.MinDistanceKM,
+		&filter.MaxDistanceKM,
 		&filter.Goal,
 		&filter.Zodiac,
 		&filter.Education,

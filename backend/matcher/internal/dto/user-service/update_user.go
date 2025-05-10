@@ -13,7 +13,8 @@ type UpdateUserV1Request struct {
 	Name                string
 	Age                 int32
 	Gender              user.Gender
-	Location            string
+	Latitude            float64
+	Longitude           float64
 	Bio                 string
 	Goal                common.Goal
 	Interest            *interest.Interest
@@ -23,8 +24,10 @@ type UpdateUserV1Request struct {
 	Children            common.Children
 	Alcohol             common.Alcohol
 	Smoking             common.Smoking
-	Hidden              bool
-	Verified            bool
+	IsHidden            bool
+	IsVerified          bool
+	IsPremium           bool
+	IsBlocked           bool
 	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
@@ -49,11 +52,18 @@ func (x *UpdateUserV1Request) GetGender() user.Gender {
 	return user.Gender(0)
 }
 
-func (x *UpdateUserV1Request) GetLocation() string {
+func (x *UpdateUserV1Request) GetLatitude() float64 {
 	if x != nil {
-		return x.Location
+		return x.Latitude
 	}
-	return ""
+	return 0
+}
+
+func (x *UpdateUserV1Request) GetLongitude() float64 {
+	if x != nil {
+		return x.Longitude
+	}
+	return 0
 }
 
 func (x *UpdateUserV1Request) GetBio() string {
@@ -119,16 +129,30 @@ func (x *UpdateUserV1Request) GetSmoking() common.Smoking {
 	return common.Smoking(0)
 }
 
-func (x *UpdateUserV1Request) GetHidden() bool {
+func (x *UpdateUserV1Request) GetIsHidden() bool {
 	if x != nil {
-		return x.Hidden
+		return x.IsHidden
 	}
 	return false
 }
 
-func (x *UpdateUserV1Request) GetVerified() bool {
+func (x *UpdateUserV1Request) GetIsVerified() bool {
 	if x != nil {
-		return x.Verified
+		return x.IsVerified
+	}
+	return false
+}
+
+func (x *UpdateUserV1Request) GetIsPremium() bool {
+	if x != nil {
+		return x.IsPremium
+	}
+	return false
+}
+
+func (x *UpdateUserV1Request) GetIsBlocked() bool {
+	if x != nil {
+		return x.IsBlocked
 	}
 	return false
 }
@@ -153,21 +177,24 @@ func (x *UpdateUserV1Response) GetUser() *user.User {
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 	return &UpdateUserV1Request{
-		Name:      req.GetName(),
-		Age:       req.GetAge(),
-		Gender:    user.PBToGender(req.GetGender()),
-		Location:  req.GetLocation(),
-		Bio:       req.GetBio(),
-		Goal:      common.PBToGoal(req.GetGoal()),
-		Interest:  interest.PBToInterest(req.GetInterest()),
-		Zodiac:    common.PBToZodiac(req.GetZodiac()),
-		Height:    req.GetHeight(),
-		Education: common.PBToEducation(req.GetEducation()),
-		Children:  common.PBToChildren(req.GetChildren()),
-		Alcohol:   common.PBToAlcohol(req.GetAlcohol()),
-		Smoking:   common.PBToSmoking(req.GetSmoking()),
-		Hidden:    req.GetHidden(),
-		Verified:  req.GetVerified(),
+		Name:       req.GetName(),
+		Age:        req.GetAge(),
+		Gender:     user.PBToGender(req.GetGender()),
+		Latitude:   req.GetLatitude(),
+		Longitude:  req.GetLongitude(),
+		Bio:        req.GetBio(),
+		Goal:       common.PBToGoal(req.GetGoal()),
+		Interest:   interest.PBToInterest(req.GetInterest()),
+		Zodiac:     common.PBToZodiac(req.GetZodiac()),
+		Height:     req.GetHeight(),
+		Education:  common.PBToEducation(req.GetEducation()),
+		Children:   common.PBToChildren(req.GetChildren()),
+		Alcohol:    common.PBToAlcohol(req.GetAlcohol()),
+		Smoking:    common.PBToSmoking(req.GetSmoking()),
+		IsHidden:   req.GetIsHidden(),
+		IsVerified: req.GetIsVerified(),
+		IsPremium:  req.GetIsPremium(),
+		IsBlocked:  req.GetIsBlocked(),
 		PhotoUploadRequests: slices.Map(req.GetPhotoUploadRequests(), func(from *desc.PhotoUploadRequest) user.PhotoUploadRequest {
 			return user.PhotoUploadRequest{
 				OrderNumber: from.GetOrderNumber(),
