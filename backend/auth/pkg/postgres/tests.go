@@ -3,7 +3,6 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -12,11 +11,9 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/pressly/goose/v3"
 	"github.com/stretchr/testify/require"
 
-	"github.com/golang-migrate/migrate/v4"
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -41,7 +38,7 @@ func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 			"POSTGRES_USER":     cfg.User,
 			"POSTGRES_DB":       cfg.Database,
 		},
-		WaitingFor: wait.ForListeningPort("5432/tcp").WithStartupTimeout(20 * time.Second),
+		WaitingFor: wait.ForListeningPort("5432/tcp").WithStartupTimeout(40 * time.Second),
 	}
 
 	postgresC, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
@@ -79,24 +76,20 @@ func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 		}
 	}()
 
-	driver, err := postgres.WithInstance(sqlDB, &postgres.Config{})
-	if err != nil {
-		log.Fatalf("couldn't create db driver: %v", err)
-	}
-
 	baseMigrationsPath := os.Getenv("BASE_MIGRATIONS_PATH")
 	if baseMigrationsPath == "" {
 		log.Fatalf("env variable BASE_MIGRATIONS_PATH not set")
 	}
 
-	migrator, err := migrate.NewWithDatabaseInstance(
-		fmt.Sprintf("file://%s", filepath.Join(baseMigrationsPath, migrationsDir)),
-		"postgres", driver)
+	migrator, err := goose.NewProvider(
+		goose.DialectPostgres,
+		sqlDB, os.DirFS(filepath.Join(baseMigrationsPath, migrationsDir)),
+	)
 	if err != nil {
-		log.Fatalf("couldn't create migrator: %v", err)
+		log.Fatalf("couldn't create db migrations provider: %v", err)
 	}
 
-	if err = migrator.Up(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
+	if _, err = migrator.Up(ctx); err != nil {
 		log.Fatalf("couldn't run migrations: %v", err)
 	}
 
