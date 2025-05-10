@@ -2,14 +2,15 @@
 DB = postgres://user:pass@localhost:5432/
 DB_PARAMS = ?sslmode=disable
 
-MIGRATE_CREATE = migrate create -ext sql -dir
+export GOOSE_DRIVER=postgres
+MIGRATE_CREATE = goose create $(name) sql -s
 export TESTCONTAINERS_RYUK_DISABLED=true
 export BASE_MIGRATIONS_PATH=$(PWD)
 
 deps: deps/migrate deps/go-test-coverage deps/buf deps/mockgen deps/protoc deps/linters
 
 deps/migrate:
-	brew install golang-migrate
+	go install github.com/pressly/goose/v3/cmd/goose@latest
 
 deps/go-test-coverage:
 	go install github.com/vladopajic/go-test-coverage/v2@latest
@@ -84,19 +85,19 @@ auth/start: auth/generate
 auth/generate:
 	cd auth && go generate ./...
 
-AUTH_MIGRATIONS = file://auth/migrations
+AUTH_MIGRATIONS = auth/migrations
 
 auth/migrate/up:
-	migrate -verbose -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" up
+	goose -v -dir "$(AUTH_MIGRATIONS)" "$(DB)auth$(DB_PARAMS)" up
 
 auth/migrate/down:
-	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down -all
+	goose -v -dir "$(AUTH_MIGRATIONS)" "$(DB)auth$(DB_PARAMS)" reset
 
 auth/migrate/down-one:
-	migrate -source $(AUTH_MIGRATIONS) -database "$(DB)auth$(DB_PARAMS)" down 1
+	goose -v -dir "$(AUTH_MIGRATIONS)" "$(DB)auth$(DB_PARAMS)" down
 
 auth/migrate/create:
-	$(MIGRATE_CREATE) auth/migrations $(name)
+	cd auth/migrations && $(MIGRATE_CREATE)
 
 ### Matcher service targets
 matcher/check-coverage:
@@ -119,13 +120,16 @@ matcher/start: matcher/generate
 matcher/generate:
 	cd matcher && go generate ./...
 
-MATCHER_MIGRATIONS = file://matcher/migrations
+MATCHER_MIGRATIONS = matcher/migrations
 
 matcher/migrate/up:
-	migrate -verbose -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" up
+	goose -v -dir "$(MATCHER_MIGRATIONS)" "$(DB)matcher$(DB_PARAMS)" up
 
 matcher/migrate/down:
-	migrate -source $(MATCHER_MIGRATIONS) -database "$(DB)matcher$(DB_PARAMS)" down -all
+	goose -v -dir "$(MATCHER_MIGRATIONS)" "$(DB)matcher$(DB_PARAMS)" reset
+
+matcher/migrate/down-one:
+	goose -v -dir "$(MATCHER_MIGRATIONS)" "$(DB)matcher$(DB_PARAMS)" down
 
 matcher/migrate/create:
-	$(MIGRATE_CREATE) matcher/migrations ($name)
+	cd matcher/migrations && $(MIGRATE_CREATE)
