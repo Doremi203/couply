@@ -45,7 +45,7 @@ func scanUsers(rows pgx.Rows) ([]*user.User, map[uuid.UUID]float64, error) {
 			return nil, nil, errors.WrapFail(err, "scan rows")
 		}
 		users = append(users, user)
-		distances[user.GetID()] = dist
+		distances[user.GetID()] = dist / 1000
 	}
 
 	if err := rows.Err(); err != nil {
@@ -108,7 +108,7 @@ func buildSearchQuery(
 
 func baseQuery() sq.SelectBuilder {
 	return sq.Select(
-		"u.id", "u.name", "u.age", "u.gender", "u.location",
+		"u.id", "u.name", "u.age", "u.gender", "u.latitude", "u.longitude",
 		"u.bio", "u.goal", "u.zodiac", "u.height", "u.education",
 		"u.children", "u.alcohol", "u.smoking", "u.is_hidden",
 		"u.is_verified", "u.is_premium", "is_blocked", "u.created_at", "u.updated_at",

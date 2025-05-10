@@ -182,7 +182,7 @@ message LikeUserV1Request {
 
 message LikeUserV1Response {
   bool is_match = 1; // true если лайк взаимный
-  Match match = 2;   // Данные мэтча (только если is_match = true)
+  Match match = 2;   // данные мэтча (только если is_match = true)
 }
 
 message DislikeUserV1Request {

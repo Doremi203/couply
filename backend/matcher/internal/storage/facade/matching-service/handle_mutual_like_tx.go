@@ -11,9 +11,8 @@ func (f *StorageFacadeMatching) HandleMutualLikeTx(ctx context.Context, userID, 
 	var newMatch *matching.Match
 	var err error
 
-	err = f.txManager.RunReadCommitted(ctx, func(ctx context.Context) error {
+	err = f.txManager.RunRepeatableRead(ctx, func(ctx context.Context) error {
 		updatedLike := matching.NewLike(targetUserID, userID, message, matching.StatusAccepted)
-
 		err = f.storage.UpdateLike(ctx, updatedLike)
 		if err != nil {
 			return err
