@@ -146,6 +146,27 @@ service UserService {
       }
     };
   }
+
+  rpc ConfirmPhotosUploadV1 (ConfirmPhotosUploadV1Request) returns (ConfirmPhotosUploadV1Response) {
+    option (google.api.http) = {
+      post: "/v1/ConfirmPhotoUploadV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Подтверждение загрузки фото пользователя";
+      description: "Принимает номера успешно загруженных фотографий";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateUserV1Request {
