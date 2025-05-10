@@ -204,6 +204,7 @@ message CreateUserV1Request {
 
 message CreateUserV1Response {
   User user = 1;
+  repeated PhotoUploadResponse photo_upload_responses = 2;
 }
 
 message UpdateUserV1Request {

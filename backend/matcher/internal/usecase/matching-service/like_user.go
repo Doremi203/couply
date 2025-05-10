@@ -3,6 +3,7 @@ package matching_service
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	matching_storage "github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/matching"
 

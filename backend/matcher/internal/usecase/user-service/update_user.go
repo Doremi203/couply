@@ -27,7 +27,8 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		SetName(in.GetName()).
 		SetAge(in.GetAge()).
 		SetGender(in.GetGender()).
-		SetLocation(in.GetLocation()).
+		SetLatitude(in.GetLatitude()).
+		SetLongitude(in.GetLongitude()).
 		SetBIO(in.GetBio()).
 		SetGoal(in.GetGoal()).
 		SetInterest(in.GetInterest()).
@@ -37,8 +38,10 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		SetChildren(in.GetChildren()).
 		SetAlcohol(in.GetAlcohol()).
 		SetSmoking(in.GetSmoking()).
-		SetHidden(in.GetHidden()).
-		SetVerified(in.GetVerified()).
+		SetIsHidden(in.GetIsHidden()).
+		SetIsVerified(in.GetIsVerified()).
+		SetIsPremium(in.GetIsPremium()).
+		SetIsBlocked(in.GetIsBlocked()).
 		SetPhotos(photos).
 		SetUpdatedAt(time.Now()).
 		Build()

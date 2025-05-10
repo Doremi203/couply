@@ -1,10 +1,7 @@
 package user_service
 
 import (
-	"time"
-
-	"github.com/google/uuid"
-
+	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 
@@ -13,24 +10,24 @@ import (
 )
 
 type CreateUserV1Request struct {
-	Name      string
-	Age       int32
-	Gender    user.Gender
-	Latitude   float64
-	Longitude  float64
-	Bio       string
-	Goal      common.Goal
-	Interest  *interest.Interest
-	Zodiac    common.Zodiac
-	Height    int32
-	Education common.Education
-	Children  common.Children
-	Alcohol   common.Alcohol
-	Smoking   common.Smoking
-	IsHidden   bool
-	IsVerified bool
-	IsPremium  bool
-	IsBlocked  bool
+	Name                string
+	Age                 int32
+	Gender              user.Gender
+	Latitude            float64
+	Longitude           float64
+	Bio                 string
+	Goal                common.Goal
+	Interest            *interest.Interest
+	Zodiac              common.Zodiac
+	Height              int32
+	Education           common.Education
+	Children            common.Children
+	Alcohol             common.Alcohol
+	Smoking             common.Smoking
+	IsHidden            bool
+	IsVerified          bool
+	IsPremium           bool
+	IsBlocked           bool
 	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
@@ -180,20 +177,20 @@ func (x *CreateUserV1Response) GetUser() *user.User {
 
 func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 	return &CreateUserV1Request{
-		Name:      req.GetName(),
-		Age:       req.GetAge(),
-		Gender:    user.PBToGender(req.GetGender()),
+		Name:       req.GetName(),
+		Age:        req.GetAge(),
+		Gender:     user.PBToGender(req.GetGender()),
 		Latitude:   req.GetLatitude(),
 		Longitude:  req.GetLongitude(),
-		Bio:       req.GetBio(),
-		Goal:      common.PBToGoal(req.GetGoal()),
-		Interest:  interest.PBToInterest(req.GetInterest()),
-		Zodiac:    common.PBToZodiac(req.GetZodiac()),
-		Height:    req.GetHeight(),
-		Education: common.PBToEducation(req.GetEducation()),
-		Children:  common.PBToChildren(req.GetChildren()),
-		Alcohol:   common.PBToAlcohol(req.GetAlcohol()),
-		Smoking:   common.PBToSmoking(req.GetSmoking()),
+		Bio:        req.GetBio(),
+		Goal:       common.PBToGoal(req.GetGoal()),
+		Interest:   interest.PBToInterest(req.GetInterest()),
+		Zodiac:     common.PBToZodiac(req.GetZodiac()),
+		Height:     req.GetHeight(),
+		Education:  common.PBToEducation(req.GetEducation()),
+		Children:   common.PBToChildren(req.GetChildren()),
+		Alcohol:    common.PBToAlcohol(req.GetAlcohol()),
+		Smoking:    common.PBToSmoking(req.GetSmoking()),
 		IsHidden:   req.GetIsHidden(),
 		IsVerified: req.GetIsVerified(),
 		IsPremium:  req.GetIsPremium(),
@@ -206,7 +203,6 @@ func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 		}),
 	}
 }
-
 
 func CreateUserResponseToPB(resp *CreateUserV1Response) *desc.CreateUserV1Response {
 	return &desc.CreateUserV1Response{

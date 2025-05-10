@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
