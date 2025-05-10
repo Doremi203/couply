@@ -17,7 +17,8 @@ type User struct {
 	Name      string             `db:"name"`
 	Age       int32              `db:"age"`
 	Gender    Gender             `db:"gender"`
-	Location  string             `db:"location"`
+	Latitude  float64            `db:"latitude"`
+	Longitude float64            `db:"longitude"`
 	BIO       string             `db:"bio"`
 	Goal      common.Goal        `db:"goal"`
 	Interest  *interest.Interest `db:"interest"`
@@ -62,11 +63,18 @@ func (x *User) GetGender() Gender {
 	return 0
 }
 
-func (x *User) GetLocation() string {
+func (x *User) GetLatitude() float64 {
 	if x != nil {
-		return x.Location
+		return x.Latitude
 	}
-	return ""
+	return 0
+}
+
+func (x *User) GetLongitude() float64 {
+	if x != nil {
+		return x.Longitude
+	}
+	return 0
 }
 
 func (x *User) GetBIO() string {
@@ -195,8 +203,13 @@ func (b *UserBuilder) SetGender(gender Gender) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetLocation(location string) *UserBuilder {
-	b.user.Location = location
+func (b *UserBuilder) SetLatitude(latitude float64) *UserBuilder {
+	b.user.Latitude = latitude
+	return b
+}
+
+func (b *UserBuilder) SetLongitude(longitude float64) *UserBuilder {
+	b.user.Longitude = longitude
 	return b
 }
 
@@ -280,7 +293,8 @@ func UserToPB(user *User) *desc.User {
 		Name:      user.GetName(),
 		Age:       user.GetAge(),
 		Gender:    GenderToPB(user.GetGender()),
-		Location:  user.GetLocation(),
+		Latitude:  user.GetLatitude(),
+		Longitude: user.GetLongitude(),
 		Bio:       user.GetBIO(),
 		Goal:      common.GoalToPB(user.GetGoal()),
 		Interest:  interest.InterestToPB(user.GetInterest()),
@@ -313,7 +327,8 @@ func PBToUser(user *desc.User) *User {
 		Name:      user.GetName(),
 		Age:       user.GetAge(),
 		Gender:    PBToGender(user.GetGender()),
-		Location:  user.GetLocation(),
+		Latitude:  user.GetLatitude(),
+		Longitude: user.GetLongitude(),
 		BIO:       user.GetBio(),
 		Goal:      common.PBToGoal(user.GetGoal()),
 		Interest:  interest.PBToInterest(user.GetInterest()),

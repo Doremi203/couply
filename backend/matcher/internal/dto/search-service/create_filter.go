@@ -17,7 +17,8 @@ type CreateFilterV1Request struct {
 	MaxAge         int32
 	MinHeight      int32
 	MaxHeight      int32
-	Distance       int32
+	MinDistanceKM  int32
+	MaxDistanceKM  int32
 	Goal           common.Goal
 	Zodiac         common.Zodiac
 	Education      common.Education
@@ -64,9 +65,16 @@ func (x *CreateFilterV1Request) GetMaxHeight() int32 {
 	return 0
 }
 
-func (x *CreateFilterV1Request) GetDistance() int32 {
+func (x *CreateFilterV1Request) GetMinDistanceKM() int32 {
 	if x != nil {
-		return x.Distance
+		return x.MinDistanceKM
+	}
+	return 0
+}
+
+func (x *CreateFilterV1Request) GetMaxDistanceKM() int32 {
+	if x != nil {
+		return x.MaxDistanceKM
 	}
 	return 0
 }
@@ -152,7 +160,8 @@ func PBToCreateFilterRequest(req *desc.CreateFilterV1Request) *CreateFilterV1Req
 		MaxAge:         req.GetMaxAge(),
 		MinHeight:      req.GetMinHeight(),
 		MaxHeight:      req.GetMaxHeight(),
-		Distance:       req.GetDistance(),
+		MinDistanceKM:  req.GetMinDistanceKm(),
+		MaxDistanceKM:  req.GetMaxDistanceKm(),
 		Goal:           common.PBToGoal(req.GetGoal()),
 		Zodiac:         common.PBToZodiac(req.GetZodiac()),
 		Education:      common.PBToEducation(req.GetEducation()),
@@ -179,7 +188,8 @@ func CreateFilterRequestToFilter(req *CreateFilterV1Request, userID uuid.UUID) *
 		MaxAge:         req.GetMaxAge(),
 		MinHeight:      req.GetMinHeight(),
 		MaxHeight:      req.GetMaxHeight(),
-		Distance:       req.GetDistance(),
+		MinDistanceKM:  req.GetMinDistanceKM(),
+		MaxDistanceKM:  req.GetMaxDistanceKM(),
 		Goal:           req.GetGoal(),
 		Zodiac:         req.GetZodiac(),
 		Education:      req.GetEducation(),

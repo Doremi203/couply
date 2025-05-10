@@ -161,43 +161,47 @@ message CreateUserV1Request {
     (validate.rules).enum.defined_only = true,
     (google.api.field_behavior) = REQUIRED
   ];
-  string location = 4 [
-    (validate.rules).string.min_len = 2,
+  double latitude = 4 [
+    (validate.rules).double = {gte: -90.0, lte: 90.0},
     (google.api.field_behavior) = REQUIRED
   ];
-  string bio = 5 [
+  double longitude = 5 [
+    (validate.rules).double = {gte: -180.0, lte: 180.0},
+    (google.api.field_behavior) = REQUIRED
+  ];
+  string bio = 6 [
     (validate.rules).string.min_len = 2
   ];
-  common.v1.Goal goal = 6 [
+  common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 7;
-  common.v1.Zodiac zodiac = 8 [
+  common.v1.Interest interest = 8;
+  common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  int32 height = 9 [
+  int32 height = 10 [
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32.gt = 0
   ];
-  common.v1.Education education = 10 [
+  common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 11 [
+  common.v1.Children children = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 12 [
+  common.v1.Alcohol alcohol = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 13 [
+  common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  bool hidden = 14 [
+  bool hidden = 15 [
     (google.api.field_behavior) = REQUIRED
   ];
-  bool verified = 15 [
+  bool verified = 16 [
     (google.api.field_behavior) = REQUIRED
   ];
-  repeated Photo photos = 16;
+  repeated Photo photos = 17;
 }
 
 message CreateUserV1Response {
@@ -214,37 +218,40 @@ message UpdateUserV1Request {
   Gender gender = 3 [
     (validate.rules).enum.defined_only = true
   ];
-  string location = 4 [
+  double latitude = 4 [
+    (validate.rules).double = {gte: -90.0, lte: 90.0}
+  ];
+  double longitude = 5 [
+    (validate.rules).double = {gte: -180.0, lte: 180.0}
+  ];
+  string bio = 6 [
     (validate.rules).string.min_len = 2
   ];
-  string bio = 5 [
-    (validate.rules).string.min_len = 2
-  ];
-  common.v1.Goal goal = 6 [
+  common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 7;
-  common.v1.Zodiac zodiac = 8 [
+  common.v1.Interest interest = 8;
+  common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  int32 height = 9 [
+  int32 height = 10 [
     (validate.rules).int32.gt = 0
   ];
-  common.v1.Education education = 10 [
+  common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 11 [
+  common.v1.Children children = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 12 [
+  common.v1.Alcohol alcohol = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 13 [
+  common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  bool hidden = 14;
-  bool verified = 15;
-  repeated Photo photos = 16;
+  bool hidden = 15;
+  bool verified = 16;
+  repeated Photo photos = 17;
 }
 
 message UpdateUserV1Response {
@@ -277,21 +284,22 @@ message User {
   string name = 2;
   int32 age = 3;
   Gender gender = 4;
-  string location = 5;
-  string bio = 6;
-  common.v1.Goal goal = 7;
-  common.v1.Interest interest = 8;
-  common.v1.Zodiac zodiac = 9;
-  int32 height = 10;
-  common.v1.Education education = 11;
-  common.v1.Children children = 12;
-  common.v1.Alcohol alcohol = 13;
-  common.v1.Smoking smoking = 14;
-  bool hidden = 15;
-  bool verified = 16;
-  repeated Photo photos = 17;
-  google.protobuf.Timestamp created_at = 18;
-  google.protobuf.Timestamp updated_at = 19;
+  double latitude = 5;
+  double longitude = 6;
+  string bio = 7;
+  common.v1.Goal goal = 8;
+  common.v1.Interest interest = 9;
+  common.v1.Zodiac zodiac = 10;
+  int32 height = 11;
+  common.v1.Education education = 12;
+  common.v1.Children children = 13;
+  common.v1.Alcohol alcohol = 14;
+  common.v1.Smoking smoking = 15;
+  bool hidden = 16;
+  bool verified = 17;
+  repeated Photo photos = 18;
+  google.protobuf.Timestamp created_at = 19;
+  google.protobuf.Timestamp updated_at = 20;
 }
 
 message Photo {

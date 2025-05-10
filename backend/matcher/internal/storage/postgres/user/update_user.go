@@ -13,7 +13,8 @@ func (s *PgStorageUser) UpdateUser(ctx context.Context, user *user.User) (*user.
 		Set("name", user.GetName()).
 		Set("age", user.GetAge()).
 		Set("gender", user.GetGender()).
-		Set("location", user.GetLocation()).
+		Set("latitude", user.GetLatitude()).
+		Set("longitude", user.GetLongitude()).
 		Set("bio", user.GetBIO()).
 		Set("goal", user.GetGoal()).
 		Set("zodiac", user.GetZodiac()).

@@ -2,7 +2,7 @@ package search_service
 
 import (
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 )
 
 type SearchUsersV1Request struct {
@@ -25,12 +25,12 @@ func (x *SearchUsersV1Request) GetLimit() uint64 {
 }
 
 type SearchUsersV1Response struct {
-	Users []*user.User
+	UsersSearchInfo []*search.UserSearchInfo
 }
 
-func (x *SearchUsersV1Response) GetUsers() []*user.User {
+func (x *SearchUsersV1Response) GetUsersSearchInfo() []*search.UserSearchInfo {
 	if x != nil {
-		return x.Users
+		return x.UsersSearchInfo
 	}
 	return nil
 }
@@ -43,7 +43,12 @@ func PBToSearchUsersRequest(req *desc.SearchUsersV1Request) *SearchUsersV1Reques
 }
 
 func SearchUsersResponseToPB(resp *SearchUsersV1Response) *desc.SearchUsersV1Response {
+	pbUserSearchInfo := make([]*desc.UserSearchInfo, len(resp.GetUsersSearchInfo()))
+	for i, info := range resp.GetUsersSearchInfo() {
+		pbUserSearchInfo[i] = search.UserSearchInfoToPB(info)
+	}
+
 	return &desc.SearchUsersV1Response{
-		Users: user.UsersToPB(resp.GetUsers()),
+		UsersSearchInfo: pbUserSearchInfo,
 	}
 }

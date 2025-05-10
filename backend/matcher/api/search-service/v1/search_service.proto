@@ -146,31 +146,35 @@ message CreateFilterV1Request {
     (google.api.field_behavior) = REQUIRED,
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  int32 distance = 6 [
+  int32 min_distance_km = 6 [
     (google.api.field_behavior) = REQUIRED,
-    (validate.rules).int32 = {gte: 1, lte: 100}
+    (validate.rules).int32 = {gte: 0, lte: 100}
   ];
-  common.v1.Goal goal = 7 [
+  int32 max_distance_km = 7 [
+    (google.api.field_behavior) = REQUIRED,
+    (validate.rules).int32 = {gte: 0, lte: 100}
+  ];
+  common.v1.Goal goal = 8 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Zodiac zodiac = 8 [
+  common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Education education = 9 [
+  common.v1.Education education = 10 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 10 [
+  common.v1.Children children = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 11 [
+  common.v1.Alcohol alcohol = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 12 [
+  common.v1.Smoking smoking = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 13;
-  bool only_verified = 14;
-  bool only_premium = 15;
+  common.v1.Interest interest = 14;
+  bool only_verified = 15;
+  bool only_premium = 16;
 }
 
 message CreateFilterV1Response {
@@ -193,30 +197,33 @@ message UpdateFilterV1Request {
   int32 max_height = 5 [
     (validate.rules).int32 = {gte: 100, lte: 250}
   ];
-  int32 distance = 6 [
-    (validate.rules).int32 = {gte: 1, lte: 100}
+  int32 min_distance_km = 6 [
+    (validate.rules).int32 = {gte: 0, lte: 100}
   ];
-  common.v1.Goal goal = 7 [
+  int32 max_distance_km = 7 [
+    (validate.rules).int32 = {gte: 0, lte: 100}
+  ];
+  common.v1.Goal goal = 8 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Zodiac zodiac = 8 [
+  common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Education education = 9 [
+  common.v1.Education education = 10 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 10 [
+  common.v1.Children children = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 11 [
+  common.v1.Alcohol alcohol = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 12 [
+  common.v1.Smoking smoking = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 13;
-  bool only_verified = 14;
-  bool only_premium = 15;
+  common.v1.Interest interest = 14;
+  bool only_verified = 15;
+  bool only_premium = 16;
 }
 
 message UpdateFilterV1Response {
@@ -240,14 +247,14 @@ message SearchUsersV1Request {
 }
 
 message SearchUsersV1Response {
-  repeated user_service.v1.User users = 1;
+  repeated UserSearchInfo users_search_info = 1;
 }
 
 message Filter {
   GenderPriority gender_priority = 1;
   Range age_range = 2;
   Range height_range = 3;
-  int32 distance = 4;
+  Range distance_km_range = 4;
   common.v1.Goal goal = 5;
   common.v1.Zodiac zodiac = 6;
   common.v1.Education education = 7;
@@ -271,4 +278,9 @@ enum GenderPriority {
   GENDERPRIORITY_MALE = 1;
   GENDERPRIORITY_FEMALE = 2;
   GENDERPRIORITY_ANY = 3;
+}
+
+message UserSearchInfo {
+  user_service.v1.User user = 1;
+  int32 distance_to_user = 2;
 }

@@ -16,7 +16,8 @@ type UpdateUserV1Request struct {
 	Name      string
 	Age       int32
 	Gender    user.Gender
-	Location  string
+	Latitude  float64
+	Longitude float64
 	Bio       string
 	Goal      common.Goal
 	Interest  *interest.Interest
@@ -52,11 +53,18 @@ func (x *UpdateUserV1Request) GetGender() user.Gender {
 	return user.Gender(0)
 }
 
-func (x *UpdateUserV1Request) GetLocation() string {
+func (x *UpdateUserV1Request) GetLatitude() float64 {
 	if x != nil {
-		return x.Location
+		return x.Latitude
 	}
-	return ""
+	return 0
+}
+
+func (x *UpdateUserV1Request) GetLongitude() float64 {
+	if x != nil {
+		return x.Longitude
+	}
+	return 0
 }
 
 func (x *UpdateUserV1Request) GetBio() string {
@@ -159,7 +167,8 @@ func UpdateUserRequestToPB(req *UpdateUserV1Request) *desc.UpdateUserV1Request {
 		Name:      req.GetName(),
 		Age:       req.GetAge(),
 		Gender:    user.GenderToPB(req.GetGender()),
-		Location:  req.GetLocation(),
+		Latitude:  req.GetLatitude(),
+		Longitude: req.GetLongitude(),
 		Bio:       req.GetBio(),
 		Goal:      common.GoalToPB(req.GetGoal()),
 		Interest:  interest.InterestToPB(req.GetInterest()),
@@ -180,7 +189,8 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 		Name:      req.GetName(),
 		Age:       req.GetAge(),
 		Gender:    user.PBToGender(req.GetGender()),
-		Location:  req.GetLocation(),
+		Latitude:  req.GetLatitude(),
+		Longitude: req.GetLongitude(),
 		Bio:       req.GetBio(),
 		Goal:      common.PBToGoal(req.GetGoal()),
 		Interest:  interest.PBToInterest(req.GetInterest()),
@@ -202,7 +212,8 @@ func UpdateUserRequestToUser(req *UpdateUserV1Request, id uuid.UUID) *user.User 
 		SetName(req.GetName()).
 		SetAge(req.GetAge()).
 		SetGender(req.GetGender()).
-		SetLocation(req.GetLocation()).
+		SetLatitude(req.GetLatitude()).
+		SetLongitude(req.GetLongitude()).
 		SetBIO(req.GetBio()).
 		SetGoal(req.GetGoal()).
 		SetInterest(req.GetInterest()).
