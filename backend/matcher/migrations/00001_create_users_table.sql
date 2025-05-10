@@ -1,0 +1,28 @@
+-- +goose Up
+-- +goose StatementBegin
+create table if not exists users
+(
+    id         uuid primary key,
+    name       text    not null,
+    age        int check (age >= 18),
+    gender     int     not null,
+    location   text    not null,
+    bio        text,
+    goal       int,
+    zodiac     int,
+    height     int check (height > 0),
+    education  int,
+    children   int,
+    alcohol    int,
+    smoking    int,
+    hidden     boolean not null,
+    verified   boolean not null,
+    created_at timestamptz default current_timestamp,
+    updated_at timestamptz default current_timestamp
+);
+-- +goose StatementEnd
+
+-- +goose Down
+-- +goose StatementBegin
+drop table if exists users;
+-- +goose StatementEnd

@@ -1,1 +1,0 @@
-drop table if exists filter_interests;
