@@ -77,7 +77,9 @@ export const RegistrationPage = () => {
 
         // Store the token in localStorage
         // localStorage.setItem('token', result.token);
-        navigate('/enterInfo');
+
+        // navigate('/enterInfo');
+        navigate('/enterPhone');
       } catch (error) {
         console.error('Registration failed:', error);
 

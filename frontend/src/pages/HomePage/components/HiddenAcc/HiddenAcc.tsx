@@ -2,6 +2,8 @@ import { CustomButton } from '../../../../shared/components/CustomButton';
 
 import styles from './hiddenAcc.module.css';
 
+// @ts-ignore
+
 export const HiddenAcc = () => {
   return (
     <div className={styles.container}>
@@ -15,6 +17,7 @@ export const HiddenAcc = () => {
           Активируйте профиль, чтобы продолжить искать свою каплю в океане людей
         </div>
       </div>
+      {/** @ts-ignore */}
       <CustomButton className={styles.button} text="Активировать профиль" />
     </div>
   );

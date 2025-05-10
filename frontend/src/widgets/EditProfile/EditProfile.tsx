@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
-import { BasicInfoForm, ProfileData } from '../../features/profileEdit';
+import { ProfileData } from '../../features/profileEdit';
 import { ProfilePhotoEdit } from '../../features/profileEdit/components/ProfilePhotoEdit';
 import { ProfileVisibilitySection } from '../../features/profileVisibility/components/ProfileVisibilitySection';
 import AboutMeSection from '../../shared/components/AboutMeSection';

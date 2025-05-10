@@ -6,6 +6,13 @@
   position: relative;
 }
 
+@supports (-webkit-overflow-scrolling: touch) {
+  .container {
+    height: calc(100% - constant(safe-area-inset-bottom));
+    height: calc(100% - env(safe-area-inset-bottom));
+  }
+}
+
 .backIcon {
   cursor: pointer;
   margin-bottom: 20px;
@@ -159,4 +166,23 @@
   75% {
     transform: translateX(5px);
   }
+}
+
+.geoButton {
+  margin-top: 20px;
+  margin-left: 70px;
+}
+
+.geoText {
+  margin-top: 10px;
+}
+
+.coordsDisplay {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--secondary-text-color);
+  text-align: center;
 }

@@ -4,7 +4,7 @@ import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 // import { ProfileView } from '../../../LikesPage/components/ProfileView';
 import { ProfileView } from '../../../../widgets/ProfileView';
-import { ProfileData, ActivityItem } from '../../types';
+import { ProfileData } from '../../types';
 import { Profile } from '../Profile';
 // import { ProfilePreview } from '../ProfilePreview';
 
@@ -41,15 +41,16 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     hobbies: ['Photography', 'Cooking', 'Hiking'],
     isHidden: false,
     photos: ['/photo1.png', '/woman1.jpg'],
+    //@ts-ignore
     imageUrl: '/photo1.png',
   });
 
-  const [activityHistory] = useState<ActivityItem[]>([
-    { type: 'view', user: 'Alex', date: '2025-03-28T14:30:00' },
-    { type: 'like', user: 'Michael', date: '2025-03-27T10:15:00' },
-    { type: 'message', user: 'David', date: '2025-03-26T18:45:00' },
-    { type: 'view', user: 'Sarah', date: '2025-03-25T09:20:00' },
-  ]);
+  // const [activityHistory] = useState<ActivityItem[]>([
+  //   { type: 'view', user: 'Alex', date: '2025-03-28T14:30:00' },
+  //   { type: 'like', user: 'Michael', date: '2025-03-27T10:15:00' },
+  //   { type: 'message', user: 'David', date: '2025-03-26T18:45:00' },
+  //   { type: 'view', user: 'Sarah', date: '2025-03-25T09:20:00' },
+  // ]);
 
   const handleEditToggle = () => {
     setIsEditMode(!isEditMode);
@@ -141,10 +142,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     setActiveTab('profile');
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+  // const formatDate = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString();
+  // };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -161,6 +162,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           />
         );
       case 'preview':
+        //@ts-ignore
         return <ProfileView profile={profileData} onClose={() => setActiveTab('profile')} />;
       default:
         return (

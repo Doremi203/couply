@@ -8,13 +8,13 @@
   "theme_color": "#202C83",
   "icons": [
     {
-      "src": "icon512_rounded.png",
+      "src": "logo1.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon512_maskable.png",
+      "src": "logo1.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -33,7 +33,7 @@
       "url": "/likes",
       "icons": [
         {
-          "src": "icon512_rounded.png",
+          "src": "logo1.png",
           "sizes": "512x512"
         }
       ]
@@ -45,10 +45,11 @@
       "url": "/profile",
       "icons": [
         {
-          "src": "icon512_rounded.png",
+          "src": "logo1.png",
           "sizes": "512x512"
         }
       ]
     }
-  ]
+  ],
+  "permissions": ["geolocation"]
 }

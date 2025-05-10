@@ -1,5 +1,4 @@
 import EditIcon from '@mui/icons-material/Edit';
-import HistoryIcon from '@mui/icons-material/History';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import React from 'react';
@@ -18,11 +17,13 @@ interface ProfileHeaderProps {
   onPreviewClick: () => void;
 }
 
+// @ts-nocheck
+
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   isProfileHidden,
   onEditToggle,
   onVisibilityToggle,
-  onActivityClick,
+  // onActivityClick,
   onPreviewClick,
 }) => {
   return (

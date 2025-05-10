@@ -22,9 +22,11 @@ import {
   Zodiac,
   Children,
 } from '../../../../entities/user';
+import { MessageModal } from '../../../../pages/HomePage/components/MessageModal/MessageModal';
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
 import { LikeButton } from '../../../../shared/components/LikeButton';
+//@ts-ignore
 import MessageButton from '../../../../shared/components/MessageButton/messageButton';
 import UndoButton from '../../../../shared/components/UndoButton/UndoButton';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -117,28 +119,35 @@ export const ProfileSlider = () => {
   const [searchUsers] = useSearchUsersMutation();
   const [createFilter] = useCreateFilterMutation();
 
-  const [profiles1, setProfiles] = useState<(typeof profiles)[0][]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [profiles1, setProfiles] = useState<(typeof profiles)[0][]>([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<(typeof profiles)[0] | null>(null);
 
   const [complaintOpen, setComplaintOpen] = useState(false);
 
+  const [messageOpen, setMessageOpen] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
+        //@ts-ignore
         setLoading(true);
         const defaultFilter = getDefaultFilter();
+        //@ts-ignore
         await createFilter(defaultFilter).unwrap();
         const response = await searchUsers({ limit: 10, offset: 0 }).unwrap();
         console.log(response);
+        //@ts-ignore
         setProfiles(response.users || []);
       } catch (err) {
+        //@ts-ignore
         setError('Ошибка при загрузке профилей');
         console.error(err);
       } finally {
+        //@ts-ignore
         setLoading(false);
       }
     };
@@ -327,7 +336,7 @@ export const ProfileSlider = () => {
           className={styles.likeButton}
           likeClassName={styles.like}
         />
-        <MessageButton />
+        <MessageButton onClick={() => setMessageOpen(true)} />
       </div>
 
       {selectedProfile && (
@@ -342,6 +351,7 @@ export const ProfileSlider = () => {
       )}
 
       <ComplaintModal isOpen={complaintOpen} onClose={() => setComplaintOpen(false)} />
+      <MessageModal isOpen={messageOpen} onClose={() => setMessageOpen(false)} />
     </div>
   );
 };

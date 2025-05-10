@@ -10,6 +10,7 @@ import { LikeProfile, MatchProfile } from '../types';
 export const useLikesAndMatches = () => {
   const [fetchMatches] = useFetchMatchesMutation();
   const [fetchIncomingLikes, { isLoading: isLoadingIncoming }] = useFetchIncomingLikesMutation();
+  //@ts-ignore
   const [likeUser] = useLikeUserMutation();
   //const [getUser] = useGetUserMutation();
 

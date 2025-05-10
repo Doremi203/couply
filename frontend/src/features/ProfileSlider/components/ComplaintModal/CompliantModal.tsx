@@ -10,14 +10,13 @@ import {
   FormControlLabel,
   Radio,
   RadioGroup,
-  Slide,
   TextField,
 } from '@mui/material';
-import { forwardRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const Transition = forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
+// const Transition = forwardRef(function Transition(props, ref) {
+//   return <Slide direction="up" ref={ref} {...props} />;
+// });
 
 const reportReasons = [
   'Спам',
@@ -27,6 +26,7 @@ const reportReasons = [
   'Другая причина',
 ];
 
+//@ts-ignore
 export const ComplaintModal = ({ isOpen, onClose }) => {
   const [selectedReason, setSelectedReason] = useState('');
   const [customText, setCustomText] = useState('');
@@ -48,7 +48,7 @@ export const ComplaintModal = ({ isOpen, onClose }) => {
     <Dialog
       open={isOpen}
       onClose={onClose}
-      TransitionComponent={Transition}
+      // TransitionComponent={Transition}
       fullWidth
       maxWidth="sm"
       PaperProps={{

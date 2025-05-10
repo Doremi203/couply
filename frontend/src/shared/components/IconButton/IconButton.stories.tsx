@@ -1,7 +1,4 @@
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
-import MessageIcon from '@mui/icons-material/Message';
-import SettingsIcon from '@mui/icons-material/Settings';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import { IconButton } from './IconButton';

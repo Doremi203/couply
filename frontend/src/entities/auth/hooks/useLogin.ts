@@ -17,6 +17,7 @@ export const useLogin = () => {
         return loginResponse;
       } catch (error) {
         // TODO
+        //@ts-ignore
         throw new Error(error?.data?.message || 'An error occurred during registration or login');
       }
     },

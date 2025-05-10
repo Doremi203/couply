@@ -6,10 +6,22 @@
   gap: 20px;
   background-color: var(--background-color);
   color: var(--text-color);
-  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  height: 100vh;
   margin: 0;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+.noScroll {
+  overflow: hidden;
+  height: 100%;
 }
 
 .personCard {
@@ -93,5 +105,12 @@
 
   .personCard {
     margin-top: 9.375rem;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: auto;
   }
 }

@@ -50,6 +50,7 @@ const sampleProfile = {
 
 export const Default: Story = {
   args: {
+    // @ts-ignore
     profile: sampleProfile,
     onClose: () => console.log('Profile view closed'),
     onLike: id => console.log(`Liked profile with id: ${id}`),
@@ -58,6 +59,7 @@ export const Default: Story = {
 
 export const HasLikedYou: Story = {
   args: {
+    // @ts-ignore
     profile: {
       ...sampleProfile,
       // user: {hasLikedYou: true},
@@ -70,6 +72,7 @@ export const HasLikedYou: Story = {
 export const MinimalProfile: Story = {
   args: {
     profile: {
+      // @ts-ignore
       user: {
         id: 2,
         name: 'John Doe',

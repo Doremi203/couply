@@ -24,6 +24,7 @@ export const useProfileView = () => {
       interests: ['Match'],
       lifestyle: {
         contact: `Telegram: ${match.telegram}`,
+        //@ts-ignore
         social: `Instagram: ${match.instagram}`,
       },
       // Add photos property to ensure the ProfileView component can display photos

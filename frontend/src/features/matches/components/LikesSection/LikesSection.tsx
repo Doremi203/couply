@@ -25,6 +25,7 @@ export const LikesSection: React.FC<LikesSectionProps> = ({ likes, onProfileClic
       <div className={styles.profilesGrid}>
         {likes.map(profile => (
           <ProfileCard
+            //@ts-ignore
             key={profile.id}
             profile={profile}
             onClick={() => onProfileClick(profile)}

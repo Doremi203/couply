@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import FiltersDrawer from '../../../../features/filters/components/FiltersDrawer';
 import { ProfileSlider } from '../../../../features/ProfileSlider';
@@ -9,6 +9,13 @@ import { HiddenAcc } from '../HiddenAcc/HiddenAcc';
 import styles from './homePage.module.css';
 
 export const HomePage = () => {
+  useEffect(() => {
+    document.documentElement.classList.add(styles.noScroll);
+    return () => {
+      document.documentElement.classList.remove(styles.noScroll);
+    };
+  }, []);
+
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const handleFiltersOpen = () => {
@@ -23,7 +30,7 @@ export const HomePage = () => {
 
   if (hidden) {
     return (
-      <body className={styles.pageContainer}>
+      <div className={styles.pageContainer}>
         <div className={styles.headerHidden}>
           <div className={styles.spacer} />
           <div className={styles.appName}> couply</div>
@@ -34,12 +41,12 @@ export const HomePage = () => {
         <div style={{ position: 'relative', zIndex: 1010 }}>
           <NavBar />
         </div>
-      </body>
+      </div>
     );
   }
 
   return (
-    <body className={styles.pageContainer}>
+    <div className={styles.pageContainer}>
       <div className={styles.header}>
         <div className={styles.spacer} />
         <div className={styles.appName}> couply</div>
@@ -56,7 +63,7 @@ export const HomePage = () => {
       <div style={{ position: 'relative', zIndex: 1010 }}>
         <NavBar />
       </div>
-    </body>
+    </div>
   );
 };
 

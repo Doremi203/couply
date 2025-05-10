@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-import useFetchUsers from '../../../../entities/user/hooks/useFetchUsers';
-import { LikesSection, useLikesAndMatches, useMatches } from '../../../../features/matches';
+import { LikesSection, useLikesAndMatches } from '../../../../features/matches';
 import { NavBar } from '../../../../shared/components/NavBar';
 import TabsSection from '../../../../shared/components/TabsSection';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -72,7 +71,7 @@ const matchesUsers = [
 ];
 
 export const LikesPage = () => {
-  const [activeTab, setActiveTab] = useState<'likes' | 'matches'>('likes');
+  const [activeTab, setActiveTab] = useState<'лайки' | 'мэтчи'>('лайки');
 
   const {
     //   matches,
@@ -80,7 +79,7 @@ export const LikesPage = () => {
     matchedProfile,
     showChatMessage,
     handleLike,
-    handleSendMessage,
+    // handleSendMessage,
     handleKeepSwiping,
     handleSocialClick,
     //   incomingMatches,
@@ -90,15 +89,15 @@ export const LikesPage = () => {
     useProfileView();
 
   // Handle tab change - memoize to prevent unnecessary re-renders
-  const handleTabChange = useCallback((tab: 'likes' | 'matches') => {
+  const handleTabChange = useCallback((tab: 'лайки' | 'мэтчи') => {
     setActiveTab(tab);
   }, []);
 
   // Handle send message (switch to matches tab) - memoize to prevent unnecessary re-renders
-  const handleSendMessageAndSwitchTab = useCallback(() => {
-    handleSendMessage();
-    setActiveTab('matches');
-  }, [handleSendMessage]);
+  // const handleSendMessageAndSwitchTab = useCallback(() => {
+  //   handleSendMessage();
+  //   setActiveTab('matches');
+  // }, [handleSendMessage]);
 
   // Effect to clean up when component unmounts - use a ref to prevent dependency on selectedProfile
   const firstRender = useRef(true);
@@ -120,20 +119,20 @@ export const LikesPage = () => {
 
   return (
     <div className={styles.container} id="likes-page-container">
-      <div className={styles.header}>likes & matches</div>
+      <div className={styles.header}>лайки & мэтчи</div>
 
       <TabsSection
-        tabs={['likes', 'matches'] as const}
+        tabs={['лайки', 'мэтчи'] as const}
         activeTab={activeTab}
         onTabChange={handleTabChange}
       />
 
-      {activeTab === 'likes' && (
+      {activeTab === 'лайки' && (
         // @ts-ignore
         <LikesSection likes={likes} onProfileClick={handleProfileClick} onLike={handleLike} />
       )}
 
-      {activeTab === 'matches' && (
+      {activeTab === 'мэтчи' && (
         <MatchesSection
           matches={matchesUsers}
           onMatchClick={handleMatchClick}

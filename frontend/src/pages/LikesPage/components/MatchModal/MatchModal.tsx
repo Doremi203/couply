@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 
-import { CustomButton } from '../../../../shared/components/CustomButton';
-
 import styles from './matchModal.module.css';
 
 interface MatchModalProps {
@@ -13,7 +11,7 @@ interface MatchModalProps {
 
 export const MatchModal: React.FC<MatchModalProps> = ({
   userImage,
-  matchImage,
+  // matchImage,
   matchName,
   onKeepSwiping,
 }) => {

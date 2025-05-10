@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { getUserId, setUserId } from './entities/user/model/userSlice';
 import { AuthPage } from './pages/AuthPage';
 import { EnterInfoPage } from './pages/EnterInfoPage';
+import { EnterPhonePage } from './pages/EnterPhonePage';
 import { HomePage } from './pages/HomePage';
 import { LikesPage } from './pages/LikesPage';
 import LoginPage from './pages/LoginPage';
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: 'registration',
     element: <RegistrationPage />,
+  },
+  {
+    path: 'enterPhone',
+    element: <EnterPhonePage />,
   },
   {
     path: 'enterInfo',

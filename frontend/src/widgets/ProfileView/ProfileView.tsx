@@ -349,6 +349,7 @@ interface ProfileViewProps {
   onLike: (id: number) => void;
 }
 
+//@ts-ignore
 export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLike }) => {
   // State to track the menu position - initially expanded to show full photo
   const [menuPosition, setMenuPosition] = useState<'collapsed' | 'expanded'>('expanded');

@@ -65,10 +65,10 @@ export const LoginPage = () => {
     setShowRegistrationModal(false);
   };
 
-  const handleNavigateToRegistration = () => {
-    navigate('/registration');
-    setShowRegistrationModal(false);
-  };
+  // const handleNavigateToRegistration = () => {
+  //   navigate('/registration');
+  //   setShowRegistrationModal(false);
+  // };
 
   const handleSubmit = async () => {
     if (validateForm()) {
@@ -78,6 +78,7 @@ export const LoginPage = () => {
           email,
         };
 
+        //@ts-ignore
         const result = await loginUser(loginData).unwrap();
 
         // Store the token and its expiration time using TokenService

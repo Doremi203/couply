@@ -1,0 +1,79 @@
+.container {
+  padding: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 20px !important;
+  color: var(--primary-color, #3f51b5);
+  font-weight: 600 !important;
+}
+
+.instructionsContainer {
+  margin-bottom: 24px;
+}
+
+.subtitle {
+  font-weight: 500 !important;
+  margin-bottom: 12px !important;
+  color: var(--secondary-text-color, rgba(0, 0, 0, 0.7));
+}
+
+.instructionsList {
+  padding-left: 24px;
+  margin-bottom: 20px;
+}
+
+.instructionsList li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+  color: var(--secondary-text-color, rgba(0, 0, 0, 0.7));
+}
+
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.instructionImage {
+  max-width: 100%;
+  height: auto;
+  max-height: 300px;
+  object-fit: contain;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.button {
+  min-width: 120px;
+  height: 44px;
+  border-radius: 22px !important;
+  text-transform: none !important;
+  font-weight: 500 !important;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .instructionsList li {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .subtitle {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .imageContainer {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}

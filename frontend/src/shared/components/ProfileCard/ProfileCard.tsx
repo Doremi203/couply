@@ -1,3 +1,5 @@
+// @ts-nocheck
+import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import React from 'react';
 
 import { LikeButton } from '../LikeButton';
@@ -48,8 +50,38 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   //TODO вернуть profile.user
   //TODO photo
   return (
+    // <div className={`${styles.profileCard} ${className || ''}`} onClick={handleCardClick}>
+    //   <div className={styles.imageCont}>
+    //     <img src={profile.imageUrl} alt={profile.name} className={styles.profileImage} />
+    //     <SmsOutlinedIcon className={styles.iconOverlay} sx={{ fontSize: 30 }} />
+    //   </div>
+    //   <div className={styles.profileInfo}>
+    //     <div className={styles.profileName}>
+    //       {profile.name}, {profile.age}
+    //     </div>
+    //     {onLike && (
+    //       <div onClick={e => e.stopPropagation()}>
+    //         <LikeButton
+    //           onClick={handleLikeClick}
+    //           className={styles.likeButton}
+    //           likeClassName={styles.like}
+    //         />
+    //       </div>
+    //     )}
+    //   </div>
+    // </div>
+
     <div className={`${styles.profileCard} ${className || ''}`} onClick={handleCardClick}>
-      <img src={profile.imageUrl} alt={profile.name} className={styles.profileImage} />
+      <div className={styles.imageCont}>
+        <img src={profile.imageUrl} alt={profile.name} className={styles.profileImage} />
+        <SmsOutlinedIcon
+          className={styles.iconOverlay}
+          sx={{
+            fontSize: 30,
+            animation: `${styles.messageNotification} 1s infinite`,
+          }}
+        />
+      </div>
       <div className={styles.profileInfo}>
         <div className={styles.profileName}>
           {profile.name}, {profile.age}

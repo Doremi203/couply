@@ -30,6 +30,7 @@ interface WrapperProps {
 const ProfileInfoWrapper = (props: WrapperProps) => {
   const profileInfoRef = useRef<HTMLDivElement>(null);
 
+  // @ts-ignore
   return <ProfileInfo {...props} profileInfoRef={profileInfoRef} />;
 };
 

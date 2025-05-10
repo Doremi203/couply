@@ -1,11 +1,13 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { Gender } from '../../../../entities/user/api/constants';
 import { useCreateUserMutation } from '../../../../entities/user/api/userApi';
 import { setUserId } from '../../../../entities/user/model/userSlice';
+import { PhotoGalleryEdit } from '../../../../features/photoGallery/components/PhotoGalleryEdit';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
@@ -17,6 +19,7 @@ import {
   sendSubscriptionToServer,
 } from '../../../../shared/lib/services/PushNotificationService';
 import getAge from '../../helpers/getAge';
+import { GeoLocationRequest } from '../GeoLocationRequest';
 
 import styles from './enterInfo.module.css';
 
@@ -29,6 +32,7 @@ export const EnterInfoPage = () => {
 
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
+  const [height, setHeight] = useState('');
   const [userGender, setUserGender] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,16 +40,51 @@ export const EnterInfoPage = () => {
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
   const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
 
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+
+  // Handler for when location is received from GeoLocationRequest
+  const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
+    setCoords(coordinates);
+  };
+
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
       try {
+        // Calculate age and ensure it's a number
+        const calculatedAge = getAge(birthDate);
+        const ageValue = typeof calculatedAge === 'number' ? calculatedAge : 0;
+
+        // Convert string gender to Gender enum
+        let genderEnum: Gender;
+        switch (userGender) {
+          case 'male':
+            genderEnum = Gender.male;
+            break;
+          case 'female':
+            genderEnum = Gender.female;
+            break;
+          default:
+            genderEnum = Gender.unspecified;
+        }
+
+        // Convert coordinates to location string if available
+        const locationString = coords ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}` : '';
+
+        // Create user data object according to UserRequest interface
         const userData = {
           name,
-          age: getAge(birthDate),
-          gender: userGender,
-          birthDate,
-          photos: [{ url: profilePhoto }], //TODO
+          age: ageValue,
+          gender: genderEnum,
+          ...(locationString ? { location: locationString } : {}),
+          // Store profile photo in localStorage instead of sending it directly
+          // since the API expects photos to be null
+          photos: null,
         };
+
+        // Save photo URL to localStorage for later use
+        if (profilePhoto) {
+          localStorage.setItem('profilePhotoUrl', profilePhoto);
+        }
 
         // TODO
         if (profilePhoto) {
@@ -160,10 +199,18 @@ export const EnterInfoPage = () => {
     switch (currentStep) {
       case 0:
         return name.trim() !== '';
-      case 1:
-        return birthDate !== '' && getAge(birthDate) >= 18;
+      case 1: {
+        // Ensure age is a number and >= 18
+        const calculatedAge = getAge(birthDate);
+        return birthDate !== '' && typeof calculatedAge === 'number' && calculatedAge >= 18;
+      }
       case 2:
-        return userGender !== '' && profilePhoto !== null;
+        // return userGender !== '' && profilePhoto !== null;
+        return true;
+      case 3:
+        return true;
+      case 4:
+        return true;
       default:
         return false;
     }
@@ -190,9 +237,11 @@ export const EnterInfoPage = () => {
         className={styles.input}
       />
 
-      {birthDate && getAge(birthDate) < 18 && (
-        <div className={styles.error}>Для регистрации необходимо быть старше 18 лет</div>
-      )}
+      {birthDate &&
+        (() => {
+          const age = getAge(birthDate);
+          return typeof age === 'number' && age < 18;
+        })() && <div className={styles.error}>Для регистрации необходимо быть старше 18 лет</div>}
       <div>
         <h2 className={styles.genderLabel}>Ваш пол:</h2>
         <ToggleButtons
@@ -205,6 +254,21 @@ export const EnterInfoPage = () => {
           className={styles.toggleButtons}
         />
       </div>
+      <h2 className={styles.genderLabel}>Ваш рост</h2>
+      <CustomInput
+        placeholder="180 см"
+        type="number"
+        value={height}
+        onChange={e => setHeight(e.target.value)}
+        className={styles.input}
+      />
+
+      <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+      {coords && (
+        <p className={styles.coordsDisplay}>
+          Широта: {coords.lat.toFixed(4)}, Долгота: {coords.lng.toFixed(4)}
+        </p>
+      )}
     </div>,
     <div key="datingSettingsSection">
       <h2>Загрузите ваше фото</h2>
@@ -224,6 +288,29 @@ export const EnterInfoPage = () => {
               <span>Нажмите, чтобы выбрать фото</span>
             </div>
           )}
+        </div>
+      </div>
+    </div>,
+    <div key="datingSettingsSection">
+      <h2>Добавьте фото</h2>
+      <div>
+        <PhotoGalleryEdit
+          //@ts-ignore
+          photos={[profilePhoto]}
+          //onPhotoRemove={onPhotoRemove}
+          //@ts-ignore
+          onAddPhotoClick={() => handleCameraClick(false)}
+        />
+      </div>
+    </div>,
+    <div key="datingSettingsSection">
+      <h2>Включите геопозицию</h2>
+      <div>
+        <div>
+          <div className={styles.geoText}>
+            Чтобы мы подобрали вам людей не только близких по духу, но и по расположению
+          </div>
+          <GeoLocationRequest onLocationReceived={handleLocationReceived} />
         </div>
       </div>
     </div>,
