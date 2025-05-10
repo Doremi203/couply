@@ -13,28 +13,28 @@ import (
 )
 
 type User struct {
-	ID         uuid.UUID          `db:"id"`
-	Name       string             `db:"name"`
-	Age        int32              `db:"age"`
-	Gender     Gender             `db:"gender"`
+	ID        uuid.UUID          `db:"id"`
+	Name      string             `db:"name"`
+	Age       int32              `db:"age"`
+	Gender    Gender             `db:"gender"`
 	Latitude   float64            `db:"latitude"`
 	Longitude  float64            `db:"longitude"`
-	BIO        string             `db:"bio"`
-	Goal       common.Goal        `db:"goal"`
-	Interest   *interest.Interest `db:"interest"`
-	Zodiac     common.Zodiac      `db:"zodiac"`
-	Height     int32              `db:"height"`
-	Education  common.Education   `db:"education"`
-	Children   common.Children    `db:"children"`
-	Alcohol    common.Alcohol     `db:"alcohol"`
-	Smoking    common.Smoking     `db:"smoking"`
+	BIO       string             `db:"bio"`
+	Goal      common.Goal        `db:"goal"`
+	Interest  *interest.Interest `db:"interest"`
+	Zodiac    common.Zodiac      `db:"zodiac"`
+	Height    int32              `db:"height"`
+	Education common.Education   `db:"education"`
+	Children  common.Children    `db:"children"`
+	Alcohol   common.Alcohol     `db:"alcohol"`
+	Smoking   common.Smoking     `db:"smoking"`
 	IsHidden   bool               `db:"is_hidden"`
 	IsVerified bool               `db:"is_verified"`
 	IsPremium  bool               `db:"is_premium"`
 	IsBlocked  bool               `db:"is_blocked"`
-	Photos     []*Photo           `db:"photos"`
-	CreatedAt  time.Time          `db:"created_at"`
-	UpdatedAt  time.Time          `db:"updated_at"`
+	Photos    []Photo            `db:"photos"`
+	CreatedAt time.Time          `db:"created_at"`
+	UpdatedAt time.Time          `db:"updated_at"`
 }
 
 func (x *User) GetID() uuid.UUID {
@@ -170,7 +170,7 @@ func (x *User) GetIsBlocked() bool {
 	return false
 }
 
-func (x *User) GetPhotos() []*Photo {
+func (x *User) GetPhotos() []Photo {
 	if x != nil {
 		return x.Photos
 	}
@@ -294,7 +294,7 @@ func (b *UserBuilder) SetIsBlocked(isBlocked bool) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetPhotos(photos []*Photo) *UserBuilder {
+func (b *UserBuilder) SetPhotos(photos []Photo) *UserBuilder {
 	b.user.Photos = photos
 	return b
 }
@@ -315,28 +315,33 @@ func (b *UserBuilder) Build() *User {
 
 func UserToPB(user *User) *desc.User {
 	return &desc.User{
-		Id:         user.GetID().String(),
-		Name:       user.GetName(),
-		Age:        user.GetAge(),
-		Gender:     GenderToPB(user.GetGender()),
+		Id:        user.GetID().String(),
+		Name:      user.GetName(),
+		Age:       user.GetAge(),
+		Gender:    GenderToPB(user.GetGender()),
 		Latitude:   user.GetLatitude(),
 		Longitude:  user.GetLongitude(),
-		Bio:        user.GetBIO(),
-		Goal:       common.GoalToPB(user.GetGoal()),
-		Interest:   interest.InterestToPB(user.GetInterest()),
-		Zodiac:     common.ZodiacToPB(user.GetZodiac()),
-		Height:     user.GetHeight(),
-		Education:  common.EducationToPB(user.GetEducation()),
-		Children:   common.ChildrenToPB(user.GetChildren()),
-		Alcohol:    common.AlcoholToPB(user.GetAlcohol()),
-		Smoking:    common.SmokingToPB(user.GetSmoking()),
+		Bio:       user.GetBIO(),
+		Goal:      common.GoalToPB(user.GetGoal()),
+		Interest:  interest.InterestToPB(user.GetInterest()),
+		Zodiac:    common.ZodiacToPB(user.GetZodiac()),
+		Height:    user.GetHeight(),
+		Education: common.EducationToPB(user.GetEducation()),
+		Children:  common.ChildrenToPB(user.GetChildren()),
+		Alcohol:   common.AlcoholToPB(user.GetAlcohol()),
+		Smoking:   common.SmokingToPB(user.GetSmoking()),
 		IsHidden:   user.GetIsHidden(),
 		IsVerified: user.GetIsVerified(),
 		IsPremium:  user.GetIsPremium(),
 		IsBlocked:  user.GetIsBlocked(),
-		Photos:     PhotoSliceToPB(user.GetPhotos()),
-		CreatedAt:  timestamppb.New(user.GetCreatedAt()),
-		UpdatedAt:  timestamppb.New(user.GetUpdatedAt()),
+		Photos: slices.Map(user.GetPhotos(), func(from Photo) *desc.Photo {
+			return &desc.Photo{
+				OrderNumber: from.GetOrderNumber(),
+				Url:         from.DownloadURL,
+			}
+		}),
+		CreatedAt: timestamppb.New(user.GetCreatedAt()),
+		UpdatedAt: timestamppb.New(user.GetUpdatedAt()),
 	}
 }
 
@@ -348,40 +353,4 @@ func UsersToPB(users []*User) []*desc.User {
 		}
 	}
 	return pbUsers
-}
-
-func PBToUser(user *desc.User) *User {
-	return &User{
-		Name:       user.GetName(),
-		Age:        user.GetAge(),
-		Gender:     PBToGender(user.GetGender()),
-		Latitude:   user.GetLatitude(),
-		Longitude:  user.GetLongitude(),
-		BIO:        user.GetBio(),
-		Goal:       common.PBToGoal(user.GetGoal()),
-		Interest:   interest.PBToInterest(user.GetInterest()),
-		Zodiac:     common.PBToZodiac(user.GetZodiac()),
-		Height:     user.GetHeight(),
-		Education:  common.PBToEducation(user.GetEducation()),
-		Children:   common.PBToChildren(user.GetChildren()),
-		Alcohol:    common.PBToAlcohol(user.GetAlcohol()),
-		Smoking:    common.PBToSmoking(user.GetSmoking()),
-		IsHidden:   user.GetIsHidden(),
-		IsVerified: user.GetIsVerified(),
-		IsPremium:  user.GetIsPremium(),
-		IsBlocked:  user.GetIsBlocked(),
-		Photos:     PBToPhotoSlice(user.GetPhotos()),
-		CreatedAt:  user.GetCreatedAt().AsTime(),
-		UpdatedAt:  user.GetUpdatedAt().AsTime(),
-	}
-}
-
-func PBToUsers(users []*desc.User) []*User {
-	domainUsers := make([]*User, 0, len(users))
-	for _, u := range users {
-		if u != nil {
-			domainUsers = append(domainUsers, PBToUser(u))
-		}
-	}
-	return domainUsers
 }

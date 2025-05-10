@@ -199,7 +199,7 @@ message CreateUserV1Request {
   bool is_verified = 16;
   bool is_premium = 17;
   bool is_blocked = 18;
-  repeated Photo photos = 19;
+  repeated PhotoUploadRequest photo_upload_requests = 19;
 }
 
 message CreateUserV1Response {
@@ -251,7 +251,7 @@ message UpdateUserV1Request {
   bool is_verified = 16;
   bool is_premium = 17;
   bool is_blocked = 18;
-  repeated Photo photos = 19;
+  repeated PhotoUploadRequest photo_upload_requests = 19;
 }
 
 message UpdateUserV1Response {
@@ -279,6 +279,12 @@ message GetUsersV1Response {
   repeated User users = 1;
 }
 
+message ConfirmPhotosUploadV1Request {
+  repeated int32 order_numbers = 1;
+}
+
+message ConfirmPhotosUploadV1Response {}
+
 message User {
   string id = 1;
   string name = 2;
@@ -304,16 +310,21 @@ message User {
   google.protobuf.Timestamp updated_at = 22;
 }
 
+message PhotoUploadRequest {
+  int32 order_number = 1;
+  string mime_type = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message PhotoUploadResponse {
+  int32 order_number = 1;
+  string upload_url = 2;
+}
+
 message Photo {
   int32 order_number = 1;
-  string url = 2 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  string mime_type = 3 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  google.protobuf.Timestamp uploaded_at = 4;
-  google.protobuf.Timestamp updated_at = 5;
+  optional string url = 2;
 }
 
 enum Gender {

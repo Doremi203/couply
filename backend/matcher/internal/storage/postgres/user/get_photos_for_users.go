@@ -9,13 +9,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *PgStorageUser) GetPhotosForUsers(ctx context.Context, userIDs []uuid.UUID) (map[uuid.UUID][]*user.Photo, error) {
+func (s *PgStorageUser) GetPhotosForUsers(ctx context.Context, userIDs []uuid.UUID) (map[uuid.UUID][]user.Photo, error) {
 	if len(userIDs) == 0 {
-		return map[uuid.UUID][]*user.Photo{}, nil
+		return map[uuid.UUID][]user.Photo{}, nil
 	}
 
 	query, args, err := sq.Select(
-		"user_id", "order_number", "url", "mime_type", "uploaded_at", "updated_at",
+		"user_id", "order_number", "object_key", "mime_type", "uploaded_at",
 	).
 		From("photos").
 		Where(sq.Eq{"user_id": userIDs}).
@@ -31,7 +31,7 @@ func (s *PgStorageUser) GetPhotosForUsers(ctx context.Context, userIDs []uuid.UU
 	}
 	defer rows.Close()
 
-	photosMap := make(map[uuid.UUID][]*user.Photo)
+	photosMap := make(map[uuid.UUID][]user.Photo)
 	for rows.Next() {
 		var (
 			userID uuid.UUID
@@ -40,15 +40,14 @@ func (s *PgStorageUser) GetPhotosForUsers(ctx context.Context, userIDs []uuid.UU
 		err := rows.Scan(
 			&userID,
 			&p.OrderNumber,
-			&p.URL,
+			&p.ObjectKey,
 			&p.MimeType,
 			&p.UploadedAt,
-			&p.UpdatedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("failed to scan photo row: %w", err)
 		}
-		photosMap[userID] = append(photosMap[userID], &p)
+		photosMap[userID] = append(photosMap[userID], p)
 	}
 
 	if err := rows.Err(); err != nil {
