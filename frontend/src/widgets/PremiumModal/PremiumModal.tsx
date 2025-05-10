@@ -1,7 +1,7 @@
 import BoltIcon from '@mui/icons-material/Bolt';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
 import styles from './premiumModal.module.css';
@@ -29,6 +29,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose }) =
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Only close if clicking directly on the overlay (not its children)
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -36,7 +37,8 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose }) =
 
   if (!isOpen) return null;
 
-  return (
+  // Use createPortal to render the modal directly in the document body
+  return createPortal(
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalContent}>
         <button className={styles.closeButton} onClick={onClose}>
@@ -80,7 +82,8 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose }) =
           Смотреть все планы
         </button>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };
 

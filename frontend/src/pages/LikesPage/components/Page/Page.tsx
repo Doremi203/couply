@@ -119,7 +119,7 @@ export const LikesPage = () => {
 
   return (
     <div className={styles.container} id="likes-page-container">
-      <div className={styles.header}>лайки & мэтчи</div>
+      <div className={styles.header}>Лайки и мэтчи</div>
 
       <TabsSection
         tabs={['лайки', 'мэтчи'] as const}

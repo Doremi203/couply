@@ -14,7 +14,6 @@ interface ProfileMenuProps {
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   onEditProfileClick,
-  onMyStatsClick,
   onSettingsClick,
   onInviteFriendClick,
   onHelpClick,

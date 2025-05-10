@@ -74,11 +74,8 @@
 
 // export default NotificationSettings;
 
-import ArticleIcon from '@mui/icons-material/Article';
 import BedtimeIcon from '@mui/icons-material/Bedtime';
-import EmailIcon from '@mui/icons-material/Email';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import SmsIcon from '@mui/icons-material/Sms';
 import { Switch } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
@@ -114,10 +111,12 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         id: 'theme',
         label: 'Темная тема',
         icon: <BedtimeIcon />,
+        //@ts-ignore
         enabled: theme.isDark,
       },
     ]);
-  }, [theme.isDark]);
+    // ts-ignore
+  }, []);
 
   const handleToggle = (id: string) => {
     if (id === 'theme') {
@@ -142,6 +141,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
             <span className={styles.label}>{notification.label}</span>
           </div>
           <Switch
+            //@ts-ignore
             checked={notification.id === 'theme' ? theme.isDark : notification.enabled}
             onChange={() => handleToggle(notification.id)}
             color="primary"

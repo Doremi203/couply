@@ -13,7 +13,7 @@ export const AuthPage = () => {
 
   return (
     <div className={styles.page}>
-      <img src="logo.png" width="200px" height="150px" alt="Logo" className={styles.logo} />
+      <img src="pv3.jpg" width="200px" height="150px" alt="Logo" className={styles.logo} />
       <span className={styles.text}>Найди того, кто будет похож на тебя, как капля воды.</span>
 
       <div className={styles.buttons}>

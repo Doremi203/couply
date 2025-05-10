@@ -41,6 +41,7 @@ const mockProfileData: ProfileData = {
 };
 
 export const Verified: Story = {
+  // @ts-ignore
   args: {
     profileData: mockProfileData,
     isVerified: true,
@@ -49,6 +50,7 @@ export const Verified: Story = {
 };
 
 export const Unverified: Story = {
+  // @ts-ignore
   args: {
     profileData: mockProfileData,
     isVerified: false,

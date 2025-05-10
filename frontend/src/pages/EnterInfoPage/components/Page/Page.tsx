@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { Gender } from '../../../../entities/user/api/constants';
 import { useCreateUserMutation } from '../../../../entities/user/api/userApi';
 import { setUserId } from '../../../../entities/user/model/userSlice';
-import { PhotoGalleryEdit } from '../../../../features/photoGallery/components/PhotoGalleryEdit';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';

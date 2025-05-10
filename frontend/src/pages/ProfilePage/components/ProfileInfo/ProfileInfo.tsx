@@ -1,7 +1,6 @@
 import VerifiedIcon from '@mui/icons-material/Verified';
 import React from 'react';
 
-import { CustomButton } from '../../../../shared/components/CustomButton';
 import { ProfileData } from '../../types';
 
 import styles from './profileInfo.module.css';
@@ -19,7 +18,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   onVerificationRequest,
   onPreviewClick,
 }) => {
-  const isPro = true;
+  const isPro = false;
   return (
     <div className={styles.profileInfo}>
       <div className={styles.profileImageContainer} onClick={onPreviewClick}>

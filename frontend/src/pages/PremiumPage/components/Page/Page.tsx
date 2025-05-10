@@ -1,6 +1,5 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import BoltIcon from '@mui/icons-material/Bolt';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
