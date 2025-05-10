@@ -169,7 +169,10 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 		Hidden:    req.GetHidden(),
 		Verified:  req.GetVerified(),
 		PhotoUploadRequests: slices.Map(req.GetPhotoUploadRequests(), func(from *desc.PhotoUploadRequest) user.PhotoUploadRequest {
-			return user.PhotoUploadRequest{}
+			return user.PhotoUploadRequest{
+				OrderNumber: from.GetOrderNumber(),
+				MimeType:    from.GetMimeType(),
+			}
 		}),
 	}
 }
