@@ -74,11 +74,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download migrate
-        run: |
-          curl -L https://github.com/golang-migrate/migrate/releases/download/v4.18.2/migrate.linux-amd64.tar.gz -o migrate.tar.gz
-          tar -zxvf migrate.tar.gz
-          chmod +x migrate
+      - name: Download goose
+        run: curl -fsSL https://raw.githubusercontent.com/pressly/goose/master/install.sh | sh
 
       - name: Setup yc
         run: |
@@ -95,7 +92,9 @@ jobs:
           
           mkdir -p ~/.postgresql && wget "https://storage.yandexcloud.net/cloud-certs/CA.pem" --output-document ~/.postgresql/root.crt && chmod 0600 ~/.postgresql/root.crt
           
-          ./migrate -source file://migrations -database "postgres://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/auth?sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/home/runner/.postgresql/root.crt" up
+          export GOOSE_DRIVER=postgres
+          export GOOSE_DBSTRING="postgres://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/auth?sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/home/runner/.postgresql/root.crt"
+          goose -v -dir "migrations" up
 
   build-testing:
     needs: codegen
