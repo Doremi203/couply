@@ -73,8 +73,10 @@ func scanUser(row pgx.Row) (*user.User, float64, error) {
 		&u.Children,
 		&u.Alcohol,
 		&u.Smoking,
-		&u.Hidden,
-		&u.Verified,
+		&u.IsHidden,
+		&u.IsVerified,
+		&u.IsPremium,
+		&u.IsBlocked,
 		&u.CreatedAt,
 		&u.UpdatedAt,
 		&distance,
@@ -107,16 +109,17 @@ func buildSearchQuery(
 func baseQuery() sq.SelectBuilder {
 	return sq.Select(
 		"u.id", "u.name", "u.age", "u.gender", "u.location",
-		"u.bio", "u.goal", "u.odiac", "u.height", "u.education",
-		"u.children", "u.alcohol", "u.smoking", "u.hidden",
-		"u.verified", "u.created_at", "u.updated_at",
+		"u.bio", "u.goal", "u.zodiac", "u.height", "u.education",
+		"u.children", "u.alcohol", "u.smoking", "u.is_hidden",
+		"u.is_verified", "u.is_premium", "is_blocked", "u.created_at", "u.updated_at",
 	).From("users u").
 		PlaceholderFormat(sq.Dollar)
 }
 
 func baseConditions(filter *search.Filter) sq.Sqlizer {
 	return sq.And{
-		sq.Eq{"hidden": false},
+		sq.Eq{"is_hidden": false},
+		sq.Eq{"is_blocked": false},
 		sq.NotEq{"id": filter.GetUserID()},
 		sq.Expr("NOT EXISTS (SELECT 1 FROM likes WHERE sender_id = ? AND receiver_id = u.id)", filter.GetUserID()),
 	}

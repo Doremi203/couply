@@ -15,8 +15,8 @@ import (
 func (s *PgStorageUser) GetUser(ctx context.Context, userID uuid.UUID) (*user.User, error) {
 	query, args, err := sq.Select(
 		"id", "name", "age", "gender", "latitude", "longitude", "bio", "goal", "zodiac",
-		"height", "education", "children", "alcohol", "smoking", "hidden",
-		"verified", "created_at", "updated_at",
+		"height", "education", "children", "alcohol", "smoking", "is_hidden",
+		"is_verified", "is_premium", "is_blocked", "created_at", "updated_at",
 	).
 		From("users").
 		Where(sq.Eq{"id": userID}).
@@ -42,8 +42,10 @@ func (s *PgStorageUser) GetUser(ctx context.Context, userID uuid.UUID) (*user.Us
 		&u.Children,
 		&u.Alcohol,
 		&u.Smoking,
-		&u.Hidden,
-		&u.Verified,
+		&u.IsHidden,
+		&u.IsVerified,
+		&u.IsPremium,
+		&u.IsBlocked,
 		&u.CreatedAt,
 		&u.UpdatedAt,
 	)

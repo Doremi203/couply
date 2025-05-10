@@ -12,8 +12,8 @@ func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.Use
 	query, args, err := sq.Insert("users").
 		Columns(
 			"id", "name", "age", "gender", "latitude", "longitude", "bio", "goal", "zodiac",
-			"height", "education", "children", "alcohol", "smoking", "hidden",
-			"verified", "created_at", "updated_at",
+			"height", "education", "children", "alcohol", "smoking", "is_hidden",
+			"is_verified", "is_premium", "is_blocked", "created_at", "updated_at",
 		).
 		Values(
 			user.GetID(),
@@ -30,8 +30,10 @@ func (s *PgStorageUser) AddUser(ctx context.Context, user *user.User) (*user.Use
 			user.GetChildren(),
 			user.GetAlcohol(),
 			user.GetSmoking(),
-			user.GetHidden(),
-			user.GetVerified(),
+			user.GetIsHidden(),
+			user.GetIsVerified(),
+			user.GetIsPremium(),
+			user.GetIsBlocked(),
 			user.GetCreatedAt(),
 			user.GetUpdatedAt(),
 		).

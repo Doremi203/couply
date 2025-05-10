@@ -195,13 +195,11 @@ message CreateUserV1Request {
   common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  bool hidden = 15 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  bool verified = 16 [
-    (google.api.field_behavior) = REQUIRED
-  ];
-  repeated Photo photos = 17;
+  bool is_hidden = 15;
+  bool is_verified = 16;
+  bool is_premium = 17;
+  bool is_blocked = 18;
+  repeated Photo photos = 19;
 }
 
 message CreateUserV1Response {
@@ -249,9 +247,11 @@ message UpdateUserV1Request {
   common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  bool hidden = 15;
-  bool verified = 16;
-  repeated Photo photos = 17;
+  bool is_hidden = 15;
+  bool is_verified = 16;
+  bool is_premium = 17;
+  bool is_blocked = 18;
+  repeated Photo photos = 19;
 }
 
 message UpdateUserV1Response {
@@ -295,11 +295,13 @@ message User {
   common.v1.Children children = 13;
   common.v1.Alcohol alcohol = 14;
   common.v1.Smoking smoking = 15;
-  bool hidden = 16;
-  bool verified = 17;
-  repeated Photo photos = 18;
-  google.protobuf.Timestamp created_at = 19;
-  google.protobuf.Timestamp updated_at = 20;
+  bool is_hidden = 16;
+  bool is_verified = 17;
+  bool is_premium = 18;
+  bool is_blocked = 19;
+  repeated Photo photos = 20;
+  google.protobuf.Timestamp created_at = 21;
+  google.protobuf.Timestamp updated_at = 22;
 }
 
 message Photo {

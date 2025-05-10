@@ -23,8 +23,10 @@ func (s *PgStorageUser) UpdateUser(ctx context.Context, user *user.User) (*user.
 		Set("children", user.GetChildren()).
 		Set("alcohol", user.GetAlcohol()).
 		Set("smoking", user.GetSmoking()).
-		Set("hidden", user.GetHidden()).
-		Set("verified", user.GetVerified()).
+		Set("is_hidden", user.GetIsHidden()).
+		Set("is_verified", user.GetIsVerified()).
+		Set("is_premium", user.GetIsPremium()).
+		Set("is_blocked", user.GetIsBlocked()).
 		Set("updated_at", user.GetUpdatedAt()).
 		Where(sq.Eq{"id": user.GetID()}).
 		PlaceholderFormat(sq.Dollar).

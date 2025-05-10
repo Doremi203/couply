@@ -13,26 +13,28 @@ import (
 )
 
 type User struct {
-	ID        uuid.UUID          `db:"id"`
-	Name      string             `db:"name"`
-	Age       int32              `db:"age"`
-	Gender    Gender             `db:"gender"`
-	Latitude  float64            `db:"latitude"`
-	Longitude float64            `db:"longitude"`
-	BIO       string             `db:"bio"`
-	Goal      common.Goal        `db:"goal"`
-	Interest  *interest.Interest `db:"interest"`
-	Zodiac    common.Zodiac      `db:"zodiac"`
-	Height    int32              `db:"height"`
-	Education common.Education   `db:"education"`
-	Children  common.Children    `db:"children"`
-	Alcohol   common.Alcohol     `db:"alcohol"`
-	Smoking   common.Smoking     `db:"smoking"`
-	Hidden    bool               `db:"hidden"`
-	Verified  bool               `db:"verified"`
-	Photos    []*Photo           `db:"photos"`
-	CreatedAt time.Time          `db:"created_at"`
-	UpdatedAt time.Time          `db:"updated_at"`
+	ID         uuid.UUID          `db:"id"`
+	Name       string             `db:"name"`
+	Age        int32              `db:"age"`
+	Gender     Gender             `db:"gender"`
+	Latitude   float64            `db:"latitude"`
+	Longitude  float64            `db:"longitude"`
+	BIO        string             `db:"bio"`
+	Goal       common.Goal        `db:"goal"`
+	Interest   *interest.Interest `db:"interest"`
+	Zodiac     common.Zodiac      `db:"zodiac"`
+	Height     int32              `db:"height"`
+	Education  common.Education   `db:"education"`
+	Children   common.Children    `db:"children"`
+	Alcohol    common.Alcohol     `db:"alcohol"`
+	Smoking    common.Smoking     `db:"smoking"`
+	IsHidden   bool               `db:"is_hidden"`
+	IsVerified bool               `db:"is_verified"`
+	IsPremium  bool               `db:"is_premium"`
+	IsBlocked  bool               `db:"is_blocked"`
+	Photos     []*Photo           `db:"photos"`
+	CreatedAt  time.Time          `db:"created_at"`
+	UpdatedAt  time.Time          `db:"updated_at"`
 }
 
 func (x *User) GetID() uuid.UUID {
@@ -140,16 +142,30 @@ func (x *User) GetSmoking() common.Smoking {
 	return 0
 }
 
-func (x *User) GetHidden() bool {
+func (x *User) GetIsHidden() bool {
 	if x != nil {
-		return x.Hidden
+		return x.IsHidden
 	}
 	return false
 }
 
-func (x *User) GetVerified() bool {
+func (x *User) GetIsVerified() bool {
 	if x != nil {
-		return x.Verified
+		return x.IsVerified
+	}
+	return false
+}
+
+func (x *User) GetIsPremium() bool {
+	if x != nil {
+		return x.IsPremium
+	}
+	return false
+}
+
+func (x *User) GetIsBlocked() bool {
+	if x != nil {
+		return x.IsBlocked
 	}
 	return false
 }
@@ -258,13 +274,23 @@ func (b *UserBuilder) SetSmoking(smoking common.Smoking) *UserBuilder {
 	return b
 }
 
-func (b *UserBuilder) SetHidden(hidden bool) *UserBuilder {
-	b.user.Hidden = hidden
+func (b *UserBuilder) SetIsHidden(isHidden bool) *UserBuilder {
+	b.user.IsHidden = isHidden
 	return b
 }
 
-func (b *UserBuilder) SetVerified(verified bool) *UserBuilder {
-	b.user.Verified = verified
+func (b *UserBuilder) SetIsVerified(isVerified bool) *UserBuilder {
+	b.user.IsVerified = isVerified
+	return b
+}
+
+func (b *UserBuilder) SetIsPremium(isPremium bool) *UserBuilder {
+	b.user.IsPremium = isPremium
+	return b
+}
+
+func (b *UserBuilder) SetIsBlocked(isBlocked bool) *UserBuilder {
+	b.user.IsBlocked = isBlocked
 	return b
 }
 
@@ -289,26 +315,28 @@ func (b *UserBuilder) Build() *User {
 
 func UserToPB(user *User) *desc.User {
 	return &desc.User{
-		Id:        user.GetID().String(),
-		Name:      user.GetName(),
-		Age:       user.GetAge(),
-		Gender:    GenderToPB(user.GetGender()),
-		Latitude:  user.GetLatitude(),
-		Longitude: user.GetLongitude(),
-		Bio:       user.GetBIO(),
-		Goal:      common.GoalToPB(user.GetGoal()),
-		Interest:  interest.InterestToPB(user.GetInterest()),
-		Zodiac:    common.ZodiacToPB(user.GetZodiac()),
-		Height:    user.GetHeight(),
-		Education: common.EducationToPB(user.GetEducation()),
-		Children:  common.ChildrenToPB(user.GetChildren()),
-		Alcohol:   common.AlcoholToPB(user.GetAlcohol()),
-		Smoking:   common.SmokingToPB(user.GetSmoking()),
-		Hidden:    user.GetHidden(),
-		Verified:  user.GetVerified(),
-		Photos:    PhotoSliceToPB(user.GetPhotos()),
-		CreatedAt: timestamppb.New(user.GetCreatedAt()),
-		UpdatedAt: timestamppb.New(user.GetUpdatedAt()),
+		Id:         user.GetID().String(),
+		Name:       user.GetName(),
+		Age:        user.GetAge(),
+		Gender:     GenderToPB(user.GetGender()),
+		Latitude:   user.GetLatitude(),
+		Longitude:  user.GetLongitude(),
+		Bio:        user.GetBIO(),
+		Goal:       common.GoalToPB(user.GetGoal()),
+		Interest:   interest.InterestToPB(user.GetInterest()),
+		Zodiac:     common.ZodiacToPB(user.GetZodiac()),
+		Height:     user.GetHeight(),
+		Education:  common.EducationToPB(user.GetEducation()),
+		Children:   common.ChildrenToPB(user.GetChildren()),
+		Alcohol:    common.AlcoholToPB(user.GetAlcohol()),
+		Smoking:    common.SmokingToPB(user.GetSmoking()),
+		IsHidden:   user.GetIsHidden(),
+		IsVerified: user.GetIsVerified(),
+		IsPremium:  user.GetIsPremium(),
+		IsBlocked:  user.GetIsBlocked(),
+		Photos:     PhotoSliceToPB(user.GetPhotos()),
+		CreatedAt:  timestamppb.New(user.GetCreatedAt()),
+		UpdatedAt:  timestamppb.New(user.GetUpdatedAt()),
 	}
 }
 
@@ -324,25 +352,27 @@ func UsersToPB(users []*User) []*desc.User {
 
 func PBToUser(user *desc.User) *User {
 	return &User{
-		Name:      user.GetName(),
-		Age:       user.GetAge(),
-		Gender:    PBToGender(user.GetGender()),
-		Latitude:  user.GetLatitude(),
-		Longitude: user.GetLongitude(),
-		BIO:       user.GetBio(),
-		Goal:      common.PBToGoal(user.GetGoal()),
-		Interest:  interest.PBToInterest(user.GetInterest()),
-		Zodiac:    common.PBToZodiac(user.GetZodiac()),
-		Height:    user.GetHeight(),
-		Education: common.PBToEducation(user.GetEducation()),
-		Children:  common.PBToChildren(user.GetChildren()),
-		Alcohol:   common.PBToAlcohol(user.GetAlcohol()),
-		Smoking:   common.PBToSmoking(user.GetSmoking()),
-		Hidden:    user.GetHidden(),
-		Verified:  user.GetVerified(),
-		Photos:    PBToPhotoSlice(user.GetPhotos()),
-		CreatedAt: user.GetCreatedAt().AsTime(),
-		UpdatedAt: user.GetUpdatedAt().AsTime(),
+		Name:       user.GetName(),
+		Age:        user.GetAge(),
+		Gender:     PBToGender(user.GetGender()),
+		Latitude:   user.GetLatitude(),
+		Longitude:  user.GetLongitude(),
+		BIO:        user.GetBio(),
+		Goal:       common.PBToGoal(user.GetGoal()),
+		Interest:   interest.PBToInterest(user.GetInterest()),
+		Zodiac:     common.PBToZodiac(user.GetZodiac()),
+		Height:     user.GetHeight(),
+		Education:  common.PBToEducation(user.GetEducation()),
+		Children:   common.PBToChildren(user.GetChildren()),
+		Alcohol:    common.PBToAlcohol(user.GetAlcohol()),
+		Smoking:    common.PBToSmoking(user.GetSmoking()),
+		IsHidden:   user.GetIsHidden(),
+		IsVerified: user.GetIsVerified(),
+		IsPremium:  user.GetIsPremium(),
+		IsBlocked:  user.GetIsBlocked(),
+		Photos:     PBToPhotoSlice(user.GetPhotos()),
+		CreatedAt:  user.GetCreatedAt().AsTime(),
+		UpdatedAt:  user.GetUpdatedAt().AsTime(),
 	}
 }
 
