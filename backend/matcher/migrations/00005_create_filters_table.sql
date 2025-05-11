@@ -2,7 +2,7 @@
 -- +goose StatementBegin
 create table if not exists filters
 (
-    user_id         uuid,
+    user_id         uuid ,
     gender_priority int,
     min_age         int,
     max_age         int,
