@@ -116,12 +116,12 @@ func PBToInterest(pb *desc.Interest) *Interest {
 	}
 
 	return &Interest{
-		Sport:             PBToSportSlice(pb.Sport),
-		Hobby:             PBToHobbySlice(pb.Hobby),
-		Music:             PBToMusicSlice(pb.Music),
-		MoviesTV:          PBToMoviesTVSlice(pb.MoviesTv),
-		FoodDrink:         PBToFoodDrinkSlice(pb.FoodDrink),
-		PersonalityTraits: PBToPersonalityTraitsSlice(pb.PersonalityTraits),
-		Pets:              PBToPetsSlice(pb.Pets),
+		Sport:             PBToSportSlice(pb.GetSport()),
+		Hobby:             PBToHobbySlice(pb.GetHobby()),
+		Music:             PBToMusicSlice(pb.GetMusic()),
+		MoviesTV:          PBToMoviesTVSlice(pb.GetMoviesTv()),
+		FoodDrink:         PBToFoodDrinkSlice(pb.GetFoodDrink()),
+		PersonalityTraits: PBToPersonalityTraitsSlice(pb.GetPersonalityTraits()),
+		Pets:              PBToPetsSlice(pb.GetPets()),
 	}
 }
