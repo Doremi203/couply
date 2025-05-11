@@ -6,107 +6,103 @@ type Sport int
 
 const (
 	SportUnspecified Sport = iota
-	SportRunning
-	SportSwimming
-	SportYoga
-	SportBicycle
 	SportGym
-	SportSkiing
-	SportSnowboarding
+	SportRunning
+	SportYoga
+	SportSwimming
+	SportCycling
+	SportTennis
+	SportBasketball
+	SportHiking
 	SportDancing
 	SportMartialArts
-	SportSurfing
-	SportHiking
-	SportTennis
+	SportFootball
+	SportSkiing
 	SportClimbing
 )
 
-func PBToSport(sport desc.Sport) Sport {
-	switch sport {
+func PBToSport(s desc.Sport) Sport {
+	switch s {
 	case desc.Sport_SPORT_UNSPECIFIED:
 		return SportUnspecified
-	case desc.Sport_SPORT_RUNNING:
-		return SportRunning
-	case desc.Sport_SPORT_SWIMMING:
-		return SportSwimming
-	case desc.Sport_SPORT_YOGA:
-		return SportYoga
-	case desc.Sport_SPORT_BYCICLE:
-		return SportBicycle
 	case desc.Sport_SPORT_GYM:
 		return SportGym
-	case desc.Sport_SPORT_SKIING:
-		return SportSkiing
-	case desc.Sport_SPORT_SNOWBOARDING:
-		return SportSnowboarding
+	case desc.Sport_SPORT_RUNNING:
+		return SportRunning
+	case desc.Sport_SPORT_YOGA:
+		return SportYoga
+	case desc.Sport_SPORT_SWIMMING:
+		return SportSwimming
+	case desc.Sport_SPORT_CYCLING:
+		return SportCycling
+	case desc.Sport_SPORT_TENNIS:
+		return SportTennis
+	case desc.Sport_SPORT_BASKETBALL:
+		return SportBasketball
+	case desc.Sport_SPORT_HIKING:
+		return SportHiking
 	case desc.Sport_SPORT_DANCING:
 		return SportDancing
 	case desc.Sport_SPORT_MARTIAL_ARTS:
 		return SportMartialArts
-	case desc.Sport_SPORT_SURFING:
-		return SportSurfing
-	case desc.Sport_SPORT_HIKING:
-		return SportHiking
-	case desc.Sport_SPORT_TENNIS:
-		return SportTennis
+	case desc.Sport_SPORT_FOOTBALL:
+		return SportFootball
+	case desc.Sport_SPORT_SKIING:
+		return SportSkiing
 	case desc.Sport_SPORT_CLIMBING:
 		return SportClimbing
 	default:
-		return Sport(0)
+		return SportUnspecified
 	}
 }
 
-func SportToPB(sport Sport) desc.Sport {
-	switch sport {
+func SportToPB(s Sport) desc.Sport {
+	switch s {
 	case SportUnspecified:
 		return desc.Sport_SPORT_UNSPECIFIED
-	case SportRunning:
-		return desc.Sport_SPORT_RUNNING
-	case SportSwimming:
-		return desc.Sport_SPORT_SWIMMING
-	case SportYoga:
-		return desc.Sport_SPORT_YOGA
-	case SportBicycle:
-		return desc.Sport_SPORT_BYCICLE
 	case SportGym:
 		return desc.Sport_SPORT_GYM
-	case SportSkiing:
-		return desc.Sport_SPORT_SKIING
-	case SportSnowboarding:
-		return desc.Sport_SPORT_SNOWBOARDING
+	case SportRunning:
+		return desc.Sport_SPORT_RUNNING
+	case SportYoga:
+		return desc.Sport_SPORT_YOGA
+	case SportSwimming:
+		return desc.Sport_SPORT_SWIMMING
+	case SportCycling:
+		return desc.Sport_SPORT_CYCLING
+	case SportTennis:
+		return desc.Sport_SPORT_TENNIS
+	case SportBasketball:
+		return desc.Sport_SPORT_BASKETBALL
+	case SportHiking:
+		return desc.Sport_SPORT_HIKING
 	case SportDancing:
 		return desc.Sport_SPORT_DANCING
 	case SportMartialArts:
 		return desc.Sport_SPORT_MARTIAL_ARTS
-	case SportSurfing:
-		return desc.Sport_SPORT_SURFING
-	case SportHiking:
-		return desc.Sport_SPORT_HIKING
-	case SportTennis:
-		return desc.Sport_SPORT_TENNIS
+	case SportFootball:
+		return desc.Sport_SPORT_FOOTBALL
+	case SportSkiing:
+		return desc.Sport_SPORT_SKIING
 	case SportClimbing:
 		return desc.Sport_SPORT_CLIMBING
 	default:
-		return desc.Sport(0)
+		return desc.Sport_SPORT_UNSPECIFIED
 	}
 }
 
-func SportSliceToPB(sports []Sport) []desc.Sport {
-	sportsPB := make([]desc.Sport, 0, len(sports))
-
-	for _, sport := range sports {
-		sportsPB = append(sportsPB, SportToPB(sport))
+func SportSliceToPB(s []Sport) []desc.Sport {
+	pb := make([]desc.Sport, len(s))
+	for i, v := range s {
+		pb[i] = SportToPB(v)
 	}
-
-	return sportsPB
+	return pb
 }
 
-func PBToSportSlice(sports []desc.Sport) []Sport {
-	sportsDomain := make([]Sport, 0, len(sports))
-
-	for _, sport := range sports {
-		sportsDomain = append(sportsDomain, PBToSport(sport))
+func PBToSportSlice(pb []desc.Sport) []Sport {
+	s := make([]Sport, len(pb))
+	for i, v := range pb {
+		s[i] = PBToSport(v)
 	}
-
-	return sportsDomain
+	return s
 }

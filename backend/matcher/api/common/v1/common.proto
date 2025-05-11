@@ -10,113 +10,12 @@ import "google/protobuf/timestamp.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "validate/validate.proto";
 
-message Interest {
-  repeated Sport sport = 1 [
-    (validate.rules).repeated.items.enum.defined_only = true
-  ];
-  repeated SelfDevelopment self_development = 2 [
-    (validate.rules).repeated.items.enum.defined_only = true
-  ];
-  repeated Art art = 3 [
-    (validate.rules).repeated.items.enum.defined_only = true
-  ];
-  repeated Social social = 4 [
-    (validate.rules).repeated.items.enum.defined_only = true
-  ];
-  repeated Hobby hobby = 5 [
-    (validate.rules).repeated.items.enum.defined_only = true
-  ];
-  repeated Gastronomy gastronomy = 6 [
-    (validate.rules).repeated.items.enum.defined_only = true
-  ];
-}
-
 enum Goal {
   GOAL_UNSPECIFIED = 0;
   GOAL_DATING = 1;
   GOAL_RELATIONSHIP = 2;
   GOAL_FRIENDSHIP = 3;
   GOAL_JUST_CHATTING = 4;
-}
-
-enum Sport {
-  SPORT_UNSPECIFIED = 0;
-  SPORT_RUNNING = 1;
-  SPORT_SWIMMING = 2;
-  SPORT_YOGA = 3;
-  SPORT_BYCICLE = 4;
-  SPORT_GYM = 5;
-  SPORT_SKIING = 6;
-  SPORT_SNOWBOARDING = 7;
-  SPORT_DANCING = 8;
-  SPORT_MARTIAL_ARTS = 9;
-  SPORT_SURFING = 10;
-  SPORT_HIKING = 11;
-  SPORT_TENNIS = 12;
-  SPORT_CLIMBING = 13;
-}
-
-enum SelfDevelopment {
-  SELFDEVELOPMENT_UNSPECIFIED = 0;
-  SELFDEVELOPMENT_LANGUAGES = 1;
-  SELFDEVELOPMENT_LECTURES = 2;
-  SELFDEVELOPMENT_ONLINE_COURSES = 3;
-  SELFDEVELOPMENT_SELF_EDUCATION = 4;
-  SELFDEVELOPMENT_MEDITATION = 5;
-  SELFDEVELOPMENT_PSYCHOLOGY = 6;
-  SELFDEVELOPMENT_PHILOSOPHY = 7;
-  SELFDEVELOPMENT_HISTORY = 8;
-  SELFDEVELOPMENT_TECHNOLOGY = 9;
-  SELFDEVELOPMENT_READING = 10;
-}
-
-enum Art {
-  ART_UNSPECIFIED = 0;
-  ART_PAINTING = 1;
-  ART_PHOTOGRAPH = 2;
-  ART_MUSIC = 3;
-  ART_SINGING = 4;
-  ART_WRITING = 5;
-  ART_SCULPTURE = 6;
-  ART_THEATER = 7;
-  ART_CINEMA = 8;
-  ART_NEEDLEWORK = 9;
-}
-
-enum Social {
-  SOCIAL_UNSPECIFIED = 0;
-  SOCIAL_VOLUNTEERING = 1;
-  SOCIAL_CHARITY = 2;
-  SOCIAL_ECO_ACTIVISM = 3;
-  SOCIAL_ELDERLY_CARE = 4;
-  SOCIAL_CHILDCARE = 5;
-  SOCIAL_ANIMAL_WELFARE = 6;
-}
-
-enum Hobby {
-  HOBBY_UNSPECIFIED = 0;
-  HOBBY_LITERATURE = 1;
-  HOBBY_VIDEO_GAMES = 2;
-  HOBBY_BOARD_GAMES = 3;
-  HOBBY_TRAVELS = 4;
-  HOBBY_PLANT_CULTIVATION = 5;
-  HOBBY_FISHING = 6;
-  HOBBY_DOG_WALKS = 7;
-  HOBBY_CATS_LOVER = 8;
-  HOBBY_CARS_AND_MOTORCYCLES = 9;
-  HOBBY_CONCERTS = 10;
-}
-
-enum Gastronomy {
-  GASTRONOMY_UNSPECIFIED = 0;
-  GASTRONOMY_COOKING = 1;
-  GASTRONOMY_WINE_DEGUSTATION = 2;
-  GASTRONOMY_BARS = 3;
-  GASTRONOMY_COFFEE = 4;
-  GASTRONOMY_TEA = 5;
-  GASTRONOMY_VEGAN = 6;
-  GASTRONOMY_FOOD_CRITIC = 7;
-  GASTRONOMY_SUGAR_LOVER = 8;
 }
 
 enum Zodiac {
@@ -161,4 +60,146 @@ enum Smoking {
   SMOKING_NEGATIVELY = 1;
   SMOKING_NEUTRALLY = 2;
   SMOKING_POSITIVELY = 3;
+}
+
+message Interest {
+  repeated Sport sport = 1 [ // Спорт
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated SelfDevelopment self_development = 2 [ // Саморазвитие
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated Hobby hobby = 3 [ // Хобби
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated Music music = 4 [ // Музыка
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated MoviesTV movies_tv = 5 [ // Кино и ТВ
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated FoodDrink food_drink = 6 [ // Еда и напитки
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated PersonalityTraits personality_traits = 7 [ // Черты характера
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+  repeated Pets pets = 8 [ // Домашние животные
+    (validate.rules).repeated.items.enum.defined_only = true
+  ];
+}
+
+enum Sport {
+  SPORT_UNSPECIFIED = 0;
+  SPORT_GYM = 1;             // Тренажерный зал
+  SPORT_RUNNING = 2;          // Бег
+  SPORT_YOGA = 3;             // Йога
+  SPORT_SWIMMING = 4;         // Плавание
+  SPORT_CYCLING = 5;          // Велоспорт
+  SPORT_TENNIS = 6;           // Теннис
+  SPORT_BASKETBALL = 7;       // Баскетбол
+  SPORT_HIKING = 8;           // Походы
+  SPORT_DANCING = 9;          // Танцы
+  SPORT_MARTIAL_ARTS = 10;    // Боевые искусства
+  SPORT_FOOTBALL = 11;        // Футбол
+  SPORT_SKIING = 12;          // Лыжи/Сноуборд
+  SPORT_CLIMBING = 13;        // Скалолазание
+}
+
+enum SelfDevelopment {
+  SELFDEVELOPMENT_UNSPECIFIED = 0;
+  SELFDEVELOPMENT_LANGUAGES = 1;    // Изучение языков
+  SELFDEVELOPMENT_LECTURES = 2;     // Лекции
+  SELFDEVELOPMENT_ONLINE_COURSES = 3; // Онлайн-курсы
+  SELFDEVELOPMENT_SELF_EDUCATION = 4; // Самообразование
+  SELFDEVELOPMENT_MEDITATION = 5;   // Медитация
+  SELFDEVELOPMENT_PSYCHOLOGY = 6;   // Психология
+  SELFDEVELOPMENT_PHILOSOPHY = 7;   // Философия
+  SELFDEVELOPMENT_HISTORY = 8;      // История
+  SELFDEVELOPMENT_TECHNOLOGY = 9;   // Технологии
+  SELFDEVELOPMENT_READING = 10;     // Чтение
+}
+
+enum Hobby {
+  HOBBY_UNSPECIFIED = 0;
+  HOBBY_PHOTOGRAPHY = 1;      // Фотография
+  HOBBY_PAINTING = 2;         // Рисование
+  HOBBY_BOARDGAMES = 3;       // Настольные игры
+  HOBBY_READING = 4;          // Чтение
+  HOBBY_COOKING = 5;          // Готовка
+  HOBBY_GARDENING = 6;        // Садоводство
+  HOBBY_TRAVEL = 7;           // Путешествия
+  HOBBY_WRITING = 8;          // Писательство
+  HOBBY_CHESS = 9;            // Шахматы
+  HOBBY_CRAFTS = 10;          // Рукоделие/DIY
+  HOBBY_ANIMALS = 11;         // Уход за животными
+  HOBBY_ASTROLOGY = 12;       // Астрология
+}
+
+enum Music {
+  MUSIC_UNSPECIFIED = 0;
+  MUSIC_POP = 1;              // Поп-музыка
+  MUSIC_ROCK = 2;             // Рок
+  MUSIC_HIPHOP = 3;           // Хип-хоп
+  MUSIC_RAP = 4;              // Рэп
+  MUSIC_ELECTRONIC = 5;       // Электронная
+  MUSIC_JAZZ = 6;             // Джаз
+  MUSIC_CLASSICAL = 7;        // Классическая
+  MUSIC_INDIE = 8;            // Инди
+  MUSIC_RNB = 9;              // R&B
+  MUSIC_METAL = 10;            // Метал
+  MUSIC_FOLK = 11;            // Фолк
+  MUSIC_COUNTRY = 12;         // Кантри
+  MUSIC_ALTERNATIVE = 13;     // Альтернатива
+}
+
+enum MoviesTV {
+  MOVIESTV_UNSPECIFIED = 0;
+  MOVIESTV_ACTION = 1;         // Боевики
+  MOVIESTV_COMEDY = 2;         // Комедии
+  MOVIESTV_DRAMA = 3;          // Драмы
+  MOVIESTV_SCIFI = 4;          // Научная фантастика
+  MOVIESTV_ANIME = 5;          // Аниме
+  MOVIESTV_DOCUMENTARIES = 6;  // Документалки
+  MOVIESTV_HORROR = 7;         // Ужасы
+  MOVIESTV_FANTASY = 8;        // Фэнтези
+  MOVIESTV_THRILLER = 9;       // Триллеры
+  MOVIESTV_ROMANCE = 10;       // Мелодрамы
+  MOVIESTV_HISTORICAL = 11;    // Исторические
+}
+
+enum FoodDrink {
+  FOODDRINK_UNSPECIFIED = 0;
+  FOODDRINK_COFFEE = 1;        // Кофе
+  FOODDRINK_WINE = 2;          // Вино
+  FOODDRINK_COCKTAILS = 3;     // Коктейли
+  FOODDRINK_VEGAN = 4;         // Веганство
+  FOODDRINK_BAKING = 5;        // Выпечка
+  FOODDRINK_FINE_DINING = 6;   // Рестораны
+  FOODDRINK_STREET_FOOD = 7;   // Уличная еда
+  FOODDRINK_TEA = 8;           // Чайные церемонии
+  FOODDRINK_BARBECUE = 9;      // Шашлыки/Гриль
+  FOODDRINK_CRAFT_BEER = 10;   // Крафтовое пиво
+}
+
+enum PersonalityTraits {
+  TRAIT_UNSPECIFIED = 0;
+  TRAIT_INTROVERT = 1;         // Интроверт
+  TRAIT_EXTROVERT = 2;         // Экстраверт
+  TRAIT_ADVENTUROUS = 3;       // Авантюрист
+  TRAIT_HOMEBODY = 4;          // Домосед
+  TRAIT_OPTIMIST = 5;          // Оптимист
+  TRAIT_AMBITIOUS = 6;         // Амбициозный
+  TRAIT_CREATIVE = 7;          // Творческий
+  TRAIT_EMPATHIC = 8;          // Эмпат
+  TRAIT_ANALYTICAL = 9;        // Аналитик
+  TRAIT_SARCASM = 10;          // Саркастичность
+}
+
+enum Pets {
+  PETS_UNSPECIFIED = 0;
+  PETS_DOGS = 1;               // Собаки
+  PETS_CATS = 2;               // Кошки
+  PETS_OTHER = 3;              // Другие питомцы
+  PETS_NONE = 4;               // Без питомцев
 }
