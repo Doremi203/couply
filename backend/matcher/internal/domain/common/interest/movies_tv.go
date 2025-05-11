@@ -1,5 +1,7 @@
 package interest
 
+import desc "github.com/Doremi203/couply/backend/matcher/gen/api/common/v1"
+
 type MoviesTV int
 
 const (

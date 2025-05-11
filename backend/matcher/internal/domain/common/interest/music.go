@@ -1,5 +1,7 @@
 package interest
 
+import desc "github.com/Doremi203/couply/backend/matcher/gen/api/common/v1"
+
 type Music int
 
 const (
@@ -7,6 +9,7 @@ const (
 	MusicPop
 	MusicRock
 	MusicHipHop
+	MusicRap
 	MusicElectronic
 	MusicJazz
 	MusicClassical
@@ -28,6 +31,8 @@ func PBToMusic(m desc.Music) Music {
 		return MusicRock
 	case desc.Music_MUSIC_HIPHOP:
 		return MusicHipHop
+	case desc.Music_MUSIC_RAP:
+		return MusicRap
 	case desc.Music_MUSIC_ELECTRONIC:
 		return MusicElectronic
 	case desc.Music_MUSIC_JAZZ:
@@ -61,6 +66,8 @@ func MusicToPB(m Music) desc.Music {
 		return desc.Music_MUSIC_ROCK
 	case MusicHipHop:
 		return desc.Music_MUSIC_HIPHOP
+	case MusicRap:
+		return desc.Music_MUSIC_RAP
 	case MusicElectronic:
 		return desc.Music_MUSIC_ELECTRONIC
 	case MusicJazz:

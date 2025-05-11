@@ -53,18 +53,22 @@ func (s *PgStorageSearch) GetFilterInterests(ctx context.Context, userID uuid.UU
 
 func (s *PgStorageSearch) mapInterestValue(i *interest.Interest, interestType string, value int) error {
 	switch interestType {
-	case "sport":
+	case interest.SportDBName:
 		i.Sport = append(i.Sport, interest.Sport(value))
-	case "self_development":
+	case interest.SelfDevelopmentDBName:
 		i.SelfDevelopment = append(i.SelfDevelopment, interest.SelfDevelopment(value))
-	case "art":
-		i.Art = append(i.Art, interest.Art(value))
-	case "social":
-		i.Social = append(i.Social, interest.Social(value))
-	case "hobby":
+	case interest.HobbyDBName:
 		i.Hobby = append(i.Hobby, interest.Hobby(value))
-	case "gastronomy":
-		i.Gastronomy = append(i.Gastronomy, interest.Gastronomy(value))
+	case interest.MusicDBName:
+		i.Music = append(i.Music, interest.Music(value))
+	case interest.MoviesTVDBName:
+		i.MoviesTV = append(i.MoviesTV, interest.MoviesTV(value))
+	case interest.FoodDrinkDBName:
+		i.FoodDrink = append(i.FoodDrink, interest.FoodDrink(value))
+	case interest.PersonalityTraitsDBName:
+		i.PersonalityTraits = append(i.PersonalityTraits, interest.PersonalityTraits(value))
+	case interest.PetsDBName:
+		i.Pets = append(i.Pets, interest.Pets(value))
 	default:
 		return fmt.Errorf("unknown interest type: %s", interestType)
 	}

@@ -13,14 +13,22 @@ type Interest struct {
 	Pets              []Pets
 }
 
+var (
+	SportDBName             = "sport"
+	SelfDevelopmentDBName   = "self_development"
+	HobbyDBName             = "hobby"
+	MusicDBName             = "music"
+	MoviesTVDBName          = "movies_tv"
+	FoodDrinkDBName         = "food_drink"
+	PersonalityTraitsDBName = "personality_traits"
+	PetsDBName              = "pets"
+)
+
 func NewInterest() *Interest {
 	return &Interest{
 		Sport:             make([]Sport, 0),
 		SelfDevelopment:   make([]SelfDevelopment, 0),
-		Art:               make([]Art, 0),
-		Social:            make([]Social, 0),
 		Hobby:             make([]Hobby, 0),
-		Gastronomy:        make([]Gastronomy, 0),
 		Music:             make([]Music, 0),
 		MoviesTV:          make([]MoviesTV, 0),
 		FoodDrink:         make([]FoodDrink, 0),
@@ -29,7 +37,6 @@ func NewInterest() *Interest {
 	}
 }
 
-// Getter methods
 func (x *Interest) GetSport() []Sport {
 	if x != nil {
 		return x.Sport
@@ -44,30 +51,9 @@ func (x *Interest) GetSelfDevelopment() []SelfDevelopment {
 	return nil
 }
 
-func (x *Interest) GetArt() []Art {
-	if x != nil {
-		return x.Art
-	}
-	return nil
-}
-
-func (x *Interest) GetSocial() []Social {
-	if x != nil {
-		return x.Social
-	}
-	return nil
-}
-
 func (x *Interest) GetHobby() []Hobby {
 	if x != nil {
 		return x.Hobby
-	}
-	return nil
-}
-
-func (x *Interest) GetGastronomy() []Gastronomy {
-	if x != nil {
-		return x.Gastronomy
 	}
 	return nil
 }
@@ -107,7 +93,6 @@ func (x *Interest) GetPets() []Pets {
 	return nil
 }
 
-// Conversion functions
 func InterestToPB(interest *Interest) *desc.Interest {
 	if interest == nil {
 		return nil
@@ -116,10 +101,7 @@ func InterestToPB(interest *Interest) *desc.Interest {
 	return &desc.Interest{
 		Sport:             SportSliceToPB(interest.Sport),
 		SelfDevelopment:   SelfDevelopmentSliceToPB(interest.SelfDevelopment),
-		Art:               ArtSliceToPB(interest.Art),
-		Social:            SocialSliceToPB(interest.Social),
 		Hobby:             HobbySliceToPB(interest.Hobby),
-		Gastronomy:        GastronomySliceToPB(interest.Gastronomy),
 		Music:             MusicSliceToPB(interest.Music),
 		MoviesTv:          MoviesTVSliceToPB(interest.MoviesTV),
 		FoodDrink:         FoodDrinkSliceToPB(interest.FoodDrink),
@@ -135,11 +117,7 @@ func PBToInterest(pb *desc.Interest) *Interest {
 
 	return &Interest{
 		Sport:             PBToSportSlice(pb.Sport),
-		SelfDevelopment:   PBToSelfDevelopmentSlice(pb.SelfDevelopment),
-		Art:               PBToArtSlice(pb.Art),
-		Social:            PBToSocialSlice(pb.Social),
 		Hobby:             PBToHobbySlice(pb.Hobby),
-		Gastronomy:        PBToGastronomySlice(pb.Gastronomy),
 		Music:             PBToMusicSlice(pb.Music),
 		MoviesTV:          PBToMoviesTVSlice(pb.MoviesTv),
 		FoodDrink:         PBToFoodDrinkSlice(pb.FoodDrink),
