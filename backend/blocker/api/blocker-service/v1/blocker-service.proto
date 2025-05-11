@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package blocker_service.v1;
+
+option go_package = "github.com/Doremi203/couply/backend/blocker/gen/api/blocker-service/v1;blocker_service";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "validate/validate.proto";
+import "api/user-service/v1/user_service.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Приложение для знакомств. Сервис блокировок";
+    version: "1.0.0";
+    description: "Сервис блокировок для приложения, которое позволяет людям искать людей для знакомств";
+  };
+  consumes: "application/json";
+  produces: "application/json";
+  security_definitions: {
+    security: {
+      key: "api-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_API_KEY;
+        name: "x-api-token";
+        description: "Токен авторизации";
+      }
+    }
+    security: {
+      key: "user-token";
+      value: {
+        in: IN_HEADER;
+        type: TYPE_API_KEY;
+        name: "user-token";
+        description: "Токен пользователя для идентификации";
+      }
+    }
+  }
+};
+
+service BlockerService {
+  rpc ReportUserV1(ReportUserV1Request) returns (ReportUserV1Response) {
+    option (google.api.http) = {
+      post: "/v1/ReportUserV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Жалоба на пользователя";
+      description: "Принимает важные поля для создания жалобы на пользователя";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
+}
+
+message ReportUserV1Request {
+  string user_id = 1 [
+    (validate.rules).string.min_len = 1,
+    (google.api.field_behavior) = REQUIRED
+  ];
+  repeated ReportReason reasons = 2 [
+    (validate.rules).repeated = {
+      min_items: 1,
+      unique: true,
+      items: {
+        enum: {defined_only: true}
+      }
+    }
+  ];
+  string message = 3 [(validate.rules).string.max_len = 500];
+}
+
+message ReportUserV1Response {}
+
+enum ReportReason {
+  REASON_UNSPECIFIED = 0;
+  REASON_FAKE_PROFILE = 1;
+  REASON_SPAM = 2;
+  REASON_ABUSE = 3;
+  REASON_INAPPROPRIATE_CONTENT = 4;
+  REASON_AGE = 5;
+  REASON_OTHER = 6;
+}

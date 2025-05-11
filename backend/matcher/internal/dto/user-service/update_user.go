@@ -4,6 +4,7 @@ import (
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -29,6 +30,7 @@ type UpdateUserV1Request struct {
 	IsPremium           bool
 	IsBlocked           bool
 	PhotoUploadRequests []user.PhotoUploadRequest
+	UpdateMask          *fieldmaskpb.FieldMask
 }
 
 func (x *UpdateUserV1Request) GetName() string {
@@ -122,6 +124,13 @@ func (x *UpdateUserV1Request) GetAlcohol() common.Alcohol {
 	return common.Alcohol(0)
 }
 
+func (x *UpdateUserV1Request) GetUpdateMask() *fieldmaskpb.FieldMask {
+	if x != nil {
+		return x.UpdateMask
+	}
+	return nil
+}
+
 func (x *UpdateUserV1Request) GetSmoking() common.Smoking {
 	if x != nil {
 		return x.Smoking
@@ -201,6 +210,7 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 				MimeType:    from.GetMimeType(),
 			}
 		}),
+		UpdateMask: req.GetUpdateMask(),
 	}
 }
 

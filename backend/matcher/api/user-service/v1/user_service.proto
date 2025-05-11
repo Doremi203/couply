@@ -7,6 +7,7 @@ option go_package = "github.com/Doremi203/couply/backend/matcher/gen/api/user-se
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/field_mask.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "validate/validate.proto";
 import "api/common/v1/common.proto";
@@ -229,51 +230,52 @@ message CreateUserV1Response {
 }
 
 message UpdateUserV1Request {
-  string name = 1 [
+  optional string name = 1 [
     (validate.rules).string.min_len = 2
   ];
-  int32 age = 2 [
+  optional int32 age = 2 [
     (validate.rules).int32.gte = 18
   ];
-  Gender gender = 3 [
+  optional Gender gender = 3 [
     (validate.rules).enum.defined_only = true
   ];
-  double latitude = 4 [
+  optional double latitude = 4 [
     (validate.rules).double = {gte: -90.0, lte: 90.0}
   ];
-  double longitude = 5 [
+  optional double longitude = 5 [
     (validate.rules).double = {gte: -180.0, lte: 180.0}
   ];
-  string bio = 6 [
+  optional string bio = 6 [
     (validate.rules).string.min_len = 2
   ];
-  common.v1.Goal goal = 7 [
+  optional common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Interest interest = 8;
-  common.v1.Zodiac zodiac = 9 [
+  optional common.v1.Interest interest = 8;
+  optional common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  int32 height = 10 [
+  optional int32 height = 10 [
     (validate.rules).int32.gt = 0
   ];
-  common.v1.Education education = 11 [
+  optional common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Children children = 12 [
+  optional common.v1.Children children = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Alcohol alcohol = 13 [
+  optional common.v1.Alcohol alcohol = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  common.v1.Smoking smoking = 14 [
+  optional common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  bool is_hidden = 15;
-  bool is_verified = 16;
-  bool is_premium = 17;
-  bool is_blocked = 18;
+  optional bool is_hidden = 15;
+  optional bool is_verified = 16;
+  optional bool is_premium = 17;
+  optional bool is_blocked = 18;
   repeated PhotoUploadRequest photo_upload_requests = 19;
+  google.protobuf.FieldMask update_mask = 20;
 }
 
 message UpdateUserV1Response {

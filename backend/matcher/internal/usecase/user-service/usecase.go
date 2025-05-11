@@ -2,6 +2,7 @@ package user_service
 
 import (
 	"context"
+	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	"github.com/google/uuid"
 
@@ -10,7 +11,7 @@ import (
 
 type userStorageFacade interface {
 	CreateUserTx(ctx context.Context, user *user.User) (*user.User, error)
-	UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error)
+	UpdateUserTx(ctx context.Context, user *user.User, updateMask *fieldmaskpb.FieldMask) (*user.User, error)
 	DeleteUserTx(ctx context.Context, userID uuid.UUID) error
 	GetUserTx(ctx context.Context, userID uuid.UUID) (*user.User, error)
 	GetUsersTx(ctx context.Context, userIDs []uuid.UUID) ([]*user.User, error)
