@@ -9,10 +9,6 @@ import (
 )
 
 func (a *App) loadSecrets() error {
-	if a.Env != TestingEnvironment && a.Env != ProdEnvironment {
-		return nil
-	}
-
 	for _, id := range a.Config.secrets.Ids {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		secret, err := a.ycSDKClient.LockboxPayload().Payload().Get(ctx, &lockbox.GetPayloadRequest{

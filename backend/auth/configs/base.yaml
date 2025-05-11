@@ -26,3 +26,10 @@ phone-confirmation:
 
 jwt:
   tokenLifetime: 30m
+
+secrets:
+  ids:
+    smsru: e6qeb7ef6o0sgb12n3r0
+
+smsru:
+  test: true

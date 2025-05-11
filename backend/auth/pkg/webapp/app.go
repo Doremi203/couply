@@ -95,7 +95,11 @@ func initApp() *App {
 
 	backgroundCtx, backgroundCancelFunc := context.WithCancelCause(context.Background())
 
-	httpClient := resty.New().SetTimeout(5 * time.Second)
+	httpClient := resty.New().
+		SetTimeout(5 * time.Second).
+		SetRetryCount(5).
+		SetRetryWaitTime(1 * time.Second).
+		SetRetryMaxWaitTime(5 * time.Second)
 
 	sdkClient, err := initYCSdk(httpClient, env)
 	if err != nil {
@@ -133,25 +137,31 @@ func initApp() *App {
 }
 
 func initYCSdk(httpClient *resty.Client, env Environment) (*ycsdk.SDK, error) {
-	if env != TestingEnvironment && env != ProdEnvironment {
-		return nil, nil
+	var ycToken string
+	if env == TestingEnvironment || env == ProdEnvironment {
+		tokenResp := struct {
+			AccessToken string `json:"access_token"`
+			ExpiresIn   int    `json:"expires_in"`
+			TokenType   string `json:"token_type"`
+		}{}
+		resp, err := httpClient.R().
+			SetHeader("Metadata-Flavor", "Google").
+			SetResult(&tokenResp).
+			Get(fmt.Sprintf("http://%s/computeMetadata/v1/instance/service-accounts/default/token", ycsdk.GetMetadataServiceAddr()))
+		if err != nil {
+			return nil, errors.WrapFail(err, "get yc iam token")
+		}
+		if !resp.IsSuccess() {
+			return nil, errors.Error("got unexpected status code from yc iam token")
+		}
+		ycToken = tokenResp.AccessToken
 	}
-	tokenResp := struct {
-		AccessToken string `json:"access_token"`
-		ExpiresIn   int    `json:"expires_in"`
-		TokenType   string `json:"token_type"`
-	}{}
-	resp, err := httpClient.R().
-		SetHeader("Metadata-Flavor", "Google").
-		SetResult(&tokenResp).
-		Get(fmt.Sprintf("http://%s/computeMetadata/v1/instance/service-accounts/default/token", ycsdk.GetMetadataServiceAddr()))
-	if err != nil {
-		return nil, errors.WrapFail(err, "get yc iam token")
+	if env == DevEnvironment {
+		ycToken = os.Getenv("YC_TOKEN")
 	}
-	if !resp.IsSuccess() {
-		return nil, errors.Error("got unexpected status code from yc iam token")
+	if ycToken == "" {
+		return nil, errors.Error("yc token is empty")
 	}
-	ycToken := tokenResp.AccessToken
 
 	retriesDialOption, err := retry.DefaultRetryDialOption()
 	if err != nil {
