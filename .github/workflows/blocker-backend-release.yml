@@ -1,4 +1,4 @@
-name: Notificator Service Release Flow
+name: Blocker Service Release Flow
 on:
   workflow_dispatch:
 
