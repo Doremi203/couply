@@ -57,7 +57,7 @@ func Test_repo_Create(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tester.Run(tt.name, tt.fixtures, time.Second*10, t, func(t *testing.T, ctx context.Context, db postgres.Client) {
+		tester.Run(t, tt.name, tt.fixtures, time.Second*10, func(t *testing.T, ctx context.Context, db postgres.Client) {
 			r := &repo{
 				db: db,
 			}
@@ -118,7 +118,7 @@ func Test_repo_GetByEmail(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
-		tester.Run(tt.name, tt.fixtures, time.Second*10, t, func(t *testing.T, ctx context.Context, db postgres.Client) {
+		tester.Run(t, tt.name, tt.fixtures, time.Second*10, func(t *testing.T, ctx context.Context, db postgres.Client) {
 			r := &repo{
 				db: db,
 			}

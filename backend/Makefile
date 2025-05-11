@@ -8,7 +8,7 @@ export TESTCONTAINERS_RYUK_DISABLED=true
 export BASE_MIGRATIONS_PATH=$(PWD)
 
 secrets/yc-token:
-	@echo "YC_TOKEN=$$(yc iam create-token)" > secrets.env
+	@echo "YC_TOKEN=$$(yc iam create-token)" > .env
 
 deps: deps/migrate deps/go-test-coverage deps/buf deps/mockgen deps/protoc deps/linters
 

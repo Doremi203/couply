@@ -131,10 +131,10 @@ type Tester struct {
 }
 
 func (tester Tester) Run(
+	t *testing.T,
 	name string,
 	fixtures []string,
 	timeout time.Duration,
-	t *testing.T,
 	testFunc func(*testing.T, context.Context, Client),
 ) bool {
 	return t.Run(name, func(t *testing.T) {

@@ -58,3 +58,23 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  notificator:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+      args:
+        service: notificator
+    environment:
+      APP_ENV: dev
+      CONFIGS_PATH: /app/configs
+    env_file:
+      - secrets.env
+    volumes:
+      - ./notificator/swagger/api:/app/swagger-ui/api
+    ports:
+      - "8080:8080"
+      - "9090:9090"
+    depends_on:
+      db:
+        condition: service_healthy

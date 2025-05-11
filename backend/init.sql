@@ -1,2 +1,3 @@
 CREATE DATABASE auth;
 CREATE DATABASE matcher;
+CREATE DATABASE notificator;

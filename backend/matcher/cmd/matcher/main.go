@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"strings"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
@@ -22,24 +21,12 @@ import (
 	matching_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/matching-service"
 	search_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/search-service"
 	user_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/user-service"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
 )
 
 func main() {
 	webapp.Run(func(ctx context.Context, app *webapp.App) error {
-		app.AddGatewayOptions(
-			runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
-				switch s = strings.ToLower(s); s {
-				case "x-api-key", "user-token":
-					return s, true
-				default:
-					return runtime.DefaultHeaderMatcher(s)
-				}
-			}),
-		)
-
 		dbConfig := postgrespkg.Config{}
 		err := app.Config.ReadSection("database", &dbConfig)
 		if err != nil {

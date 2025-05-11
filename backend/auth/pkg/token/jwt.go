@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/Doremi203/couply/backend/auth/pkg/user"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
@@ -20,8 +19,8 @@ type jwtProvider struct {
 }
 
 type сustomClaims struct {
-	UserID    user.ID    `json:"user_id"`
-	UserEmail user.Email `json:"useremail"`
+	UserID    uuid.UUID `json:"user_id"`
+	UserEmail string    `json:"user_email"`
 	jwt.RegisteredClaims
 }
 
@@ -100,8 +99,8 @@ func getJWTClaims(t *jwt.Token) (сustomClaims, error) {
 	}
 
 	return сustomClaims{
-		UserID:           user.ID(userID),
-		UserEmail:        user.Email(email),
+		UserID:           userID,
+		UserEmail:        email,
 		RegisteredClaims: registeredClaims,
 	}, nil
 }

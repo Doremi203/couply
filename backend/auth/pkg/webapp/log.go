@@ -1,12 +1,16 @@
 package webapp
 
 import (
+	"context"
 	"log/slog"
 	"os"
 	"strings"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type logFormat string
@@ -62,5 +66,25 @@ func parseLogLevel(level string) slog.Level {
 		return slog.LevelError
 	default:
 		return slog.LevelError
+	}
+}
+
+func NewUnaryInternalErrorLogInterceptor(logger log.Logger) grpc.UnaryServerInterceptor {
+	return func(
+		ctx context.Context,
+		req any,
+		info *grpc.UnaryServerInfo,
+		handler grpc.UnaryHandler,
+	) (any, error) {
+		resp, err := handler(ctx, req)
+		if err != nil {
+			s, ok := status.FromError(err)
+			if !ok && s.Code() == codes.Unknown {
+				logger.Error(errors.Wrapf(err, "%v failed", errors.Token("handler", info.FullMethod)))
+				return resp, status.Error(codes.Internal, "internal error")
+			}
+		}
+
+		return resp, err
 	}
 }

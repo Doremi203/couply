@@ -3,19 +3,19 @@ package token
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/user"
+	"github.com/google/uuid"
 )
 
 type Token struct {
-	userID    user.ID
-	userEmail user.Email
+	userID    uuid.UUID
+	userEmail string
 }
 
-func (t Token) GetUserID() user.ID {
+func (t Token) GetUserID() uuid.UUID {
 	return t.userID
 }
 
-func (t Token) GetEmail() user.Email {
+func (t Token) GetEmail() string {
 	return t.userEmail
 }
 

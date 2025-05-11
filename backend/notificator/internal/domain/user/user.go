@@ -7,5 +7,3 @@ type ID uuid.UUID
 func (id ID) String() string {
 	return uuid.UUID(id).String()
 }
-
-type Email string

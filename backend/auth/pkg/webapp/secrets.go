@@ -9,14 +9,19 @@ import (
 )
 
 func (a *App) loadSecrets() error {
-	for _, id := range a.Config.secrets.Ids {
+	for name, id := range a.Config.secrets.Ids {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		secret, err := a.ycSDKClient.LockboxPayload().Payload().Get(ctx, &lockbox.GetPayloadRequest{
 			SecretId: id,
 		})
 		cancel()
 		if err != nil {
-			return errors.WrapFail(err, "get token secret")
+			return errors.WrapFailf(
+				err,
+				"get secret %v %v",
+				errors.Token("name", name),
+				errors.Token("id", id),
+			)
 		}
 		if len(secret.GetEntries()) == 0 {
 			return errors.Error("secret required with config but not found in yc")
