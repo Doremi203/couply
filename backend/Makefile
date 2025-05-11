@@ -109,7 +109,7 @@ matcher/check-coverage:
 	@rm matcher/cover.out
 
 matcher/local-build:
-	cd matcher/cmd/matcher && go build -ldflags="-s -w" -o /dev/null
+	cd matcher/cmd/app && go build -ldflags="-s -w" -o /dev/null
 
 matcher/lint:
 	cd matcher && golangci-lint run
@@ -136,3 +136,32 @@ matcher/migrate/down-one:
 
 matcher/migrate/create:
 	cd matcher/migrations && $(MIGRATE_CREATE)
+
+### Notificator service targets
+notificator/check-coverage:
+	-cd notificator && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd notificator && go-test-coverage --config=.local.testcoverage.yml
+	@rm notificator/cover.out
+
+notificator/local-build:
+	cd notificator/cmd/app && go build -ldflags="-s -w" -o /dev/null
+
+notificator/lint:
+	cd notificator && golangci-lint run
+
+notificator/generate:
+	cd notificator && go generate ./...
+
+NOTIFICATOR_MIGRATIONS = notificator/migrations
+
+notificator/migrate/up:
+	goose -v -dir "$(NOTIFICATOR_MIGRATIONS)" "$(DB)notificator$(DB_PARAMS)" up
+
+notificator/migrate/down:
+	goose -v -dir "$(NOTIFICATOR_MIGRATIONS)" "$(DB)notificator$(DB_PARAMS)" reset
+
+notificator/migrate/down-one:
+	goose -v -dir "$(NOTIFICATOR_MIGRATIONS)" "$(DB)notificator$(DB_PARAMS)" down
+
+notificator/migrate/create:
+	cd $(NOTIFICATOR_MIGRATIONS) && $(MIGRATE_CREATE)

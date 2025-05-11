@@ -2,7 +2,6 @@ package push
 
 import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/Doremi203/couply/backend/notificator/internal/domain/user"
 )
 
 type Endpoint string
@@ -13,7 +12,7 @@ type Credentials struct {
 }
 
 func NewSubscription(
-	userID user.ID,
+	recipientID RecipientID,
 	endpoint string,
 	p256dh string,
 	authKey string,
@@ -34,12 +33,12 @@ func NewSubscription(
 			P256dh:  p256dh,
 			AuthKey: authKey,
 		},
-		UserID: userID,
+		RecipientID: recipientID,
 	}, nil
 }
 
 type Subscription struct {
+	RecipientID RecipientID
 	Endpoint    Endpoint
 	Credentials Credentials
-	UserID      user.ID
 }

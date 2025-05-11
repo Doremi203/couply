@@ -7,7 +7,6 @@ import (
 
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/notificator/internal/domain/push"
-	"github.com/Doremi203/couply/backend/notificator/internal/domain/user"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -34,7 +33,7 @@ func Test_repo_UpsertSubscription(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 			},
 			want: push.Subscription{
@@ -43,7 +42,7 @@ func Test_repo_UpsertSubscription(t *testing.T) {
 					P256dh:  "public_key",
 					AuthKey: "auth_key",
 				},
-				UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 			},
 			wantErr: assert.NoError,
 		},
@@ -56,7 +55,7 @@ func Test_repo_UpsertSubscription(t *testing.T) {
 						P256dh:  "public_key_updated",
 						AuthKey: "auth_key_updated",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-2222-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-2222-111111111111")),
 				},
 			},
 			setup: func(t *testing.T, ctx context.Context, r *repo) {
@@ -66,7 +65,7 @@ func Test_repo_UpsertSubscription(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				})
 				require.NoError(t, err)
 			},
@@ -76,7 +75,7 @@ func Test_repo_UpsertSubscription(t *testing.T) {
 					P256dh:  "public_key_updated",
 					AuthKey: "auth_key_updated",
 				},
-				UserID: user.ID(uuid.MustParse("11111111-1111-1111-2222-111111111111")),
+				RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-2222-111111111111")),
 			},
 			wantErr: assert.NoError,
 		},
@@ -94,7 +93,7 @@ func Test_repo_UpsertSubscription(t *testing.T) {
 			err := r.UpsertSubscription(ctx, tt.args.subscription)
 			tt.wantErr(t, err)
 
-			subscriptions, err := r.GetSubscriptionsByUserID(ctx, tt.args.subscription.UserID)
+			subscriptions, err := r.GetSubscriptionsByRecipientID(ctx, tt.args.subscription.RecipientID)
 			require.NoError(t, err)
 			require.Len(t, subscriptions, 1)
 
@@ -105,7 +104,7 @@ func Test_repo_UpsertSubscription(t *testing.T) {
 
 func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 	type args struct {
-		userID user.ID
+		userID push.RecipientID
 	}
 	tests := []struct {
 		name     string
@@ -118,7 +117,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 		{
 			name: "no subscriptions then nil",
 			args: args{
-				userID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				userID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 			},
 			want:    nil,
 			wantErr: assert.NoError,
@@ -126,7 +125,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 		{
 			name: "all subscriptions for one user",
 			args: args{
-				userID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				userID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 			},
 			setup: func(t *testing.T, ctx context.Context, r *repo) {
 				err := r.UpsertSubscription(ctx, push.Subscription{
@@ -135,7 +134,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 						P256dh:  "public_key_1",
 						AuthKey: "auth_key_1",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				})
 				require.NoError(t, err)
 				err = r.UpsertSubscription(ctx, push.Subscription{
@@ -144,7 +143,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 						P256dh:  "public_key_2",
 						AuthKey: "auth_key_2",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				})
 				require.NoError(t, err)
 			},
@@ -155,7 +154,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 						P256dh:  "public_key_1",
 						AuthKey: "auth_key_1",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 				{
 					Endpoint: "endpoint_2",
@@ -163,7 +162,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 						P256dh:  "public_key_2",
 						AuthKey: "auth_key_2",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 			},
 			wantErr: assert.NoError,
@@ -171,7 +170,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 		{
 			name: "different users with subscriptions",
 			args: args{
-				userID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				userID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 			},
 			setup: func(t *testing.T, ctx context.Context, r *repo) {
 				err := r.UpsertSubscription(ctx, push.Subscription{
@@ -180,7 +179,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 						P256dh:  "public_key_1",
 						AuthKey: "auth_key_1",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				})
 				require.NoError(t, err)
 				err = r.UpsertSubscription(ctx, push.Subscription{
@@ -189,7 +188,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 						P256dh:  "public_key_2",
 						AuthKey: "auth_key_2",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-2222-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-2222-111111111111")),
 				})
 				require.NoError(t, err)
 			},
@@ -200,7 +199,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 						P256dh:  "public_key_1",
 						AuthKey: "auth_key_1",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 			},
 			wantErr: assert.NoError,
@@ -216,7 +215,7 @@ func Test_repo_GetSubscriptionsByUserID(t *testing.T) {
 				tt.setup(t, ctx, r)
 			}
 
-			got, err := r.GetSubscriptionsByUserID(ctx, tt.args.userID)
+			got, err := r.GetSubscriptionsByRecipientID(ctx, tt.args.userID)
 
 			tt.wantErr(t, err)
 			assert.ElementsMatch(t, tt.want, got, "GetSubscriptionsByUserID(ctx, %v)", tt.args.userID)

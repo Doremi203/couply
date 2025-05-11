@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/Doremi203/couply/backend/notificator/internal/domain/push"
-	"github.com/Doremi203/couply/backend/notificator/internal/domain/user"
 	mock_push "github.com/Doremi203/couply/backend/notificator/internal/mocks/push"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
@@ -34,7 +33,7 @@ func TestPushSubscription_Subscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 			},
 			setup: func(m mocks) {
@@ -44,7 +43,7 @@ func TestPushSubscription_Subscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				}).Return(nil)
 			},
 			wantErr: assert.NoError,
@@ -58,7 +57,7 @@ func TestPushSubscription_Subscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 			},
 			setup: func(m mocks) {
@@ -68,7 +67,7 @@ func TestPushSubscription_Subscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				}).Return(assert.AnError)
 			},
 			wantErr: assert.Error,
@@ -118,7 +117,7 @@ func TestPushSubscription_Unsubscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 			},
 			setup: func(m mocks) {
@@ -128,7 +127,7 @@ func TestPushSubscription_Unsubscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				}).Return(nil)
 			},
 			wantErr: assert.NoError,
@@ -142,7 +141,7 @@ func TestPushSubscription_Unsubscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				},
 			},
 			setup: func(m mocks) {
@@ -152,7 +151,7 @@ func TestPushSubscription_Unsubscribe(t *testing.T) {
 						P256dh:  "public_key",
 						AuthKey: "auth_key",
 					},
-					UserID: user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					RecipientID: push.RecipientID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
 				}).Return(assert.AnError)
 			},
 			wantErr: assert.Error,

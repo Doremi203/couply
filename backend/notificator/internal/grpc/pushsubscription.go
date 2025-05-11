@@ -8,7 +8,6 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	pushgrpc "github.com/Doremi203/couply/backend/notificator/gen/api/push"
 	"github.com/Doremi203/couply/backend/notificator/internal/domain/push"
-	"github.com/Doremi203/couply/backend/notificator/internal/domain/user"
 	"github.com/Doremi203/couply/backend/notificator/internal/usecase"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -55,10 +54,10 @@ func (s *pushSubscriptionService) SubscribeV1(
 		return nil, status.Error(codes.Unauthenticated, "missing token")
 	}
 
-	userID := user.ID(t.GetUserID())
+	recipientID := push.RecipientID(t.GetUserID())
 
 	subscription, err := push.NewSubscription(
-		userID,
+		recipientID,
 		req.GetEndpoint(),
 		req.GetP256Dh(),
 		req.GetAuthKey(),
@@ -69,7 +68,7 @@ func (s *pushSubscriptionService) SubscribeV1(
 
 	err = s.pushSubscriptionUseCase.Subscribe(ctx, subscription)
 	if err != nil {
-		return nil, errors.WrapFailf(err, "subscribe %v to pushes", errors.Token("user_id", userID))
+		return nil, errors.WrapFailf(err, "subscribe %v to pushes", errors.Token("user_id", recipientID))
 	}
 
 	return &pushgrpc.SubscribeV1Response{}, nil
@@ -84,11 +83,11 @@ func (s *pushSubscriptionService) UnsubscribeV1(
 		return nil, status.Error(codes.Unauthenticated, "missing token")
 	}
 
-	userID := user.ID(t.GetUserID())
+	recipientID := push.RecipientID(t.GetUserID())
 
-	err := s.pushSubscriptionUseCase.Subscribe(ctx, push.Subscription{UserID: userID})
+	err := s.pushSubscriptionUseCase.Subscribe(ctx, push.Subscription{RecipientID: recipientID})
 	if err != nil {
-		return nil, errors.WrapFailf(err, "unsubscribe %v to pushes", errors.Token("user_id", userID))
+		return nil, errors.WrapFailf(err, "unsubscribe %v to pushes", errors.Token("recipient_id", recipientID))
 	}
 
 	return &pushgrpc.UnsubscribeV1Response{}, nil

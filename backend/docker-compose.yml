@@ -28,7 +28,9 @@ services:
   matcher:
     build:
       context: .
-      dockerfile: matcher/dev.Dockerfile
+      dockerfile: testing.Dockerfile
+      args:
+        service: matcher
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs
@@ -44,7 +46,9 @@ services:
   auth:
     build:
       context: .
-      dockerfile: auth/dev.Dockerfile
+      dockerfile: testing.Dockerfile
+      args:
+        service: auth
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs
@@ -62,7 +66,7 @@ services:
   notificator:
     build:
       context: .
-      dockerfile: dev.Dockerfile
+      dockerfile: testing.Dockerfile
       args:
         service: notificator
     environment:
@@ -73,8 +77,8 @@ services:
     volumes:
       - ./notificator/swagger/api:/app/swagger-ui/api
     ports:
-      - "8080:8080"
-      - "9090:9090"
+      - "8081:8081"
+      - "9091:9091"
     depends_on:
       db:
         condition: service_healthy

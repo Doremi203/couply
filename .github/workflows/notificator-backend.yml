@@ -1,13 +1,13 @@
-name: Matcher Service CI/CD
+name: Notificator Service CI/CD
 
 on:
   pull_request:
     branches: ["main"]
     paths:
-      - 'backend/matcher/**'
+      - 'backend/notificator/**'
       - 'backend/auth/pkg/**'
       - 'backend/common/**'
-      - '.github/workflows/matcher-backend.yml'
+      - '.github/workflows/auth-backend.yml'
       - '.github/actions/codegen/**'
 
 # Cancel any in-progress job or run for the same branch/PR to save resources
@@ -19,6 +19,5 @@ jobs:
   ci:
     uses: ./.github/workflows/backend-service-ci.yml
     with:
-      service_name: matcher
-      additional_paths: 'backend/auth/pkg/**'
+      service_name: auth
     secrets: inherit

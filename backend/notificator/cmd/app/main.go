@@ -27,6 +27,15 @@ func main() {
 			return err
 		}
 
+		webPushConfig := struct {
+			VapidPublicKey  string
+			VapidPrivateKey string
+		}{}
+		err = app.Config.ReadSection("web-push", &webPushConfig)
+		if err != nil {
+			return err
+		}
+
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")

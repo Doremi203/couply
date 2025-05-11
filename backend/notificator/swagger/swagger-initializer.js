@@ -2,7 +2,7 @@ window.onload = function() {
   window.ui = SwaggerUIBundle({
     // Можно указать несколько JSON-файлов и дать им названия
     urls: [
-      { url: "api/registration/registration.swagger.json", name: "Registration API" },
+      { url: "api/push/push.swagger.json", name: "Registration API" },
     ],
     dom_id: '#swagger-ui',
     deepLinking: true,

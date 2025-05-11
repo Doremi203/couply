@@ -2,13 +2,13 @@
 -- +goose StatementBegin
 create table if not exists push_subscriptions
 (
-    endpoint text primary key,
-    p256dh   text,
-    auth_key text,
-    user_id  uuid
+    endpoint     text primary key,
+    p256dh       text,
+    auth_key     text,
+    recipient_id uuid
 );
 
-create index user_id_idx on push_subscriptions (user_id);
+create index recipient_id_idx on push_subscriptions (recipient_id);
 -- +goose StatementEnd
 
 -- +goose Down

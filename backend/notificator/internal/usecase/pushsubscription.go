@@ -20,8 +20,8 @@ func (s PushSubscription) Subscribe(ctx context.Context, subscription push.Subsc
 	if err != nil {
 		return errors.WrapFailf(
 			err,
-			"upsert push subscription for user with %v",
-			errors.Token("id", subscription.UserID),
+			"upsert push subscription for recipient with %v",
+			errors.Token("id", subscription.RecipientID),
 		)
 	}
 
@@ -33,8 +33,8 @@ func (s PushSubscription) Unsubscribe(ctx context.Context, subscription push.Sub
 	if err != nil {
 		return errors.WrapFailf(
 			err,
-			"delete push subscription for user with %v",
-			errors.Token("id", subscription.UserID),
+			"delete push subscription for recipient with %v",
+			errors.Token("id", subscription.RecipientID),
 		)
 	}
 

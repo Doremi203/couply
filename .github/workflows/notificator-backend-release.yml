@@ -1,4 +1,4 @@
-name: Matcher Service Release Flow
+name: Notificator Service Release Flow
 on:
   workflow_dispatch:
 
@@ -10,7 +10,7 @@ jobs:
   release:
     uses: ./.github/workflows/backend-service-release.yml
     with:
-      service_name: matcher
-      db_name: matcher
-      instance_group_name: matcher-testing
+      service_name: notificator
+      db_name: notificator
+      instance_group_name: notificator-testing
     secrets: inherit

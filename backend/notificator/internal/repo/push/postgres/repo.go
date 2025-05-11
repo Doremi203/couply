@@ -7,7 +7,6 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/Doremi203/couply/backend/notificator/internal/domain/push"
-	"github.com/Doremi203/couply/backend/notificator/internal/domain/user"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -21,11 +20,11 @@ type repo struct {
 
 func (r *repo) UpsertSubscription(ctx context.Context, subscription push.Subscription) error {
 	const query = `
-		INSERT INTO push_subscriptions (endpoint, p256dh, auth_key, user_id)
+		INSERT INTO push_subscriptions (endpoint, p256dh, auth_key, recipient_id)
 		VALUES ($1, $2, $3, $4)
 		ON CONFLICT (endpoint) DO UPDATE
 		SET auth_key = EXCLUDED.auth_key,
-		    user_id = EXCLUDED.user_id,
+		    recipient_id = EXCLUDED.recipient_id,
 		    p256dh = EXCLUDED.p256dh;
 	`
 	_, err := r.db.Exec(
@@ -33,7 +32,7 @@ func (r *repo) UpsertSubscription(ctx context.Context, subscription push.Subscri
 		subscription.Endpoint,
 		subscription.Credentials.P256dh,
 		subscription.Credentials.AuthKey,
-		subscription.UserID,
+		subscription.RecipientID,
 	)
 	if err != nil {
 		return errors.WrapFail(err, "exec upsert push subscription query")
@@ -45,11 +44,12 @@ func (r *repo) UpsertSubscription(ctx context.Context, subscription push.Subscri
 func (r *repo) DeleteSubscription(ctx context.Context, subscription push.Subscription) error {
 	const query = `
 		DELETE FROM push_subscriptions
-		WHERE user_id = $1
+		WHERE endpoint = $1 AND recipient_id = $2
 	`
 	_, err := r.db.Exec(
 		ctx, query,
-		subscription.UserID,
+		subscription.Endpoint,
+		subscription.RecipientID,
 	)
 	if err != nil {
 		return errors.WrapFail(err, "exec delete push subscription query")
@@ -58,15 +58,15 @@ func (r *repo) DeleteSubscription(ctx context.Context, subscription push.Subscri
 	return nil
 }
 
-func (r *repo) GetSubscriptionsByUserID(ctx context.Context, userID user.ID) ([]push.Subscription, error) {
+func (r *repo) GetSubscriptionsByRecipientID(ctx context.Context, userID push.RecipientID) ([]push.Subscription, error) {
 	const query = `
 		SELECT
-		    user_id,
+		    recipient_id,
 		    endpoint,
 		    p256dh,
 		    auth_key
 		FROM push_subscriptions
-		WHERE user_id = $1
+		WHERE recipient_id = $1
 	`
 	rows, err := r.db.Query(ctx, query, userID)
 	if err != nil {
@@ -86,7 +86,7 @@ func (r *repo) GetSubscriptionsByUserID(ctx context.Context, userID user.ID) ([]
 				P256dh:  from.P256dh,
 				AuthKey: from.AuthKey,
 			},
-			UserID: user.ID(from.UserID),
+			RecipientID: push.RecipientID(from.RecipientID),
 		}
 	}), nil
 }

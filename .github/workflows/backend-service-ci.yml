@@ -1,0 +1,99 @@
+name: Backend Service CI/CD
+on:
+  workflow_call:
+    inputs:
+      service_name:
+        required: true
+        type: string
+        description: "Service name (e.g. auth, matcher)"
+      additional_paths:
+        required: false
+        type: string
+        description: "Additional paths to trigger the workflow, comma-separated"
+        default: ""
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  codegen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/codegen
+      - name: Upload codegen results
+        uses: actions/upload-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
+  lint:
+    needs: codegen
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: backend/${{ inputs.service_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v7
+        with:
+          version: latest
+          working-directory: backend/${{ inputs.service_name }}
+
+  test:
+    needs: codegen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/${{ inputs.service_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
+      - name: Run tests with coverage
+        run: BASE_MIGRATIONS_PATH=${{ github.workspace }}/backend go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...
+
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: ${{ github.repository }}
+          files: ./backend/${{ inputs.service_name }}/coverage.txt
+          fail_ci_if_error: false
+          verbose: true
+
+  build:
+    needs: codegen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
+      - name: Build Docker image
+        run: docker build -t ${{ inputs.service_name }}_service:latest . -f ${{ inputs.service_name }}/prod.Dockerfile

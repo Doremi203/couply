@@ -10,7 +10,7 @@ logging:
 
 swagger-ui:
   path: /app/swagger-ui
-  enabled: false
+  enabled: true
 
 database:
   host: db
