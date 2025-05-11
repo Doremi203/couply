@@ -19,3 +19,6 @@ secrets:
     db: e6qoug3fau0c6bhsj20i
     token: e6qo9u8d7n70ciqo8omk
     telegram: e6qgotvn596k4k5331cq
+
+user_service:
+  address: "matcher.testing.couply.ru:50051"

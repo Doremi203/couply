@@ -12,9 +12,9 @@ swagger-ui:
   path: /app/swagger-ui
   enabled: true
 
-telegram:
-  # секреты для локальной разработки берите из Lockbox
+secrets:
+  ids:
+    telegram: e6qgotvn596k4k5331cq
 
 user_service:
   address:  "matcher:7002"
-  # address: "user-service:50051"

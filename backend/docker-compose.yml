@@ -28,10 +28,14 @@ services:
   blocker:
     build:
       context: .
-      dockerfile: blocker/dev.Dockerfile
+      dockerfile: testing.Dockerfile
+      args:
+        service: blocker
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs
+    env_file:
+      - secrets.env
     ports:
       - "7003:7003"
       - "7004:7004"

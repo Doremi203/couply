@@ -8,7 +8,7 @@ export TESTCONTAINERS_RYUK_DISABLED=true
 export BASE_MIGRATIONS_PATH=$(PWD)
 
 secrets/yc-token:
-	@echo "YC_TOKEN=$$(yc iam create-token)" > .env
+	@echo "YC_TOKEN=$$(yc iam create-token)" > secrets.env
 
 deps: deps/migrate deps/go-test-coverage deps/buf deps/mockgen deps/protoc deps/linters
 
@@ -174,7 +174,7 @@ blocker/check-coverage:
 	@rm blocker/cover.out
 
 blocker/local-build:
-	cd blocker/cmd/blocker && go build -ldflags="-s -w" -o /dev/null
+	cd blocker/cmd/app && go build -ldflags="-s -w" -o /dev/null
 
 blocker/lint:
 	cd blocker && golangci-lint run
