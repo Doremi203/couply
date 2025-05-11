@@ -6,92 +6,98 @@ type Hobby int
 
 const (
 	HobbyUnspecified Hobby = iota
-	HobbyLiterature
-	HobbyVideoGames
+	HobbyPhotography
+	HobbyPainting
 	HobbyBoardGames
-	HobbyTravels
-	HobbyPlantCultivation
-	HobbyFishing
-	HobbyDogWalks
-	HobbyCatsLover
-	HobbyCarsAndMotorcycles
-	HobbyConcerts
+	HobbyReading
+	HobbyCooking
+	HobbyGardening
+	HobbyTravel
+	HobbyWriting
+	HobbyChess
+	HobbyCrafts
+	HobbyAnimals
+	HobbyAstrology
 )
 
-func PBToHobby(hobby desc.Hobby) Hobby {
-	switch hobby {
+func PBToHobby(h desc.Hobby) Hobby {
+	switch h {
 	case desc.Hobby_HOBBY_UNSPECIFIED:
 		return HobbyUnspecified
-	case desc.Hobby_HOBBY_LITERATURE:
-		return HobbyLiterature
-	case desc.Hobby_HOBBY_VIDEO_GAMES:
-		return HobbyVideoGames
-	case desc.Hobby_HOBBY_BOARD_GAMES:
+	case desc.Hobby_HOBBY_PHOTOGRAPHY:
+		return HobbyPhotography
+	case desc.Hobby_HOBBY_PAINTING:
+		return HobbyPainting
+	case desc.Hobby_HOBBY_BOARDGAMES:
 		return HobbyBoardGames
-	case desc.Hobby_HOBBY_TRAVELS:
-		return HobbyTravels
-	case desc.Hobby_HOBBY_PLANT_CULTIVATION:
-		return HobbyPlantCultivation
-	case desc.Hobby_HOBBY_FISHING:
-		return HobbyFishing
-	case desc.Hobby_HOBBY_DOG_WALKS:
-		return HobbyDogWalks
-	case desc.Hobby_HOBBY_CATS_LOVER:
-		return HobbyCatsLover
-	case desc.Hobby_HOBBY_CARS_AND_MOTORCYCLES:
-		return HobbyCarsAndMotorcycles
-	case desc.Hobby_HOBBY_CONCERTS:
-		return HobbyConcerts
+	case desc.Hobby_HOBBY_READING:
+		return HobbyReading
+	case desc.Hobby_HOBBY_COOKING:
+		return HobbyCooking
+	case desc.Hobby_HOBBY_GARDENING:
+		return HobbyGardening
+	case desc.Hobby_HOBBY_TRAVEL:
+		return HobbyTravel
+	case desc.Hobby_HOBBY_WRITING:
+		return HobbyWriting
+	case desc.Hobby_HOBBY_CHESS:
+		return HobbyChess
+	case desc.Hobby_HOBBY_CRAFTS:
+		return HobbyCrafts
+	case desc.Hobby_HOBBY_ANIMALS:
+		return HobbyAnimals
+	case desc.Hobby_HOBBY_ASTROLOGY:
+		return HobbyAstrology
 	default:
-		return Hobby(0)
+		return HobbyUnspecified
 	}
 }
 
-func HobbyToPB(hobby Hobby) desc.Hobby {
-	switch hobby {
+func HobbyToPB(h Hobby) desc.Hobby {
+	switch h {
 	case HobbyUnspecified:
 		return desc.Hobby_HOBBY_UNSPECIFIED
-	case HobbyLiterature:
-		return desc.Hobby_HOBBY_LITERATURE
-	case HobbyVideoGames:
-		return desc.Hobby_HOBBY_VIDEO_GAMES
+	case HobbyPhotography:
+		return desc.Hobby_HOBBY_PHOTOGRAPHY
+	case HobbyPainting:
+		return desc.Hobby_HOBBY_PAINTING
 	case HobbyBoardGames:
-		return desc.Hobby_HOBBY_BOARD_GAMES
-	case HobbyTravels:
-		return desc.Hobby_HOBBY_TRAVELS
-	case HobbyPlantCultivation:
-		return desc.Hobby_HOBBY_PLANT_CULTIVATION
-	case HobbyFishing:
-		return desc.Hobby_HOBBY_FISHING
-	case HobbyDogWalks:
-		return desc.Hobby_HOBBY_DOG_WALKS
-	case HobbyCatsLover:
-		return desc.Hobby_HOBBY_CATS_LOVER
-	case HobbyCarsAndMotorcycles:
-		return desc.Hobby_HOBBY_CARS_AND_MOTORCYCLES
-	case HobbyConcerts:
-		return desc.Hobby_HOBBY_CONCERTS
+		return desc.Hobby_HOBBY_BOARDGAMES
+	case HobbyReading:
+		return desc.Hobby_HOBBY_READING
+	case HobbyCooking:
+		return desc.Hobby_HOBBY_COOKING
+	case HobbyGardening:
+		return desc.Hobby_HOBBY_GARDENING
+	case HobbyTravel:
+		return desc.Hobby_HOBBY_TRAVEL
+	case HobbyWriting:
+		return desc.Hobby_HOBBY_WRITING
+	case HobbyChess:
+		return desc.Hobby_HOBBY_CHESS
+	case HobbyCrafts:
+		return desc.Hobby_HOBBY_CRAFTS
+	case HobbyAnimals:
+		return desc.Hobby_HOBBY_ANIMALS
+	case HobbyAstrology:
+		return desc.Hobby_HOBBY_ASTROLOGY
 	default:
-		return desc.Hobby(0)
+		return desc.Hobby_HOBBY_UNSPECIFIED
 	}
 }
 
-func HobbySliceToPB(hobbies []Hobby) []desc.Hobby {
-	hobbiesPB := make([]desc.Hobby, 0, len(hobbies))
-
-	for _, hobby := range hobbies {
-		hobbiesPB = append(hobbiesPB, HobbyToPB(hobby))
+func HobbySliceToPB(h []Hobby) []desc.Hobby {
+	pb := make([]desc.Hobby, len(h))
+	for i, v := range h {
+		pb[i] = HobbyToPB(v)
 	}
-
-	return hobbiesPB
+	return pb
 }
 
-func PBToHobbySlice(hobbies []desc.Hobby) []Hobby {
-	hobbiesDomain := make([]Hobby, 0, len(hobbies))
-
-	for _, hobby := range hobbies {
-		hobbiesDomain = append(hobbiesDomain, PBToHobby(hobby))
+func PBToHobbySlice(pb []desc.Hobby) []Hobby {
+	h := make([]Hobby, len(pb))
+	for i, v := range pb {
+		h[i] = PBToHobby(v)
 	}
-
-	return hobbiesDomain
+	return h
 }

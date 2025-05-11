@@ -205,12 +205,14 @@ func extractInterestPairs(interests *interest.Interest) []struct {
 	Value int
 } {
 	interestGroups := map[string][]int{
-		"social":           convertSlice(interests.GetSocial()),
-		"sport":            convertSlice(interests.GetSport()),
-		"self_development": convertSlice(interests.GetSelfDevelopment()),
-		"art":              convertSlice(interests.GetArt()),
-		"hobby":            convertSlice(interests.GetHobby()),
-		"gastronomy":       convertSlice(interests.GetGastronomy()),
+		interest.SportDBName:             convertSlice(interests.GetSport()),
+		interest.SelfDevelopmentDBName:   convertSlice(interests.GetSelfDevelopment()),
+		interest.HobbyDBName:             convertSlice(interests.GetHobby()),
+		interest.MusicDBName:             convertSlice(interests.GetMusic()),
+		interest.MoviesTVDBName:          convertSlice(interests.GetMoviesTV()),
+		interest.FoodDrinkDBName:         convertSlice(interests.GetFoodDrink()),
+		interest.PersonalityTraitsDBName: convertSlice(interests.GetPersonalityTraits()),
+		interest.PetsDBName:              convertSlice(interests.GetPets()),
 	}
 
 	var pairs []struct {

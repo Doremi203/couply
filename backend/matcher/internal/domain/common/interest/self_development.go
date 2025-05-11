@@ -18,8 +18,8 @@ const (
 	SelfDevelopmentReading
 )
 
-func PBToSelfDevelopment(selfDevelopment desc.SelfDevelopment) SelfDevelopment {
-	switch selfDevelopment {
+func PBToSelfDevelopment(sd desc.SelfDevelopment) SelfDevelopment {
+	switch sd {
 	case desc.SelfDevelopment_SELFDEVELOPMENT_UNSPECIFIED:
 		return SelfDevelopmentUnspecified
 	case desc.SelfDevelopment_SELFDEVELOPMENT_LANGUAGES:
@@ -43,12 +43,12 @@ func PBToSelfDevelopment(selfDevelopment desc.SelfDevelopment) SelfDevelopment {
 	case desc.SelfDevelopment_SELFDEVELOPMENT_READING:
 		return SelfDevelopmentReading
 	default:
-		return SelfDevelopment(0)
+		return SelfDevelopmentUnspecified
 	}
 }
 
-func SelfDevelopmentToPB(selfDevelopment SelfDevelopment) desc.SelfDevelopment {
-	switch selfDevelopment {
+func SelfDevelopmentToPB(sd SelfDevelopment) desc.SelfDevelopment {
+	switch sd {
 	case SelfDevelopmentUnspecified:
 		return desc.SelfDevelopment_SELFDEVELOPMENT_UNSPECIFIED
 	case SelfDevelopmentLanguages:
@@ -72,26 +72,22 @@ func SelfDevelopmentToPB(selfDevelopment SelfDevelopment) desc.SelfDevelopment {
 	case SelfDevelopmentReading:
 		return desc.SelfDevelopment_SELFDEVELOPMENT_READING
 	default:
-		return desc.SelfDevelopment(0)
+		return desc.SelfDevelopment_SELFDEVELOPMENT_UNSPECIFIED
 	}
 }
 
-func SelfDevelopmentSliceToPB(sds []SelfDevelopment) []desc.SelfDevelopment {
-	sdsPB := make([]desc.SelfDevelopment, 0, len(sds))
-
-	for _, sd := range sds {
-		sdsPB = append(sdsPB, SelfDevelopmentToPB(sd))
+func SelfDevelopmentSliceToPB(s []SelfDevelopment) []desc.SelfDevelopment {
+	pb := make([]desc.SelfDevelopment, len(s))
+	for i, v := range s {
+		pb[i] = SelfDevelopmentToPB(v)
 	}
-
-	return sdsPB
+	return pb
 }
 
-func PBToSelfDevelopmentSlice(sds []desc.SelfDevelopment) []SelfDevelopment {
-	sdsDomain := make([]SelfDevelopment, 0, len(sds))
-
-	for _, sd := range sds {
-		sdsDomain = append(sdsDomain, PBToSelfDevelopment(sd))
+func PBToSelfDevelopmentSlice(pb []desc.SelfDevelopment) []SelfDevelopment {
+	s := make([]SelfDevelopment, len(pb))
+	for i, v := range pb {
+		s[i] = PBToSelfDevelopment(v)
 	}
-
-	return sdsDomain
+	return s
 }
