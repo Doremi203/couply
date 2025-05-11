@@ -1,11 +1,12 @@
 package blocker_service
 
 import (
+	"time"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"github.com/Doremi203/couply/backend/blocker/internal/client/telegram"
 	"github.com/Doremi203/couply/backend/blocker/internal/client/user"
 	"github.com/patrickmn/go-cache"
-	"time"
 )
 
 type UseCase struct {

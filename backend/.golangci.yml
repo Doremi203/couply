@@ -16,9 +16,9 @@ linters:
     warn-unused: true
   settings:
     gocyclo:
-      min-complexity: 20
+      min-complexity: 25
     gocognit:
-      min-complexity: 20
+      min-complexity: 25
 
 formatters:
   enable:

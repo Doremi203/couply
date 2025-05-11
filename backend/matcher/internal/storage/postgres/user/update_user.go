@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"

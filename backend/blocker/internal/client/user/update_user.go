@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	"google.golang.org/grpc/codes"

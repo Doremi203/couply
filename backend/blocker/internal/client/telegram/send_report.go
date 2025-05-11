@@ -2,8 +2,9 @@ package telegram
 
 import (
 	"fmt"
-	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
 	"strings"
+
+	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
 
 	user_service "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"

@@ -2,6 +2,7 @@ package user_service
 
 import (
 	"context"
+
 	"google.golang.org/protobuf/types/known/fieldmaskpb"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
