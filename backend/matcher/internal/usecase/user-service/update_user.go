@@ -45,7 +45,7 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		SetUpdatedAt(time.Now()).
 		Build()
 
-	updatedUser, err := c.userStorageFacade.UpdateUserTx(ctx, user)
+	updatedUser, err := c.userStorageFacade.UpdateUserTx(ctx, user, in.GetUpdateMask())
 	if err != nil {
 		return nil, err
 	}

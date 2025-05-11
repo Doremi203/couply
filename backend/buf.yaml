@@ -3,5 +3,6 @@ version: v2
 modules:
   - path: auth
   - path: matcher
+  - path: blocker
   - path: notificator
   - path: common/proto

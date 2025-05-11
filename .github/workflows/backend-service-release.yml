@@ -7,9 +7,14 @@ on:
         type: string
         description: "Service name (e.g. auth, matcher)"
       db_name:
-        required: true
+        required: false
         type: string
         description: "Database name for migrations"
+      needs_migrations:
+        required: false
+        type: string
+        description: "Service need for migrations"
+        default: true
       instance_group_name:
         required: true
         type: string
@@ -76,6 +81,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - test-unit
+    if: ${{ inputs.needs_migrations }}
     timeout-minutes: 10
     defaults:
       run:
@@ -84,9 +90,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download goose
+        if: ${{ inputs.needs_migrations == 'true' }}
         run: curl -fsSL https://raw.githubusercontent.com/pressly/goose/master/install.sh | sh
 
       - name: Setup yc
+        if: ${{ inputs.needs_migrations == 'true' }}
         run: |
           curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
           echo '${{ secrets.YC_SERVICE_KEY }}' > sa-key.json
@@ -94,6 +102,7 @@ jobs:
           /opt/yc/bin/yc config set folder-id b1ggapscf0p06cohndtt
 
       - name: Migrate up
+        if: ${{ inputs.needs_migrations == 'true' }}
         run: |
           echo "Fetching DB_USER from Yandex Cloud Lockbox..."
           DB_USER=$(/opt/yc/bin/yc lockbox payload get --name testing-db --key db-user)
@@ -104,6 +113,9 @@ jobs:
           export GOOSE_DRIVER=postgres
           export GOOSE_DBSTRING="postgres://$DB_USER:$DB_PASS@${{ vars.TESTING_DB_HOST }}:6432/${{ inputs.db_name }}?sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/home/runner/.postgresql/root.crt"
           goose -v -dir "migrations" up
+
+      - name: Success
+        run: echo "migrated"
 
   build-testing:
     needs: codegen

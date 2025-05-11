@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strconv"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 
@@ -107,6 +108,12 @@ func (c *Config) readFromSecrets(cfg any) error {
 		switch fv.Kind() {
 		case reflect.String:
 			fv.SetString(secret)
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+			secretNumber, err := strconv.ParseInt(secret, 10, 64)
+			if err != nil {
+				return errors.WrapFailf(err, "field %q could not be parsed", field.Name)
+			}
+			fv.SetInt(secretNumber)
 		default:
 			return fmt.Errorf("field type %q (%s) not supported", field.Name, fv.Kind())
 		}

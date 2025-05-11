@@ -1,13 +1,13 @@
-name: Matcher Service CI/CD
+name: Blocker Service CI/CD
 
 on:
   pull_request:
     branches: ["main"]
     paths:
-      - 'backend/matcher/**'
+      - 'backend/blocker/**'
       - 'backend/auth/pkg/**'
       - 'backend/common/**'
-      - '.github/workflows/matcher-backend.yml'
+      - '.github/workflows/blocker-backend.yml'
       - '.github/actions/codegen/**'
 
 concurrency:
@@ -18,6 +18,5 @@ jobs:
   ci:
     uses: ./.github/workflows/backend-service-ci.yml
     with:
-      service_name: matcher
-      additional_paths: 'backend/auth/pkg/**'
+      service_name: blocker
     secrets: inherit

@@ -1,0 +1,16 @@
+name: Notificator Service Release Flow
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    uses: ./.github/workflows/backend-service-release.yml
+    with:
+      service_name: blocker
+      needs_migrations: false
+      instance_group_name: blocker-testing
+    secrets: inherit

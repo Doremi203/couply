@@ -8,7 +8,7 @@ export TESTCONTAINERS_RYUK_DISABLED=true
 export BASE_MIGRATIONS_PATH=$(PWD)
 
 secrets/yc-token:
-	@echo "YC_TOKEN=$$(yc iam create-token)" > .env
+	@echo "YC_TOKEN=$$(yc iam create-token)" > secrets.env
 
 deps: deps/migrate deps/go-test-coverage deps/buf deps/mockgen deps/protoc deps/linters
 
@@ -59,7 +59,7 @@ define CLONE_PROTO_REPO
 	@rm -rf tmp
 endef
 
-generate: auth/generate matcher/generate
+generate: auth/generate matcher/generate blocker/generate notificator/generate
 
 services/deploy:
 	docker compose up
@@ -165,3 +165,25 @@ notificator/migrate/down-one:
 
 notificator/migrate/create:
 	cd $(NOTIFICATOR_MIGRATIONS) && $(MIGRATE_CREATE)
+
+
+### Blocker service targets
+blocker/check-coverage:
+	-cd blocker && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd blocker && go-test-coverage --config=.local.testcoverage.yml
+	@rm blocker/cover.out
+
+blocker/local-build:
+	cd blocker/cmd/app && go build -ldflags="-s -w" -o /dev/null
+
+blocker/lint:
+	cd blocker && golangci-lint run
+
+blocker/run:
+	docker compose up -d blocker
+
+blocker/start: blocker/generate
+	docker compose up --build --force-recreate -d blocker
+
+blocker/generate:
+	cd blocker && go generate ./...

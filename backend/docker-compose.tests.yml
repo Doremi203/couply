@@ -15,6 +15,20 @@ services:
     ports:
       - "5432:5432"
 
+  blocker:
+    build:
+      context: .
+      dockerfile: blocker/prod.Dockerfile
+    environment:
+      APP_ENV: tests
+      CONFIGS_PATH: /app/configs
+    ports:
+      - "7003:7003"
+      - "7004:7004"
+    depends_on:
+      db:
+        condition: service_healthy
+
   matcher:
     build:
       context: .

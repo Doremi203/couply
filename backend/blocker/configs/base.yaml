@@ -1,0 +1,20 @@
+grpc:
+  port: 7004
+
+http:
+  port: 7003
+
+logging:
+  level: debug
+  format: console
+
+swagger-ui:
+  path: /app/swagger-ui
+  enabled: true
+
+secrets:
+  ids:
+    telegram: e6qgotvn596k4k5331cq
+
+user_service:
+  address:  "matcher:7002"

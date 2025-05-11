@@ -7,7 +7,7 @@ on:
       - 'backend/notificator/**'
       - 'backend/auth/pkg/**'
       - 'backend/common/**'
-      - '.github/workflows/auth-backend.yml'
+      - '.github/workflows/notificator-backend.yml'
       - '.github/actions/codegen/**'
 
 # Cancel any in-progress job or run for the same branch/PR to save resources
@@ -19,5 +19,5 @@ jobs:
   ci:
     uses: ./.github/workflows/backend-service-ci.yml
     with:
-      service_name: auth
+      service_name: notificator
     secrets: inherit
