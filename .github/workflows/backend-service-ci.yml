@@ -96,4 +96,4 @@ jobs:
           path: backend
 
       - name: Build Docker image
-        run: docker build -t ${{ inputs.service_name }}_service:latest . -f ${{ inputs.service_name }}/prod.Dockerfile
+        run: docker build --build-arg service=${{ inputs.service_name }} -t ${{ inputs.service_name }}_service:latest . -f prod.Dockerfile

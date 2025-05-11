@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	userpkg "github.com/Doremi203/couply/backend/auth/pkg/user"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 	"github.com/Doremi203/couply/backend/matcher/utils"
@@ -17,7 +16,7 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		return nil, err
 	}
 
-	photos, err := c.createPhotos(ctx, userpkg.ID(userID), in.GetPhotoUploadRequests())
+	photos, err := c.createPhotos(ctx, userID, in.GetPhotoUploadRequests())
 	if err != nil {
 		return nil, errors.WrapFail(err, "create photos")
 	}

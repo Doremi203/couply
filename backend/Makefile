@@ -74,7 +74,7 @@ auth/check-coverage:
 	@rm auth/cover.out
 
 auth/local-build:
-	cd auth/cmd/auth && go build -ldflags="-s -w" -o /dev/null
+	cd auth/cmd/app && go build -ldflags="-s -w" -o /dev/null
 
 auth/lint:
 	cd auth && golangci-lint run

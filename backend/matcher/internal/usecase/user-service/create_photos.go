@@ -5,11 +5,11 @@ import (
 	"fmt"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	userpkg "github.com/Doremi203/couply/backend/auth/pkg/user"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+	"github.com/google/uuid"
 )
 
-func (c *UseCase) createPhotos(ctx context.Context, userID userpkg.ID, requests []user.PhotoUploadRequest) ([]user.Photo, error) {
+func (c *UseCase) createPhotos(ctx context.Context, userID uuid.UUID, requests []user.PhotoUploadRequest) ([]user.Photo, error) {
 	photos := make([]user.Photo, 0, len(requests))
 	for _, req := range requests {
 		photo := user.Photo{
