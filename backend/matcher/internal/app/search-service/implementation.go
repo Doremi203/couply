@@ -15,6 +15,7 @@ type searchServiceUseCase interface {
 	UpdateFilter(ctx context.Context, in *dto.UpdateFilterV1Request) (*dto.UpdateFilterV1Response, error)
 	GetFilter(ctx context.Context, in *dto.GetFilterV1Request) (*dto.GetFilterV1Response, error)
 	SearchUsers(ctx context.Context, in *dto.SearchUsersV1Request) (*dto.SearchUsersV1Response, error)
+	AddView(ctx context.Context, in *dto.AddViewV1Request) (*dto.AddViewV1Response, error)
 }
 
 type Implementation struct {

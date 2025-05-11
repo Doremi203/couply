@@ -121,7 +121,7 @@ func baseConditions(filter *search.Filter) sq.Sqlizer {
 		sq.Eq{"is_hidden": false},
 		sq.Eq{"is_blocked": false},
 		sq.NotEq{"id": filter.GetUserID()},
-		sq.Expr("NOT EXISTS (SELECT 1 FROM likes WHERE sender_id = ? AND receiver_id = u.id)", filter.GetUserID()),
+		sq.Expr("NOT EXISTS (SELECT 1 FROM user_views WHERE viewer_id = ? AND viewed_id = u.id)", filter.GetUserID()),
 	}
 }
 
