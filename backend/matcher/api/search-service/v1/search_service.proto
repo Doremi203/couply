@@ -123,6 +123,26 @@ service SearchService {
       }
     };
   }
+  rpc AddViewV1 (AddViewV1Request) returns (AddViewV1Response) {
+    option (google.api.http) = {
+      post: "/v1/AddViewV1"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Добавление просмотра профиля";
+      description: "Добавляет пользователя в историю просмотров, чтобы снова не появляться в ленте поиска";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateFilterV1Request {
@@ -248,6 +268,13 @@ message SearchUsersV1Request {
 
 message SearchUsersV1Response {
   repeated UserSearchInfo users_search_info = 1;
+}
+
+message AddViewV1Request {
+  string viewed_id = 1;
+}
+
+message AddViewV1Response {
 }
 
 message Filter {
