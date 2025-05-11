@@ -61,6 +61,9 @@ func (s *phoneConfirmationService) SendCodeV1(
 
 	confirmReq, err := s.phoneConfirmationUseCase.SendCodeV1(ctx, user.ID(t.GetUserID()), phone)
 	switch {
+	case errors.Is(err, usecase.ErrUnsupportedPhoneOperator):
+		return nil, status.Error(codes.FailedPrecondition, err.Error())
+
 	case errors.Is(err, usecase.ErrPendingConfirmationRequestAlreadyExists):
 		return nil, status.Error(codes.ResourceExhausted, err.Error())
 

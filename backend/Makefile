@@ -7,6 +7,9 @@ MIGRATE_CREATE = goose create $(name) sql -s
 export TESTCONTAINERS_RYUK_DISABLED=true
 export BASE_MIGRATIONS_PATH=$(PWD)
 
+secrets/yc-token:
+	@echo "YC_TOKEN=$$(yc iam create-token)" > secrets.env
+
 deps: deps/migrate deps/go-test-coverage deps/buf deps/mockgen deps/protoc deps/linters
 
 deps/migrate:

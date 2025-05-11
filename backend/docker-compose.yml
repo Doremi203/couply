@@ -32,6 +32,8 @@ services:
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs
+    env_file:
+      - secrets.env
     ports:
       - "7001:7001"
       - "7002:7002"
@@ -46,6 +48,8 @@ services:
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs
+    env_file:
+      - secrets.env
     volumes:
       - ./auth/swagger/api:/app/swagger-ui/api
     ports:

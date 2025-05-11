@@ -7,6 +7,8 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 )
 
+var ErrUnsupportedPhoneOperator = errors.Error("phone operator not supported")
+
 type Sender interface {
 	Send(ctx context.Context, text, phoneE164 string) error
 }

@@ -17,7 +17,7 @@ import (
 	idempotencypostgres "github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
-	"github.com/Doremi203/couply/backend/auth/pkg/sms"
+	"github.com/Doremi203/couply/backend/auth/pkg/sms/smsru"
 	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
@@ -57,6 +57,12 @@ func main() {
 
 		phoneConfirmationConfig := phoneconfirm.Config{}
 		err = app.Config.ReadSection("phone-confirmation", &phoneConfirmationConfig)
+		if err != nil {
+			return err
+		}
+
+		smsruSenderConfig := smsru.Config{}
+		err = app.Config.ReadSection("smsru", &smsruSenderConfig)
 		if err != nil {
 			return err
 		}
@@ -105,9 +111,11 @@ func main() {
 		)
 
 		phoneConfirmationUseCase := usecase.NewPhoneConfirmation(
-			sms.TestSender{
-				Logger: app.Log,
-			},
+			smsru.NewSender(
+				smsruSenderConfig,
+				app.HTTPClient(),
+				app.Log,
+			),
 			phoneconfirm.NewDigitCodeGenerator(phoneConfirmationConfig),
 			hashProvider,
 			phoneconfirmpostgres.NewRepo(dbClient),

@@ -45,6 +45,7 @@ type PhoneConfirmation struct {
 
 var ErrPendingConfirmationRequestAlreadyExists = errors.Error("phone confirmation request already exists")
 var ErrPhoneAlreadyConfirmed = errors.Error("phone already confirmed for some user")
+var ErrUnsupportedPhoneOperator = errors.Error("phone operator not supported")
 
 func (u PhoneConfirmation) SendCodeV1(ctx context.Context, userID user.ID, phone user.Phone) (phoneconfirm.Request, error) {
 	_, err := u.userRepo.GetByPhone(ctx, phone)
@@ -87,7 +88,10 @@ func (u PhoneConfirmation) SendCodeV1(ctx context.Context, userID user.ID, phone
 	}
 
 	err = u.smsSender.Send(ctx, string(request.Code.Value()), string(phone))
-	if err != nil {
+	switch {
+	case errors.Is(err, sms.ErrUnsupportedPhoneOperator):
+		return phoneconfirm.Request{}, ErrUnsupportedPhoneOperator
+	case err != nil:
 		return phoneconfirm.Request{}, errors.WrapFail(err, "send phone code")
 	}
 

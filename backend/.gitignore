@@ -2,6 +2,7 @@
 vendor/*
 
 *.tmp.*
+*.env
 
 # ignore proto build artifacts
 *cover.out
