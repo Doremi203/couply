@@ -19,6 +19,7 @@ func (s *PgStorageMatching) FetchOutgoingLikes(ctx context.Context, userID uuid.
 	).
 		From("likes").
 		Where(sq.Eq{"sender_id": userID}).
+		Where(sq.Eq{"status": 1}).
 		OrderBy("created_at DESC").
 		Limit(limit).
 		Offset(offset).

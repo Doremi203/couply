@@ -46,6 +46,15 @@ func (f *StorageFacadeSearch) SearchUsersTx(ctx context.Context, userID uuid.UUI
 			u.Interest = userInterest
 		}
 
+		for _, u := range users {
+			userPhotos, err := f.userStorage.GetPhotos(ctx, u.GetID())
+			if err != nil {
+				return fmt.Errorf("SearchUsersTx: get photos failed: %w", err)
+			}
+
+			u.Photos = userPhotos
+		}
+
 		return nil
 	})
 

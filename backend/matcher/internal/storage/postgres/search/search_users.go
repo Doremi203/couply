@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
+
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -134,12 +136,12 @@ func applyMainFilters(qb sq.SelectBuilder, filter *search.Filter) sq.SelectBuild
 	}
 
 	filters := map[string]int{
-		"goal":      int(filter.GetGoal()),
-		"zodiac":    int(filter.GetZodiac()),
-		"education": int(filter.GetEducation()),
-		"children":  int(filter.GetChildren()),
-		"alcohol":   int(filter.GetAlcohol()),
-		"smoking":   int(filter.GetSmoking()),
+		common.GoalDBName:      int(filter.GetGoal()),
+		common.ZodiacDBName:    int(filter.GetZodiac()),
+		common.EducationDBName: int(filter.GetEducation()),
+		common.ChildrenDBName:  int(filter.GetChildren()),
+		common.AlcoholDBName:   int(filter.GetAlcohol()),
+		common.SmokingDBName:   int(filter.GetSmoking()),
 	}
 
 	for field, value := range filters {
