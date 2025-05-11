@@ -1,15 +1,12 @@
 name: Matcher Service CI/CD
 
-permissions:
-  actions: read
-  contents: read
-
 on:
   pull_request:
     branches: ["main"]
     paths:
       - 'backend/matcher/**'
       - 'backend/auth/pkg/**'
+      - 'backend/common/**'
       - '.github/workflows/matcher-backend.yml'
       - '.github/actions/codegen/**'
 
@@ -19,83 +16,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  codegen:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/codegen
-      - name: Upload codegen results
-        uses: actions/upload-artifact@v4
-        with:
-          name: codegen-output
-          path: backend
-
-  lint:
-    needs: codegen
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    defaults:
-      run:
-        working-directory: backend/matcher
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download codegen results
-        uses: actions/download-artifact@v4
-        with:
-          name: codegen-output
-          path: backend
-
-      - name: golangci-lint
-        uses: golangci/golangci-lint-action@v7
-        with:
-          version: latest
-          working-directory: backend/matcher
-
-  test:
-    needs: codegen
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: backend/matcher
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download codegen results
-        uses: actions/download-artifact@v4
-        with:
-          name: codegen-output
-          path: backend
-
-      - name: Run tests with coverage
-        run: BASE_MIGRATIONS_PATH=${{ github.workspace }}/backend go test ./... -race -coverprofile=coverage.txt -covermode=atomic -coverpkg=./...
-
-      - name: Upload coverage report to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          slug: ${{ github.repository }}
-          files: ./backend/matcher/coverage.txt
-          fail_ci_if_error: false
-          verbose: true
-
-  build:
-    needs: codegen
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    defaults:
-      run:
-        working-directory: backend
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download codegen results
-        uses: actions/download-artifact@v4
-        with:
-          name: codegen-output
-          path: backend
-
-      - name: Build Docker image
-        run: docker build -t matcher_service:latest . -f matcher/prod.Dockerfile
+  ci:
+    uses: ./.github/workflows/backend-service-ci.yml
+    with:
+      service_name: matcher
+      additional_paths: 'backend/auth/pkg/**'
+    secrets: inherit

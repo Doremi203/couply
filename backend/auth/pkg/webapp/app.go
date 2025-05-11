@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"reflect"
 	"runtime/debug"
+	"strings"
 	"sync"
 	"syscall"
 	"time"
@@ -103,7 +104,8 @@ func initApp() *App {
 
 	sdkClient, err := initYCSdk(httpClient, env)
 	if err != nil {
-		panic(errors.WrapFail(err, "init yc sdk"))
+		logger.Error(errors.WrapFail(err, "init yc sdk"))
+		os.Exit(1)
 	}
 
 	app := &App{
@@ -126,11 +128,22 @@ func initApp() *App {
 		livenessCheckFunc: func() bool {
 			return true
 		},
+		gatewayOptions: []runtime.ServeMuxOption{
+			runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
+				switch s = strings.ToLower(s); s {
+				case "idempotency-key", "user-token", "x-api-key":
+					return s, true
+				default:
+					return runtime.DefaultHeaderMatcher(s)
+				}
+			}),
+		},
 	}
 
 	err = app.loadSecrets()
 	if err != nil {
-		panic(errors.WrapFail(err, "load secrets"))
+		logger.Error(errors.WrapFail(err, "load secrets"))
+		os.Exit(1)
 	}
 
 	return app
@@ -312,7 +325,10 @@ func (a *App) registerGatewayHandler(
 
 func (a *App) initGRPCServer(grpcMux *runtime.ServeMux) (*grpc.Server, error) {
 	grpcServer := grpc.NewServer(
-		grpc.ChainUnaryInterceptor(NewUnaryPanicInterceptor(a.Log)),
+		grpc.ChainUnaryInterceptor(
+			NewUnaryPanicInterceptor(a.Log),
+			NewUnaryInternalErrorLogInterceptor(a.Log),
+		),
 		grpc.ChainUnaryInterceptor(a.grpcUnaryInterceptors...),
 	)
 	reflection.Register(grpcServer)

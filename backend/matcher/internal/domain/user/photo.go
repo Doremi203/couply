@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/Doremi203/couply/backend/auth/pkg/user"
+	"github.com/google/uuid"
 	"github.com/minio/minio-go/v7"
 )
 
@@ -78,7 +78,7 @@ type PhotoUploadRequest struct {
 }
 
 type Photo struct {
-	UserID      user.ID    `db:"user_id"`
+	UserID      uuid.UUID  `db:"user_id"`
 	OrderNumber int32      `db:"order_number"`
 	ObjectKey   string     `db:"object_key"`
 	MimeType    string     `db:"mime_type"`

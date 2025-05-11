@@ -1,0 +1,23 @@
+name: Notificator Service CI/CD
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'backend/notificator/**'
+      - 'backend/auth/pkg/**'
+      - 'backend/common/**'
+      - '.github/workflows/auth-backend.yml'
+      - '.github/actions/codegen/**'
+
+# Cancel any in-progress job or run for the same branch/PR to save resources
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/backend-service-ci.yml
+    with:
+      service_name: auth
+    secrets: inherit

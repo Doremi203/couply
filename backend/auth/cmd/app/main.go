@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"strings"
 
 	phoneconfirmgrpc "github.com/Doremi203/couply/backend/auth/gen/api/phone-confirm"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
@@ -21,22 +20,10 @@ import (
 	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 )
 
 func main() {
 	webapp.Run(func(ctx context.Context, app *webapp.App) error {
-		app.AddGatewayOptions(
-			runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
-				switch s = strings.ToLower(s); s {
-				case "idempotency-key", "user-token":
-					return s, true
-				default:
-					return runtime.DefaultHeaderMatcher(s)
-				}
-			}),
-		)
-
 		dbConfig := postgres.Config{}
 		err := app.Config.ReadSection("database", &dbConfig)
 		if err != nil {

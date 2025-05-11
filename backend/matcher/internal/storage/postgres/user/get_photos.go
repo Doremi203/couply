@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	userpkg "github.com/Doremi203/couply/backend/auth/pkg/user"
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
@@ -48,7 +47,7 @@ func (s *PgStorageUser) GetPhotos(ctx context.Context, userID uuid.UUID) ([]user
 
 	return slices.Map(photos, func(from photoEntity) user.Photo {
 		return user.Photo{
-			UserID:      userpkg.ID(from.UserID),
+			UserID:      from.UserID,
 			OrderNumber: from.OrderNumber,
 			ObjectKey:   from.ObjectKey,
 			MimeType:    from.MimeType,

@@ -1,13 +1,17 @@
 FROM golang:alpine AS build
+ARG service
 WORKDIR /src
+
 COPY go.mod go.sum ./
 RUN go mod download
+
 COPY . .
-WORKDIR /src/matcher/cmd/matcher
+WORKDIR /src/$service/cmd/app
 RUN go build -ldflags="-s -w" -o /src/app
 
 FROM alpine
+ARG service
 WORKDIR /app
 COPY --from=build /src/app ./
-COPY --from=build /src/matcher/configs configs
+COPY --from=build /src/$service/configs configs
 CMD ["./app"]
