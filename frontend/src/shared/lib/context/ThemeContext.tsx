@@ -19,7 +19,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     localStorage.setItem('theme', theme);
     document.body.setAttribute('data-theme', theme);
 
-    const themeColor = theme === 'dark' ? '#4fd1c5' : '#202C83';
+    const themeColor = theme === 'dark' ? '#4fd1c5' : '#3b5eda';
 
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     const metaAppleStatusBar = document.querySelector(

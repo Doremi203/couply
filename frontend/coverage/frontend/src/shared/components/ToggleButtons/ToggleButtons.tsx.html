@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>7/14</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>7/14</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -112,7 +112,9 @@
 <a name='L47'></a><a href='#L47'>47</a>
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,6 +143,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -149,18 +153,18 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useEffect } from 'react';
 &nbsp;
 import styles from './toggleButtons.module.css';
@@ -174,12 +178,14 @@ interface ToggleButtonsProps {
   options: ToggleButtonOption[];
   onSelect: (value: string) =&gt; void;
   value?: string;
+  className?: string;
 }
 &nbsp;
 export const ToggleButtons: React.FC&lt;ToggleButtonsProps&gt; = ({
   options,
   onSelect,
   value,
+  className,
 }) =&gt; {
   const [selected, setSelected] = useState&lt;string&gt;(value || '');
 &nbsp;
@@ -195,21 +201,21 @@ export const ToggleButtons: React.FC&lt;ToggleButtonsProps&gt; = ({
   };
 &nbsp;
   return (
-    &lt;div className={styles.toggleButtons}&gt;
-      {options.map((option) =&gt; (
-<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        &lt;b</span></span></span>utton
-          key={option.value}
-          className={selected === option.value ? styles.active : styles.button}
-          onClick={() =&gt; handleClick(option.value)}
+    &lt;div className={`${styles.toggleButtons} ${className || ''}`}&gt;
+      {options.map(option =&gt; (
+<span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >        &lt;b</span></span></span>utton</span>
+<span class="cstat-no" title="statement not covered" >          key={option.value}</span>
+<span class="cstat-no" title="statement not covered" >          className={selected === option.value ? styles.active : styles.button}</span>
+<span class="cstat-no" title="statement not covered" >          onClick={() =&gt; handleClick(option.value)}</span>
         &gt;
-          {option.label}
+<span class="cstat-no" title="statement not covered" >          {option.label}</span>
         &lt;/button&gt;
       ))}
-    &lt;/div&gt;
+<span class="cstat-no" title="statement not covered" >    &lt;/div&gt;</span>
   );
-<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >};</span></span>
+<span class="cstat-no" title="statement not covered" >};</span>
 &nbsp;
-export default ToggleButtons;
+<span class="cstat-no" title="statement not covered" >export default ToggleButtons;</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -217,7 +223,7 @@ export default ToggleButtons;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-08T18:59:50.442Z
+                at 2025-05-11T18:04:48.217Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.91% </span>
+                <span class="strong">74.35% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/46</span>
+                <span class='fraction'>29/39</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/6</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">33.33% </span>
+                <span class="strong">37.5% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/9</span>
+                <span class='fraction'>3/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.91% </span>
+                <span class="strong">74.35% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/46</span>
+                <span class='fraction'>29/39</span>
             </div>
         
             
@@ -168,29 +168,9 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -199,19 +179,39 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -220,79 +220,79 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { matcherApi } from '../../../shared/api/baseApi';
 &nbsp;
 import {
-  CreateMatchRequest,
-  FetchInMatchesRequest,
   FetchMatchesRequest,
-  Match,
+  FetchMatchesResponse,
+  FetchMatchesUserIdsResponse,
+  LikeRequest,
+  LikeResponse,
   MatchRequest,
-  MatchesResponse,
 } from './types';
 &nbsp;
 export const matchesApi = matcherApi.injectEndpoints({
   endpoints: builder =&gt; ({
-    createMatch: builder.mutation&lt;Match, CreateMatchRequest&gt;({
+    likeUser: builder.mutation&lt;LikeResponse, LikeRequest&gt;({
       query: data =&gt; ({
-        url: '/v1/CreateMatchV1',
+        url: '/v1/LikeUserhV1',
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
+      // invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
     }),
 &nbsp;
-    deleteMatch: builder.mutation&lt;object, CreateMatchRequest&gt;({
+    dislikeUser: builder.mutation&lt;object, MatchRequest&gt;({
+      query: data =&gt; ({
+        url: '/v1/LikeUserhV1',
+        method: 'POST',
+        body: data,
+      }),
+      // invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
+    }),
+&nbsp;
+    deleteMatch: builder.mutation&lt;object, MatchRequest&gt;({
       query: data =&gt; ({
         url: '/v1/DeleteMatchV1',
         method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
-    }),
+<span class="fstat-no" title="function not covered" >        body: data,</span>
+<span class="cstat-no" title="statement not covered" >      }),</span>
+      // invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
+<span class="cstat-no" title="statement not covered" >    }<span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >),</span></span></span></span>
 &nbsp;
-    updateMatch: builder.mutation&lt;Match, MatchRequest&gt;({
+<span class="cstat-no" title="statement not covered" >    fetchIncomingLikes: builder.mutation&lt;FetchMatchesResponse, FetchMatchesRequest&gt;({</span>
       query: data =&gt; ({
-        url: '/v1/UpdateMatchV1',
-        method: 'POST',
-        body: data,
-      }),
-      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
-    }<span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="branch-0 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" >),</span></span></span></span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    fetchIncomingMatches: builder.mutation&lt;Match[], FetchInMatchesRequest&gt;({</span>
-      query: data =&gt; ({
-        url: '/v1/FetchIncomingMatchesV1',
+        url: '/v1/FetchIncomingLikesV1',
         method: 'POST',
         body: data,
 <span class="fstat-no" title="function not covered" >      }),</span>
-<span class="cstat-no" title="statement not covered" >      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],</span>
+      // invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
 <span class="cstat-no" title="statement not covered" >    }),</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    fetchMatches: builder.mutation&lt;MatchesResponse, FetchMatchesRequest&gt;({</span>
-      query: data =&gt; ({
-        url: '/v1/FetchMatchesV1',
-        method: 'POST',
-        body: data,
-      }),
-<span class="fstat-no" title="function not covered" >      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],</span>
-<span class="cstat-no" title="statement not covered" >    }),</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >    fetchOutgoingMatches: builder.mutation&lt;Match[], FetchMatchesRequest&gt;({</span>
+<span class="cstat-no" title="statement not covered" >    fetchMatches: builder.mutation&lt;FetchMatchesUserIdsResponse, FetchMatchesRequest&gt;({</span>
 <span class="cstat-no" title="statement not covered" >      query: data =&gt; ({</span>
-        url: '/v1/FetchOutgoingMatchesV1',
+        url: '/v1/FetchMatchesUserIDsV1',
+        method: 'POST',
+        body: data,
+<span class="fstat-no" title="function not covered" >      }),</span>
+      // invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
+<span class="cstat-no" title="statement not covered" >    }),</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    fetchOutgoingLikes: builder.mutation&lt;FetchMatchesResponse, FetchMatchesRequest&gt;({</span>
+<span class="cstat-no" title="statement not covered" >      query: data =&gt; ({</span>
+        url: '/v1/FetchOutgoingLikesV1',
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
-    }<span class="fstat-no" title="function not covered" >),</span>
-<span class="cstat-no" title="statement not covered" >  }),</span>
-<span class="cstat-no" title="statement not covered" >});</span>
+      // invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
+    }),
+  }),
+});
 &nbsp;
-<span class="cstat-no" title="statement not covered" >export const {</span>
-<span class="cstat-no" title="statement not covered" >  useCreateMatchMutation,</span>
+export const {
   useDeleteMatchMutation,
-  useUpdateMatchMutation,
-  useFetchIncomingMatchesMutation,
   useFetchMatchesMutation,
-<span class="fstat-no" title="function not covered" >  useFetchOutgoingMatchesMutation,</span>
+  useFetchIncomingLikesMutation,
+  useFetchOutgoingLikesMutation,
+  useLikeUserMutation,
+<span class="fstat-no" title="function not covered" >  useDislikeUserMutation,</span>
 <span class="cstat-no" title="statement not covered" >} = matchesApi;</span>
 &nbsp;</pre></td></tr></table></pre>
 
@@ -301,7 +301,7 @@ export const matchesApi = matcherApi.injectEndpoints({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-08T18:59:50.442Z
+                at 2025-05-11T18:04:48.217Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

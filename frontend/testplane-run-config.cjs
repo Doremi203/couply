@@ -7,7 +7,7 @@ module.exports = {
   resetCursor: false,
   sets: {
     desktop: {
-      files: ['testplane-tests/scenarios/UserRegistrationE2E.testplane.js'],
+      files: ['testplane-tests/e2e/UserRegistrationE2E.testplane.js'],
       browsers: ['chrome'],
     },
   },

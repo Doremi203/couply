@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.04% </span>
+                <span class="strong">84.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>37/43</span>
+                <span class='fraction'>38/45</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.04% </span>
+                <span class="strong">84.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/43</span>
+                <span class='fraction'>38/45</span>
             </div>
         
             
@@ -185,7 +185,9 @@
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
 <a name='L122'></a><a href='#L122'>122</a>
-<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -247,6 +249,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -273,9 +276,10 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -310,7 +314,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useRef, useState } from 'react';
 &nbsp;
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
-import { BasicInfoForm, ProfileData } from '../../features/profileEdit';
+import { ProfileData } from '../../features/profileEdit';
 import { ProfilePhotoEdit } from '../../features/profileEdit/components/ProfilePhotoEdit';
 import { ProfileVisibilitySection } from '../../features/profileVisibility/components/ProfileVisibilitySection';
 import AboutMeSection from '../../shared/components/AboutMeSection';
@@ -358,7 +362,7 @@ export const EditProfile: React.FC&lt;EditProfileProps&gt; = ({
   };
 &nbsp;
   return (
-    &lt;div className={styles.editContent}&gt;
+    &lt;div&gt;
 <span class="fstat-no" title="function not covered" >      &lt;input</span>
 <span class="cstat-no" title="statement not covered" >        type="file"</span>
 <span class="cstat-no" title="statement not covered" >        ref={fileInputRef}</span>
@@ -367,63 +371,65 @@ export const EditProfile: React.FC&lt;EditProfileProps&gt; = ({
 <span class="cstat-no" title="statement not covered" >        onChange={handleFileChange}</span>
 <span class="cstat-no" title="statement not covered" >      /&gt;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      &lt;PageHeader onBack={onBack} title="edit profile" /&gt;</span>
+<span class="cstat-no" title="statement not covered" >      &lt;PageHeader onBack={onBack} title="Редактирование" /&gt;</span>
 &nbsp;
-      &lt;ProfilePhotoEdit profilePhoto={profileData.photos[0]} onCameraClick={handleCameraClick} /&gt;
+<span class="cstat-no" title="statement not covered" >      &lt;div className={styles.editContent}&gt;</span>
+        &lt;ProfilePhotoEdit profilePhoto={profileData.photos[0]} onCameraClick={handleCameraClick} /&gt;
 &nbsp;
-<span class="fstat-no" title="function not covered" >      &lt;P</span>hotoGalleryEdit
-        photos={profileData.photos}
-        onPhotoRemove={onPhotoRemove}
-        onAddPhotoClick={() =&gt; handleCameraClick(false)}
-      /&gt;
+<span class="fstat-no" title="function not covered" >        &lt;P</span>hotoGalleryEdit
+          photos={profileData.photos}
+          onPhotoRemove={onPhotoRemove}
+          onAddPhotoClick={() =&gt; handleCameraClick(false)}
+        /&gt;
 &nbsp;
-      {/* &lt;BasicInfoForm profileData={profileData} onInputChange={onInputChange} /&gt; */}
+        {/* &lt;BasicInfoForm profileData={profileData} onInputChange={onInputChange} /&gt; */}
 &nbsp;
-      &lt;AboutMeSection about={profileData.about} onInputChange={onInputChange} /&gt;
+        &lt;AboutMeSection about={profileData.about} onInputChange={onInputChange} /&gt;
 &nbsp;
-      &lt;InterestsSection
-        title="Interests"
-        placeholder="Interests (comma separated)"
-        values={profileData.interests}
-        fieldName="interests"
-        onArrayInputChange={onArrayInputChange}
-      /&gt;
+        &lt;InterestsSection
+          title="Интересы"
+          placeholder="Interests (comma separated)"
+          values={profileData.interests}
+          fieldName="interests"
+          onArrayInputChange={onArrayInputChange}
+        /&gt;
 &nbsp;
-      &lt;InterestsSection
-        title="Music"
-        placeholder="Favorite music (comma separated)"
-        values={profileData.music}
-        fieldName="music"
-        onArrayInputChange={onArrayInputChange}
-      /&gt;
+        &lt;InterestsSection
+          title="Music"
+          placeholder="Favorite music (comma separated)"
+          values={profileData.music}
+          fieldName="music"
+          onArrayInputChange={onArrayInputChange}
+        /&gt;
 &nbsp;
-      &lt;InterestsSection
-        title="Movies"
-        placeholder="Favorite movies (comma separated)"
-        values={profileData.movies}
-        fieldName="movies"
-        onArrayInputChange={onArrayInputChange}
-      /&gt;
+        &lt;InterestsSection
+          title="Movies"
+          placeholder="Favorite movies (comma separated)"
+          values={profileData.movies}
+          fieldName="movies"
+          onArrayInputChange={onArrayInputChange}
+        /&gt;
 &nbsp;
-      &lt;InterestsSection
-        title="Books"
-        placeholder="Favorite books (comma separated)"
-        values={profileData.books}
-        fieldName="books"
-        onArrayInputChange={onArrayInputChange}
-      /&gt;
+        &lt;InterestsSection
+          title="Books"
+          placeholder="Favorite books (comma separated)"
+          values={profileData.books}
+          fieldName="books"
+          onArrayInputChange={onArrayInputChange}
+        /&gt;
 &nbsp;
-      &lt;InterestsSection
-        title="Hobbies"
-        placeholder="Hobbies (comma separated)"
-        values={profileData.hobbies}
-        fieldName="hobbies"
-        onArrayInputChange={onArrayInputChange}
-      /&gt;
+        &lt;InterestsSection
+          title="Hobbies"
+          placeholder="Hobbies (comma separated)"
+          values={profileData.hobbies}
+          fieldName="hobbies"
+          onArrayInputChange={onArrayInputChange}
+        /&gt;
 &nbsp;
-      &lt;ProfileVisibilitySection isHidden={profileData.isHidden} onInputChange={onInputChange} /&gt;
+        &lt;ProfileVisibilitySection isHidden={profileData.isHidden} onInputChange={onInputChange} /&gt;
 &nbsp;
-      &lt;SaveButtonSection onSave={onSave} /&gt;
+        &lt;SaveButtonSection onSave={onSave} /&gt;
+      &lt;/div&gt;
     &lt;/div&gt;
   );
 };
@@ -436,7 +442,7 @@ export default EditProfile;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-05-08T18:59:50.442Z
+                at 2025-05-11T18:04:48.217Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

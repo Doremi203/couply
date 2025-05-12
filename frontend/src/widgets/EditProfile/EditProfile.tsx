@@ -74,7 +74,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <AboutMeSection about={profileData.about} onInputChange={onInputChange} />
 
         <InterestsSection
-          title="Interests"
+          title="Интересы"
           placeholder="Interests (comma separated)"
           values={profileData.interests}
           fieldName="interests"

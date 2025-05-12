@@ -60,7 +60,7 @@ body {
 .textOverlay {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: 47%;
   transform: translate(-50%, -50%);
   z-index: 3;
   text-align: center;
@@ -75,4 +75,6 @@ body {
   background-color: black;
   position: absolute;
   top: 65%;
+  right: 17%;
+  width: 300px;
 }

@@ -8,7 +8,7 @@ export const NoUsersLeft = () => {
         <div className={`${styles.wave} ${styles.waveTwo}`} />
       </div>
       <div className={styles.textOverlay}>
-        <div className={styles.header}> Вы посмотрели всех пользователей</div>
+        <div className={styles.header}>Вы посмотрели всех пользователей</div>
         <div className={styles.text}>Загляните сюда позже</div>
       </div>
     </div>

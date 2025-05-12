@@ -38,10 +38,10 @@ import styles from './profileSlider.module.css';
 const profiles = [
   {
     id: 1,
-    name: 'Анна',
+    name: 'Максим',
     age: 25,
-    bio: '',
-    photos: ['man1.jpg', 'man1.jpg', 'man1.jpg'],
+    bio: 'Увлекаюсь фотографией и кулинарией.',
+    photos: ['man1.jpg', 'man3.jpeg', 'man4.jpeg'],
     location: 'Москва, Россия',
     verified: true,
     interests: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
@@ -111,7 +111,7 @@ const adProfiles = [
   {
     id: 'ad1',
     isAd: true,
-    adText: 'Ебать какая классная игра всем советую!!',
+    adText: 'Главный платформер 2025 года!!',
     adLink: 'https://t.me/cactus_carnage',
     photos: ['cactus3.jpg'],
     name: 'Cactus Carnage',
@@ -157,8 +157,8 @@ export const ProfileSlider = () => {
   const [createFilter] = useCreateFilterMutation();
 
   // const [profiles1, setProfiles] = useState<(typeof profiles)[0][]>([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<(typeof profiles)[0] | null>(null);
@@ -201,7 +201,11 @@ export const ProfileSlider = () => {
 
   const handleNextUser = () => {
     // If showing an ad and timer is active, don't allow swiping
-    if (showingAd && timerActive) {
+    if (showingAd && timerActive) return;
+
+    // Check if we're at the end of profiles and not showing an ad
+    if (currentIndex >= profiles.length - 1 && !showingAd) {
+      setCurrentIndex(prev => prev + 1);
       return;
     }
 
@@ -247,7 +251,6 @@ export const ProfileSlider = () => {
       }
       setTimerActive(false);
     }
-
     setCurrentIndex(prev => prev + 1);
     setCurrentPhotoIndex(0);
   };
@@ -259,24 +262,72 @@ export const ProfileSlider = () => {
   };
 
   const handleNextPhoto = () => {
+    // Add safety check to ensure currentIndex is valid
+    if (currentIndex < 0 || currentIndex >= profiles.length) return;
+
     const currentUser = profiles[currentIndex];
     setCurrentPhotoIndex(prevIndex => (prevIndex + 1) % currentUser.photos.length);
   };
 
   const handlePrevPhoto = () => {
+    // Add safety check to ensure currentIndex is valid
+    if (currentIndex < 0 || currentIndex >= profiles.length) return;
+
     const currentUser = profiles[currentIndex];
     setCurrentPhotoIndex(
       prevIndex => (prevIndex - 1 + currentUser.photos.length) % currentUser.photos.length,
     );
   };
 
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [translateX, setTranslateX] = useState(0);
+  const [opacity, setOpacity] = useState(1);
+
   const handlers = useSwipeable({
-    onSwipedLeft: () => handleNextUser(),
-    onSwipedRight: () => handleNextUser(),
+    onSwiping: e => {
+      if (showingAd && timerActive) return;
+
+      setTranslateX(e.deltaX);
+      setOpacity(1 - Math.abs(e.deltaX) / 300);
+      setSwipeDirection(e.deltaX > 0 ? 'right' : 'left');
+      // Don't call handleNextUser here, wait for onSwiped
+    },
+    onSwiped: e => {
+      if (showingAd && timerActive) return;
+
+      if (Math.abs(e.deltaX) > 100) {
+        setSwipeDirection(null);
+        setTranslateX(e.deltaX > 0 ? 500 : -500);
+        setOpacity(0);
+
+        // Use setTimeout to allow animation to complete before changing profile
+        setTimeout(() => {
+          // Reset photo index first to prevent flickering
+          setCurrentPhotoIndex(0);
+          handleNextUser();
+
+          // Add a small delay before resetting styles to ensure smooth transition
+          setTimeout(() => {
+            setTranslateX(0);
+            setOpacity(1);
+          }, 50);
+        }, 300);
+      } else {
+        setTranslateX(0);
+        setOpacity(1);
+        setSwipeDirection(null);
+      }
+    },
     trackMouse: true,
-    // @ts-ignore
-    preventDefaultTouchmoveEvent: !timerActive, // Prevent swiping when timer is active
   });
+
+  // const handlers = useSwipeable({
+  //   onSwipedLeft: () => handleNextUser(),
+  //   onSwipedRight: () => handleNextUser(),
+  //   trackMouse: true,
+  //   // @ts-ignore
+  //   preventDefaultTouchmoveEvent: !timerActive, // Prevent swiping when timer is active
+  // });
 
   // Clean up timer on unmount
   useEffect(() => {
@@ -287,13 +338,23 @@ export const ProfileSlider = () => {
     };
   }, []);
 
-  if (currentIndex >= profiles.length && !showingAd) {
-    return <NoUsersLeft />;
-  }
+  // This check is now handled when determining currentProfile
 
+  // Make sure we have a valid index before accessing profiles
   const currentProfile = showingAd
     ? adProfiles[adIndex % adProfiles.length]
-    : profiles[currentIndex];
+    : currentIndex >= 0 && currentIndex <= profiles.length - 1
+      ? profiles[currentIndex]
+      : null;
+
+  console.log(currentIndex);
+  console.log(profiles.length);
+  console.log(currentProfile);
+
+  // If we don't have a valid profile and we're not showing an ad, show NoUsersLeft
+  if (!currentProfile && !showingAd) {
+    return <NoUsersLeft />;
+  }
 
   // if (loading) {
   //   return <div className={styles.loading}>Загрузка...</div>;
@@ -309,6 +370,7 @@ export const ProfileSlider = () => {
 
   const handleProfileClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // If it's an ad, navigate to the ad link
+    //@ts-ignore
     if (showingAd && 'adLink' in currentProfile) {
       window.open(currentProfile.adLink, '_blank');
       return;
@@ -422,58 +484,77 @@ export const ProfileSlider = () => {
 
   return (
     <div className={styles.slider}>
-      <div className={styles.profileCard} {...handlers} onClick={handleProfileClick}>
-        <img
-          src={currentProfile.photos[currentPhotoIndex]}
-          // src="man1.jpg"
-          alt={currentProfile.name}
-          className={styles.profileImage}
-          draggable="false"
-        />
-
-        {!isAd && (
-          <>
-            <div className={styles.distance}>0 км</div>
+      {currentProfile && (
+        <>
+          <div
+            className={styles.profileCard}
+            {...handlers}
+            onClick={handleProfileClick}
+            style={{
+              transform: `translateX(${translateX}px)`,
+              opacity: opacity,
+            }}
+          >
+            {swipeDirection === 'left' && (
+              <div className={`${styles.swipeIndicator} ${styles.left}`}>👎</div>
+            )}
+            {swipeDirection === 'right' && (
+              <div className={`${styles.swipeIndicator} ${styles.right}`}>👍</div>
+            )}
             <img
-              src="data:image/png;base64,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"
-              alt="error--v1"
-              className={styles.block}
-              width="20px"
-              height="20px"
-              onClick={onBlock}
+              src={currentProfile.photos[currentPhotoIndex]}
+              // src="man1.jpg"
+              alt={currentProfile.name}
+              className={styles.profileImage}
+              draggable="false"
             />
-          </>
-        )}
 
-        {!isAd && renderProfileInfo()}
+            {!isAd && (
+              <>
+                <div className={styles.distance}>0 км</div>
+                <img
+                  src="data:image/png;base64,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"
+                  alt="error--v1"
+                  className={styles.block}
+                  width="20px"
+                  height="20px"
+                  onClick={onBlock}
+                />
+              </>
+            )}
 
-        {isAd && (
-          <div>
-            <div className={styles.nameWithBioOne}>{currentProfile.name}</div>
-            <div className={styles.bio}>
-              {'adText' in currentProfile ? currentProfile.adText : ''}
-            </div>
-            {timerActive && <div className={styles.adTimer}>{timer}</div>}
-            <div className={styles.adText}>Реклама</div>
+            {!isAd && renderProfileInfo()}
+
+            {isAd && (
+              <div>
+                <div className={styles.nameWithBioOne}>{currentProfile.name}</div>
+                <div className={styles.bio}>
+                  {'adText' in currentProfile ? currentProfile.adText : ''}
+                </div>
+                {timerActive && <div className={styles.adTimer}>{timer}</div>}
+                <div className={styles.adText}>Реклама</div>
+              </div>
+            )}
+
+            {!isAd && (
+              <div className={styles.photoCounter}>
+                {currentPhotoIndex + 1}/{currentProfile.photos.length}
+              </div>
+            )}
           </div>
-        )}
 
-        {!isAd && (
-          <div className={styles.photoCounter}>
-            {currentPhotoIndex + 1}/{currentProfile.photos.length}
+          <div className={styles.controls}>
+            <UndoButton onClick={handlePrevUser} />
+            <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
+            <LikeButton
+              onClick={handleNextUser}
+              className={styles.likeButton}
+              likeClassName={styles.like}
+            />
+            <MessageButton onClick={() => setPremiumOpen(true)} />
           </div>
-        )}
-      </div>
-      <div className={styles.controls}>
-        <UndoButton onClick={handlePrevUser} />
-        <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
-        <LikeButton
-          onClick={handleNextUser}
-          className={styles.likeButton}
-          likeClassName={styles.like}
-        />
-        <MessageButton onClick={() => setPremiumOpen(true)} />
-      </div>
+        </>
+      )}
 
       {selectedProfile && (
         <ProfileView

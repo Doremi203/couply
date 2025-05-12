@@ -1,23 +1,40 @@
 import { configureStore } from '@reduxjs/toolkit';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 
 import userReducer from '../../../../entities/user/model/userSlice';
 import { baseApi } from '../../../../shared/api/baseApi';
 
 import { ProfileSlider } from './ProfileSlider';
 
-// Create a mock store with the user reducer
+// Фикс для модальных окон
+const ModalRoot = () => <div id="modal-root" style={{ position: 'relative', zIndex: 999 }} />;
+
 const mockStore = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     user: userReducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(baseApi.middleware),
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false, // Отключаем проверку для Storybook
+    }).concat(baseApi.middleware),
   preloadedState: {
     user: {
       id: 'mock-user-id',
       isAuthenticated: true,
+      profile: null,
+      status: 'idle',
+      error: null,
+      // Добавляем все обязательные поля из userSlice
+    },
+    [baseApi.reducerPath]: {
+      queries: {},
+      mutations: {},
+      provided: {},
+      subscriptions: {},
+      config: baseApi.reducerPath,
     },
   },
 });
@@ -38,9 +55,19 @@ const meta = {
   decorators: [
     Story => (
       <Provider store={mockStore}>
-        <div style={{ width: '100%', maxWidth: '350px', height: '600px' }}>
-          <Story />
-        </div>
+        <MemoryRouter>
+          <ModalRoot /> {/* Добавляем корень для модалок */}
+          <div
+            style={{
+              maxWidth: '350px',
+              marginTop: '20px',
+              height: '600px',
+              position: 'relative',
+            }}
+          >
+            <Story />
+          </div>
+        </MemoryRouter>
       </Provider>
     ),
   ],
@@ -49,11 +76,4 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof ProfileSlider>;
 
-// Since ProfileSlider has its own internal state and data,
-// we don't need to pass any props to it
 export const Default: Story = {};
-
-// Note: The ProfileSlider component uses internal state and hardcoded profiles,
-// so we can't easily customize it with different stories without modifying the component.
-// In a real-world scenario, you might want to refactor the component to accept profiles as props
-// to make it more flexible for testing and reuse.

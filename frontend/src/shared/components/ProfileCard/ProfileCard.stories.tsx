@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { MemoryRouter } from 'react-router-dom'; // Добавляем импорт
 
 import { ProfileCard } from './ProfileCard';
 
@@ -17,9 +18,13 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '350px' }}>
-        <Story />
-      </div>
+      <MemoryRouter>
+        {' '}
+        {/* Добавляем обертку роутера */}
+        <div style={{ width: '100%', maxWidth: '350px' }}>
+          <Story />
+        </div>
+      </MemoryRouter>
     ),
   ],
 } satisfies Meta<typeof ProfileCard>;

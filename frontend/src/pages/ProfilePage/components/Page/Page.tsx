@@ -27,14 +27,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [isVerified, setIsVerified] = useState(initialVerified);
 
   const [profileData, setProfileData] = useState<ProfileData>({
-    name: 'Jenny',
-    age: 22,
+    name: 'Майя',
+    age: 21,
     phone: '+91 9876543210',
     dateOfBirth: '1997-05-02',
     email: 'abcqwertyu@gmail.com',
     gender: 'female',
-    interests: ['Travel', 'Fashion', 'Music'],
-    about: 'I love traveling and exploring new places.',
+    interests: ['Музыка', 'Путешествия', 'Спорт'],
+    about: 'Я люблю человека-паука, викенда и пить бабл ти.',
     music: ['Pop', 'Rock', 'Jazz'],
     movies: ['Comedy', 'Action', 'Drama'],
     books: ['Fiction', 'Biography'],

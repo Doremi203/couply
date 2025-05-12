@@ -4,8 +4,8 @@
   "description": "Приложение для знакомств",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#202C83",
-  "theme_color": "#202C83",
+  "background_color": "#3b5eda",
+  "theme_color": "#3b5eda",
   "icons": [
     {
       "src": "logo1.png",

@@ -15,7 +15,7 @@ const likes = [
     id: 1,
     name: 'Анна',
     age: 25,
-    imageUrl: 'woman1.jpg',
+    imageUrl: 'girl.jpeg',
     liked: false,
     hasLikedYou: true, // This profile has already liked the user
     location: 'Москва, Россия',
@@ -25,7 +25,7 @@ const likes = [
     id: 2,
     name: 'Иван',
     age: 30,
-    imageUrl: 'man1.jpg',
+    imageUrl: 'boy.jpeg',
     liked: false,
     hasLikedYou: true, // This profile has already liked the user
     location: 'Санкт-Петербург, Россия',
@@ -35,7 +35,7 @@ const likes = [
     id: 3,
     name: 'Ольга',
     age: 28,
-    imageUrl: 'photo1.png',
+    imageUrl: 'woman3.jpeg',
     liked: false,
     hasLikedYou: false,
     location: 'Казань, Россия',
@@ -45,7 +45,7 @@ const likes = [
     id: 4,
     name: 'Алексей',
     age: 32,
-    imageUrl: 'man1.jpg',
+    imageUrl: 'miio.jpeg',
     liked: false,
     hasLikedYou: false,
     location: 'Екатеринбург, Россия',
@@ -65,7 +65,7 @@ const matchesUsers = [
     id: 102, // Using different ID range for matches
     name: 'Дмитрий',
     age: 31,
-    imageUrl: 'man1.jpg',
+    imageUrl: 'boy1.jpeg',
     telegram: '@dmitry_31',
   },
 ];

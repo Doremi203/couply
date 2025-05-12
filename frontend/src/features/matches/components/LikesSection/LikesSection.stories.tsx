@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { MemoryRouter } from 'react-router-dom'; // Добавляем импорт
 
 import { LikesSection } from './LikesSection';
 
@@ -16,15 +17,21 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '350px', marginTop: '20px' }}>
-        <Story />
-      </div>
+      <MemoryRouter>
+        {' '}
+        {/* Добавляем обертку Router */}
+        <div style={{ width: '350px', marginTop: '20px' }}>
+          <Story />
+        </div>
+      </MemoryRouter>
     ),
   ],
 } satisfies Meta<typeof LikesSection>;
 
 export default meta;
 type Story = StoryObj<typeof LikesSection>;
+
+// ...остальной код с sampleLikes остается без изменений...
 
 const sampleLikes = [
   {
