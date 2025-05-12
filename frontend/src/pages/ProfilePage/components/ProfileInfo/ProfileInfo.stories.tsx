@@ -11,6 +11,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', marginTop: '40px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof ProfileInfo>;
 
 export default meta;
@@ -34,6 +41,7 @@ const mockProfileData: ProfileData = {
 };
 
 export const Verified: Story = {
+  // @ts-ignore
   args: {
     profileData: mockProfileData,
     isVerified: true,
@@ -42,6 +50,7 @@ export const Verified: Story = {
 };
 
 export const Unverified: Story = {
+  // @ts-ignore
   args: {
     profileData: mockProfileData,
     isVerified: false,

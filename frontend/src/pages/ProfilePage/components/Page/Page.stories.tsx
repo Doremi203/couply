@@ -7,18 +7,14 @@ const meta: Meta = {
   title: 'Pages/ProfilePage',
   component: Page,
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
-        <Story />
+        <div style={{ width: '350px', maxWidth: '400px' }}>
+          <Story />
+        </div>
       </BrowserRouter>
     ),
   ],
-  parameters: {
-    layout: 'fullscreen',
-    backgrounds: {
-      default: 'light',
-    },
-  },
 };
 
 export default meta;
@@ -51,22 +47,6 @@ export const EditMode: Story = {
     docs: {
       description: {
         story: 'Shows the profile in edit mode where users can modify their information.',
-      },
-    },
-  },
-};
-
-export const ActivityHistory: Story = {
-  args: {
-    initialTab: 'activity',
-    initialEditMode: false,
-    initialVerified: false,
-  },
-  name: 'Activity History View',
-  parameters: {
-    docs: {
-      description: {
-        story: 'Shows the activity history with profile views and interactions.',
       },
     },
   },

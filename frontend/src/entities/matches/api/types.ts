@@ -1,38 +1,37 @@
-export interface Match {
-  match: {
-    mainUserId: string;
-    chosenUserId: string;
-    approved: boolean;
-  };
+import { Status } from '../constants';
+
+export interface FetchMatchesRequest {
+  limit: number;
+  offset: number;
 }
 
 export interface MatchRequest {
-  mainUserId: string;
-  chosenUserId: string;
-  approved: boolean;
+  targetUserId: string;
 }
 
-export interface CreateMatchRequest {
-  mainUserId: string;
-  chosenUserId: string;
-}
-
-export interface FetchMatchesRequest {
-  mainUserId: string;
-  limit: number;
-  offset: number;
-}
-
-export interface FetchInMatchesRequest {
-  chosenUserId: string;
-  limit: number;
-  offset: number;
-}
-
-export interface MatchesResponse {
-  match: Array<{
-    mainUserId: string;
-    chosenUserId: string;
-    approved: boolean;
+export interface FetchMatchesResponse {
+  likes: Array<{
+    senderId: string;
+    receiverId: string;
+    message: string;
+    status: Status;
   }>;
+}
+
+export interface FetchMatchesUserIdsResponse {
+  userIds: Array<string>;
+}
+
+export interface LikeRequest {
+  targetUserId: string;
+  message: string;
+}
+
+export interface LikeResponse {
+  isMatch: boolean;
+  match: {
+    firstUserId: string;
+    secondUserId: string;
+    createdAt: string;
+  };
 }

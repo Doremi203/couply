@@ -1,14 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-import useFetchUsers from '../../../../entities/user/hooks/useFetchUsers';
-import { LikesSection, useMatches } from '../../../../features/matches';
+import { LikesSection, useLikesAndMatches } from '../../../../features/matches';
 import { NavBar } from '../../../../shared/components/NavBar';
 import TabsSection from '../../../../shared/components/TabsSection';
 import { ProfileView } from '../../../../widgets/ProfileView';
 import { useProfileView } from '../../hooks/useProfileView';
 import MatchesSection from '../MatchesSection';
 import { MatchModal } from '../MatchModal';
-// import { ProfileView } from '../ProfileView';
 
 import styles from './likesPage.module.css';
 
@@ -17,7 +15,7 @@ const likes = [
     id: 1,
     name: 'Анна',
     age: 25,
-    imageUrl: 'woman1.jpg',
+    imageUrl: 'girl.jpeg',
     liked: false,
     hasLikedYou: true, // This profile has already liked the user
     location: 'Москва, Россия',
@@ -27,7 +25,7 @@ const likes = [
     id: 2,
     name: 'Иван',
     age: 30,
-    imageUrl: 'man1.jpg',
+    imageUrl: 'boy.jpeg',
     liked: false,
     hasLikedYou: true, // This profile has already liked the user
     location: 'Санкт-Петербург, Россия',
@@ -37,7 +35,7 @@ const likes = [
     id: 3,
     name: 'Ольга',
     age: 28,
-    imageUrl: 'photo1.png',
+    imageUrl: 'woman3.jpeg',
     liked: false,
     hasLikedYou: false,
     location: 'Казань, Россия',
@@ -47,7 +45,7 @@ const likes = [
     id: 4,
     name: 'Алексей',
     age: 32,
-    imageUrl: 'man1.jpg',
+    imageUrl: 'miio.jpeg',
     liked: false,
     hasLikedYou: false,
     location: 'Екатеринбург, Россия',
@@ -62,20 +60,18 @@ const matchesUsers = [
     age: 27,
     imageUrl: 'woman1.jpg',
     telegram: '@maria_27',
-    instagram: '@maria_insta',
   },
   {
     id: 102, // Using different ID range for matches
     name: 'Дмитрий',
     age: 31,
-    imageUrl: 'man1.jpg',
+    imageUrl: 'boy1.jpeg',
     telegram: '@dmitry_31',
-    instagram: '@dmitry_insta',
   },
 ];
 
 export const LikesPage = () => {
-  const [activeTab, setActiveTab] = useState<'likes' | 'matches'>('likes');
+  const [activeTab, setActiveTab] = useState<'лайки' | 'мэтчи'>('лайки');
 
   const {
     //   matches,
@@ -83,30 +79,25 @@ export const LikesPage = () => {
     matchedProfile,
     showChatMessage,
     handleLike,
-    handleSendMessage,
+    // handleSendMessage,
     handleKeepSwiping,
     handleSocialClick,
     //   incomingMatches,
-  } = useMatches();
-
-  // @ts-ignore
-  //const likes = useFetchUsers(incomingMatches);
-  // @ts-ignore
-  //const matchesUsers = useFetchUsers(matches);
+  } = useLikesAndMatches();
 
   const { selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile } =
     useProfileView();
 
   // Handle tab change - memoize to prevent unnecessary re-renders
-  const handleTabChange = useCallback((tab: 'likes' | 'matches') => {
+  const handleTabChange = useCallback((tab: 'лайки' | 'мэтчи') => {
     setActiveTab(tab);
   }, []);
 
   // Handle send message (switch to matches tab) - memoize to prevent unnecessary re-renders
-  const handleSendMessageAndSwitchTab = useCallback(() => {
-    handleSendMessage();
-    setActiveTab('matches');
-  }, [handleSendMessage]);
+  // const handleSendMessageAndSwitchTab = useCallback(() => {
+  //   handleSendMessage();
+  //   setActiveTab('matches');
+  // }, [handleSendMessage]);
 
   // Effect to clean up when component unmounts - use a ref to prevent dependency on selectedProfile
   const firstRender = useRef(true);
@@ -128,20 +119,20 @@ export const LikesPage = () => {
 
   return (
     <div className={styles.container} id="likes-page-container">
-      <div className={styles.header}>likes & matches</div>
+      <div className={styles.header}>Лайки и мэтчи</div>
 
       <TabsSection
-        tabs={['likes', 'matches'] as const}
+        tabs={['лайки', 'мэтчи'] as const}
         activeTab={activeTab}
         onTabChange={handleTabChange}
       />
 
-      {activeTab === 'likes' && (
+      {activeTab === 'лайки' && (
         // @ts-ignore
         <LikesSection likes={likes} onProfileClick={handleProfileClick} onLike={handleLike} />
       )}
 
-      {activeTab === 'matches' && (
+      {activeTab === 'мэтчи' && (
         <MatchesSection
           matches={matchesUsers}
           onMatchClick={handleMatchClick}

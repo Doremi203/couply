@@ -20,24 +20,10 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof RegistrationPage>;
 
-// Phone registration story
-export const PhoneRegistration: Story = {
+export const Registration: Story = {
   decorators: [
     Story => (
-      <MemoryRouter initialEntries={[{ pathname: '/registration', state: { method: 'phone' } }]}>
-        <Routes>
-          <Route path="/registration" element={<Story />} />
-        </Routes>
-      </MemoryRouter>
-    ),
-  ],
-};
-
-// Email registration story
-export const EmailRegistration: Story = {
-  decorators: [
-    Story => (
-      <MemoryRouter initialEntries={[{ pathname: '/registration', state: { method: 'email' } }]}>
+      <MemoryRouter initialEntries={[{ pathname: '/registration' }]}>
         <Routes>
           <Route path="/registration" element={<Story />} />
         </Routes>

@@ -7,7 +7,7 @@ const meta: Meta = {
   title: 'Pages/EnterInfoPage',
   component: EnterInfoPage,
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
         <Story />
       </BrowserRouter>

@@ -1,5 +1,8 @@
-.button {
-  border-radius: 50%;
+.buttons {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .page {
@@ -20,6 +23,9 @@
 .text {
   color: var(--header-text-color);
   text-align: center;
+  font-size: 18px;
+  margin-top: 30px;
+  width: 280px;
 }
 
 .loginButton {
@@ -35,4 +41,14 @@
   color: #333;
   cursor: pointer;
   transition: background-color 0.3s ease;
+}
+
+.logo {
+  position: absolute;
+  /* top: 170px; */
+  top: 17%;
+}
+
+.vkIcon {
+  margin-left: 2px;
 }

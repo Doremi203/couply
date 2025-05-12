@@ -11,6 +11,8 @@ interface InfoGridProps {
   infoItems: InfoItem[];
 }
 
+// TODO delete later
+
 export const InfoGrid: React.FC<InfoGridProps> = ({ infoItems }) => {
   return (
     <div className={styles.infoGrid}>

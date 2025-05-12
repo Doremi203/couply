@@ -1,16 +1,7 @@
 import { matcherApi } from '../../../shared/api/baseApi';
-import {
-  Alcohol,
-  Children,
-  Education,
-  GetUserRequest,
-  Goal,
-  Smoking,
-  UpdateUserParams,
-  UserRequest,
-  UserResponse,
-  Zodiac,
-} from '../types';
+
+import { Alcohol, Children, Education, Goal, Smoking, Zodiac } from './constants';
+import { UserResponse, UserRequest, UpdateUserParams } from './types';
 
 //TODO
 const basicData = {
@@ -37,16 +28,16 @@ export const userApiExtended = matcherApi.injectEndpoints({
         method: 'POST',
         body: { ...userData, ...basicData },
       }),
-      invalidatesTags: [{ type: 'User', id: 'LIST' }],
+      // invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
 
-    getUser: builder.mutation<UserResponse, GetUserRequest>({
+    getUser: builder.mutation<UserResponse, object>({
       query: id => ({
         url: '/v1/GetUserV1',
         method: 'POST',
         body: id,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
+      // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),
 
     updateUser: builder.mutation<UserResponse, UpdateUserParams>({
@@ -58,16 +49,16 @@ export const userApiExtended = matcherApi.injectEndpoints({
       invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),
 
-    deleteUser: builder.mutation<void, string>({
+    deleteUser: builder.mutation<object, object>({
       query: id => ({
         url: '/v1/DeleteUserV1',
         method: 'POST',
         body: { id },
       }),
-      invalidatesTags: (_result, _error, id) => [
-        { type: 'User', id },
-        { type: 'User', id: 'LIST' },
-      ],
+      // invalidatesTags: (_result, _error, id) => [
+      //   { type: 'User', id },
+      //   { type: 'User', id: 'LIST' },
+      // ],
     }),
   }),
 });

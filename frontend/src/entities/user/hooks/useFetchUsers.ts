@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 
+import { UserResponse } from '../api/types';
 import { useGetUserMutation } from '../api/userApi';
-import { UserResponse } from '../types';
+
+// TODO maybe delete later
 
 const useFetchUsers = (incomingMatches = []) => {
   const [getUser] = useGetUserMutation();

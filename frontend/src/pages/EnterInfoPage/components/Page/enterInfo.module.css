@@ -6,6 +6,13 @@
   position: relative;
 }
 
+@supports (-webkit-overflow-scrolling: touch) {
+  .container {
+    height: calc(100% - constant(safe-area-inset-bottom));
+    height: calc(100% - env(safe-area-inset-bottom));
+  }
+}
+
 .backIcon {
   cursor: pointer;
   margin-bottom: 20px;
@@ -69,7 +76,7 @@
 }
 
 .photoPreview {
-  position: relative;
+  /* position: relative; */
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -85,8 +92,10 @@
 
 .editIcon {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  /* bottom: 0;
+  right: 0; */
+  top: 210px;
+  right: 120px;
   background-color: var(--primary-color);
   color: white;
   width: 40px;
@@ -122,6 +131,59 @@
 }
 
 .photoPlaceholder span {
+  font-size: 14px;
+  color: var(--secondary-text-color);
+  text-align: center;
+}
+
+.input {
+  margin-top: 10px;
+}
+
+.genderLabel {
+  margin-top: 10px;
+}
+
+.toggleButtons {
+  margin-top: 10px;
+  margin-left: 14px;
+}
+
+.error {
+  color: #ff4444;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+.geoButton {
+  margin-top: 20px;
+  margin-left: 70px;
+}
+
+.geoText {
+  margin-top: 10px;
+}
+
+.coordsDisplay {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
   font-size: 14px;
   color: var(--secondary-text-color);
   text-align: center;

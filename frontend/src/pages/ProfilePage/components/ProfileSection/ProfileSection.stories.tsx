@@ -9,6 +9,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', marginTop: '20px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof ProfileSection>;
 
 export default meta;
@@ -18,35 +25,11 @@ export const Default: Story = {
   args: {
     title: 'About Me',
     children: (
-      <p>I love exploring new places and trying new cuisines. Photography is my passion, and I enjoy capturing moments during my travels.</p>
+      <p>
+        I love exploring new places and trying new cuisines. Photography is my passion, and I enjoy
+        capturing moments during my travels.
+      </p>
     ),
     showEditLink: false,
-  },
-};
-
-export const WithEditLink: Story = {
-  args: {
-    title: 'About Me',
-    children: (
-      <p>I love exploring new places and trying new cuisines. Photography is my passion, and I enjoy capturing moments during my travels.</p>
-    ),
-    showEditLink: true,
-    onEdit: () => console.log('Edit clicked'),
-  },
-};
-
-export const WithListContent: Story = {
-  args: {
-    title: 'Interests',
-    children: (
-      <ul style={{ margin: 0, paddingLeft: '20px' }}>
-        <li>Photography</li>
-        <li>Traveling</li>
-        <li>Cooking</li>
-        <li>Reading</li>
-      </ul>
-    ),
-    showEditLink: true,
-    onEdit: () => console.log('Edit clicked'),
   },
 };

@@ -9,6 +9,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ marginTop: '20px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof ChipFilter>;
 
 export default meta;

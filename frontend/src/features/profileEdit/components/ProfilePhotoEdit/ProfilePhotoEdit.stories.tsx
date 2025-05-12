@@ -16,7 +16,7 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '400px' }}>
+      <div style={{ width: '350px', maxWidth: '400px' }}>
         <Story />
       </div>
     ),
@@ -28,29 +28,7 @@ type Story = StoryObj<typeof ProfilePhotoEdit>;
 
 export const WithPhoto: Story = {
   args: {
-    profilePhoto: 'https://randomuser.me/api/portraits/women/68.jpg',
+    profilePhoto: 'man1.jpg',
     onCameraClick: isAvatar => console.log(`Camera clicked, isAvatar: ${isAvatar}`),
-  },
-};
-
-export const NoPhoto: Story = {
-  args: {
-    profilePhoto: '',
-    onCameraClick: isAvatar => console.log(`Camera clicked, isAvatar: ${isAvatar}`),
-  },
-};
-
-export const MalePhoto: Story = {
-  args: {
-    profilePhoto: 'https://randomuser.me/api/portraits/men/44.jpg',
-    onCameraClick: isAvatar => console.log(`Camera clicked, isAvatar: ${isAvatar}`),
-  },
-};
-
-export const CustomTitle: Story = {
-  args: {
-    profilePhoto: 'https://randomuser.me/api/portraits/women/68.jpg',
-    onCameraClick: isAvatar => console.log(`Camera clicked, isAvatar: ${isAvatar}`),
-    title: 'Your Avatar',
   },
 };

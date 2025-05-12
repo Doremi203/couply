@@ -1,1 +1,0 @@
-export { ActivityIcon } from './ActivityIcon';

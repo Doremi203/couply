@@ -26,7 +26,6 @@ export const useProfileView = () => {
         interests: [],
         lifestyle: {
           contact: `Telegram: ${match.telegram}`,
-          social: `Instagram: ${match.instagram}`,
         },
       },
     };

@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { MemoryRouter } from 'react-router-dom'; // Добавляем импорт
 
 import { LikesSection } from './LikesSection';
 
@@ -16,9 +17,13 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '800px' }}>
-        <Story />
-      </div>
+      <MemoryRouter>
+        {' '}
+        {/* Добавляем обертку Router */}
+        <div style={{ width: '350px', marginTop: '20px' }}>
+          <Story />
+        </div>
+      </MemoryRouter>
     ),
   ],
 } satisfies Meta<typeof LikesSection>;
@@ -26,34 +31,35 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof LikesSection>;
 
-// Sample likes data
+// ...остальной код с sampleLikes остается без изменений...
+
 const sampleLikes = [
   {
     id: 1,
-    name: 'Anna Smith',
+    name: 'Олег',
     age: 28,
-    imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
+    imageUrl: 'man1.jpg',
     hasLikedYou: true,
   },
   {
     id: 2,
-    name: 'John Doe',
+    name: 'Анна',
     age: 32,
-    imageUrl: 'https://randomuser.me/api/portraits/men/44.jpg',
+    imageUrl: 'woman1.jpg',
     hasLikedYou: true,
   },
   {
     id: 3,
-    name: 'Maria Garcia',
+    name: 'Анастасия',
     age: 26,
-    imageUrl: 'https://randomuser.me/api/portraits/women/45.jpg',
+    imageUrl: 'woman1.jpg',
     hasLikedYou: true,
   },
   {
     id: 4,
-    name: 'Alex Johnson',
+    name: 'Павел',
     age: 30,
-    imageUrl: 'https://randomuser.me/api/portraits/men/22.jpg',
+    imageUrl: 'man1.jpg',
     hasLikedYou: true,
   },
 ];
@@ -79,49 +85,6 @@ export const SingleLike: Story = {
   args: {
     // @ts-ignore
     likes: [sampleLikes[0]],
-    onProfileClick: profile => console.log('Profile clicked:', profile),
-    onLike: id => console.log(`Liked profile with id: ${id}`),
-  },
-};
-
-export const ManyLikes: Story = {
-  args: {
-    likes: [
-      // @ts-ignore
-      ...sampleLikes,
-      {
-        // @ts-ignore
-        id: 5,
-        name: 'Sarah Williams',
-        age: 27,
-        imageUrl: 'https://randomuser.me/api/portraits/women/33.jpg',
-        hasLikedYou: true,
-      },
-      {
-        // @ts-ignore
-        id: 6,
-        name: 'Michael Brown',
-        age: 31,
-        imageUrl: 'https://randomuser.me/api/portraits/men/55.jpg',
-        hasLikedYou: true,
-      },
-      {
-        // @ts-ignore
-        id: 7,
-        name: 'Emily Davis',
-        age: 25,
-        imageUrl: 'https://randomuser.me/api/portraits/women/22.jpg',
-        hasLikedYou: true,
-      },
-      {
-        // @ts-ignore
-        id: 8,
-        name: 'David Wilson',
-        age: 33,
-        imageUrl: 'https://randomuser.me/api/portraits/men/33.jpg',
-        hasLikedYou: true,
-      },
-    ],
     onProfileClick: profile => console.log('Profile clicked:', profile),
     onLike: id => console.log(`Liked profile with id: ${id}`),
   },

@@ -2,7 +2,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useRegisterMutation } from '../../../../entities/auth';
+import { useRegister } from '../../../../entities/auth';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 
@@ -21,7 +21,9 @@ export const RegistrationPage = () => {
     confirmPassword: '',
   });
 
-  const [register, { isLoading }] = useRegisterMutation();
+  // const [register, { isLoading }] = useRegisterMutation();
+
+  const { registerAndLogin } = useRegister();
 
   const goBack = () => {
     navigate('/auth');
@@ -71,11 +73,13 @@ export const RegistrationPage = () => {
           ...{ email: contactValue },
         };
 
-        await register(registrationData).unwrap();
+        await registerAndLogin(registrationData);
 
         // Store the token in localStorage
         // localStorage.setItem('token', result.token);
-        navigate('/enterInfo');
+
+        // navigate('/enterInfo');
+        navigate('/enterPhone');
       } catch (error) {
         console.error('Registration failed:', error);
 
@@ -135,7 +139,7 @@ export const RegistrationPage = () => {
       <CustomButton
         onClick={handleSubmit}
         text="Зарегистрироваться"
-        disabled={isLoading}
+        // disabled={isLoading}
         className={styles.submitButton}
       />
     </div>

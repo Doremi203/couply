@@ -1,0 +1,12 @@
+.circle {
+  width: 45px;
+  height: 45px;
+  background: rgb(255, 255, 255);
+  box-shadow: 0 4px 10px 2px rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+}
+
+.icon {
+  margin-top: 13px;
+  margin-left: 13px;
+}

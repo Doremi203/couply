@@ -33,7 +33,7 @@ const sampleProfile = {
     id: 1,
     name: 'Anna Smith',
     age: 28,
-    imageUrl: 'https://randomuser.me/api/portraits/women/68.jpg',
+    imageUrl: 'man1.jpg',
     location: 'Moscow, Russia',
     bio: 'I love hiking, photography, and exploring new places. I work as a software engineer and enjoy solving complex problems.',
     interests: ['Hiking', 'Photography', 'Travel', 'Music', 'Art'],
@@ -44,16 +44,13 @@ const sampleProfile = {
       smoking: 'Never',
     },
     passion: ['Music', 'Travel', 'Photography', 'Art', 'Fashion'],
-    photos: [
-      'https://randomuser.me/api/portraits/women/68.jpg',
-      'https://randomuser.me/api/portraits/women/69.jpg',
-      'https://randomuser.me/api/portraits/women/70.jpg',
-    ],
+    photos: ['man1.jpg'],
   },
 };
 
 export const Default: Story = {
   args: {
+    // @ts-ignore
     profile: sampleProfile,
     onClose: () => console.log('Profile view closed'),
     onLike: id => console.log(`Liked profile with id: ${id}`),
@@ -62,6 +59,7 @@ export const Default: Story = {
 
 export const HasLikedYou: Story = {
   args: {
+    // @ts-ignore
     profile: {
       ...sampleProfile,
       // user: {hasLikedYou: true},
@@ -74,6 +72,7 @@ export const HasLikedYou: Story = {
 export const MinimalProfile: Story = {
   args: {
     profile: {
+      // @ts-ignore
       user: {
         id: 2,
         name: 'John Doe',
@@ -86,3 +85,5 @@ export const MinimalProfile: Story = {
     onLike: id => console.log(`Liked profile with id: ${id}`),
   },
 };
+
+//TODO

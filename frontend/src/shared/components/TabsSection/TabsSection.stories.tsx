@@ -39,7 +39,7 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '400px' }}>
+      <div style={{ width: '350px', maxWidth: '400px' }}>
         <Story />
       </div>
     ),
@@ -51,7 +51,6 @@ type Story = StoryObj<typeof TabsSection>;
 
 // Define some example tab types
 type ProfileTabs = 'info' | 'photos' | 'interests';
-type ContentTabs = 'likes' | 'matches' | 'messages';
 
 export const ProfileTabsExample: Story = {
   render: () => {
@@ -63,34 +62,5 @@ export const ProfileTabsExample: Story = {
     };
 
     return <TabsSectionWrapper initialTab="info" tabs={tabs} tabLabels={tabLabels} />;
-  },
-};
-
-export const ContentTabsExample: Story = {
-  render: () => {
-    const tabs: ContentTabs[] = ['likes', 'matches', 'messages'];
-    const tabLabels: Record<ContentTabs, string> = {
-      likes: 'Likes',
-      matches: 'Matches',
-      messages: 'Messages',
-    };
-
-    return <TabsSectionWrapper initialTab="likes" tabs={tabs} tabLabels={tabLabels} />;
-  },
-};
-
-export const WithoutLabels: Story = {
-  render: () => {
-    const tabs = ['tab1', 'tab2', 'tab3'];
-
-    return <TabsSectionWrapper initialTab="tab1" tabs={tabs} />;
-  },
-};
-
-export const ManyTabs: Story = {
-  render: () => {
-    const tabs = ['tab1', 'tab2', 'tab3', 'tab4', 'tab5', 'tab6'];
-
-    return <TabsSectionWrapper initialTab="tab1" tabs={tabs} />;
   },
 };

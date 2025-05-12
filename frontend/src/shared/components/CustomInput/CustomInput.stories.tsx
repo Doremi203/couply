@@ -17,6 +17,13 @@ const meta: Meta<CustomInputStoryProps> = {
     onChange: { action: 'changed' },
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', marginTop: '20px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;

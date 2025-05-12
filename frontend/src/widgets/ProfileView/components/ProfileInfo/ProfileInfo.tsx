@@ -191,7 +191,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
       onTouchEnd={handleTouchEnd}
       onClick={handleToggleClick}
     >
-      {/* Profile header with name and action buttons */}
       <div className={styles.profileNameContainer}>
         <div>
           <h2 className={styles.profileName}>{profile.name}</h2>
@@ -201,7 +200,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
         </div>
       </div>
 
-      {/* Interest tags with common interests highlighted */}
       <div className={styles.interestTags}>
         {profileDetails.passion.slice(0, 5).map((interest, index) => (
           <CommonInterest
@@ -213,17 +211,14 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
         ))}
       </div>
 
-      {/* Detailed profile information sections */}
       <div className={styles.detailedInfo}>
-        {/* Bio section */}
         <section className={styles.infoSection}>
-          <h3>Introduce</h3>
+          <h3>Био</h3>
           <p>{profileDetails.bio}</p>
         </section>
 
-        {/* Lifestyle section */}
         <section className={styles.infoSection}>
-          <h3>Lifestyle</h3>
+          <h3>Основное</h3>
           {Object.values(profileDetails.lifestyle).map((value, index) => (
             <p key={index}>{value}</p>
           ))}
@@ -231,7 +226,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
 
         {/* Passion/interests section with common interests highlighted */}
         <section className={styles.infoSection}>
-          <h3>Passion</h3>
+          <h3>Интересы</h3>
           <div className={styles.interestTags}>
             {profileDetails.passion.slice(0, 5).map((interest, index) => (
               <CommonInterest
@@ -246,7 +241,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
 
         {/* Photo gallery section */}
         <section className={styles.infoSection}>
-          <h3>Photos</h3>
+          <h3>Фото</h3>
           <div className={styles.photosGrid}>
             {profileDetails.photos.map((photo, index) => (
               <div key={index} className={styles.photoItem}>
@@ -254,6 +249,10 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
               </div>
             ))}
           </div>
+        </section>
+
+        <section className={styles.infoSection}>
+          <div className={styles.empty} />
         </section>
       </div>
     </div>

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
-import ActivityHistory from '../../../../widgets/ActivityHistory';
 import { EditProfile } from '../../../../widgets/EditProfile';
 // import { ProfileView } from '../../../LikesPage/components/ProfileView';
-import { ProfileData, ActivityItem } from '../../types';
-import { ProfilePreview } from '../ProfilePreview';
-import { ProfileView } from '../ProfileView';
+import { ProfileView } from '../../../../widgets/ProfileView';
+import { ProfileData } from '../../types';
+import { Profile } from '../Profile';
+// import { ProfilePreview } from '../ProfilePreview';
 
 import styles from './profilePage.module.css';
 
@@ -27,28 +27,30 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [isVerified, setIsVerified] = useState(initialVerified);
 
   const [profileData, setProfileData] = useState<ProfileData>({
-    name: 'Jenny',
-    age: 22,
+    name: 'Майя',
+    age: 21,
     phone: '+91 9876543210',
     dateOfBirth: '1997-05-02',
     email: 'abcqwertyu@gmail.com',
     gender: 'female',
-    interests: ['Travel', 'Fashion', 'Music'],
-    about: 'I love traveling and exploring new places.',
+    interests: ['Музыка', 'Путешествия', 'Спорт'],
+    about: 'Я люблю человека-паука, викенда и пить бабл ти.',
     music: ['Pop', 'Rock', 'Jazz'],
     movies: ['Comedy', 'Action', 'Drama'],
     books: ['Fiction', 'Biography'],
     hobbies: ['Photography', 'Cooking', 'Hiking'],
     isHidden: false,
     photos: ['/photo1.png', '/woman1.jpg'],
+    //@ts-ignore
+    imageUrl: '/photo1.png',
   });
 
-  const [activityHistory] = useState<ActivityItem[]>([
-    { type: 'view', user: 'Alex', date: '2025-03-28T14:30:00' },
-    { type: 'like', user: 'Michael', date: '2025-03-27T10:15:00' },
-    { type: 'message', user: 'David', date: '2025-03-26T18:45:00' },
-    { type: 'view', user: 'Sarah', date: '2025-03-25T09:20:00' },
-  ]);
+  // const [activityHistory] = useState<ActivityItem[]>([
+  //   { type: 'view', user: 'Alex', date: '2025-03-28T14:30:00' },
+  //   { type: 'like', user: 'Michael', date: '2025-03-27T10:15:00' },
+  //   { type: 'message', user: 'David', date: '2025-03-26T18:45:00' },
+  //   { type: 'view', user: 'Sarah', date: '2025-03-25T09:20:00' },
+  // ]);
 
   const handleEditToggle = () => {
     setIsEditMode(!isEditMode);
@@ -140,10 +142,10 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     setActiveTab('profile');
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString();
-  };
+  // const formatDate = (dateString: string) => {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString();
+  // };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -159,19 +161,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             onPhotoRemove={handlePhotoRemove}
           />
         );
-      case 'activity':
-        return (
-          <ActivityHistory
-            activityHistory={activityHistory}
-            onBack={() => setActiveTab('profile')}
-            formatDate={formatDate}
-          />
-        );
       case 'preview':
-        return <ProfilePreview profileData={profileData} onClose={() => setActiveTab('profile')} />;
+        //@ts-ignore
+        return <ProfileView profile={profileData} onClose={() => setActiveTab('profile')} />;
       default:
         return (
-          <ProfileView
+          <Profile
             profileData={profileData}
             isVerified={isVerified}
             isProfileHidden={isProfileHidden}

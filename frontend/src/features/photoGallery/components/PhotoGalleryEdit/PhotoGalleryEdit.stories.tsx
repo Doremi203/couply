@@ -16,7 +16,7 @@ const meta = {
   tags: ['autodocs'],
   decorators: [
     Story => (
-      <div style={{ width: '100%', maxWidth: '600px' }}>
+      <div style={{ width: '350px', marginTop: '20px' }}>
         <Story />
       </div>
     ),
@@ -27,11 +27,7 @@ export default meta;
 type Story = StoryObj<typeof PhotoGalleryEdit>;
 
 // Sample photos
-const samplePhotos = [
-  'https://randomuser.me/api/portraits/women/68.jpg',
-  'https://randomuser.me/api/portraits/women/69.jpg',
-  'https://randomuser.me/api/portraits/women/70.jpg',
-];
+const samplePhotos = ['man1.jpg', 'woman1.jpg', 'man1.jpg'];
 
 export const WithPhotos: Story = {
   args: {
@@ -54,27 +50,5 @@ export const SinglePhoto: Story = {
     photos: [samplePhotos[0]],
     onPhotoRemove: index => console.log(`Removed photo at index: ${index}`),
     onAddPhotoClick: () => console.log('Add photo clicked'),
-  },
-};
-
-export const ManyPhotos: Story = {
-  args: {
-    photos: [
-      ...samplePhotos,
-      'https://randomuser.me/api/portraits/men/44.jpg',
-      'https://randomuser.me/api/portraits/men/45.jpg',
-      'https://randomuser.me/api/portraits/men/46.jpg',
-    ],
-    onPhotoRemove: index => console.log(`Removed photo at index: ${index}`),
-    onAddPhotoClick: () => console.log('Add photo clicked'),
-  },
-};
-
-export const CustomTitle: Story = {
-  args: {
-    photos: samplePhotos,
-    onPhotoRemove: index => console.log(`Removed photo at index: ${index}`),
-    onAddPhotoClick: () => console.log('Add photo clicked'),
-    title: 'My Photo Gallery',
   },
 };

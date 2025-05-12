@@ -8,6 +8,7 @@ interface ButtonWithIconProps {
   onClick: () => void;
   className?: string;
   disabled?: boolean;
+  iconClassName?: string;
 }
 
 export const ButtonWithIcon = ({
@@ -16,6 +17,7 @@ export const ButtonWithIcon = ({
   onClick,
   className,
   disabled = false,
+  iconClassName,
 }: ButtonWithIconProps) => {
   return (
     <div className={styles.buttonWrapper}>
@@ -26,7 +28,9 @@ export const ButtonWithIcon = ({
         onClick={onClick}
         disabled={disabled}
       >
-        <div className={styles.iconContainer}>{icon}</div>
+        <div className={`${styles.iconContainer} ${iconClassName ? iconClassName : ''}`}>
+          {icon}
+        </div>
         <span className={styles.buttonText}>{text}</span>
       </button>
     </div>

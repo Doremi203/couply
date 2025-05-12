@@ -349,6 +349,7 @@ interface ProfileViewProps {
   onLike: (id: number) => void;
 }
 
+//@ts-ignore
 export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLike }) => {
   // State to track the menu position - initially expanded to show full photo
   const [menuPosition, setMenuPosition] = useState<'collapsed' | 'expanded'>('expanded');
@@ -559,14 +560,40 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
         {/* Content displayed on top of the photo */}
         <div className={styles.photoContent}>
           {/* User name and basic info */}
-          <h2 className={styles.photoName}>
-            {profile.name}
-            {profile.verified && (
-              <div className={styles.verifiedBadge}>
-                <VerifiedIcon />
+
+          <div className={styles.nameAndButtons}>
+            <h2 className={styles.photoName}>
+              {profile.name}
+              {profile.verified && (
+                <div className={styles.verifiedBadge}>
+                  <VerifiedIcon />
+                </div>
+              )}
+            </h2>
+
+            <div className={styles.buttons}>
+              <div onClick={e => e.stopPropagation()}>
+                <DislikeButton
+                  onClick={() => {
+                    // Close the ProfileView and return to the likes page
+                    onClose();
+                  }}
+                  className={styles.dislikeButton}
+                />
               </div>
-            )}
-          </h2>
+              <div onClick={e => e.stopPropagation()}>
+                <LikeButton
+                  onClick={() => {
+                    // Call the onLike function to trigger the match modal
+                    onLike(profile.id);
+                  }}
+                  className={styles.likeButton}
+                  likeClassName={styles.like}
+                />
+              </div>
+            </div>
+          </div>
+
           <p className={styles.photoInfo}>
             {profile.age} | {profileDetails.location}
           </p>
@@ -607,24 +634,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
               />
             </svg>
           </div>
-        </div>
-        <div onClick={e => e.stopPropagation()}>
-          <LikeButton
-            onClick={() => {
-              // Call the onLike function to trigger the match modal
-              onLike(profile.id);
-            }}
-            className={styles.likeButton}
-          />
-        </div>
-        <div onClick={e => e.stopPropagation()}>
-          <DislikeButton
-            onClick={() => {
-              // Close the ProfileView and return to the likes page
-              onClose();
-            }}
-            className={styles.dislikeButton}
-          />
         </div>
       </div>
 

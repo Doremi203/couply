@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Gender } from '../../../../entities/user';
+import { Gender } from '../../../../entities/user/api/constants';
 import { useCreateUserMutation } from '../../../../entities/user/api/userApi';
 import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
@@ -17,6 +17,9 @@ import {
   createPushSubscription,
   sendSubscriptionToServer,
 } from '../../../../shared/lib/services/PushNotificationService';
+import getAge from '../../helpers/getAge';
+import { GeoLocationRequest } from '../GeoLocationRequest';
+import { FixedPhotoGallery } from '../PhotoGallery/PhotoGallery';
 
 import styles from './enterInfo.module.css';
 
@@ -29,6 +32,7 @@ export const EnterInfoPage = () => {
 
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
+  const [height, setHeight] = useState('');
   const [userGender, setUserGender] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,17 +40,53 @@ export const EnterInfoPage = () => {
   const [showNotificationPrompt, setShowNotificationPrompt] = useState(false);
   const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
 
+  const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+
+  const [userPhotos, setUserPhotos] = useState<string[]>([]);
+
+  // Handler for when location is received from GeoLocationRequest
+  const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
+    setCoords(coordinates);
+  };
+
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
       try {
-        //TODO
+        // Calculate age and ensure it's a number
+        const calculatedAge = getAge(birthDate);
+        const ageValue = typeof calculatedAge === 'number' ? calculatedAge : 0;
+
+        // Convert string gender to Gender enum
+        let genderEnum: Gender;
+        switch (userGender) {
+          case 'male':
+            genderEnum = Gender.male;
+            break;
+          case 'female':
+            genderEnum = Gender.female;
+            break;
+          default:
+            genderEnum = Gender.unspecified;
+        }
+
+        // Convert coordinates to location string if available
+        const locationString = coords ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}` : '';
+
+        // Create user data object according to UserRequest interface
         const userData = {
           name,
-          age: 20,
-          gender: Gender.male,
-          birthDate,
-          photos: [{ url: profilePhoto }],
+          age: ageValue,
+          gender: genderEnum,
+          ...(locationString ? { location: locationString } : {}),
+          // Store profile photo in localStorage instead of sending it directly
+          // since the API expects photos to be null
+          photos: null,
         };
+
+        // Save photo URL to localStorage for later use
+        if (profilePhoto) {
+          localStorage.setItem('profilePhotoUrl', profilePhoto);
+        }
 
         // TODO
         if (profilePhoto) {
@@ -54,13 +94,13 @@ export const EnterInfoPage = () => {
         }
 
         //ВЕРНУТЬ
-        //const response = await createUser(userData).unwrap();
+        const response = await createUser(userData).unwrap();
 
         // надо ли сохранять в локал TODO
-        // if (response && response.user && response.user.id) {
-        //   dispatch(setUserId(response.user.id));
-        //   localStorage.setItem('userId', response.user.id);
-        // }
+        if (response && response.user && response.user.id) {
+          dispatch(setUserId(response.user.id));
+          localStorage.setItem('userId', response.user.id);
+        }
 
         // After creating user, check if we should show notification prompt
         if (
@@ -115,9 +155,19 @@ export const EnterInfoPage = () => {
     const files = event.target.files;
     if (files && files.length > 0) {
       const file = files[0];
-
       const fileUrl = URL.createObjectURL(file);
+
+      // Update the profile photo
       setProfilePhoto(fileUrl);
+
+      // Also update the userPhotos array to include this as the first photo
+      setUserPhotos(prevPhotos => {
+        // Create a new array with the new photo as the first element
+        const newPhotos = [...prevPhotos];
+        // If there's already a photo at index 0, replace it
+        newPhotos[0] = fileUrl;
+        return newPhotos;
+      });
 
       event.target.value = '';
     }
@@ -161,13 +211,49 @@ export const EnterInfoPage = () => {
     switch (currentStep) {
       case 0:
         return name.trim() !== '';
-      case 1:
-        return birthDate !== '';
+      case 1: {
+        // Ensure age is a number and >= 18
+        const calculatedAge = getAge(birthDate);
+        return birthDate !== '' && typeof calculatedAge === 'number' && calculatedAge >= 18;
+      }
       case 2:
-        return userGender !== '' && profilePhoto !== null;
+        // return userGender !== '' && profilePhoto !== null;
+        return true;
+      case 3:
+        return true;
+      case 4:
+        return true;
       default:
         return false;
     }
+  };
+
+  const handleAddPhoto = () => {
+    if (userPhotos.length >= 6) return;
+
+    // Create a new file input for adding additional photos
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = e => {
+      const target = e.target as HTMLInputElement;
+      const files = target.files;
+
+      if (files && files.length > 0) {
+        const file = files[0];
+        const fileUrl = URL.createObjectURL(file);
+
+        // Add the new photo to the userPhotos array
+        setUserPhotos(prevPhotos => [...prevPhotos, fileUrl]);
+      }
+    };
+
+    input.click();
+  };
+
+  const handleRemovePhoto = (index: number) => {
+    const newPhotos = userPhotos.filter((_, i) => i !== index);
+    setUserPhotos(newPhotos);
   };
 
   const sections = [
@@ -178,6 +264,7 @@ export const EnterInfoPage = () => {
         type="text"
         value={name}
         onChange={e => setName(e.target.value)}
+        className={styles.input}
       />
     </div>,
     <div key="birthDateSection">
@@ -187,9 +274,16 @@ export const EnterInfoPage = () => {
         type="date"
         value={birthDate}
         onChange={e => setBirthDate(e.target.value)}
+        className={styles.input}
       />
+
+      {birthDate &&
+        (() => {
+          const age = getAge(birthDate);
+          return typeof age === 'number' && age < 18;
+        })() && <div className={styles.error}>Для регистрации необходимо быть старше 18 лет</div>}
       <div>
-        <h2>Ваш пол:</h2>
+        <h2 className={styles.genderLabel}>Ваш пол:</h2>
         <ToggleButtons
           options={[
             { label: 'Женский', value: 'female' },
@@ -197,8 +291,24 @@ export const EnterInfoPage = () => {
           ]}
           onSelect={handleUserGenderSelect}
           value={userGender}
+          className={styles.toggleButtons}
         />
       </div>
+      <h2 className={styles.genderLabel}>Ваш рост</h2>
+      <CustomInput
+        placeholder="180 см"
+        type="number"
+        value={height}
+        onChange={e => setHeight(e.target.value)}
+        className={styles.input}
+      />
+
+      <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+      {coords && (
+        <p className={styles.coordsDisplay}>
+          Широта: {coords.lat.toFixed(4)}, Долгота: {coords.lng.toFixed(4)}
+        </p>
+      )}
     </div>,
     <div key="datingSettingsSection">
       <h2>Загрузите ваше фото</h2>
@@ -219,9 +329,28 @@ export const EnterInfoPage = () => {
             </div>
           )}
         </div>
+        <FixedPhotoGallery
+          photos={userPhotos}
+          onPhotoRemove={index => handleRemovePhoto(index)}
+          onAddPhotoClick={handleAddPhoto}
+          title="Мои фото"
+        />
+      </div>
+    </div>,
+    <div key="datingSettingsSection">
+      <h2>Включите геопозицию</h2>
+      <div>
+        <div>
+          <div className={styles.geoText}>
+            Чтобы мы подобрали вам людей не только близких по духу, но и по расположению
+          </div>
+          <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+        </div>
       </div>
     </div>,
   ];
+
+  console.log(birthDate);
 
   return (
     <div className={styles.container}>

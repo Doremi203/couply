@@ -1,12 +1,11 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Link } from '@mui/material';
+import { Dialog, Link } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useLoginMutation } from '../../../../entities/auth';
+import { useLogin } from '../../../../entities/auth/hooks/useLogin';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
-// import { setToken } from '../../../../shared/lib/services/TokenService';
 
 import styles from './loginPage.module.css';
 
@@ -16,13 +15,15 @@ export const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+
   const [errors, setErrors] = useState({
     email: '',
     password: '',
     confirmPassword: '',
   });
 
-  const [login, { isLoading }] = useLoginMutation();
+  const { loginUser } = useLogin();
 
   const goBack = () => {
     navigate('/auth');
@@ -60,15 +61,25 @@ export const LoginPage = () => {
     return isValid;
   };
 
+  const handleCloseModal = () => {
+    setShowRegistrationModal(false);
+  };
+
+  // const handleNavigateToRegistration = () => {
+  //   navigate('/registration');
+  //   setShowRegistrationModal(false);
+  // };
+
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
-        const registrationData = {
+        const loginData = {
           password,
-          ...{ email: email },
+          email,
         };
 
-        const result = await login(registrationData).unwrap();
+        //@ts-ignore
+        const result = await loginUser(loginData).unwrap();
 
         // Store the token and its expiration time using TokenService
         // setToken(result.token, result.expiresIn);
@@ -79,6 +90,7 @@ export const LoginPage = () => {
           navigate('/registration');
         }
       } catch (error) {
+        setShowRegistrationModal(true);
         //TODO
         // navigate('/registration');
         console.error('Registration failed:', error);
@@ -122,15 +134,31 @@ export const LoginPage = () => {
         </div>
       </div>
 
-      <CustomButton
-        onClick={handleSubmit}
-        text="Войти"
-        disabled={isLoading}
-        className={styles.submitButton}
-      />
+      <CustomButton onClick={handleSubmit} text="Войти" className={styles.submitButton} />
       <Link onClick={onRegister} className={styles.regLink}>
         Зарегистрироваться
       </Link>
+
+      {showRegistrationModal && (
+        <Dialog
+          open={showRegistrationModal}
+          onClose={handleCloseModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <div className={styles.notificationPrompt}>
+            <h3>Аккаунт не найден</h3>
+            <p>Аккаунт с указанным email не существует. Хотите зарегистрироваться?</p>
+            <div className={styles.promptButtons}>
+              <CustomButton
+                onClick={onRegister}
+                text="Зарегистрироваться"
+                className={styles.allowButton}
+              />
+            </div>
+          </div>
+        </Dialog>
+      )}
     </div>
   );
 };

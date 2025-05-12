@@ -1,7 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 
-import { CustomButton } from '../../../../shared/components/CustomButton';
-
 import styles from './matchModal.module.css';
 
 interface MatchModalProps {
@@ -13,7 +11,7 @@ interface MatchModalProps {
 
 export const MatchModal: React.FC<MatchModalProps> = ({
   userImage,
-  matchImage,
+  // matchImage,
   matchName,
   onKeepSwiping,
 }) => {
@@ -45,7 +43,7 @@ export const MatchModal: React.FC<MatchModalProps> = ({
           <img src={userImage} alt={matchName} className={styles.profileImage} />
         </div>
       </div>
-      <h1>КАК ДВЕ КАПЛИ</h1>
+      <h1 className={styles.title}>КАК ДВЕ КАПЛИ</h1>
       <div className={styles.dropContainer}>
         <div className={styles.drop} />
       </div>

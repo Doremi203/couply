@@ -7,7 +7,6 @@
 }
 
 .buttonWithIcon {
-  padding: 0.625rem 1.25rem;
   background-color: white;
   color: black;
   border: 1px solid #e0e0e0;
@@ -25,11 +24,10 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
   max-width: 290px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.3);
   position: relative;
-  padding-left: 1.5rem;
+  width: 300px;
 }
 
 .buttonWithIcon:hover {
@@ -51,10 +49,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 1rem;
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
 }
 
 .buttonText {
@@ -62,12 +56,4 @@
   flex: 1;
   text-align: center;
   margin-right: 1.5rem;
-}
-
-@media (max-width: 480px) {
-  .buttonWithIcon {
-    max-width: 100%;
-    padding: 0.5rem 1rem;
-    height: 2.75rem;
-  }
 }

@@ -1,31 +1,24 @@
 import { matcherApi } from '../../../shared/api/baseApi';
 
-import {
-  CreateFilterRequest,
-  GetFilterRequest,
-  GetFilterResponse,
-  SearchRequest,
-  SearchResponse,
-} from './types';
+import { CreateFilterRequest, FilterResponse, SearchRequest, SearchResponse } from './types';
 
 export const searchApi = matcherApi.injectEndpoints({
   endpoints: builder => ({
-    createFilter: builder.mutation<GetFilterResponse, CreateFilterRequest>({
+    createFilter: builder.mutation<FilterResponse, CreateFilterRequest>({
       query: data => ({
         url: '/v1/CreateFilterV1',
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'Matches', id: 'LIST' }], //TODO
+      invalidatesTags: [{ type: 'filter' }],
     }),
 
-    getFilter: builder.query<GetFilterResponse, GetFilterRequest>({
+    getFilter: builder.query<FilterResponse, object>({
       query: data => ({
         url: '/v1/GetFilterV1',
         method: 'POST',
         body: data,
       }),
-      //   invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
     }),
 
     searchUsers: builder.mutation<SearchResponse, SearchRequest>({
@@ -34,16 +27,16 @@ export const searchApi = matcherApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
+      invalidatesTags: [{ type: 'search' }],
     }),
 
-    updateFilter: builder.mutation<GetFilterResponse, CreateFilterRequest>({
+    updateFilter: builder.mutation<FilterResponse, CreateFilterRequest>({
       query: data => ({
         url: '/v1/UpdateFilterV1',
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'Matches', id: 'LIST' }],
+      invalidatesTags: [{ type: 'filter' }],
     }),
   }),
 });

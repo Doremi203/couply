@@ -6,11 +6,14 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { getUserId, setUserId } from './entities/user/model/userSlice';
 import { AuthPage } from './pages/AuthPage';
 import { EnterInfoPage } from './pages/EnterInfoPage';
+import { EnterPhonePage } from './pages/EnterPhonePage';
 import { HomePage } from './pages/HomePage';
 import { LikesPage } from './pages/LikesPage';
 import LoginPage from './pages/LoginPage';
+import { PremiumPage } from './pages/PremiumPage';
 import { ProfilePage } from './pages/ProfilePage';
 import RegistrationPage from './pages/RegistrationPage';
+import { SettingsPage } from './pages/SettingsPage';
 import { SplashPage } from './pages/SplashPage';
 import { ThemeProvider } from './shared/lib/context/ThemeContext';
 import { usePushNotifications } from './shared/lib/hooks/usePushNotifications';
@@ -29,8 +32,16 @@ const router = createBrowserRouter([
     element: <RegistrationPage />,
   },
   {
+    path: 'enterPhone',
+    element: <EnterPhonePage />,
+  },
+  {
     path: 'enterInfo',
     element: <EnterInfoPage />,
+  },
+  {
+    path: 'settings',
+    element: <SettingsPage />,
   },
   {
     path: '/',
@@ -47,6 +58,10 @@ const router = createBrowserRouter([
   {
     path: 'likes',
     element: <LikesPage key="likes-page" />,
+  },
+  {
+    path: 'premium',
+    element: <PremiumPage key="premium-page" />,
   },
 ]);
 

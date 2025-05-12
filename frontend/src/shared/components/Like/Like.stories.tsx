@@ -6,7 +6,11 @@ const meta = {
   title: 'Shared/Like',
   component: Like,
   parameters: {
-    layout: 'centered',
+    // layout: 'centered',
+    backgrounds: {
+      default: 'dark',
+      values: [{ name: 'dark', value: '#202C83' }],
+    },
   },
   tags: ['autodocs'],
 } satisfies Meta<typeof Like>;

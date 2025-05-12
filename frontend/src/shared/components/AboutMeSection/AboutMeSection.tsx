@@ -13,9 +13,9 @@ interface AboutMeSectionProps {
 export const AboutMeSection: React.FC<AboutMeSectionProps> = ({
   about,
   onInputChange,
-  title = 'About Me',
+  title = 'Обо мне',
   maxLength = 500,
-  placeholder = 'Tell something about yourself',
+  placeholder = 'Напишите что-нибудь о себе',
 }) => {
   return (
     <div className={styles.editSection}>

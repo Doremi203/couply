@@ -1,1 +1,0 @@
-export { InstagramIcon } from './InstagramIcon';

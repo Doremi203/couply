@@ -16,25 +16,12 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    photos: [
-      '/photo1.png',
-      '/woman1.jpg',
-      '/man1.jpg',
-      '/photo1.png',
-      '/woman1.jpg',
-      '/man1.jpg',
-    ],
+    photos: ['/photo1.png', '/woman1.jpg', '/man1.jpg', '/photo1.png', '/woman1.jpg', '/man1.jpg'],
   },
 };
 
 export const SinglePhoto: Story = {
   args: {
     photos: ['/photo1.png'],
-  },
-};
-
-export const TwoPhotos: Story = {
-  args: {
-    photos: ['/photo1.png', '/woman1.jpg'],
   },
 };

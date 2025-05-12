@@ -1,0 +1,32 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+}
+
+.section {
+  margin-top: 25px;
+  background-color: var(--section-background);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+  width: 90%;
+}
+
+.section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.cont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px;
+  margin-top: 20px;
+}

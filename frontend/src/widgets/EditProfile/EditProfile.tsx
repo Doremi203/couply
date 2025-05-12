@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
-import { BasicInfoForm, ProfileData } from '../../features/profileEdit';
+import { ProfileData } from '../../features/profileEdit';
 import { ProfilePhotoEdit } from '../../features/profileEdit/components/ProfilePhotoEdit';
 import { ProfileVisibilitySection } from '../../features/profileVisibility/components/ProfileVisibilitySection';
 import AboutMeSection from '../../shared/components/AboutMeSection';
@@ -49,7 +49,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   };
 
   return (
-    <div className={styles.editContent}>
+    <div>
       <input
         type="file"
         ref={fileInputRef}
@@ -58,63 +58,65 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         onChange={handleFileChange}
       />
 
-      <PageHeader onBack={onBack} title="edit profile" />
+      <PageHeader onBack={onBack} title="Редактирование" />
 
-      <ProfilePhotoEdit profilePhoto={profileData.photos[0]} onCameraClick={handleCameraClick} />
+      <div className={styles.editContent}>
+        <ProfilePhotoEdit profilePhoto={profileData.photos[0]} onCameraClick={handleCameraClick} />
 
-      <PhotoGalleryEdit
-        photos={profileData.photos}
-        onPhotoRemove={onPhotoRemove}
-        onAddPhotoClick={() => handleCameraClick(false)}
-      />
+        <PhotoGalleryEdit
+          photos={profileData.photos}
+          onPhotoRemove={onPhotoRemove}
+          onAddPhotoClick={() => handleCameraClick(false)}
+        />
 
-      {/* <BasicInfoForm profileData={profileData} onInputChange={onInputChange} /> */}
+        {/* <BasicInfoForm profileData={profileData} onInputChange={onInputChange} /> */}
 
-      <AboutMeSection about={profileData.about} onInputChange={onInputChange} />
+        <AboutMeSection about={profileData.about} onInputChange={onInputChange} />
 
-      <InterestsSection
-        title="Interests"
-        placeholder="Interests (comma separated)"
-        values={profileData.interests}
-        fieldName="interests"
-        onArrayInputChange={onArrayInputChange}
-      />
+        <InterestsSection
+          title="Интересы"
+          placeholder="Interests (comma separated)"
+          values={profileData.interests}
+          fieldName="interests"
+          onArrayInputChange={onArrayInputChange}
+        />
 
-      <InterestsSection
-        title="Music"
-        placeholder="Favorite music (comma separated)"
-        values={profileData.music}
-        fieldName="music"
-        onArrayInputChange={onArrayInputChange}
-      />
+        <InterestsSection
+          title="Music"
+          placeholder="Favorite music (comma separated)"
+          values={profileData.music}
+          fieldName="music"
+          onArrayInputChange={onArrayInputChange}
+        />
 
-      <InterestsSection
-        title="Movies"
-        placeholder="Favorite movies (comma separated)"
-        values={profileData.movies}
-        fieldName="movies"
-        onArrayInputChange={onArrayInputChange}
-      />
+        <InterestsSection
+          title="Movies"
+          placeholder="Favorite movies (comma separated)"
+          values={profileData.movies}
+          fieldName="movies"
+          onArrayInputChange={onArrayInputChange}
+        />
 
-      <InterestsSection
-        title="Books"
-        placeholder="Favorite books (comma separated)"
-        values={profileData.books}
-        fieldName="books"
-        onArrayInputChange={onArrayInputChange}
-      />
+        <InterestsSection
+          title="Books"
+          placeholder="Favorite books (comma separated)"
+          values={profileData.books}
+          fieldName="books"
+          onArrayInputChange={onArrayInputChange}
+        />
 
-      <InterestsSection
-        title="Hobbies"
-        placeholder="Hobbies (comma separated)"
-        values={profileData.hobbies}
-        fieldName="hobbies"
-        onArrayInputChange={onArrayInputChange}
-      />
+        <InterestsSection
+          title="Hobbies"
+          placeholder="Hobbies (comma separated)"
+          values={profileData.hobbies}
+          fieldName="hobbies"
+          onArrayInputChange={onArrayInputChange}
+        />
 
-      <ProfileVisibilitySection isHidden={profileData.isHidden} onInputChange={onInputChange} />
+        <ProfileVisibilitySection isHidden={profileData.isHidden} onInputChange={onInputChange} />
 
-      <SaveButtonSection onSave={onSave} />
+        <SaveButtonSection onSave={onSave} />
+      </div>
     </div>
   );
 };

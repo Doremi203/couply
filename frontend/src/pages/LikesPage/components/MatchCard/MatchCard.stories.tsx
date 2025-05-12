@@ -9,6 +9,13 @@ const meta: Meta<typeof MatchCard> = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    Story => (
+      <div style={{ width: '350px', marginTop: '20px' }}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 
 export default meta;
@@ -21,7 +28,6 @@ const sampleMatch: MatchProfile = {
   age: 28,
   imageUrl: '/woman1.jpg',
   telegram: '@anna_28',
-  instagram: '@anna_fashion',
 };
 
 export const Default: Story = {
@@ -33,6 +39,7 @@ export const Default: Story = {
   },
 };
 
+//TODO - delete later
 export const WithChatMessage: Story = {
   args: {
     match: sampleMatch,

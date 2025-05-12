@@ -164,12 +164,13 @@ export const baseApi = createApi({
       const token = localStorage.getItem('token');
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
+        headers.set('user-token', token);
       }
       return headers;
     },
   }),
   endpoints: () => ({}),
-  tagTypes: ['Profile', 'Matches', 'User'], // TODO
+  // tagTypes: ['Profile', 'Matches', 'User'], // TODO
 });
 
 export const matcherApi = createApi({
@@ -180,10 +181,11 @@ export const matcherApi = createApi({
       const token = localStorage.getItem('token');
       if (token) {
         headers.set('Authorization', `Bearer ${token}`);
+        headers.set('user-token', token);
       }
       return headers;
     },
   }),
   endpoints: () => ({}),
-  tagTypes: ['Profile', 'Matches', 'User'], // TODO
+  tagTypes: ['filter', 'search', 'User'],
 });

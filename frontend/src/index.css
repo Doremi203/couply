@@ -8,17 +8,18 @@
   --text-color: #333;
   --secondary-text-color: #666;
   --tertiary-text-color: #999;
-  --primary-color: #202c83;
+  --primary-color: #3b5eda;
   --secondary-color: #6c5ce7;
   --section-background: #ffffff;
   --border-color: #f0f0f0;
   --tag-background: #f0f0f0;
   --tag-color: #333;
-  --header-background: #202c83;
+  /*  2343B8 */
+  --header-background: #3b5eda;
   --header-text-color: #ffffff;
   --button-background: #f0f0f0;
   --button-color: #555;
-  --button-active-background: #202c83;
+  --button-active-background: #3b5eda;
   --button-active-color: #ffffff;
   --shadow-color: rgba(0, 0, 0, 0.05);
   --border-color: #ccc;
@@ -26,6 +27,7 @@
   --text-input-border: #e0e0e0;
   --icon-color: rgba(255, 255, 255, 0.8);
   --custom-input: #f5f7fa;
+  --custom-input-enter: #f0f0f0;
 }
 
 /* Dark theme variables */
@@ -34,7 +36,7 @@ body[data-theme='dark'] {
   --text-color: #ffffff;
   --secondary-text-color: #cccccc;
   --tertiary-text-color: #999999;
-  --primary-color: #2435b2;
+  --primary-color: #3b5eda;
   --secondary-color: #6c5ce7;
   --section-background: #202020;
   --border-color: #222222;
@@ -44,7 +46,7 @@ body[data-theme='dark'] {
   --header-text-color: #040404;
   --button-background: #3b3a3a;
   --button-color: #cccccc;
-  --button-active-background: #202c83;
+  --button-active-background: #3b5eda;
   --button-active-color: #ffffff;
   --shadow-color: rgba(0, 0, 0, 0.4);
   --border-color: #7b7a7a;
@@ -52,7 +54,12 @@ body[data-theme='dark'] {
   --text-input-border: #3b3a3a;
   --icon-color: #7b7a7a;
   --custom-input: #3b3a3a;
+  --custom-input-enter: #3b3a3a;
 }
+
+/*
+#b5b5b5 gray
+*/
 
 /*a {
   font-weight: 500;

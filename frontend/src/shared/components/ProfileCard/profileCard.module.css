@@ -1,7 +1,7 @@
 .profileCard {
   border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 2px 8px var(--shadow-color, rgba(0, 0, 0, 0.1));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background-color: var(--section-background, white);
   position: relative;
   cursor: pointer;
@@ -22,13 +22,21 @@
 }
 
 .profileInfo {
+  width: 165px;
+  height: 45px;
+  /* background-color: blue; */
   padding: 10px;
+  display: flex;
+  flex-direction: row;
+  /* justify-content: space-around; */
 }
 
 .profileName {
   font-weight: bold;
   margin-bottom: 5px;
   color: var(--text-color, #333);
+  /* background-color: blue; */
+  min-width: 90px;
 }
 
 .profileLocation {
@@ -66,4 +74,94 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+/* .buttons {
+  display: flex;
+  top: 20px;
+} */
+
+.messageButton {
+  /* margin-left: -10px; */
+  /* margin-right: 10px; */
+  margin-left: 5px;
+}
+
+.imageCont {
+  position: relative;
+  /* display: inline-block; */
+}
+
+.iconOverlay {
+  position: absolute;
+  top: -2px;
+  right: 1px;
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 7px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.iconOverlay:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: scale(1.1);
+}
+
+/* @keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 65, 108, 0.5);
+  }
+  70% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 65, 108, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 65, 108, 0);
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+} */
+
+/* @keyframes bounce {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+} */
+
+@keyframes messageNotification {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.1) rotate(-10deg);
+  }
+  50% {
+    transform: scale(1.1) rotate(10deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(-5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
 }

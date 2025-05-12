@@ -1,26 +1,6 @@
 .likeCircle {
-  position: relative;
   width: 62px;
   height: 62px;
   background: var(--primary-color);
   border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  z-index: 100;
-}
-
-.likeCircle:hover {
-  transform: scale(1.05);
-  transition: transform 0.2s ease;
-}
-
-.likeCircle:active {
-  transform: scale(0.95);
-  transition: transform 0.1s ease;
-}
-
-.like {
-  margin-top: 5px;
 }
