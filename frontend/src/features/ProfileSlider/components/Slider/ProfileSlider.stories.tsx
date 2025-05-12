@@ -13,9 +13,11 @@ const ModalRoot = () => <div id="modal-root" style={{ position: 'relative', zInd
 
 const mockStore = configureStore({
   reducer: {
+    //@ts-ignore
     [baseApi.reducerPath]: baseApi.reducer,
     user: userReducer,
   },
+  //@ts-ignore
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false, // Отключаем проверку для Storybook

@@ -157,8 +157,8 @@ export const ProfileSlider = () => {
   const [createFilter] = useCreateFilterMutation();
 
   // const [profiles1, setProfiles] = useState<(typeof profiles)[0][]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<(typeof profiles)[0] | null>(null);
@@ -178,7 +178,7 @@ export const ProfileSlider = () => {
     const fetchData = async () => {
       try {
         //@ts-ignore
-        setLoading(true);
+        // setLoading(true);
         const defaultFilter = getDefaultFilter();
         //@ts-ignore
         await createFilter(defaultFilter).unwrap();
@@ -188,11 +188,11 @@ export const ProfileSlider = () => {
         setProfiles(response.users || []);
       } catch (err) {
         //@ts-ignore
-        setError('Ошибка при загрузке профилей');
+        // setError('Ошибка при загрузке профилей');
         console.error(err);
       } finally {
         //@ts-ignore
-        setLoading(false);
+        // setLoading(false);
       }
     };
 
