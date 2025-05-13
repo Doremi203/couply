@@ -188,3 +188,20 @@
   position: absolute;
   left: 14%;
 }
+
+.resend button {
+  color: #999;
+  cursor: pointer;
+  font-size: inherit;
+}
+
+.resend button:disabled {
+  cursor: not-allowed;
+}
+
+.activeResend {
+  background-color: var(--primary-color);
+  color: white !important;
+  font-weight: 500;
+  cursor: pointer;
+}

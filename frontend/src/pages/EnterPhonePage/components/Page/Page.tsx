@@ -1,28 +1,41 @@
 import { KeyboardBackspace } from '@mui/icons-material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useSendCodeMutation, useConfirmPhoneMutation } from '../../../../entities/phone';
 import CodeInput from '../../../../shared/components/CodeInput/CodeInput';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { PhoneInput } from '../../../../shared/components/PhoneInput/PhoneInput';
+import { getFormattedPhone } from '../../helpers/getFormattedPhone';
 
 import styles from './enterPhone.module.css';
 
 export const EnterPhonePage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  //   const [verifyPhone] = useVerifyPhoneMutation();
-  //   const [confirmCode] = useConfirmCodeMutation();
+  const [sendAgainIn, setSendAgainIn] = useState<number | null>(null);
 
-  // const phoneInputRef = useRef<HTMLInputElement>(null);
-  // const codeInputRef = useRef<HTMLInputElement>(null);
+  const [sendCode] = useSendCodeMutation();
+  const [confirm] = useConfirmPhoneMutation();
+
+  useEffect(() => {
+    if (sendAgainIn === null || sendAgainIn <= 0) {
+      setSendAgainIn(null);
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setSendAgainIn(prev => (prev !== null ? prev - 1 : null));
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [sendAgainIn]);
 
   const handleBack = () => {
     if (currentStep > 0) {
@@ -35,8 +48,10 @@ export const EnterPhonePage = () => {
   const handleSendCode = async () => {
     setIsLoading(true);
     try {
-      // await verifyPhone({ phone }).unwrap();
       setCurrentStep(1);
+      const formattedPhone = getFormattedPhone(phone);
+      const timeout = await sendCode({ phone: formattedPhone }).unwrap();
+      setSendAgainIn(timeout.sendAgainIn);
       setError('');
     } catch (err) {
       setError('Ошибка отправки кода. Попробуйте снова.');
@@ -45,16 +60,19 @@ export const EnterPhonePage = () => {
     }
   };
 
-  const handleConfirmCode = async () => {
-    if (!/^\d{6}$/.test(code)) {
-      setError('Код должен содержать 6 цифр');
-      return;
+  const getResendButtonText = () => {
+    if (sendAgainIn === null || sendAgainIn <= 0) {
+      return 'Отправить снова';
     }
+    return `Отправить снова (${sendAgainIn} сек)`;
+  };
+
+  const handleConfirmCode = async () => {
+    const formattedPhone = getFormattedPhone(phone);
 
     setIsLoading(true);
     try {
-      // const result = await confirmCode({ phone, code }).unwrap();
-      //   dispatch(setVerifiedPhone(phone));
+      await confirm({ phone: formattedPhone, code }).unwrap();
       navigate('/enterInfo');
     } catch (err) {
       setError('Неверный код подтверждения');
@@ -78,7 +96,10 @@ export const EnterPhonePage = () => {
         <CodeInput onCodeChange={setCode} />
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.resend}>
-          Не получили код? <button onClick={handleSendCode}>Отправить снова</button>
+          Не получили код?{' '}
+          <button onClick={handleSendCode} className={sendAgainIn <= 0 ? styles.activeResend : ''}>
+            {getResendButtonText()}
+          </button>
         </div>
       </div>
     </div>,
