@@ -75,6 +75,7 @@
 // export default NotificationSettings;
 
 import BedtimeIcon from '@mui/icons-material/Bedtime';
+import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Switch } from '@mui/material';
 import React, { useState, useEffect } from 'react';
@@ -111,6 +112,13 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         id: 'theme',
         label: 'Темная тема',
         icon: <BedtimeIcon />,
+        //@ts-ignore
+        enabled: theme.isDark,
+      },
+      {
+        id: 'theme',
+        label: 'Отменить подписку',
+        icon: <CreditCardOffOutlinedIcon />,
         //@ts-ignore
         enabled: theme.isDark,
       },
