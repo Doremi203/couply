@@ -303,12 +303,12 @@ export const EnterInfoPage = () => {
         className={styles.input}
       />
 
-      <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+      {/* <GeoLocationRequest onLocationReceived={handleLocationReceived} />
       {coords && (
         <p className={styles.coordsDisplay}>
           Широта: {coords.lat.toFixed(4)}, Долгота: {coords.lng.toFixed(4)}
         </p>
-      )}
+      )} */}
     </div>,
     <div key="datingSettingsSection">
       <h2>Загрузите ваше фото</h2>

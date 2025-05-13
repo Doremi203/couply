@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { IconButton } from '../../../../shared/components/IconButton';
+import { DislikeButton } from '../../../../shared/components/DislikeButton';
+// import { IconButton } from '../../../../shared/components/IconButton';
 import { TelegramIcon } from '../../../../shared/components/TelegramIcon';
 
 import styles from './matchCard.module.css';
@@ -30,7 +31,7 @@ interface MatchCardProps {
 export const MatchCard: React.FC<MatchCardProps> = ({
   match,
   onClick,
-  onSocialClick,
+  // onSocialClick,
   showChatMessage,
 }) => {
   return (
@@ -47,15 +48,23 @@ export const MatchCard: React.FC<MatchCardProps> = ({
           <div className={styles.chatMessage}>Открыто в новой вкладке</div>
         )}
       </div>
-      <div onClick={e => e.stopPropagation()}>
-        <IconButton
+      <div onClick={e => e.stopPropagation()} className={styles.buttons}>
+        {/* <IconButton
           // size="small"
           className={styles.socialButton}
           // @ts-ignore
           onClick={() => onSocialClick(match.id, 'telegram')}
-        >
+        > */}
+        <div className={styles.telegram}>
           <TelegramIcon />
-        </IconButton>
+        </div>
+        <DislikeButton
+          onClick={function (): void {
+            throw new Error('Function not implemented.');
+          }}
+          className={styles.dislikeButton}
+        />
+        {/* </IconButton> */}
       </div>
     </div>
   );

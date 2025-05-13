@@ -20,9 +20,10 @@ import { useEffect, useState } from 'react';
 
 const reportReasons = [
   'Спам',
-  'Мошенничество',
-  'Оскорбительный контент',
-  'Некорректная информация',
+  'Фейковый профиль',
+  'Оскорбительное поведение',
+  'Неприемлемый контент',
+  'Возраст',
   'Другая причина',
 ];
 
@@ -48,19 +49,35 @@ export const ComplaintModal = ({ isOpen, onClose }) => {
     <Dialog
       open={isOpen}
       onClose={onClose}
-      // TransitionComponent={Transition}
       fullWidth
       maxWidth="sm"
       PaperProps={{
-        style: {
+        sx: {
           position: 'fixed',
-          bottom: 0,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           margin: 0,
-          borderRadius: '12px 12px 0 0',
+          borderRadius: '12px',
+          maxHeight: '90vh',
+          overflow: 'auto',
+        },
+      }}
+      sx={{
+        '& .MuiBackdrop-root': {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
         },
       }}
     >
-      <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+      <DialogTitle
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          backgroundColor: theme => theme.palette.background.paper,
+          boxShadow: 1,
+        }}
+      >
         <ReportOutlined color="error" />
         Пожаловаться
       </DialogTitle>

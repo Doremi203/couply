@@ -41,7 +41,7 @@ const profiles = [
     name: 'Максим',
     age: 25,
     bio: 'Увлекаюсь фотографией и кулинарией.',
-    photos: ['man1.jpg', 'man3.jpeg', 'man4.jpeg'],
+    photos: ['man5.jpeg', 'man3.jpeg', 'man4.jpeg'],
     location: 'Москва, Россия',
     verified: true,
     interests: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
@@ -518,7 +518,10 @@ export const ProfileSlider = () => {
                   className={styles.block}
                   width="20px"
                   height="20px"
-                  onClick={onBlock}
+                  onClick={e => {
+                    e.stopPropagation(); // Предотвращаем всплытие
+                    onBlock();
+                  }}
                 />
               </>
             )}
