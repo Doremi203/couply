@@ -1,6 +1,7 @@
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import LogoutIcon from '@mui/icons-material/Logout';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './profileMenu.module.css';
 
@@ -18,6 +19,12 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   onInviteFriendClick,
   onHelpClick,
 }) => {
+  const naviagate = useNavigate();
+
+  const handleLogOut = () => {
+    naviagate('/auth');
+    localStorage.removeItem('token');
+  };
   return (
     <div className={styles.menuContainer}>
       {/* Edit profile */}
@@ -76,7 +83,9 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
           </svg> */}
           <LogoutIcon />
         </div>
-        <div className={styles.menuText}>Выйти из аккаунта</div>
+        <div className={styles.menuText} onClick={handleLogOut}>
+          Выйти из аккаунта
+        </div>
         <div className={styles.arrowIcon}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
