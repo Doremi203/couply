@@ -7,5 +7,5 @@ create extension if not exists earthdistance;
 -- +goose Down
 -- +goose StatementBegin
 drop extension if exists earthdistance;
-drop extension if exists cude;
+drop extension if exists cube;
 -- +goose StatementEnd
