@@ -79,21 +79,15 @@ export const LoginPage = () => {
         };
 
         //@ts-ignore
-        const result = await loginUser(loginData).unwrap();
-
-        // Store the token and its expiration time using TokenService
-        // setToken(result.token, result.expiresIn);
+        const result = await loginUser(loginData);
 
         if (result.token) {
           navigate('/home');
         } else {
           navigate('/registration');
         }
-      } catch (error) {
+      } catch {
         setShowRegistrationModal(true);
-        //TODO
-        // navigate('/registration');
-        console.error('Registration failed:', error);
         setErrors({
           ...errors,
           email: 'Такого аккаунта не существует',

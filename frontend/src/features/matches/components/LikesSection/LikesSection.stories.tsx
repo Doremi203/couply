@@ -19,7 +19,6 @@ const meta = {
     Story => (
       <MemoryRouter>
         {' '}
-        {/* Добавляем обертку Router */}
         <div style={{ width: '350px', marginTop: '20px' }}>
           <Story />
         </div>
@@ -30,8 +29,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof LikesSection>;
-
-// ...остальной код с sampleLikes остается без изменений...
 
 const sampleLikes = [
   {

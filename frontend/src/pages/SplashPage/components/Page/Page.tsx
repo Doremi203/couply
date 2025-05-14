@@ -6,14 +6,11 @@ export const SplashPage = () => {
   const navigate = useNavigate();
 
   setTimeout(() => {
-    // Check if user is authenticated (token exists in localStorage)
     const token = localStorage.getItem('token');
 
     if (token) {
-      // If authenticated, redirect to home page
       navigate('/home');
     } else {
-      // If not authenticated, redirect to auth page
       navigate('/auth');
     }
   }, 4000);

@@ -4,7 +4,7 @@ describe('User Registration Scenario', () => {
     await browser.setWindowSize(1920, 1080);
 
     // 1. Navigate to the Auth page
-    await browser.url('https://moonlit-valkyrie-fdbfc4.netlify.app/');
+    await browser.url('https://rainbow-souffle-ece639.netlify.app/');
 
     // Wait for the page to load completely
     await browser.pause(3000);

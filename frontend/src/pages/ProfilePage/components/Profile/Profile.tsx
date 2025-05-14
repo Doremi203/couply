@@ -29,35 +29,10 @@ export const Profile: React.FC<ProfileViewProps> = ({
   onPreviewClick,
   onVerificationRequest,
 }) => {
-  // Create info items for the basic information section
-  //@ts-ignore
-  // const basicInfoItems = [
-  //   { label: 'Name', value: profileData.name },
-  //   { label: 'Age', value: profileData.age },
-  //   { label: 'Gender', value: profileData.gender === 'female' ? 'Female' : 'Male' },
-  //   { label: 'Email', value: profileData.email },
-  //   { label: 'Phone', value: profileData.phone },
-  // ];
-
   const navigate = useNavigate();
-
-  const handleMyStatsClick = () => {
-    // Handle My Stats click
-    console.log('My Stats clicked');
-  };
 
   const handleSettingsClick = () => {
     navigate('/settings');
-  };
-
-  const handleInviteFriendClick = () => {
-    // Handle Invite a friend click
-    console.log('Invite a friend clicked');
-  };
-
-  const handleHelpClick = () => {
-    // Handle Help click
-    console.log('Help clicked');
   };
 
   return (
@@ -86,13 +61,7 @@ export const Profile: React.FC<ProfileViewProps> = ({
           </button>
         </div>
 
-        <ProfileMenu
-          onEditProfileClick={onEditToggle}
-          onMyStatsClick={handleMyStatsClick}
-          onSettingsClick={handleSettingsClick}
-          onInviteFriendClick={handleInviteFriendClick}
-          onHelpClick={handleHelpClick}
-        />
+        <ProfileMenu onEditProfileClick={onEditToggle} onSettingsClick={handleSettingsClick} />
       </div>
     </div>
   );

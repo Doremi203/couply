@@ -45,12 +45,10 @@
 .previewButton {
   background-color: grey;
   color: white;
-  /* width: 13px; */
   width: 4px;
   height: 20px;
   font-weight: normal;
   font-size: 13px;
   margin-top: -180px;
-  /* margin-left: 59px; */
   margin-right: -20px;
 }

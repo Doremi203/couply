@@ -42,11 +42,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
         {profileData.name}, {profileData.age}
       </h2>
       {!isVerified && (
-        // <CustomButton
-        //   text="Верифицировать профиль"
-        //   onClick={onVerificationRequest}
-        //   className={styles.verifyButton}
-        // />
         <button className={styles.verifyButton} onClick={onVerificationRequest}>
           Верифицировать профиль
         </button>

@@ -1,14 +1,20 @@
 import { matcherApi } from '../../../shared/api/baseApi';
 
 import { Alcohol, Children, Education, Goal, Smoking, Zodiac } from './constants';
-import { UserResponse, UserRequest, UpdateUserParams } from './types';
+import {
+  UserResponse,
+  UserRequest,
+  UpdateUserParams,
+  PhotoParams,
+  UsersResponse,
+  GetUsersRequest,
+} from './types';
 
 //TODO
 const basicData = {
-  location: 'Москва, Россия',
-  bio: 'dfg',
-  goal: Goal.dating,
-  height: 170,
+  location: 'Москва, Россия', // todo
+  bio: 'bio',
+  goal: Goal.dating, // УБРАТЬ
   education: Education.unspecified,
   children: Children.unspecified,
   alcohol: Alcohol.neutrally,
@@ -17,7 +23,7 @@ const basicData = {
   hidden: false,
   verified: false,
   interest: null, //TODO
-  //photos: null, //TODO
+  //photos: null, //сллетаь
 };
 
 export const userApiExtended = matcherApi.injectEndpoints({
@@ -40,6 +46,15 @@ export const userApiExtended = matcherApi.injectEndpoints({
       // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),
 
+    getUsers: builder.mutation<UsersResponse, GetUsersRequest>({
+      query: userIds => ({
+        url: '/v1/GetUsersV1',
+        method: 'POST',
+        body: { userIds: userIds },
+      }),
+      // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
+    }),
+
     updateUser: builder.mutation<UserResponse, UpdateUserParams>({
       query: ({ data }) => ({
         url: 'v1/UpdateUserV1',
@@ -50,15 +65,23 @@ export const userApiExtended = matcherApi.injectEndpoints({
     }),
 
     deleteUser: builder.mutation<object, object>({
-      query: id => ({
+      query: () => ({
         url: '/v1/DeleteUserV1',
         method: 'POST',
-        body: { id },
+        body: {},
       }),
       // invalidatesTags: (_result, _error, id) => [
       //   { type: 'User', id },
       //   { type: 'User', id: 'LIST' },
       // ],
+    }),
+    confirmPhoto: builder.mutation<object, PhotoParams>({
+      query: data => ({
+        url: 'v1/ConfirmPhotoUploadV1',
+        method: 'POST',
+        body: data,
+      }),
+      // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),
   }),
 });
@@ -68,4 +91,6 @@ export const {
   useGetUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
+  useConfirmPhotoMutation,
+  useGetUsersMutation,
 } = userApiExtended;

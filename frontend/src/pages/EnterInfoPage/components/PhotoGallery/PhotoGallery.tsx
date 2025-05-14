@@ -17,7 +17,6 @@ export const FixedPhotoGallery: React.FC<FixedPhotoGalleryProps> = ({
   onAddPhotoClick,
   title = 'Photos',
 }) => {
-  // Создаем массив из 6 элементов
   const items = Array.from({ length: 6 }).map((_, index) => ({
     photo: photos[index] || null,
     index,

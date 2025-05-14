@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { baseApi } from '../../../shared/api/baseApi';
+
 import { LoginParams, LoginResponse, RegisterParams } from './types';
 
 export const authApi = baseApi.injectEndpoints({

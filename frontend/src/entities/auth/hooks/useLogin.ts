@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useLoginMutation } from '../api/authApi';
 import { LoginParams, LoginResponse } from '../api/types';
@@ -14,6 +14,7 @@ export const useLogin = () => {
         const loginResponse = await login(loginParams).unwrap();
 
         localStorage.setItem('token', loginResponse.token);
+
         return loginResponse;
       } catch (error) {
         // TODO

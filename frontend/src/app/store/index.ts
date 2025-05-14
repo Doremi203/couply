@@ -17,7 +17,6 @@ export const store = configureStore({
     getDefaultMiddleware().concat(baseApi.middleware, matcherApi.middleware),
 });
 
-// Необходимо для refetchOnFocus/refetchOnReconnect
 setupListeners(store.dispatch);
 
 export type RootState = ReturnType<typeof store.getState>;
