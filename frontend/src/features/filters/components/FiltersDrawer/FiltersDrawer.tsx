@@ -29,10 +29,9 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [interestedIn, setInterestedIn] = useState<string>('Girls');
   const [distance, setDistance] = useState<number>(40);
   const [ageRange, setAgeRange] = useState<number[]>([20, 28]);
-  const interestOptions = ['Sports', 'Travel', 'Music', 'Art', 'Food'];
+  const interestOptions = ['Спорт', 'Путешествия', 'Музыка', 'Искусство', 'Гастрономия'];
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const musicOptions = ['Rock', 'Pop', 'Hip Hop', 'Jazz', 'Classical'];
-  const [selectedMusicPreferences, setSelectedMusicPreferences] = useState<string[]>([]);
+  // const [selectedMusicPreferences, setSelectedMusicPreferences] = useState<string[]>([]);
 
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
 
@@ -60,20 +59,20 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     }
   };
 
-  const toggleMusicPreference = (music: string) => {
-    if (selectedMusicPreferences.includes(music)) {
-      setSelectedMusicPreferences(selectedMusicPreferences.filter(item => item !== music));
-    } else {
-      setSelectedMusicPreferences([...selectedMusicPreferences, music]);
-    }
-  };
+  // const toggleMusicPreference = (music: string) => {
+  //   if (selectedMusicPreferences.includes(music)) {
+  //     setSelectedMusicPreferences(selectedMusicPreferences.filter(item => item !== music));
+  //   } else {
+  //     setSelectedMusicPreferences([...selectedMusicPreferences, music]);
+  //   }
+  // };
 
   const handleClearFilters = () => {
     setInterestedIn('Both');
     setDistance(40);
     setAgeRange([18, 28]);
     setSelectedInterests([]);
-    setSelectedMusicPreferences([]);
+    // setSelectedMusicPreferences([]);
     setVerificationStatus(false);
   };
 
@@ -122,12 +121,12 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             onToggle={toggleInterest}
           />
 
-          <ChipFilter
+          {/* <ChipFilter
             title="Музыкальные предпочтения"
             options={musicOptions}
             selectedOptions={selectedMusicPreferences}
             onToggle={toggleMusicPreference}
-          />
+          /> */}
 
           <ToggleFilter
             title="Статус верификации"

@@ -96,7 +96,7 @@ export const EnterPhonePage = () => {
         <CodeInput onCodeChange={setCode} />
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.resend}>
-          Не получили код?{' '}
+          Не получили код? {/**@ts-ignore */}
           <button onClick={handleSendCode} className={sendAgainIn <= 0 ? styles.activeResend : ''}>
             {getResendButtonText()}
           </button>
