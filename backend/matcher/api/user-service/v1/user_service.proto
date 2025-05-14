@@ -45,7 +45,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service UserService {
   rpc CreateUserV1 (CreateUserV1Request) returns (CreateUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/CreateUserV1"
+      post: "/v1/users/create"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -66,7 +66,7 @@ service UserService {
 
   rpc UpdateUserV1 (UpdateUserV1Request) returns (UpdateUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/UpdateUserV1"
+      post: "/v1/users/update/me"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -85,9 +85,26 @@ service UserService {
     };
   }
 
+  rpc UpdateUserByIDV1 (UpdateUserByIDV1Request) returns (UpdateUserByIDV1Response) {
+    option (google.api.http) = {
+      post: "/v1/users/update/byID"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Обновление пользователя по айди";
+      description: "Принимает важные поля для обновления пользователя";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+
   rpc DeleteUserV1 (DeleteUserV1Request) returns (DeleteUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/DeleteUserV1"
+      post: "/v1/users/delete/me"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -108,7 +125,7 @@ service UserService {
 
   rpc GetUserV1 (GetUserV1Request) returns (GetUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/GetUserV1"
+      post: "/v1/users/get/me"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -127,9 +144,26 @@ service UserService {
     };
   }
 
+  rpc GetUserByIDV1 (GetUserByIDV1Request) returns (GetUserByIDV1Response) {
+    option (google.api.http) = {
+      post: "/v1/users/get/byID"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение пользователя по айди";
+      description: "Принимает айди пользователя для получения его данных";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+      }
+    };
+  }
+
   rpc GetUsersV1 (GetUsersV1Request) returns (GetUsersV1Response) {
     option (google.api.http) = {
-      post: "/v1/GetUsersV1"
+      post: "/v1/users/batch/get"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -150,7 +184,7 @@ service UserService {
 
   rpc ConfirmPhotosUploadV1 (ConfirmPhotosUploadV1Request) returns (ConfirmPhotosUploadV1Response) {
     option (google.api.http) = {
-      post: "/v1/ConfirmPhotoUploadV1"
+      post: "/v1/users/me/photos/confirm"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -230,55 +264,109 @@ message CreateUserV1Response {
 }
 
 message UpdateUserV1Request {
-  optional string name = 1 [
+  string name = 1 [
     (validate.rules).string.min_len = 2
   ];
-  optional int32 age = 2 [
+  int32 age = 2 [
     (validate.rules).int32.gte = 18
   ];
-  optional Gender gender = 3 [
+  Gender gender = 3 [
     (validate.rules).enum.defined_only = true
   ];
-  optional double latitude = 4 [
+  double latitude = 4 [
     (validate.rules).double = {gte: -90.0, lte: 90.0}
   ];
-  optional double longitude = 5 [
+  double longitude = 5 [
     (validate.rules).double = {gte: -180.0, lte: 180.0}
   ];
-  optional string bio = 6 [
+  string bio = 6 [
     (validate.rules).string.min_len = 2
   ];
-  optional common.v1.Goal goal = 7 [
+  common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
-  optional common.v1.Interest interest = 8;
-  optional common.v1.Zodiac zodiac = 9 [
+  common.v1.Interest interest = 8;
+  common.v1.Zodiac zodiac = 9 [
     (validate.rules).enum.defined_only = true
   ];
-  optional int32 height = 10 [
+  int32 height = 10 [
     (validate.rules).int32.gt = 0
   ];
-  optional common.v1.Education education = 11 [
+  common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
   ];
-  optional common.v1.Children children = 12 [
+  common.v1.Children children = 12 [
     (validate.rules).enum.defined_only = true
   ];
-  optional common.v1.Alcohol alcohol = 13 [
+  common.v1.Alcohol alcohol = 13 [
     (validate.rules).enum.defined_only = true
   ];
-  optional common.v1.Smoking smoking = 14 [
+  common.v1.Smoking smoking = 14 [
     (validate.rules).enum.defined_only = true
   ];
-  optional bool is_hidden = 15;
-  optional bool is_verified = 16;
-  optional bool is_premium = 17;
-  optional bool is_blocked = 18;
+  bool is_hidden = 15;
+  bool is_verified = 16;
+  bool is_premium = 17;
+  bool is_blocked = 18;
   repeated PhotoUploadRequest photo_upload_requests = 19;
-  google.protobuf.FieldMask update_mask = 20;
 }
 
 message UpdateUserV1Response {
+  User user = 1;
+}
+
+message UpdateUserByIDV1Request {
+  string id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  string name = 2 [
+    (validate.rules).string.min_len = 2
+  ];
+  int32 age = 3 [
+    (validate.rules).int32.gte = 18
+  ];
+  Gender gender = 4 [
+    (validate.rules).enum.defined_only = true
+  ];
+  double latitude = 5 [
+    (validate.rules).double = {gte: -90.0, lte: 90.0}
+  ];
+  double longitude = 6 [
+    (validate.rules).double = {gte: -180.0, lte: 180.0}
+  ];
+  string bio = 7 [
+    (validate.rules).string.min_len = 2
+  ];
+  common.v1.Goal goal = 8 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Interest interest = 9;
+  common.v1.Zodiac zodiac = 10 [
+    (validate.rules).enum.defined_only = true
+  ];
+  int32 height = 11 [
+    (validate.rules).int32.gt = 0
+  ];
+  common.v1.Education education = 12 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Children children = 13 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Alcohol alcohol = 14 [
+    (validate.rules).enum.defined_only = true
+  ];
+  common.v1.Smoking smoking = 15 [
+    (validate.rules).enum.defined_only = true
+  ];
+  bool is_hidden = 16;
+  bool is_verified = 17;
+  bool is_premium = 18;
+  bool is_blocked = 19;
+  repeated PhotoUploadRequest photo_upload_requests = 20;
+}
+
+message UpdateUserByIDV1Response {
   User user = 1;
 }
 
@@ -292,6 +380,16 @@ message GetUserV1Request {
 }
 
 message GetUserV1Response {
+  User user = 1;
+}
+
+message GetUserByIDV1Request {
+  string id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message GetUserByIDV1Response {
   User user = 1;
 }
 

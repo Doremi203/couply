@@ -43,7 +43,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service MatchingService {
   rpc LikeUserV1 (LikeUserV1Request) returns (LikeUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/LikeUserV1"
+      post: "/v1/matches/likes/add"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -64,7 +64,7 @@ service MatchingService {
 
   rpc DislikeUserV1 (DislikeUserV1Request) returns (DislikeUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/DislikeUserV1"
+      post: "/v1/matches/dislikes/add"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -85,7 +85,7 @@ service MatchingService {
 
   rpc DeleteMatchV1 (DeleteMatchV1Request) returns (DeleteMatchV1Response) {
     option (google.api.http) = {
-      post: "/v1/DeleteMatchV1"
+      post: "/v1/matches/delete/byID"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -106,7 +106,7 @@ service MatchingService {
 
   rpc FetchMatchesUserIDsV1 (FetchMatchesUserIDsV1Request) returns (FetchMatchesUserIDsV1Response) {
     option (google.api.http) = {
-      post: "/v1/FetchMatchesUserIDsV1"
+      post: "/v1/matches/list"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -127,7 +127,7 @@ service MatchingService {
 
   rpc FetchOutgoingLikesV1 (FetchOutgoingLikesV1Request) returns (FetchOutgoingLikesV1Response) {
     option (google.api.http) = {
-      post: "/v1/FetchOutgoingLikesV1"
+      post: "/v1/match/likes/outgoing/list"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -148,7 +148,7 @@ service MatchingService {
 
   rpc FetchIncomingLikesV1 (FetchIncomingLikesV1Request) returns (FetchIncomingLikesV1Response) {
     option (google.api.http) = {
-      post: "/v1/FetchIncomingLikesV1"
+      post: "/v1/matches/likes/incoming/list"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

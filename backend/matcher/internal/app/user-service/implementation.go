@@ -14,8 +14,10 @@ import (
 type userServiceUseCase interface {
 	CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (*dto.CreateUserV1Response, error)
 	UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (*dto.UpdateUserV1Response, error)
+	UpdateUserByID(ctx context.Context, in *dto.UpdateUserByIDV1Request) (*dto.UpdateUserByIDV1Response, error)
 	DeleteUser(ctx context.Context, in *dto.DeleteUserV1Request) (*dto.DeleteUserV1Response, error)
 	GetUser(ctx context.Context, in *dto.GetUserV1Request) (*dto.GetUserV1Response, error)
+	GetUserByID(ctx context.Context, req *dto.GetUserByIDV1Request) (*dto.GetUserByIDV1Response, error)
 	GetUsers(ctx context.Context, in *dto.GetUsersV1Request) (*dto.GetUsersV1Response, error)
 	ConfirmPhotosUpload(ctx context.Context, orderNumbers []int32) error
 }

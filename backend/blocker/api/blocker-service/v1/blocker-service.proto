@@ -43,7 +43,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service BlockerService {
   rpc ReportUserV1(ReportUserV1Request) returns (ReportUserV1Response) {
     option (google.api.http) = {
-      post: "/v1/ReportUserV1"
+      post: "/v1/block/reports/create"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
