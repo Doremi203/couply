@@ -1,6 +1,7 @@
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import React, { useEffect, useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useSwipeable } from 'react-swipeable';
 
 import { useLikeUserMutation } from '../../../../entities/matches';
@@ -22,6 +23,8 @@ import {
   Sport,
   Zodiac,
   Children,
+  getIsPremium,
+  setUserVerified,
 } from '../../../../entities/user';
 import { MessageModal } from '../../../../pages/HomePage/components/MessageModal/MessageModal';
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
@@ -153,13 +156,21 @@ const getDefaultFilter = () => {
   };
 };
 
+const MAX_UNDO_PER_DAY = 3;
+
 export const ProfileSlider = () => {
+  const dispatch = useDispatch();
+
+  dispatch(setUserVerified());
+
+  const isPremium = useSelector(getIsPremium);
+
   const [searchUsers] = useSearchUsersMutation();
   const [createFilter] = useCreateFilterMutation();
   const [likeUser] = useLikeUserMutation();
 
   const [profiles, setProfiles] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   // const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -172,6 +183,9 @@ export const ProfileSlider = () => {
   //@ts-ignore
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  const [undoCount, setUndoCount] = useState(0);
+  const [lastUndoDate, setLastUndoDate] = useState('');
+
   const [complaintOpen, setComplaintOpen] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
   const [premiumOpen, setPremiumOpen] = useState(false);
@@ -180,7 +194,7 @@ export const ProfileSlider = () => {
     const fetchData = async () => {
       try {
         //@ts-ignore
-        // setLoading(true);
+        setLoading(true);
         const defaultFilter = getDefaultFilter();
         //@ts-ignore
         await createFilter(defaultFilter).unwrap();
@@ -189,47 +203,47 @@ export const ProfileSlider = () => {
         //@ts-ignore
         if (response.usersSearchInfo.length > 0) {
           setProfiles(response.usersSearchInfo || []);
+          setLoading(false);
         }
-
-        console.log(response);
-        console.log(response.usersSearchInfo);
-        console.log(profiles);
       } catch (err) {
         //@ts-ignore
         // setError('Ошибка при загрузке профилей');
         // console.error(err);
       } finally {
-        //@ts-ignore
-        // setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [createFilter, searchUsers]);
 
+  useEffect(() => {
+    const storedUndoCount = localStorage.getItem('undoCount');
+    const storedDate = localStorage.getItem('undoDate');
+
+    if (storedUndoCount && storedDate === new Date().toDateString()) {
+      setUndoCount(Number(storedUndoCount));
+    }
+  }, []);
+
   const handleNextUser = () => {
-    // If showing an ad and timer is active, don't allow swiping
     if (showingAd && timerActive) return;
 
-    // Check if we're at the end of profiles and not showing an ad
     if (currentIndex >= profiles.length - 1 && !showingAd) {
       setCurrentIndex(prev => prev + 1);
       return;
     }
 
-    // Increment swipe count if not showing an ad
     if (!showingAd) {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
 
-      // Show ad after every 3 swipes
       if (newSwipeCount % 3 === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
         setTimer(5);
 
-        // Start the countdown timer
         if (timerRef.current) {
           clearInterval(timerRef.current);
         }
@@ -251,7 +265,6 @@ export const ProfileSlider = () => {
         return;
       }
     } else {
-      // If showing an ad, reset to show regular profiles
       setShowingAd(false);
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -264,34 +277,24 @@ export const ProfileSlider = () => {
   };
 
   const handleLikeUser = async () => {
-    // If showing an ad and timer is active, don't allow swiping
     if (showingAd && timerActive) return;
 
-    // Check if we're at the end of profiles and not showing an ad
     if (currentIndex >= profiles.length - 1 && !showingAd) {
       setCurrentIndex(prev => prev + 1);
-      // console.log('AAA');
-      // await likeUser({ targetUserId: profiles[currentIndex].id, message: '' });
       return;
     }
 
-    // Increment swipe count if not showing an ad
     if (!showingAd) {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
-
-      console.log('AAA');
-      console.log(profiles[currentIndex]);
       await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
 
-      // Show ad after every 3 swipes
       if (newSwipeCount % 3 === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
         setTimer(5);
 
-        // Start the countdown timer
         if (timerRef.current) {
           clearInterval(timerRef.current);
         }
@@ -313,7 +316,6 @@ export const ProfileSlider = () => {
         return;
       }
     } else {
-      // If showing an ad, reset to show regular profiles
       setShowingAd(false);
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -326,13 +328,32 @@ export const ProfileSlider = () => {
   };
 
   const handlePrevUser = () => {
+    const currentDate = new Date().toDateString();
+
+    if (currentDate !== lastUndoDate) {
+      setUndoCount(0);
+      setLastUndoDate(currentDate);
+      localStorage.setItem('undoDate', currentDate);
+    }
+
+    if (undoCount >= MAX_UNDO_PER_DAY) {
+      setPremiumOpen(true);
+      return;
+    }
+
     if (currentIndex === 0) return;
+
+    setUndoCount(prev => {
+      const newCount = prev + 1;
+      localStorage.setItem('undoCount', newCount.toString());
+      return newCount;
+    });
+
     setCurrentIndex(prev => prev - 1);
     setCurrentPhotoIndex(0);
   };
 
   const handleNextPhoto = () => {
-    // Add safety check to ensure currentIndex is valid
     if (currentIndex < 0 || currentIndex >= profiles.length) return;
 
     const currentUser = profiles[currentIndex];
@@ -340,7 +361,6 @@ export const ProfileSlider = () => {
   };
 
   const handlePrevPhoto = () => {
-    // Add safety check to ensure currentIndex is valid
     if (currentIndex < 0 || currentIndex >= profiles.length) return;
 
     const currentUser = profiles[currentIndex];
@@ -360,7 +380,6 @@ export const ProfileSlider = () => {
       setTranslateX(e.deltaX);
       setOpacity(1 - Math.abs(e.deltaX) / 300);
       setSwipeDirection(e.deltaX > 0 ? 'right' : 'left');
-      // Don't call handleNextUser here, wait for onSwiped
     },
     onSwiped: e => {
       if (showingAd && timerActive) return;
@@ -370,13 +389,10 @@ export const ProfileSlider = () => {
         setTranslateX(e.deltaX > 0 ? 500 : -500);
         setOpacity(0);
 
-        // Use setTimeout to allow animation to complete before changing profile
         setTimeout(() => {
-          // Reset photo index first to prevent flickering
           setCurrentPhotoIndex(0);
           handleNextUser();
 
-          // Add a small delay before resetting styles to ensure smooth transition
           setTimeout(() => {
             setTranslateX(0);
             setOpacity(1);
@@ -391,15 +407,6 @@ export const ProfileSlider = () => {
     trackMouse: true,
   });
 
-  // const handlers = useSwipeable({
-  //   onSwipedLeft: () => handleNextUser(),
-  //   onSwipedRight: () => handleNextUser(),
-  //   trackMouse: true,
-  //   // @ts-ignore
-  //   preventDefaultTouchmoveEvent: !timerActive, // Prevent swiping when timer is active
-  // });
-
-  // Clean up timer on unmount
   useEffect(() => {
     return () => {
       if (timerRef.current) {
@@ -408,38 +415,21 @@ export const ProfileSlider = () => {
     };
   }, []);
 
-  // This check is now handled when determining currentProfile
-
-  // Make sure we have a valid index before accessing profiles
   const currentProfile = showingAd
     ? adProfiles[adIndex % adProfiles.length]
     : currentIndex >= 0 && currentIndex <= profiles.length - 1
       ? profiles[currentIndex]
       : null;
 
-  // console.log(currentIndex);
-  // console.log(profiles.length);
-  // console.log(currentProfile);
+  if (loading) {
+    return <div className={styles.loading}>Загрузка...</div>;
+  }
 
-  // If we don't have a valid profile and we're not showing an ad, show NoUsersLeft
   if (!currentProfile && !showingAd) {
     return <NoUsersLeft />;
   }
 
-  // if (loading) {
-  //   return <div className={styles.loading}>Загрузка...</div>;
-  // }
-
-  // if (error) {
-  //   return <div className={styles.error}>{error}</div>;
-  // }
-
-  // if (!profiles.length) {
-  //   return <div className={styles.empty}>Нет профилей для отображения</div>;
-  // }
-
   const handleProfileClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // If it's an ad, navigate to the ad link
     //@ts-ignore
     if (showingAd && 'adLink' in currentProfile) {
       window.open(currentProfile.adLink, '_blank');
@@ -552,6 +542,17 @@ export const ProfileSlider = () => {
     setComplaintOpen(true);
   };
 
+  const handleMessageOpen = () => {
+    if (isPremium) {
+      console.log('here');
+      setMessageOpen(true);
+    } else {
+      console.log('l');
+      setMessageOpen(true);
+      //setPremiumOpen(true);
+    }
+  };
+
   const isAd = showingAd;
 
   return (
@@ -591,7 +592,7 @@ export const ProfileSlider = () => {
                   width="20px"
                   height="20px"
                   onClick={e => {
-                    e.stopPropagation(); // Предотвращаем всплытие
+                    e.stopPropagation();
                     onBlock();
                   }}
                 />
@@ -626,7 +627,8 @@ export const ProfileSlider = () => {
               className={styles.likeButton}
               likeClassName={styles.like}
             />
-            <MessageButton onClick={() => setPremiumOpen(true)} />
+            {/* <MessageButton onClick={() => setPremiumOpen(true)} /> */}
+            <MessageButton onClick={handleMessageOpen} />
           </div>
         </>
       )}
@@ -643,7 +645,11 @@ export const ProfileSlider = () => {
       )}
 
       <ComplaintModal isOpen={complaintOpen} onClose={() => setComplaintOpen(false)} />
-      <MessageModal isOpen={messageOpen} onClose={() => setMessageOpen(false)} />
+      <MessageModal
+        isOpen={messageOpen}
+        onClose={() => setMessageOpen(false)}
+        targetUserId={profiles[currentIndex].user.id}
+      />
       <PremiumModal isOpen={premiumOpen} onClose={() => setPremiumOpen(false)} />
     </div>
   );

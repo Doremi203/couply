@@ -10,12 +10,22 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
+import { useLikeUserMutation } from '../../../../entities/matches';
+
 // @ts-ignore
-export const MessageModal = ({ isOpen, onClose }) => {
+export const MessageModal = ({ isOpen, onClose, targetUserId }) => {
+  const [likeUser] = useLikeUserMutation();
+
+  console.log('targetUserId:', targetUserId);
+
+  //await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
+
   const [message, setMessage] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!message.trim()) return;
+
+    await likeUser({ targetUserId, message });
 
     console.log('Отправлено сообщение:', message);
     onClose();
@@ -28,11 +38,15 @@ export const MessageModal = ({ isOpen, onClose }) => {
       fullWidth
       maxWidth="sm"
       PaperProps={{
-        style: {
+        sx: {
           position: 'fixed',
-          bottom: 0,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           margin: 0,
-          borderRadius: '12px 12px 0 0',
+          borderRadius: '12px',
+          maxHeight: '90vh',
+          overflow: 'auto',
         },
       }}
     >
