@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
-// import { ProfileView } from '../../../LikesPage/components/ProfileView';
 import { ProfileView } from '../../../../widgets/ProfileView';
 import { ProfileData } from '../../types';
 import { Profile } from '../Profile';
-// import { ProfilePreview } from '../ProfilePreview';
 
 import styles from './profilePage.module.css';
 
@@ -45,13 +43,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     imageUrl: '/photo1.png',
   });
 
-  // const [activityHistory] = useState<ActivityItem[]>([
-  //   { type: 'view', user: 'Alex', date: '2025-03-28T14:30:00' },
-  //   { type: 'like', user: 'Michael', date: '2025-03-27T10:15:00' },
-  //   { type: 'message', user: 'David', date: '2025-03-26T18:45:00' },
-  //   { type: 'view', user: 'Sarah', date: '2025-03-25T09:20:00' },
-  // ]);
-
   const handleEditToggle = () => {
     setIsEditMode(!isEditMode);
     setActiveTab(isEditMode ? 'profile' : 'edit');
@@ -66,7 +57,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   const handleVerificationRequest = () => {
-    // In a real app, this would trigger a verification process
     setIsVerified(true);
   };
 
@@ -137,15 +127,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   const handleSaveChanges = () => {
-    // In a real app, this would save to a backend
     setIsEditMode(false);
     setActiveTab('profile');
   };
-
-  // const formatDate = (dateString: string) => {
-  //   const date = new Date(dateString);
-  //   return date.toLocaleDateString();
-  // };
 
   const renderContent = () => {
     switch (activeTab) {

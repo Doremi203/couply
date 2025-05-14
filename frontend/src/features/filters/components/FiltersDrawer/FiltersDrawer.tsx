@@ -31,8 +31,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [ageRange, setAgeRange] = useState<number[]>([20, 28]);
   const interestOptions = ['Спорт', 'Путешествия', 'Музыка', 'Искусство', 'Гастрономия'];
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  // const [selectedMusicPreferences, setSelectedMusicPreferences] = useState<string[]>([]);
-
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
 
   const handleDistanceChange = (_event: Event, newValue: number | number[]) => {
@@ -59,20 +57,11 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     }
   };
 
-  // const toggleMusicPreference = (music: string) => {
-  //   if (selectedMusicPreferences.includes(music)) {
-  //     setSelectedMusicPreferences(selectedMusicPreferences.filter(item => item !== music));
-  //   } else {
-  //     setSelectedMusicPreferences([...selectedMusicPreferences, music]);
-  //   }
-  // };
-
   const handleClearFilters = () => {
     setInterestedIn('Both');
     setDistance(40);
     setAgeRange([18, 28]);
     setSelectedInterests([]);
-    // setSelectedMusicPreferences([]);
     setVerificationStatus(false);
   };
 
@@ -120,13 +109,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             selectedOptions={selectedInterests}
             onToggle={toggleInterest}
           />
-
-          {/* <ChipFilter
-            title="Музыкальные предпочтения"
-            options={musicOptions}
-            selectedOptions={selectedMusicPreferences}
-            onToggle={toggleMusicPreference}
-          /> */}
 
           <ToggleFilter
             title="Статус верификации"

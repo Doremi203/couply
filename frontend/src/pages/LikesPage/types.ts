@@ -1,4 +1,3 @@
-// Define types for the LikesPage data
 export interface LikeProfile {
   id: number;
   name: string;

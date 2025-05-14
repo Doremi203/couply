@@ -1,13 +1,10 @@
 import React from 'react';
 
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
-// import { IconButton } from '../../../../shared/components/IconButton';
 import { TelegramIcon } from '../../../../shared/components/TelegramIcon';
 
 import styles from './matchCard.module.css';
-// import { IconButton } from "@mui/material";
 
-// Define the match profile interface
 export interface MatchProfile {
   match: {
     id: number;
@@ -49,12 +46,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         )}
       </div>
       <div onClick={e => e.stopPropagation()} className={styles.buttons}>
-        {/* <IconButton
-          // size="small"
-          className={styles.socialButton}
-          // @ts-ignore
-          onClick={() => onSocialClick(match.id, 'telegram')}
-        > */}
         <div className={styles.telegram}>
           <TelegramIcon />
         </div>
@@ -64,7 +55,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({
           }}
           className={styles.dislikeButton}
         />
-        {/* </IconButton> */}
       </div>
     </div>
   );

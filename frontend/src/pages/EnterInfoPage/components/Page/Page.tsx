@@ -46,13 +46,8 @@ export const EnterInfoPage = () => {
 
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
-  console.log(coords);
-
   const [userPhotos, setUserPhotos] = useState([]);
 
-  // const [userPhotos, setUserPhotos] = useState<Array{ file: File; url: string }>([]);
-
-  // Handler for when location is received from GeoLocationRequest
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
     setCoords(coordinates);
   };
@@ -60,11 +55,9 @@ export const EnterInfoPage = () => {
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
       try {
-        // Calculate age and ensure it's a number
         const calculatedAge = getAge(birthDate);
         const ageValue = typeof calculatedAge === 'number' ? calculatedAge : 0;
 
-        // Convert string gender to Gender enum
         let genderEnum: Gender;
         switch (userGender) {
           case 'male':
@@ -77,15 +70,8 @@ export const EnterInfoPage = () => {
             genderEnum = Gender.unspecified;
         }
 
-        // Convert coordinates to location string if available
         const locationString = coords ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}` : '';
 
-        // Create user data object according to UserRequest interface
-
-        //         const formData = new FormData();
-        // formData.append('image', file);
-
-        // Save photo URL to localStorage for later use
         if (profilePhoto) {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
@@ -94,9 +80,6 @@ export const EnterInfoPage = () => {
         if (profilePhoto) {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
-
-        console.log(profilePhoto);
-        console.log(userPhotos);
 
         const photoUploadRequests = userPhotos.map((photo, index) => ({
           orderNumber: index,
@@ -116,31 +99,15 @@ export const EnterInfoPage = () => {
           longitude: coords?.lng,
         };
 
-        // const userData = {
-        //   name,
-        //   age: ageValue,
-        //   gender: genderEnum,
-        //   height: String(height),
-        //   ...(locationString ? { location: locationString } : {}),
-        //   // Store profile photo in localStorage instead of sending it directly
-        //   // since the API expects photos to be null
-        //   // photos: null,
-        //   latitude: coords?.lat,
-        //   longitude: coords?.lng,
-        // };
-
-        //ВЕРНУТЬ
         const response = await createUser(userData).unwrap();
 
+        //TODO
         if (response.photoUploadResponses) {
           // Загружаем каждое фото на соответствующий URL
           await Promise.all(
             response.photoUploadResponses.map(async (resp: any) => {
               const photo = userPhotos[resp.orderNumber];
               if (!photo) return;
-
-              console.log(resp);
-              console.log(resp.uploadUrl);
 
               await fetch(resp.uploadUrl, {
                 method: 'PUT',
@@ -157,18 +124,15 @@ export const EnterInfoPage = () => {
           await confirmPhoto({ orderNumbers }).unwrap();
         } catch (error) {
           console.error('Photo confirmation failed:', error);
-          throw error; // Прокидываем ошибку дальше
+          throw error;
         }
-
-        console.log('RES', response);
 
         // надо ли сохранять в локал TODO
-        if (response && response.user && response.user.id) {
-          dispatch(setUserId(response.user.id));
-          localStorage.setItem('userId', response.user.id);
-        }
+        // if (response && response.user && response.user.id) {
+        //   dispatch(setUserId(response.user.id));
+        //   localStorage.setItem('userId', response.user.id);
+        // }
 
-        // After creating user, check if we should show notification prompt
         if (
           isPushNotificationSupported() &&
           !notificationPermissionRequested &&
@@ -177,12 +141,10 @@ export const EnterInfoPage = () => {
         ) {
           setShowNotificationPrompt(true);
         } else {
-          // If notifications are not supported or permission already requested, navigate to home
           navigate('/home');
         }
       } catch (error) {
         console.error('Error creating user:', error);
-        // Still proceed to notification or home page even if there's an error
         if (
           isPushNotificationSupported() &&
           !notificationPermissionRequested &&
@@ -224,7 +186,6 @@ export const EnterInfoPage = () => {
       const fileUrl = URL.createObjectURL(file);
 
       setUserPhotos(prevPhotos => {
-        // Создаем новый массив с обновленным первым фото
         const newPhotos = [...prevPhotos];
         if (newPhotos.length > 0) {
           newPhotos[0] = { file, url: fileUrl };
@@ -278,12 +239,10 @@ export const EnterInfoPage = () => {
       case 0:
         return name.trim() !== '';
       case 1: {
-        // Ensure age is a number and >= 18
         const calculatedAge = getAge(birthDate);
         return birthDate !== '' && typeof calculatedAge === 'number' && calculatedAge >= 18;
       }
       case 2:
-        // return userGender !== '' && profilePhoto !== null;
         return true;
       case 3:
         return true;
@@ -364,18 +323,10 @@ export const EnterInfoPage = () => {
         onChange={e => setHeight(e.target.value)}
         className={styles.input}
       />
-
-      {/* <GeoLocationRequest onLocationReceived={handleLocationReceived} />
-      {coords && (
-        <p className={styles.coordsDisplay}>
-          Широта: {coords.lat.toFixed(4)}, Долгота: {coords.lng.toFixed(4)}
-        </p>
-      )} */}
     </div>,
     <div key="datingSettingsSection">
       <h2>Загрузите ваше фото</h2>
       <div>
-        {/* <label>Загрузите ваше фото:</label> */}
         <div className={styles.photoUploadContainer}>
           {profilePhoto ? (
             <div className={styles.photoPreview}>

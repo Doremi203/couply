@@ -1,14 +1,15 @@
 import { Gender, Goal, Zodiac, Education, Children, Alcohol, Smoking } from './constants';
 
+//TODO
 export interface UserRequest {
-  id?: string; //
+  id?: string;
   name: string;
   age: number;
   gender: Gender;
   location: string;
   bio: string;
   goal: Goal;
-  interest: null; //
+  interest: null;
   zodiac: Zodiac;
   height: number;
   education: Education;
@@ -17,7 +18,7 @@ export interface UserRequest {
   smoking: Smoking;
   hidden: boolean;
   verified: boolean;
-  photos: null; //
+  photos: null;
 }
 
 export interface UserResponse {
@@ -29,7 +30,7 @@ export interface UserResponse {
     location: string;
     bio: string;
     goal: Goal;
-    interest: null; //
+    interest: null;
     zodiac: Zodiac;
     height: number;
     education: Education;
@@ -38,7 +39,7 @@ export interface UserResponse {
     smoking: Smoking;
     hidden: boolean;
     verified: boolean;
-    photos: null; //
+    photos: null;
   };
 }
 

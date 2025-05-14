@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
-import { ProfileData } from '../../features/profileEdit';
+import { BasicInfoForm, ProfileData } from '../../features/profileEdit';
 import { ProfilePhotoEdit } from '../../features/profileEdit/components/ProfilePhotoEdit';
 import { ProfileVisibilitySection } from '../../features/profileVisibility/components/ProfileVisibilitySection';
 import AboutMeSection from '../../shared/components/AboutMeSection';
@@ -69,7 +69,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           onAddPhotoClick={() => handleCameraClick(false)}
         />
 
-        {/* <BasicInfoForm profileData={profileData} onInputChange={onInputChange} /> */}
+        <BasicInfoForm profileData={profileData} onInputChange={onInputChange} />
 
         <AboutMeSection about={profileData.about} onInputChange={onInputChange} />
 

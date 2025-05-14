@@ -8,14 +8,7 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-// @ts-ignore
-import { forwardRef, useState } from 'react';
-
-// @ts-nocheck
-
-// const Transition = forwardRef(function Transition(props, ref) {
-//   return <Slide direction="up" ref={ref} {...props} />;
-// });
+import { useState } from 'react';
 
 // @ts-ignore
 export const MessageModal = ({ isOpen, onClose }) => {
@@ -24,7 +17,6 @@ export const MessageModal = ({ isOpen, onClose }) => {
   const handleSubmit = () => {
     if (!message.trim()) return;
 
-    // Здесь обработка отправки сообщения
     console.log('Отправлено сообщение:', message);
     onClose();
   };
@@ -33,7 +25,6 @@ export const MessageModal = ({ isOpen, onClose }) => {
     <Dialog
       open={isOpen}
       onClose={onClose}
-      // TransitionComponent={Transition}
       fullWidth
       maxWidth="sm"
       PaperProps={{

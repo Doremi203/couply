@@ -19,16 +19,6 @@ export const PremiumPage: React.FC = () => {
     navigate(-1);
   };
 
-  //   const handleSubscribe = (plan: string) => {
-  //     // Handle subscription logic here
-  //     console.log(`Selected plan: ${plan}`);
-  //   };
-
-  const handleRestorePurchases = () => {
-    // Handle restore purchases logic here
-    console.log('Restore purchases');
-  };
-
   const [selectedPlan, setSelectedPlan] = useState<string | null>('6-month');
   const [selectedPrice, setSelectedPrice] = useState<string | null>('999₽');
 
@@ -41,11 +31,7 @@ export const PremiumPage: React.FC = () => {
   const handleSubscribe = (plan: string, price: string) => {
     setSelectedPlan(plan);
     setSelectedPrice(price);
-    // Дополнительная логика обработки подписки
-    console.log(`Selected plan: ${plan}`);
   };
-
-  console.log(selectedPlan);
 
   return (
     <div className={styles.pageContainer}>
@@ -93,19 +79,12 @@ export const PremiumPage: React.FC = () => {
               </div>
               <div className={styles.planPrice}>
                 <div className={styles.priceAmount}>{plan.price}</div>
-                {/* <ChevronRightIcon className={styles.arrowIcon} /> */}
               </div>
             </div>
           ))}
         </div>
 
-        <button className={styles.restoreButton} onClick={handleRestorePurchases}>
-          Подписаться за {selectedPrice}
-        </button>
-        {/* <div className={styles.disclaimer}>
-          You can cancel subscription or free trial any time by canceling your subscription through
-          account settings, or it will automatically renew.
-        </div> */}
+        <button className={styles.restoreButton}>Подписаться за {selectedPrice}</button>
       </div>
 
       <div className={styles.navBarWrapper}>

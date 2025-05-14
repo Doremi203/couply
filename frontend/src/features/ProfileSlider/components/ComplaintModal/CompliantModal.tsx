@@ -14,10 +14,6 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 
-// const Transition = forwardRef(function Transition(props, ref) {
-//   return <Slide direction="up" ref={ref} {...props} />;
-// });
-
 const reportReasons = [
   'Спам',
   'Фейковый профиль',

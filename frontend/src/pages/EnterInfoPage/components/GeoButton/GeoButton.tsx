@@ -7,7 +7,6 @@ const GeoLocationRequest = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
 
-  // Определяем платформу пользователя
   const detectPlatform = () => {
     const userAgent = navigator.userAgent.toLowerCase();
     setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent));

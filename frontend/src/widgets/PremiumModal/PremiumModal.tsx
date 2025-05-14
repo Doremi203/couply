@@ -14,22 +14,17 @@ interface PremiumModalProps {
 export const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
 
-  const handleSubscribe = (plan: string) => {
-    // Handle subscription logic here
-    console.log(`Selected plan: ${plan}`);
-    // Close modal and navigate to premium page for checkout
+  const handleSubscribe = () => {
     onClose();
     navigate('/premium');
   };
 
   const handleViewAllPlans = () => {
-    // Navigate to the full premium page
     onClose();
     navigate('/premium');
   };
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    // Only close if clicking directly on the overlay (not its children)
     if (e.target === e.currentTarget) {
       onClose();
     }
@@ -37,7 +32,6 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose }) =
 
   if (!isOpen) return null;
 
-  // Use createPortal to render the modal directly in the document body
   return createPortal(
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalContent}>
@@ -69,7 +63,7 @@ export const PremiumModal: React.FC<PremiumModalProps> = ({ isOpen, onClose }) =
           </div>
         </div>
 
-        <div className={styles.planCard} onClick={() => handleSubscribe('monthly')}>
+        <div className={styles.planCard} onClick={() => handleSubscribe()}>
           <div className={styles.planInfo}>
             <div className={styles.planDuration}>1 месяц</div>
           </div>
