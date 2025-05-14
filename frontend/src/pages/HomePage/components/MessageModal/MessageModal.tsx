@@ -15,11 +15,6 @@ import { useLikeUserMutation } from '../../../../entities/matches';
 // @ts-ignore
 export const MessageModal = ({ isOpen, onClose, targetUserId }) => {
   const [likeUser] = useLikeUserMutation();
-
-  console.log('targetUserId:', targetUserId);
-
-  //await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
-
   const [message, setMessage] = useState('');
 
   const handleSubmit = async () => {

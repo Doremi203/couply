@@ -1,6 +1,7 @@
 import VerifiedIcon from '@mui/icons-material/Verified';
 import React, { useState, useRef, useEffect } from 'react';
 
+import { useLikeUserMutation } from '../../entities/matches';
 import { BackButton } from '../../shared/components/BackButton';
 import { DislikeButton } from '../../shared/components/DislikeButton';
 import { LikeButton } from '../../shared/components/LikeButton';
@@ -29,6 +30,8 @@ interface ProfileViewProps {
 
 //@ts-ignore
 export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLike }) => {
+  const [likeUser] = useLikeUserMutation();
+
   const [menuPosition, setMenuPosition] = useState<'collapsed' | 'expanded'>('expanded');
 
   const profileInfoRef = useRef<HTMLDivElement>(null);
@@ -46,13 +49,20 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
 
   //TODO delete
   const profileDetails = {
-    bio: profile.bio || 'Hello, I am a fashion designer based in Florida.',
-    location: profile.location || 'Miami Beach, Florida',
-    lifestyle: profile.lifestyle || {
+    bio: profile.user.bio || 'Hello, I am a fashion designer based in Florida.',
+    location: profile.user.location || 'Miami Beach, Florida',
+    lifestyle: profile.user.lifestyle || {
       kids: "I don't have kids",
     },
-    passion: profile.passion ||
-      profile.interests || ['Music', 'Travel', 'Tea', 'Photography', 'Fashion', 'House Parties'],
+    passion: profile.user.passion ||
+      profile.user.interests || [
+        'Music',
+        'Travel',
+        'Tea',
+        'Photography',
+        'Fashion',
+        'House Parties',
+      ],
     photos: profile.photos || samplePhotos,
   };
 
@@ -67,6 +77,11 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
 
   const toggleMenuPosition = () => {
     setMenuPosition(menuPosition === 'collapsed' ? 'expanded' : 'collapsed');
+  };
+
+  const handleLike = () => {
+    likeUser({ targetUserId: profile.user.id });
+    onLike(profile.id);
   };
 
   useEffect(() => {
@@ -190,8 +205,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
         <div className={styles.photoContent}>
           <div className={styles.nameAndButtons}>
             <h2 className={styles.photoName}>
-              {profile.name}
-              {profile.verified && (
+              {profile.user.name}
+              {profile.user.verified && (
                 <div className={styles.verifiedBadge}>
                   <VerifiedIcon />
                 </div>
@@ -209,9 +224,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
               </div>
               <div onClick={e => e.stopPropagation()}>
                 <LikeButton
-                  onClick={() => {
-                    onLike(profile.id);
-                  }}
+                  onClick={handleLike}
                   className={styles.likeButton}
                   likeClassName={styles.like}
                 />
@@ -220,7 +233,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
           </div>
 
           <p className={styles.photoInfo}>
-            {profile.age} | {profileDetails.location}
+            {profile.user.age} | {profileDetails.location}
           </p>
 
           <div className={styles.photoTags}>
