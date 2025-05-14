@@ -12,6 +12,7 @@ interface LikesSectionProps {
 }
 
 export const LikesSection: React.FC<LikesSectionProps> = ({ likes, onProfileClick, onLike }) => {
+  console.log('3', likes);
   if (likes.length === 0) {
     return (
       <EmptyState title="У вас пока нет лайков" subtitle="Продолжайте искать новые знакомства" />

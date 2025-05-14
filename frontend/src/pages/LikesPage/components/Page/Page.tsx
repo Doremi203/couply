@@ -10,80 +10,84 @@ import { MatchModal } from '../MatchModal';
 
 import styles from './likesPage.module.css';
 
-const likes = [
-  {
-    id: 1,
-    name: 'Анна',
-    age: 25,
-    imageUrl: 'girl.jpeg',
-    liked: false,
-    hasLikedYou: true, // This profile has already liked the user
-    location: 'Москва, Россия',
-    interests: ['Музыка', 'Путешествия', 'Фотография', 'Мода', 'Искусство'],
-  },
-  {
-    id: 2,
-    name: 'Иван',
-    age: 30,
-    imageUrl: 'boy.jpeg',
-    liked: false,
-    hasLikedYou: true, // This profile has already liked the user
-    location: 'Санкт-Петербург, Россия',
-    interests: ['Спорт', 'Кино', 'Технологии', 'Путешествия'],
-  },
-  {
-    id: 3,
-    name: 'Ольга',
-    age: 28,
-    imageUrl: 'woman3.jpeg',
-    liked: false,
-    hasLikedYou: false,
-    location: 'Казань, Россия',
-    interests: ['Книги', 'Йога', 'Кулинария', 'Природа'],
-  },
-  {
-    id: 4,
-    name: 'Алексей',
-    age: 32,
-    imageUrl: 'miio.jpeg',
-    liked: false,
-    hasLikedYou: false,
-    location: 'Екатеринбург, Россия',
-    interests: ['Музыка', 'Горы', 'Фотография', 'Путешествия'],
-  },
-];
+// const likes = [
+//   {
+//     id: 1,
+//     name: 'Анна',
+//     age: 25,
+//     imageUrl: 'girl.jpeg',
+//     liked: false,
+//     hasLikedYou: true, // This profile has already liked the user
+//     location: 'Москва, Россия',
+//     interests: ['Музыка', 'Путешествия', 'Фотография', 'Мода', 'Искусство'],
+//   },
+//   {
+//     id: 2,
+//     name: 'Иван',
+//     age: 30,
+//     imageUrl: 'boy.jpeg',
+//     liked: false,
+//     hasLikedYou: true, // This profile has already liked the user
+//     location: 'Санкт-Петербург, Россия',
+//     interests: ['Спорт', 'Кино', 'Технологии', 'Путешествия'],
+//   },
+//   {
+//     id: 3,
+//     name: 'Ольга',
+//     age: 28,
+//     imageUrl: 'woman3.jpeg',
+//     liked: false,
+//     hasLikedYou: false,
+//     location: 'Казань, Россия',
+//     interests: ['Книги', 'Йога', 'Кулинария', 'Природа'],
+//   },
+//   {
+//     id: 4,
+//     name: 'Алексей',
+//     age: 32,
+//     imageUrl: 'miio.jpeg',
+//     liked: false,
+//     hasLikedYou: false,
+//     location: 'Екатеринбург, Россия',
+//     interests: ['Музыка', 'Горы', 'Фотография', 'Путешествия'],
+//   },
+// ];
 
-const matchesUsers = [
-  {
-    id: 101, // Using different ID range for matches
-    name: 'Мария',
-    age: 27,
-    imageUrl: 'woman1.jpg',
-    telegram: '@maria_27',
-  },
-  {
-    id: 102, // Using different ID range for matches
-    name: 'Дмитрий',
-    age: 31,
-    imageUrl: 'boy1.jpeg',
-    telegram: '@dmitry_31',
-  },
-];
+// const matchesUsers = [
+//   {
+//     id: 101, // Using different ID range for matches
+//     name: 'Мария',
+//     age: 27,
+//     imageUrl: 'woman1.jpg',
+//     telegram: '@maria_27',
+//   },
+//   {
+//     id: 102, // Using different ID range for matches
+//     name: 'Дмитрий',
+//     age: 31,
+//     imageUrl: 'boy1.jpeg',
+//     telegram: '@dmitry_31',
+//   },
+// ];
 
 export const LikesPage = () => {
   const [activeTab, setActiveTab] = useState<'лайки' | 'мэтчи'>('лайки');
 
   const {
-    //   matches,
     showMatchModal,
     matchedProfile,
     showChatMessage,
     handleLike,
-    // handleSendMessage,
+    handleSendMessage,
     handleKeepSwiping,
     handleSocialClick,
-    //   incomingMatches,
+    likes,
+    matchesUsers,
+    likesUsers,
   } = useLikesAndMatches();
+
+  console.log(matchesUsers);
+  console.log('2', likesUsers);
 
   const { selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile } =
     useProfileView();
@@ -129,7 +133,7 @@ export const LikesPage = () => {
 
       {activeTab === 'лайки' && (
         // @ts-ignore
-        <LikesSection likes={likes} onProfileClick={handleProfileClick} onLike={handleLike} />
+        <LikesSection likes={likesUsers} onProfileClick={handleProfileClick} onLike={handleLike} />
       )}
 
       {activeTab === 'мэтчи' && (

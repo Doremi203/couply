@@ -3,6 +3,7 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import React, { useEffect, useState, useRef } from 'react';
 import { useSwipeable } from 'react-swipeable';
 
+import { useLikeUserMutation } from '../../../../entities/matches';
 import { GenderPriority } from '../../../../entities/search';
 import {
   useCreateFilterMutation,
@@ -35,76 +36,76 @@ import { ComplaintModal } from '../ComplaintModal/CompliantModal';
 
 import styles from './profileSlider.module.css';
 
-const profiles = [
-  {
-    id: 1,
-    name: 'Максим',
-    age: 25,
-    bio: 'Увлекаюсь фотографией и кулинарией.',
-    photos: ['man5.jpeg', 'man3.jpeg', 'man4.jpeg'],
-    location: 'Москва, Россия',
-    verified: true,
-    interests: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
-    lifestyle: {
-      kids: 'Нет детей',
-      smoking: 'Не курю',
-      alcohol: 'Иногда',
-      education: 'Высшее образование',
-    },
-    passion: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
-  },
-  {
-    id: 2,
-    name: 'Иван',
-    age: 30,
-    bio: 'Пишу музыку и люблю кататься на велосипедецшуатмщышоватмщшоывтамдоытвдаломтыдвоамтлдыоватмдлывоатмдылова.',
-    photos: ['photo1.png', 'photo2.png', 'photo3.png'],
-    location: 'Санкт-Петербург, Россия',
-    verified: false,
-    interests: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
-    lifestyle: {
-      kids: 'Нет детей',
-      smoking: 'Не курю',
-      alcohol: 'Редко',
-      education: 'Высшее образование',
-    },
-    passion: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
-  },
-  {
-    id: 3,
-    name: 'Ольга',
-    age: 28,
-    bio: 'Увлекаюсь фотографией и кулинарией.',
-    photos: ['woman1.jpg', 'woman1.jpg', 'woman1.jpg'],
-    location: 'Казань, Россия',
-    verified: true,
-    interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-    lifestyle: {
-      kids: 'Нет детей',
-      smoking: 'Не курю',
-      alcohol: 'Не пью',
-      education: 'Высшее образование',
-    },
-    passion: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-  },
-  {
-    id: 3,
-    name: 'Превиак',
-    age: 20,
-    bio: 'пидорское млекопитающее',
-    photos: ['previak.jpg'],
-    location: 'Казань, Россия',
-    verified: true,
-    interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-    lifestyle: {
-      kids: 'Нет детей',
-      smoking: 'Не курю',
-      alcohol: 'Не пью',
-      education: 'Высшее образование',
-    },
-    passion: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-  },
-];
+// const profiles = [
+//   {
+//     id: 1,
+//     name: 'Максим',
+//     age: 25,
+//     bio: 'Увлекаюсь фотографией и кулинарией.',
+//     photos: ['man5.jpeg', 'man3.jpeg', 'man4.jpeg'],
+//     location: 'Москва, Россия',
+//     verified: true,
+//     interests: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
+//     lifestyle: {
+//       kids: 'Нет детей',
+//       smoking: 'Не курю',
+//       alcohol: 'Иногда',
+//       education: 'Высшее образование',
+//     },
+//     passion: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
+//   },
+//   {
+//     id: 2,
+//     name: 'Иван',
+//     age: 30,
+//     bio: 'Пишу музыку и люблю кататься на велосипедецшуатмщышоватмщшоывтамдоытвдаломтыдвоамтлдыоватмдлывоатмдылова.',
+//     photos: ['photo1.png', 'photo2.png', 'photo3.png'],
+//     location: 'Санкт-Петербург, Россия',
+//     verified: false,
+//     interests: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
+//     lifestyle: {
+//       kids: 'Нет детей',
+//       smoking: 'Не курю',
+//       alcohol: 'Редко',
+//       education: 'Высшее образование',
+//     },
+//     passion: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
+//   },
+//   {
+//     id: 3,
+//     name: 'Ольга',
+//     age: 28,
+//     bio: 'Увлекаюсь фотографией и кулинарией.',
+//     photos: ['woman1.jpg', 'woman1.jpg', 'woman1.jpg'],
+//     location: 'Казань, Россия',
+//     verified: true,
+//     interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
+//     lifestyle: {
+//       kids: 'Нет детей',
+//       smoking: 'Не курю',
+//       alcohol: 'Не пью',
+//       education: 'Высшее образование',
+//     },
+//     passion: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
+//   },
+//   {
+//     id: 3,
+//     name: 'Превиак',
+//     age: 20,
+//     bio: 'пидорское млекопитающее',
+//     photos: ['previak.jpg'],
+//     location: 'Казань, Россия',
+//     verified: true,
+//     interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
+//     lifestyle: {
+//       kids: 'Нет детей',
+//       smoking: 'Не курю',
+//       alcohol: 'Не пью',
+//       education: 'Высшее образование',
+//     },
+//     passion: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
+//   },
+// ];
 
 // Advertisement profiles
 const adProfiles = [
@@ -155,8 +156,9 @@ const getDefaultFilter = () => {
 export const ProfileSlider = () => {
   const [searchUsers] = useSearchUsersMutation();
   const [createFilter] = useCreateFilterMutation();
+  const [likeUser] = useLikeUserMutation();
 
-  // const [profiles1, setProfiles] = useState<(typeof profiles)[0][]>([]);
+  const [profiles, setProfiles] = useState([]);
   // const [loading, setLoading] = useState(true);
   // const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -183,13 +185,19 @@ export const ProfileSlider = () => {
         //@ts-ignore
         await createFilter(defaultFilter).unwrap();
         const response = await searchUsers({ limit: 10, offset: 0 }).unwrap();
-        console.log(response);
+        // console.log(response);
         //@ts-ignore
-        setProfiles(response.users || []);
+        if (response.usersSearchInfo.length > 0) {
+          setProfiles(response.usersSearchInfo || []);
+        }
+
+        console.log(response);
+        console.log(response.usersSearchInfo);
+        console.log(profiles);
       } catch (err) {
         //@ts-ignore
         // setError('Ошибка при загрузке профилей');
-        console.error(err);
+        // console.error(err);
       } finally {
         //@ts-ignore
         // setLoading(false);
@@ -213,6 +221,68 @@ export const ProfileSlider = () => {
     if (!showingAd) {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
+
+      // Show ad after every 3 swipes
+      if (newSwipeCount % 3 === 0) {
+        setShowingAd(true);
+        setAdIndex((adIndex + 1) % adProfiles.length);
+        setTimerActive(true);
+        setTimer(5);
+
+        // Start the countdown timer
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+
+        timerRef.current = setInterval(() => {
+          setTimer(prevTimer => {
+            if (prevTimer <= 1) {
+              if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+              }
+              setTimerActive(false);
+              return 0;
+            }
+            return prevTimer - 1;
+          });
+        }, 1000);
+
+        return;
+      }
+    } else {
+      // If showing an ad, reset to show regular profiles
+      setShowingAd(false);
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      setTimerActive(false);
+    }
+    setCurrentIndex(prev => prev + 1);
+    setCurrentPhotoIndex(0);
+  };
+
+  const handleLikeUser = async () => {
+    // If showing an ad and timer is active, don't allow swiping
+    if (showingAd && timerActive) return;
+
+    // Check if we're at the end of profiles and not showing an ad
+    if (currentIndex >= profiles.length - 1 && !showingAd) {
+      setCurrentIndex(prev => prev + 1);
+      // console.log('AAA');
+      // await likeUser({ targetUserId: profiles[currentIndex].id, message: '' });
+      return;
+    }
+
+    // Increment swipe count if not showing an ad
+    if (!showingAd) {
+      const newSwipeCount = swipeCount + 1;
+      setSwipeCount(newSwipeCount);
+
+      console.log('AAA');
+      console.log(profiles[currentIndex]);
+      await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
 
       // Show ad after every 3 swipes
       if (newSwipeCount % 3 === 0) {
@@ -347,9 +417,9 @@ export const ProfileSlider = () => {
       ? profiles[currentIndex]
       : null;
 
-  console.log(currentIndex);
-  console.log(profiles.length);
-  console.log(currentProfile);
+  // console.log(currentIndex);
+  // console.log(profiles.length);
+  // console.log(currentProfile);
 
   // If we don't have a valid profile and we're not showing an ad, show NoUsersLeft
   if (!currentProfile && !showingAd) {
@@ -402,9 +472,9 @@ export const ProfileSlider = () => {
     return (
       <div className={nameClass}>
         {/** @ts-ignore */}
-        {currentProfile.name}, {currentProfile.age}
+        {currentProfile.user.name}, {currentProfile.user.age}
         {/* @ts-ignore */}
-        {currentProfile.verified && (
+        {currentProfile.user.verified && (
           <div className={styles.verifiedBadge}>
             <VerifiedIcon />
           </div>
@@ -418,11 +488,13 @@ export const ProfileSlider = () => {
       case 0: {
         let bioLines = 0;
 
+        console.log(currentProfile);
+
         //@ts-ignore
-        if (currentProfile.bio.length > 0 && currentProfile.bio.length <= 50) {
+        if (currentProfile.user.bio.length > 0 && currentProfile.user.bio.length <= 50) {
           bioLines = 1;
           //@ts-ignore
-        } else if (currentProfile.bio.length > 50) {
+        } else if (currentProfile.user.bio.length > 50) {
           bioLines = 2;
         }
 
@@ -437,7 +509,7 @@ export const ProfileSlider = () => {
           <>
             {renderName(nameClass)}
             {/** @ts-ignore */}
-            <div className={styles.bio}>{currentProfile.bio}</div>
+            <div className={styles.bio}>{currentProfile.user.bio}</div>
           </>
         );
       }
@@ -461,7 +533,7 @@ export const ProfileSlider = () => {
             <div className={styles.interests}>
               <div className={styles.interestsList}>
                 {/** @ts-ignore */}
-                {currentProfile.interests.slice(0, 3).map((interest, index) => (
+                {currentProfile.user.interests.slice(0, 3).map((interest, index) => (
                   <span key={index} className={styles.interestTag}>
                     {interest}
                   </span>
@@ -502,8 +574,8 @@ export const ProfileSlider = () => {
               <div className={`${styles.swipeIndicator} ${styles.right}`}>👍</div>
             )}
             <img
-              src={currentProfile.photos[currentPhotoIndex]}
-              // src="man1.jpg"
+              // src={currentProfile.photos[currentPhotoIndex]}
+              src="man1.jpg"
               alt={currentProfile.name}
               className={styles.profileImage}
               draggable="false"
@@ -511,7 +583,7 @@ export const ProfileSlider = () => {
 
             {!isAd && (
               <>
-                <div className={styles.distance}>0 км</div>
+                <div className={styles.distance}>{currentProfile.distanceToUser} км</div>
                 <img
                   src="data:image/png;base64,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"
                   alt="error--v1"
@@ -541,7 +613,7 @@ export const ProfileSlider = () => {
 
             {!isAd && (
               <div className={styles.photoCounter}>
-                {currentPhotoIndex + 1}/{currentProfile.photos.length}
+                {currentPhotoIndex + 1}/{currentProfile.user.photos.length}
               </div>
             )}
           </div>
@@ -550,7 +622,7 @@ export const ProfileSlider = () => {
             <UndoButton onClick={handlePrevUser} />
             <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
             <LikeButton
-              onClick={handleNextUser}
+              onClick={handleLikeUser}
               className={styles.likeButton}
               likeClassName={styles.like}
             />

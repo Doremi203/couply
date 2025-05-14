@@ -5,7 +5,10 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Gender } from '../../../../entities/user/api/constants';
-import { useCreateUserMutation } from '../../../../entities/user/api/userApi';
+import {
+  useConfirmPhotoMutation,
+  useCreateUserMutation,
+} from '../../../../entities/user/api/userApi';
 import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
@@ -29,6 +32,7 @@ export const EnterInfoPage = () => {
   const dispatch = useDispatch();
 
   const [createUser, { isLoading }] = useCreateUserMutation();
+  const [confirmPhoto] = useConfirmPhotoMutation();
 
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -42,7 +46,11 @@ export const EnterInfoPage = () => {
 
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
-  const [userPhotos, setUserPhotos] = useState<string[]>([]);
+  console.log(coords);
+
+  const [userPhotos, setUserPhotos] = useState([]);
+
+  // const [userPhotos, setUserPhotos] = useState<Array{ file: File; url: string }>([]);
 
   // Handler for when location is received from GeoLocationRequest
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
@@ -73,15 +81,9 @@ export const EnterInfoPage = () => {
         const locationString = coords ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}` : '';
 
         // Create user data object according to UserRequest interface
-        const userData = {
-          name,
-          age: ageValue,
-          gender: genderEnum,
-          ...(locationString ? { location: locationString } : {}),
-          // Store profile photo in localStorage instead of sending it directly
-          // since the API expects photos to be null
-          photos: null,
-        };
+
+        //         const formData = new FormData();
+        // formData.append('image', file);
 
         // Save photo URL to localStorage for later use
         if (profilePhoto) {
@@ -93,8 +95,72 @@ export const EnterInfoPage = () => {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
 
+        console.log(profilePhoto);
+        console.log(userPhotos);
+
+        const photoUploadRequests = userPhotos.map((photo, index) => ({
+          orderNumber: index,
+          mimeType: photo.file.type,
+        }));
+
+        const orderNumbers = userPhotos.map((photo, index) => index);
+
+        const userData = {
+          name,
+          age: ageValue,
+          gender: genderEnum,
+          height: String(height),
+          ...(locationString ? { location: locationString } : {}),
+          photoUploadRequests, // Добавляем массив метаданных
+          latitude: coords?.lat,
+          longitude: coords?.lng,
+        };
+
+        // const userData = {
+        //   name,
+        //   age: ageValue,
+        //   gender: genderEnum,
+        //   height: String(height),
+        //   ...(locationString ? { location: locationString } : {}),
+        //   // Store profile photo in localStorage instead of sending it directly
+        //   // since the API expects photos to be null
+        //   // photos: null,
+        //   latitude: coords?.lat,
+        //   longitude: coords?.lng,
+        // };
+
         //ВЕРНУТЬ
         const response = await createUser(userData).unwrap();
+
+        if (response.photoUploadResponses) {
+          // Загружаем каждое фото на соответствующий URL
+          await Promise.all(
+            response.photoUploadResponses.map(async (resp: any) => {
+              const photo = userPhotos[resp.orderNumber];
+              if (!photo) return;
+
+              console.log(resp);
+              console.log(resp.uploadUrl);
+
+              await fetch(resp.uploadUrl, {
+                method: 'PUT',
+                body: photo.file,
+                headers: {
+                  'Content-Type': photo.file.type,
+                },
+              });
+            }),
+          );
+        }
+
+        try {
+          await confirmPhoto({ orderNumbers }).unwrap();
+        } catch (error) {
+          console.error('Photo confirmation failed:', error);
+          throw error; // Прокидываем ошибку дальше
+        }
+
+        console.log('RES', response);
 
         // надо ли сохранять в локал TODO
         if (response && response.user && response.user.id) {
@@ -157,18 +223,18 @@ export const EnterInfoPage = () => {
       const file = files[0];
       const fileUrl = URL.createObjectURL(file);
 
-      // Update the profile photo
-      setProfilePhoto(fileUrl);
-
-      // Also update the userPhotos array to include this as the first photo
       setUserPhotos(prevPhotos => {
-        // Create a new array with the new photo as the first element
+        // Создаем новый массив с обновленным первым фото
         const newPhotos = [...prevPhotos];
-        // If there's already a photo at index 0, replace it
-        newPhotos[0] = fileUrl;
+        if (newPhotos.length > 0) {
+          newPhotos[0] = { file, url: fileUrl };
+        } else {
+          newPhotos.push({ file, url: fileUrl });
+        }
         return newPhotos;
       });
 
+      setProfilePhoto(fileUrl);
       event.target.value = '';
     }
   };
@@ -231,7 +297,6 @@ export const EnterInfoPage = () => {
   const handleAddPhoto = () => {
     if (userPhotos.length >= 6) return;
 
-    // Create a new file input for adding additional photos
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -242,12 +307,9 @@ export const EnterInfoPage = () => {
       if (files && files.length > 0) {
         const file = files[0];
         const fileUrl = URL.createObjectURL(file);
-
-        // Add the new photo to the userPhotos array
-        setUserPhotos(prevPhotos => [...prevPhotos, fileUrl]);
+        setUserPhotos(prevPhotos => [...prevPhotos, { file, url: fileUrl }]);
       }
     };
-
     input.click();
   };
 
@@ -330,8 +392,8 @@ export const EnterInfoPage = () => {
           )}
         </div>
         <FixedPhotoGallery
-          photos={userPhotos}
-          onPhotoRemove={index => handleRemovePhoto(index)}
+          photos={userPhotos.map(photo => photo.url)}
+          onPhotoRemove={handleRemovePhoto}
           onAddPhotoClick={handleAddPhoto}
           title="Мои фото"
         />

@@ -2,42 +2,60 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 import {
   useFetchIncomingLikesMutation,
-  useFetchMatchesMutation,
+  useFetchMatchesUserIdsMutation,
   useLikeUserMutation,
 } from '../../../entities/matches/api/matchesApi';
+import { useGetUsersMutation } from '../../../entities/user';
 import { LikeProfile, MatchProfile } from '../types';
 
 export const useLikesAndMatches = () => {
-  const [fetchMatches] = useFetchMatchesMutation();
+  const [fetchMatchesUserIds] = useFetchMatchesUserIdsMutation();
   const [fetchIncomingLikes, { isLoading: isLoadingIncoming }] = useFetchIncomingLikesMutation();
   //@ts-ignore
   const [likeUser] = useLikeUserMutation();
+  const [getUsers] = useGetUsersMutation();
   //const [getUser] = useGetUserMutation();
+
+  const [matchesUsers, setMatchesUsers] = useState([]);
+  const [likesUsers, setLikesUsers] = useState([]);
 
   const isInitialized = useRef(false);
 
-  const [incomingMatches, setIncomingMatches] = useState<LikeProfile[]>([]);
+  const [likes, setIncomingMatches] = useState<LikeProfile[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const matchesResult = await fetchMatches({
+        const matchesIds = await fetchMatchesUserIds({
           limit: 10,
           offset: 0,
         }).unwrap();
 
+        const matchesUsers = await getUsers(matchesIds).unwrap();
+
+        setMatchesUsers(matchesUsers);
+
         // @ts-ignore
-        setMatches(matchesResult.match.map(el => el.mainUserId));
+        // setMatches(matchesResult.match.map(el => el.mainUserId));
 
         const incomingResult = await fetchIncomingLikes({
           limit: 10,
           offset: 0,
         }).unwrap();
 
-        // @ts-ignore
-        const incomingMatches = incomingResult.match.map(el => el.mainUserId);
+        const likesIds = incomingResult.likes.map(el => el.senderId);
+        console.log('IDS', likesIds);
 
-        setIncomingMatches(incomingMatches);
+        const likesUsers = await getUsers(likesIds).unwrap();
+
+        console.log('1', likesUsers);
+
+        setLikesUsers(likesUsers);
+
+        // @ts-ignore
+        // const likes = incomingResult.match.map(el => el.mainUserId);
+
+        // setIncomingMatches(likes);
       } catch (error) {
         console.error('Error loading matches data:', error);
       }
@@ -47,7 +65,7 @@ export const useLikesAndMatches = () => {
       loadData();
       isInitialized.current = true;
     }
-  }, [fetchMatches, fetchIncomingLikes]);
+  }, [fetchIncomingLikes, fetchMatchesUserIds, getUsers]);
 
   const [matches, setMatches] = useState<MatchProfile[]>([]);
   const [showMatchModal, setShowMatchModal] = useState(false);
@@ -57,7 +75,7 @@ export const useLikesAndMatches = () => {
   const handleLike = useCallback(
     async (id: number) => {
       // @ts-ignore
-      const likedProfile = incomingMatches.find(like => like === id);
+      const likedProfile = likes.find(like => like === id);
 
       if (likedProfile) {
         try {
@@ -100,7 +118,7 @@ export const useLikesAndMatches = () => {
         }
       }
     },
-    [incomingMatches, matches],
+    [likes, matches],
   );
 
   const handleSendMessage = useCallback(() => {
@@ -126,7 +144,7 @@ export const useLikesAndMatches = () => {
 
   return useMemo(
     () => ({
-      // matches,
+      matches,
       showMatchModal,
       matchedProfile,
       showChatMessage,
@@ -135,9 +153,12 @@ export const useLikesAndMatches = () => {
       handleKeepSwiping,
       handleSocialClick,
       isLoading: isLoadingIncoming || false,
-      // incomingMatches,
+      likes,
+      matchesUsers,
+      likesUsers,
     }),
     [
+      matches,
       showMatchModal,
       matchedProfile,
       showChatMessage,
@@ -146,6 +167,9 @@ export const useLikesAndMatches = () => {
       handleKeepSwiping,
       handleSocialClick,
       isLoadingIncoming,
+      likes,
+      matchesUsers,
+      likesUsers,
     ],
   );
 };

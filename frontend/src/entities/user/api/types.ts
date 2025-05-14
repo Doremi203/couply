@@ -51,3 +51,15 @@ export interface GetUserRequest {
   id: string;
 }
 export { Smoking };
+
+export interface PhotoParams {
+  orderNumbers: Array<number>;
+}
+
+export interface UsersResponse {
+  users: Array<UserResponse>;
+}
+
+export interface GetUsersRequest {
+  userIds: Array<string>;
+}
