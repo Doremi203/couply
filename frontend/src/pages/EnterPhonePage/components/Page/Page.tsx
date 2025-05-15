@@ -97,7 +97,7 @@ export const EnterPhonePage = () => {
         {error && <div className={styles.error}>{error}</div>}
         <div className={styles.resend}>
           Не получили код?{' '}
-          <button onClick={handleSendCode} className={sendAgainIn <= 0 ? styles.activeResend : ''}>
+          <button onClick={handleSendCode} className={(sendAgainIn === null || sendAgainIn <= 0) ? styles.activeResend : ''}>
             {getResendButtonText()}
           </button>
         </div>

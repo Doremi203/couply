@@ -1,0 +1,40 @@
+name: 'Upload to s3'
+description: 'Upload build to s3'
+
+runs:
+  inputs:
+    build-dir:
+      description: Directory with build
+      required: true
+    s3-bucket:
+      description: S3 bucket name
+      required: true
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v4
+
+    - name: Set release version
+      run: echo "RELEASE_VERSION=${{ github.run_number }}" >> $GITHUB_ENV
+
+    - name: Setup MinIO Client
+      run: |
+        curl -O https://dl.min.io/client/mc/release/linux-amd64/mc
+        chmod +x mc
+        ./mc --version
+
+    - name: Setup yc
+      run: |
+        curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
+        echo '${{ secrets.YC_SERVICE_KEY }}' > sa-key.json
+        /opt/yc/bin/yc config set folder-id b1ggapscf0p06cohndtt
+        /opt/yc/bin/yc config set service-account-key sa-key.json
+
+    - name: Configure MinIO Client
+      run: |
+        ACCESS_KEY=$(/opt/yc/bin/yc lockbox payload get --name aws-testing --key aws-access-key)
+        SECRET_KEY=$(/opt/yc/bin/yc lockbox payload get --name aws-testing --key aws-secret-key)
+        ./mc alias set ycs3 https://storage.yandexcloud.net $ACCESS_KEY $SECRET_KEY
+
+    - name: Deploy to MinIO
+      run: |
+        ./mc cp -r ./${{ inputs.build-dir }}/* ycs3/${{ inputs.s3-bucket }}/
