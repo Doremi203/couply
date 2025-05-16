@@ -9,6 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  overflow-y: auto;
 }
 
 .modalContainer {
@@ -19,20 +20,22 @@
   border-bottom-right-radius: 20px;
   background-color: var(--background-color);
   box-shadow: 0px 4px 10px var(--shadow-color);
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: auto;
 }
 
 .content {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   max-width: 500px;
   margin: 0 auto;
   background-color: var(--section-background);
   color: var(--text-color);
   position: relative;
   z-index: 1001;
+  padding-bottom: 120px;
 }
 
 .header {
@@ -203,10 +206,23 @@ input:checked + .slider:before {
   margin: 5px 0 0 0;
 }
 
-.buttonContainer {
+/* .buttonContainer {
   margin-top: 20px;
   display: flex;
   justify-content: center;
+} */
+
+.buttonContainer {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--section-background);
+  padding: 20px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1002;
 }
 
 @media (max-width: 480px) {
@@ -222,4 +238,8 @@ input:checked + .slider:before {
     padding: 6px 12px;
     font-size: 13px;
   }
+}
+
+.customSlider {
+  margin-top: -17px;
 }
