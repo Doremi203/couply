@@ -31,7 +31,7 @@ export const useLikesAndMatches = () => {
           offset: 0,
         }).unwrap();
 
-        const matchesUsers = await getUsers(matchesIds).unwrap();
+        const matchesUsers = await getUsers(matchesIds.userIds).unwrap();
 
         setMatchesUsers(matchesUsers);
 

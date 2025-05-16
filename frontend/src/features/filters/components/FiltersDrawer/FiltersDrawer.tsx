@@ -1,6 +1,20 @@
 import { Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
+import { GenderPriority, useUpdateFilterMutation } from '../../../../entities/search';
+import {
+  Alcohol,
+  Education,
+  Goal,
+  Hobby,
+  Selfdevelopment,
+  Smoking,
+  Sport,
+  Zodiac,
+  Children,
+} from '../../../../entities/user';
+import { genderOptions, goalOptions, zodiacOptions } from '../constants';
+
 import ChipFilter from './components/ChipFilter';
 import FilterActions from './components/FilterActions';
 import FilterHeader from './components/FilterHeader';
@@ -26,11 +40,17 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     };
   }, [open]);
 
+  const [updateFilter] = useUpdateFilterMutation();
+
   const [interestedIn, setInterestedIn] = useState<string>('Girls');
   const [distance, setDistance] = useState<number>(40);
-  const [ageRange, setAgeRange] = useState<number[]>([20, 28]);
+  const [ageRange, setAgeRange] = useState<number[]>([18, 28]);
+  const [heightRange, setHeightRange] = useState<number[]>([170, 190]);
   const interestOptions = ['Спорт', 'Путешествия', 'Музыка', 'Искусство', 'Гастрономия'];
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
+  const [selectedZodiac, setSelectedZodiac] = useState<string[]>([]);
+  const [goal, setGoal] = useState<string[]>([]);
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
 
   const handleDistanceChange = (_event: Event, newValue: number | number[]) => {
@@ -39,6 +59,10 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
 
   const handleAgeRangeChange = (_event: Event, newValue: number | number[]) => {
     setAgeRange(newValue as number[]);
+  };
+
+  const handleHeightRangeChange = (_event: Event, newValue: number | number[]) => {
+    setHeightRange(newValue as number[]);
   };
 
   const handleGenderSelect = (value: string) => {
@@ -57,6 +81,11 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     }
   };
 
+  const handleGoalSelect = (value: string) => {
+    // setInterestedIn(value);
+    setGoal(value);
+  };
+
   const handleClearFilters = () => {
     setInterestedIn('Both');
     setDistance(40);
@@ -65,13 +94,32 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     setVerificationStatus(false);
   };
 
-  const genderOptions = [
-    { label: 'Женщины', value: 'Girls' },
-    { label: 'Мужчины', value: 'Boys' },
-    { label: 'Оба', value: 'Both' },
-  ];
-
   if (!open) return null;
+
+  const handleApplyFilters = () => {
+    updateFilter({
+      genderPriority: GenderPriority.male,
+      minAge: 18,
+      maxAge: 100,
+      minHeight: 100,
+      maxHeight: 250,
+      distance: 100,
+      goal: Goal.unspecified,
+      zodiac: Zodiac.unspecified,
+      education: Education.unspecified,
+      children: Children.unspecified,
+      alcohol: Alcohol.unspecified,
+      smoking: Smoking.unspecified,
+      interest: {
+        sport: [Sport.unspecified],
+        selfDevelopment: [Selfdevelopment.unspecified],
+        hobby: [Hobby.unspecified],
+      },
+      onlyVerified: false,
+      onlyPremium: false,
+    });
+    onClose();
+  };
 
   return (
     <div className={styles.modalOverlay}>
@@ -103,10 +151,33 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             valueLabelDisplay="auto"
           />
 
+          <SliderFilter
+            title="Рост"
+            value={heightRange}
+            min={150}
+            max={240}
+            onChange={handleHeightRangeChange}
+            valueLabelDisplay="auto"
+          />
+
+          <ChipFilter
+            title="Цель"
+            options={goalOptions}
+            selectedOptions={goal}
+            onToggle={handleGoalSelect}
+          />
+
           <ChipFilter
             title="Интересы"
             options={interestOptions}
             selectedOptions={selectedInterests}
+            onToggle={toggleInterest}
+          />
+
+          <ChipFilter
+            title="Знаки зодиака"
+            options={zodiacOptions}
+            selectedOptions={selectedZodiac}
             onToggle={toggleInterest}
           />
 
@@ -117,7 +188,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             onChange={handleVerificationToggle}
           />
 
-          <FilterActions onContinue={onClose} />
+          <FilterActions onContinue={handleApplyFilters} />
         </Box>
       </div>
     </div>

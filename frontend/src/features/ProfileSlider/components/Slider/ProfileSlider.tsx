@@ -12,14 +12,11 @@ import {
 } from '../../../../entities/search/api/searchApi';
 import {
   Alcohol,
-  Art,
   Education,
-  Gastronomy,
   Goal,
   Hobby,
   Selfdevelopment,
   Smoking,
-  Social,
   Sport,
   Zodiac,
   Children,
@@ -146,10 +143,7 @@ const getDefaultFilter = () => {
     interest: {
       sport: [Sport.unspecified],
       selfDevelopment: [Selfdevelopment.unspecified],
-      art: [Art.unspecified],
-      social: [Social.unspecified],
       hobby: [Hobby.unspecified],
-      gastronomy: [Gastronomy.unspecified],
     },
     onlyVerified: false,
     onlyPremium: false,
@@ -238,7 +232,7 @@ export const ProfileSlider = () => {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
 
-      if (newSwipeCount % 3 === 0) {
+      if (newSwipeCount % 15 === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
@@ -289,7 +283,7 @@ export const ProfileSlider = () => {
       setSwipeCount(newSwipeCount);
       await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
 
-      if (newSwipeCount % 3 === 0) {
+      if (newSwipeCount % 15 === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
@@ -452,10 +446,12 @@ export const ProfileSlider = () => {
 
   const handleCloseProfile = () => {
     setSelectedProfile(null);
+    handleNextUser();
   };
 
   const handleLike = () => {
     handleCloseProfile();
+    handleNextUser();
   };
 
   const renderName = (nameClass: string) => {
@@ -637,7 +633,7 @@ export const ProfileSlider = () => {
         <ProfileView
           profile={{
             ...selectedProfile,
-            imageUrl: selectedProfile.photos[currentPhotoIndex],
+            imageUrl: 'man1.jpg',
           }}
           onClose={handleCloseProfile}
           onLike={handleLike}
