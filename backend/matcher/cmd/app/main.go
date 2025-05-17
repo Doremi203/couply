@@ -2,11 +2,13 @@ package main
 
 import (
 	"context"
-
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
+	matchingservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
+	searchservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
+	userservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	matching_service "github.com/Doremi203/couply/backend/matcher/internal/app/matching-service"
 	search_service "github.com/Doremi203/couply/backend/matcher/internal/app/search-service"
 	user_service "github.com/Doremi203/couply/backend/matcher/internal/app/user-service"
@@ -88,7 +90,23 @@ func main() {
 			token.NewUnaryTokenInterceptor(
 				token.NewJWTProvider(tokenConfig),
 				app.Log,
-				token.InterceptAllMethodsOption,
+				userservicegrpc.UserService_CreateUserV1_FullMethodName,
+				userservicegrpc.UserService_UpdateUserV1_FullMethodName,
+				userservicegrpc.UserService_DeleteUserV1_FullMethodName,
+				userservicegrpc.UserService_GetUserV1_FullMethodName,
+				userservicegrpc.UserService_GetUsersV1_FullMethodName,
+				userservicegrpc.UserService_ConfirmPhotosUploadV1_FullMethodName,
+				searchservicegrpc.SearchService_CreateFilterV1_FullMethodName,
+				searchservicegrpc.SearchService_UpdateFilterV1_FullMethodName,
+				searchservicegrpc.SearchService_GetFilterV1_FullMethodName,
+				searchservicegrpc.SearchService_SearchUsersV1_FullMethodName,
+				searchservicegrpc.SearchService_AddViewV1_FullMethodName,
+				matchingservicegrpc.MatchingService_LikeUserV1_FullMethodName,
+				matchingservicegrpc.MatchingService_DislikeUserV1_FullMethodName,
+				matchingservicegrpc.MatchingService_DeleteMatchV1_FullMethodName,
+				matchingservicegrpc.MatchingService_FetchMatchesUserIDsV1_FullMethodName,
+				matchingservicegrpc.MatchingService_FetchIncomingLikesV1_FullMethodName,
+				matchingservicegrpc.MatchingService_FetchOutgoingLikesV1_FullMethodName,
 			),
 		)
 		app.RegisterGRPCServices(implUserService, implMatchingService, implSearchService)

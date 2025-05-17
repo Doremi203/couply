@@ -1,7 +1,6 @@
 package telegram
 
 import (
-	"encoding/base64"
 	"fmt"
 	"strings"
 
@@ -11,7 +10,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker.ReportReason, message string, userToken string) error {
+func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker.ReportReason, message string) error {
 	createdAt := user.GetCreatedAt().AsTime().Format("02.01.2006 15:04")
 
 	parsedReasons := make([]string, len(reasons))
@@ -56,13 +55,10 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 		message,
 	)
 
-	data := fmt.Sprintf("%s|%s", user.GetId(), userToken)
-	encoded := base64.URLEncoding.EncodeToString([]byte(data))
-
 	keyboard := tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
-			tgbotapi.NewInlineKeyboardButtonData("⛔ Блокировать", "block_"+encoded),
-			tgbotapi.NewInlineKeyboardButtonData("✅ Отклонить", "dismiss_"+encoded),
+			tgbotapi.NewInlineKeyboardButtonData("⛔ Блокировать", "block_"+user.GetId()),
+			tgbotapi.NewInlineKeyboardButtonData("✅ Отклонить", "dismiss_"+user.GetId()),
 		),
 	)
 

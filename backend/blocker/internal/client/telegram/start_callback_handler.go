@@ -1,14 +1,13 @@
 package telegram
 
 import (
-	"encoding/base64"
 	"log"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (b *BotClient) StartCallbackHandler(blockCallback func(userID string, userToken string)) {
+func (b *BotClient) StartCallbackHandler(blockCallback func(userID string) error) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
@@ -24,30 +23,24 @@ func (b *BotClient) StartCallbackHandler(blockCallback func(userID string, userT
 			var responseText string
 			var actionText string
 
-			if strings.HasPrefix(data, "block_") {
-				encodedData := strings.TrimPrefix(data, "block_")
-				decodedBytes, err := base64.URLEncoding.DecodeString(encodedData)
-				if err != nil {
-					log.Printf("Failed to decode data: %v", err)
-					continue
-				}
-				parts := strings.Split(string(decodedBytes), "|")
-				if len(parts) != 2 {
-					log.Printf("Invalid data format: %s", string(decodedBytes))
-					continue
-				}
-				userID := parts[0]
-				userToken := parts[1]
-				blockCallback(userID, userToken)
-			} else {
-				responseText = "Жалоба отклонена"
-				actionText = "✅ Отклонено"
-			}
-
 			callback := tgbotapi.NewCallback(update.CallbackQuery.ID, "Обработано")
 			if _, err := b.api.Request(callback); err != nil {
 				log.Println(err)
 				continue
+			}
+
+			if strings.HasPrefix(data, "block_") {
+				err := blockCallback(userID)
+				if err != nil {
+					responseText = "❌ Ошибка при блокировке пользователя: " + err.Error()
+					actionText = "❌ Ошибка блокировки"
+				} else {
+					responseText = "✅ Пользователь успешно заблокирован"
+					actionText = "✅ Заблокировано"
+				}
+			} else {
+				responseText = "✅ Жалоба отклонена"
+				actionText = "✅ Отклонено"
 			}
 
 			editedText := msg.Text + "\n\n" + actionText

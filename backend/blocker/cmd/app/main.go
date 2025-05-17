@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
@@ -69,14 +70,13 @@ func main() {
 		)
 
 		app.AddBackgroundProcess(func(ctx context.Context) error {
-			bot.StartCallbackHandler(func(userID string, userToken string) {
+			bot.StartCallbackHandler(func(userID string) error {
 				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 				defer cancel()
 
-				userFromClient, err := userServiceClient.GetUserByIDV1(ctx, userID, userToken)
+				userFromClient, err := userServiceClient.GetUserByIDV1(ctx, userID)
 				if err != nil {
-					app.Log.Infof("Failed to get user: %v", err)
-					return
+					return fmt.Errorf("failed getting user: %v", err)
 				}
 
 				userFromClient.IsBlocked = true
@@ -84,12 +84,12 @@ func main() {
 				if err := userServiceClient.UpdateUserByIDV1(
 					ctx,
 					userFromClient,
-					userToken,
 				); err != nil {
-					app.Log.Infof("Failed to block user: %v", err)
-				} else {
-					app.Log.Infof("User %s blocked successfully", userID)
+					return fmt.Errorf("failed blocking user: %v", err)
 				}
+
+				app.Log.Infof("User %s blocked successfully", userID)
+				return nil
 			})
 			return nil
 		})

@@ -4,15 +4,9 @@ import (
 	"context"
 
 	userservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
-	"google.golang.org/grpc/metadata"
 )
 
-func (c *Client) UpdateUserByIDV1(ctx context.Context, user *userservicegrpc.User, userToken string) error {
-	outgoingMD := metadata.New(map[string]string{
-		"user-token": userToken,
-	})
-	ctx = metadata.NewOutgoingContext(ctx, outgoingMD)
-
+func (c *Client) UpdateUserByIDV1(ctx context.Context, user *userservicegrpc.User) error {
 	_, err := c.client.UpdateUserByIDV1(ctx, &userservicegrpc.UpdateUserByIDV1Request{
 		Id:         user.GetId(),
 		Name:       user.GetName(),
