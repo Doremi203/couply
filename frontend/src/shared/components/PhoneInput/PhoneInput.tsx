@@ -1,7 +1,6 @@
 import { useRef, KeyboardEvent } from 'react';
 
-// @ts-ignore
-import styles from './PhoneInput.module.css';
+import styles from './phoneInput.module.css';
 
 interface PhoneInputProps {
   value: string;
