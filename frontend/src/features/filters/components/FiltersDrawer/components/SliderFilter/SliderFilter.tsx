@@ -37,6 +37,7 @@ const SliderFilter: React.FC<SliderFilterProps> = ({
         aria-labelledby={`${title.toLowerCase()}-slider`}
         min={min}
         max={max}
+        className={styles.customSlider}
       />
     </div>
   );

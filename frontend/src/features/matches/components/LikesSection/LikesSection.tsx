@@ -12,20 +12,21 @@ interface LikesSectionProps {
 }
 
 export const LikesSection: React.FC<LikesSectionProps> = ({ likes, onProfileClick, onLike }) => {
-  if (likes.length === 0) {
+  //@ts-ignore
+  const users = likes.users;
+
+  if (users === undefined || users.length === 0) {
     return (
       <EmptyState title="У вас пока нет лайков" subtitle="Продолжайте искать новые знакомства" />
     );
   }
 
-  //TODO вернуть profile.user
-
   return (
     <div className={styles.section}>
       <div className={styles.profilesGrid}>
-        {likes.map(profile => (
+        {/**@ts-ignore */}
+        {users.map(profile => (
           <ProfileCard
-            //@ts-ignore
             key={profile.id}
             profile={profile}
             onClick={() => onProfileClick(profile)}

@@ -7,16 +7,8 @@ type FilterActionsProps = {
   buttonText?: string;
 };
 
-const FilterActions: React.FC<FilterActionsProps> = ({
-  onContinue,
-  buttonText = 'Continue',
-}) => {
-  return (
-    <CustomButton
-      text={buttonText}
-      onClick={onContinue}
-    />
-  );
+const FilterActions: React.FC<FilterActionsProps> = ({ onContinue, buttonText = 'Применить' }) => {
+  return <CustomButton text={buttonText} onClick={onContinue} />;
 };
 
 export default FilterActions;

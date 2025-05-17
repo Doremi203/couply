@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 
-import styles from './CodeInput.module.css';
+import styles from './codeInput.module.css';
 
 interface CodeInputProps {
   length?: number;
@@ -22,7 +22,6 @@ export const CodeInput = ({ length = 6, onCodeChange }: CodeInputProps) => {
     newCode[index] = value.slice(-1);
     setCode(newCode);
 
-    // Автоматический переход к следующему полю
     if (value && index < length - 1) {
       inputsRef.current[index + 1]?.focus();
     }

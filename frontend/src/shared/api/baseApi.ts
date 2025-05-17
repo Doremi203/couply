@@ -187,5 +187,5 @@ export const matcherApi = createApi({
     },
   }),
   endpoints: () => ({}),
-  tagTypes: ['filter', 'search', 'User'],
+  // tagTypes: ['filter', 'search', 'User'],
 });

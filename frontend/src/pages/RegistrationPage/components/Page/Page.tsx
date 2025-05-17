@@ -21,8 +21,6 @@ export const RegistrationPage = () => {
     confirmPassword: '',
   });
 
-  // const [register, { isLoading }] = useRegisterMutation();
-
   const { registerAndLogin } = useRegister();
 
   const goBack = () => {
@@ -75,10 +73,6 @@ export const RegistrationPage = () => {
 
         await registerAndLogin(registrationData);
 
-        // Store the token in localStorage
-        // localStorage.setItem('token', result.token);
-
-        // navigate('/enterInfo');
         navigate('/enterPhone');
       } catch (error) {
         console.error('Registration failed:', error);

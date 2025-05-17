@@ -1,14 +1,16 @@
 import {
   Alcohol,
-  Art,
   Children,
   Education,
-  Gastronomy,
+  FoodDrink,
   Goal,
   Hobby,
+  MoviesTV,
+  Music,
+  PersonalityTraits,
+  Pets,
   Selfdevelopment,
   Smoking,
-  Social,
   Sport,
   Zodiac,
 } from '../../user';
@@ -29,15 +31,17 @@ export interface CreateFilterRequest {
   alcohol: Alcohol;
   smoking: Smoking;
   interest: {
-    sport: [Sport];
-    selfDevelopment: [Selfdevelopment];
-    art: [Art];
-    social: [Social];
-    hobby: [Hobby];
-    gastronomy: [Gastronomy];
+    sport: [Sport],
+    selfDevelopment: [Selfdevelopment],
+    hobby: [Hobby],
+    music: [Music],
+    moviesTv: [MoviesTV],
+    foodDrink: [FoodDrink],
+    personalityTraits: [PersonalityTraits],
+    pets: [Pets],
   };
-  onlyVerified: true;
-  onlyPremium: true;
+  onlyVerified: boolean;
+  onlyPremium: boolean;
 }
 
 export interface FilterResponse {
@@ -59,12 +63,14 @@ export interface FilterResponse {
     alcohol: Alcohol;
     smoking: Smoking;
     interest: {
-      sport: [Sport];
-      selfDevelopment: [Selfdevelopment];
-      art: [Art];
-      social: [Social];
-      hobby: [Hobby];
-      gastronomy: [Gastronomy];
+      sport: [Sport],
+      selfDevelopment: [Selfdevelopment],
+      hobby: [Hobby],
+      music: [Music],
+      moviesTv: [MoviesTV],
+      foodDrink: [FoodDrink],
+      personalityTraits: [PersonalityTraits],
+      pets: [Pets],
     };
     onlyVerified: boolean;
     onlyPremium: boolean;
@@ -88,12 +94,14 @@ export interface SearchResponse {
       bio: string;
       goal: Goal;
       interest: {
-        sport: [Sport];
-        selfDevelopment: [Selfdevelopment];
-        art: [Art];
-        social: [Social];
-        hobby: [Hobby];
-        gastronomy: [Gastronomy];
+        sport: [Sport],
+        selfDevelopment: [Selfdevelopment],
+        hobby: [Hobby],
+        music: [Music],
+        moviesTv: [MoviesTV],
+        foodDrink: [FoodDrink],
+        personalityTraits: [PersonalityTraits],
+        pets: [Pets],
       };
       zodiac: Zodiac;
       height: number;
@@ -101,8 +109,8 @@ export interface SearchResponse {
       children: Children;
       alcohol: Alcohol;
       smoking: Smoking;
-      hidden: true;
-      verified: true;
+      hidden: boolean;
+      verified: boolean;
       photos: [
         {
           orderNumber: number;

@@ -11,8 +11,6 @@ interface BasicInfoFormProps {
   onInputChange: (field: string, value: string) => void;
 }
 
-//TODO delete later
-
 export const BasicInfoForm: React.FC<BasicInfoFormProps> = ({ profileData, onInputChange }) => {
   return (
     <div className={styles.editSection}>

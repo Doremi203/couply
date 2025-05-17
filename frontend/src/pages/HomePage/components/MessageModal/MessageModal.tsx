@@ -8,23 +8,20 @@ import {
   DialogTitle,
   TextField,
 } from '@mui/material';
-// @ts-ignore
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
 
-// @ts-nocheck
-
-// const Transition = forwardRef(function Transition(props, ref) {
-//   return <Slide direction="up" ref={ref} {...props} />;
-// });
+import { useLikeUserMutation } from '../../../../entities/matches';
 
 // @ts-ignore
-export const MessageModal = ({ isOpen, onClose }) => {
+export const MessageModal = ({ isOpen, onClose, targetUserId }) => {
+  const [likeUser] = useLikeUserMutation();
   const [message, setMessage] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!message.trim()) return;
 
-    // Здесь обработка отправки сообщения
+    await likeUser({ targetUserId, message });
+
     console.log('Отправлено сообщение:', message);
     onClose();
   };
@@ -33,15 +30,18 @@ export const MessageModal = ({ isOpen, onClose }) => {
     <Dialog
       open={isOpen}
       onClose={onClose}
-      // TransitionComponent={Transition}
       fullWidth
       maxWidth="sm"
       PaperProps={{
-        style: {
+        sx: {
           position: 'fixed',
-          bottom: 0,
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
           margin: 0,
-          borderRadius: '12px 12px 0 0',
+          borderRadius: '12px',
+          maxHeight: '90vh',
+          overflow: 'auto',
         },
       }}
     >

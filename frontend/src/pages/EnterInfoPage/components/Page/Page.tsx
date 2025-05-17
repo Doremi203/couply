@@ -1,12 +1,15 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Gender } from '../../../../entities/user/api/constants';
-import { useCreateUserMutation } from '../../../../entities/user/api/userApi';
-import { setUserId } from '../../../../entities/user/model/userSlice';
+import {
+  useConfirmPhotoMutation,
+  useCreateUserMutation,
+} from '../../../../entities/user/api/userApi';
+// import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
@@ -26,9 +29,10 @@ import styles from './enterInfo.module.css';
 export const EnterInfoPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [createUser, { isLoading }] = useCreateUserMutation();
+  const [confirmPhoto] = useConfirmPhotoMutation();
 
   const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState('');
@@ -42,9 +46,8 @@ export const EnterInfoPage = () => {
 
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
-  const [userPhotos, setUserPhotos] = useState<string[]>([]);
+  const [userPhotos, setUserPhotos] = useState([]);
 
-  // Handler for when location is received from GeoLocationRequest
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
     setCoords(coordinates);
   };
@@ -52,11 +55,9 @@ export const EnterInfoPage = () => {
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
       try {
-        // Calculate age and ensure it's a number
         const calculatedAge = getAge(birthDate);
         const ageValue = typeof calculatedAge === 'number' ? calculatedAge : 0;
 
-        // Convert string gender to Gender enum
         let genderEnum: Gender;
         switch (userGender) {
           case 'male':
@@ -69,21 +70,8 @@ export const EnterInfoPage = () => {
             genderEnum = Gender.unspecified;
         }
 
-        // Convert coordinates to location string if available
         const locationString = coords ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}` : '';
 
-        // Create user data object according to UserRequest interface
-        const userData = {
-          name,
-          age: ageValue,
-          gender: genderEnum,
-          ...(locationString ? { location: locationString } : {}),
-          // Store profile photo in localStorage instead of sending it directly
-          // since the API expects photos to be null
-          photos: null,
-        };
-
-        // Save photo URL to localStorage for later use
         if (profilePhoto) {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
@@ -93,16 +81,64 @@ export const EnterInfoPage = () => {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
 
-        //ВЕРНУТЬ
+        const photoUploadRequests = userPhotos.map((photo, index) => ({
+          orderNumber: index,
+          //@ts-ignore
+          mimeType: photo.file.type,
+        }));
+
+        const orderNumbers = userPhotos.map((_photo, index) => index);
+
+        const userData = {
+          name,
+          age: ageValue,
+          gender: genderEnum,
+          height: String(height),
+          ...(locationString ? { location: locationString } : {}),
+          photoUploadRequests, // Добавляем массив метаданных
+          latitude: coords?.lat,
+          longitude: coords?.lng,
+        };
+
+        //@ts-ignore
         const response = await createUser(userData).unwrap();
 
-        // надо ли сохранять в локал TODO
-        if (response && response.user && response.user.id) {
-          dispatch(setUserId(response.user.id));
-          localStorage.setItem('userId', response.user.id);
+        //TODO
+        //@ts-ignore
+        if (response.photoUploadResponses) {
+          // Загружаем каждое фото на соответствующий URL
+          await Promise.all(
+            //@ts-ignore
+            response.photoUploadResponses.map(async (resp: any) => {
+              const photo = userPhotos[resp.orderNumber];
+              if (!photo) return;
+
+              await fetch(resp.uploadUrl, {
+                method: 'PUT',
+                //@ts-ignore
+                body: photo.file,
+                headers: {
+                  //@ts-ignore
+                  'Content-Type': photo.file.type,
+                },
+              });
+            }),
+          );
         }
 
-        // After creating user, check if we should show notification prompt
+        try {
+          await confirmPhoto({ orderNumbers }).unwrap();
+        } catch (error) {
+          console.error('Photo confirmation failed:', error);
+          throw error;
+        }
+
+        // надо ли сохранять в локал TODO
+        // if (response && response.user && response.user.id) {
+        //   dispatch(setUserId(response.user.id));
+        //   localStorage.setItem('userId', response.user.id);
+        // }
+
         if (
           isPushNotificationSupported() &&
           !notificationPermissionRequested &&
@@ -111,12 +147,10 @@ export const EnterInfoPage = () => {
         ) {
           setShowNotificationPrompt(true);
         } else {
-          // If notifications are not supported or permission already requested, navigate to home
           navigate('/home');
         }
       } catch (error) {
         console.error('Error creating user:', error);
-        // Still proceed to notification or home page even if there's an error
         if (
           isPushNotificationSupported() &&
           !notificationPermissionRequested &&
@@ -157,18 +191,19 @@ export const EnterInfoPage = () => {
       const file = files[0];
       const fileUrl = URL.createObjectURL(file);
 
-      // Update the profile photo
-      setProfilePhoto(fileUrl);
-
-      // Also update the userPhotos array to include this as the first photo
       setUserPhotos(prevPhotos => {
-        // Create a new array with the new photo as the first element
         const newPhotos = [...prevPhotos];
-        // If there's already a photo at index 0, replace it
-        newPhotos[0] = fileUrl;
+        if (newPhotos.length > 0) {
+          //@ts-ignore
+          newPhotos[0] = { file, url: fileUrl };
+        } else {
+          //@ts-ignore
+          newPhotos.push({ file, url: fileUrl });
+        }
         return newPhotos;
       });
 
+      setProfilePhoto(fileUrl);
       event.target.value = '';
     }
   };
@@ -212,12 +247,10 @@ export const EnterInfoPage = () => {
       case 0:
         return name.trim() !== '';
       case 1: {
-        // Ensure age is a number and >= 18
         const calculatedAge = getAge(birthDate);
         return birthDate !== '' && typeof calculatedAge === 'number' && calculatedAge >= 18;
       }
       case 2:
-        // return userGender !== '' && profilePhoto !== null;
         return true;
       case 3:
         return true;
@@ -231,7 +264,6 @@ export const EnterInfoPage = () => {
   const handleAddPhoto = () => {
     if (userPhotos.length >= 6) return;
 
-    // Create a new file input for adding additional photos
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
@@ -242,12 +274,10 @@ export const EnterInfoPage = () => {
       if (files && files.length > 0) {
         const file = files[0];
         const fileUrl = URL.createObjectURL(file);
-
-        // Add the new photo to the userPhotos array
-        setUserPhotos(prevPhotos => [...prevPhotos, fileUrl]);
+        //@ts-ignore
+        setUserPhotos(prevPhotos => [...prevPhotos, { file, url: fileUrl }]);
       }
     };
-
     input.click();
   };
 
@@ -302,18 +332,10 @@ export const EnterInfoPage = () => {
         onChange={e => setHeight(e.target.value)}
         className={styles.input}
       />
-
-      {/* <GeoLocationRequest onLocationReceived={handleLocationReceived} />
-      {coords && (
-        <p className={styles.coordsDisplay}>
-          Широта: {coords.lat.toFixed(4)}, Долгота: {coords.lng.toFixed(4)}
-        </p>
-      )} */}
     </div>,
     <div key="datingSettingsSection">
       <h2>Загрузите ваше фото</h2>
       <div>
-        {/* <label>Загрузите ваше фото:</label> */}
         <div className={styles.photoUploadContainer}>
           {profilePhoto ? (
             <div className={styles.photoPreview}>
@@ -330,8 +352,9 @@ export const EnterInfoPage = () => {
           )}
         </div>
         <FixedPhotoGallery
-          photos={userPhotos}
-          onPhotoRemove={index => handleRemovePhoto(index)}
+          //@ts-ignore
+          photos={userPhotos.map(photo => photo.url)}
+          onPhotoRemove={handleRemovePhoto}
           onAddPhotoClick={handleAddPhoto}
           title="Мои фото"
         />

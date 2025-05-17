@@ -17,10 +17,7 @@ export const SettingsPage = () => {
       <PageHeader onBack={onBack} title="Настройки" />
 
       <div className={styles.cont}>
-        {/* <div className={styles.section}> */}
-        {/* <h3>Уведомления</h3> */}
         <NotificationSettings />
-        {/* </div> */}
       </div>
     </div>
   );

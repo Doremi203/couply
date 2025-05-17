@@ -14,6 +14,7 @@ export const useLogin = () => {
         const loginResponse = await login(loginParams).unwrap();
 
         localStorage.setItem('token', loginResponse.token);
+
         return loginResponse;
       } catch (error) {
         // TODO

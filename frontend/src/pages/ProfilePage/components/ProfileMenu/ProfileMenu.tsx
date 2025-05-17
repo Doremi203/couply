@@ -3,21 +3,18 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useDeleteUserMutation } from '../../../../entities/user';
+
 import styles from './profileMenu.module.css';
 
 interface ProfileMenuProps {
   onEditProfileClick: () => void;
-  onMyStatsClick: () => void;
   onSettingsClick: () => void;
-  onInviteFriendClick: () => void;
-  onHelpClick: () => void;
 }
 
 export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   onEditProfileClick,
   onSettingsClick,
-  onInviteFriendClick,
-  onHelpClick,
 }) => {
   const naviagate = useNavigate();
 
@@ -25,9 +22,17 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
     naviagate('/auth');
     localStorage.removeItem('token');
   };
+
+  const [deleteUser] = useDeleteUserMutation();
+
+  const handleDeleteAccount = async () => {
+    //@ts-ignore
+    await deleteUser();
+    naviagate('/auth');
+    localStorage.removeItem('token');
+  };
   return (
     <div className={styles.menuContainer}>
-      {/* Edit profile */}
       <div className={styles.menuItem} onClick={onEditProfileClick}>
         <div className={`${styles.iconContainer} ${styles.profileIcon}`}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff66a3">
@@ -42,22 +47,6 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
         </div>
       </div>
 
-      {/* My stats */}
-      {/* <div className={styles.menuItem} onClick={onMyStatsClick}>
-        <div className={`${styles.iconContainer} ${styles.statsIcon}`}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="#6666ff">
-            <path d="M9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17ZM19 19H5V5H19V19ZM19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" />
-          </svg>
-        </div>
-        <div className={styles.menuText}>My stats</div>
-        <div className={styles.arrowIcon}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
-          </svg>
-        </div>
-      </div> */}
-
-      {/* Settings */}
       <div className={styles.menuItem} onClick={onSettingsClick}>
         <div className={`${styles.iconContainer} ${styles.settingsIcon}`}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff9933">
@@ -72,15 +61,10 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
         </div>
       </div>
 
-      {/* Divider */}
       <div className={styles.divider} />
 
-      {/* Invite a friend */}
-      <div className={styles.menuItem} onClick={onInviteFriendClick}>
+      <div className={styles.menuItem}>
         <div className={`${styles.iconContainer} ${styles.inviteIcon}`}>
-          {/* <svg width="24" height="24" viewBox="0 0 24 24" fill="#666666">
-            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-          </svg> */}
           <LogoutIcon />
         </div>
         <div className={styles.menuText} onClick={handleLogOut}>
@@ -93,15 +77,13 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
         </div>
       </div>
 
-      {/* Help */}
-      <div className={styles.menuItem} onClick={onHelpClick}>
+      <div className={styles.menuItem}>
         <div className={`${styles.iconContainer} ${styles.helpIcon}`}>
-          {/* <svg width="24" height="24" viewBox="0 0 24 24" fill="#666666">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z" />
-          </svg> */}
           <DeleteForeverIcon />
         </div>
-        <div className={styles.menuText}>Удалить аккаунт</div>
+        <div className={styles.menuText} onClick={handleDeleteAccount}>
+          Удалить аккаунт
+        </div>
         <div className={styles.arrowIcon}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />

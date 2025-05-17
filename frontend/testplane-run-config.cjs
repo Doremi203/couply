@@ -1,13 +1,22 @@
 module.exports = {
   gridUrl: 'local',
-  baseUrl: 'http://localhost',
+  baseUrl: 'https://rainbow-souffle-ece639.netlify.app',
   pageLoadTimeout: 0,
   httpTimeout: 60000,
   testTimeout: 90000,
   resetCursor: false,
   sets: {
     desktop: {
-      files: ['testplane-tests/e2e/UserRegistrationE2E.testplane.js'],
+      files: [
+        'testplane-tests/e2e/UserRegistrationE2E.testplane.js',
+        'testplane-tests/e2e/PhoneVerificationE2E.testplane.js',
+        'testplane-tests/e2e/ProfilePageE2E.testplane.js',
+        'testplane-tests/e2e/HomePageE2E.testplane.js',
+        'testplane-tests/e2e/LikesPageE2E.testplane.js',
+        'testplane-tests/e2e/SettingsPageE2E.testplane.js',
+        'testplane-tests/e2e/ThemeSwitchingE2E.testplane.js',
+        'testplane-tests/e2e/GeolocationE2E.testplane.js',
+      ],
       browsers: ['chrome'],
     },
   },

@@ -15,6 +15,7 @@ const mockStore = configureStore({
   reducer: {
     //@ts-ignore
     [baseApi.reducerPath]: baseApi.reducer,
+    //@ts-ignore
     user: userReducer,
   },
   //@ts-ignore

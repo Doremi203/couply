@@ -1,0 +1,28 @@
+.button {
+    width: 120px;
+    background-color: var(--tag-background);
+    color: black;
+    font-weight: 500;
+    margin-right: 250px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.content {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: var(--section-background);
+  color: var(--text-color);
+  position: relative;
+  z-index: 1001;
+  padding-bottom: 120px;
+}
