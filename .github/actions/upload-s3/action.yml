@@ -46,4 +46,4 @@ runs:
     - name: Deploy to MinIO
       shell: bash
       run: |
-        ./mc cp -r ./${{ inputs.build-dir }}/* ycs3/${{ inputs.s3-bucket }}/
+        ./mc cp -r ./${{ inputs.build-dir }}/. ycs3/${{ inputs.s3-bucket }}/
