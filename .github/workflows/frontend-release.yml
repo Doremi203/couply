@@ -65,14 +65,11 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: List build output
-        run: ls -l dist
-
       - name: Upload build results
         uses: actions/upload-artifact@v4
         with:
           name: frontend_build
-          path: dist
+          path: frontend/dist
 
   deploy-testing:
     name: Deploy to Testing
@@ -86,12 +83,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: frontend_build
-          path: dist
+          path: frontend/dist
 
       - name: Upload to Object Storage
         uses: ./.github/actions/upload-s3
         with:
-          build-dir: dist
+          build-dir: frontend/dist
           s3-bucket: couply-frontend-testing
 
   publish-release:
