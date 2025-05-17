@@ -85,7 +85,7 @@ service MatchingService {
 
   rpc DeleteMatchV1 (DeleteMatchV1Request) returns (DeleteMatchV1Response) {
     option (google.api.http) = {
-      post: "/v1/matches/delete/byID"
+      post: "/v1/matches/delete/by-id"
       body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {

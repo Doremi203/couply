@@ -12,6 +12,14 @@ swagger-ui:
   path: /app/swagger-ui
   enabled: true
 
+database:
+  host: db
+  port: 5432
+  user: user
+  password: pass
+  database: blocker
+  options: sslmode=disable
+
 secrets:
   ids:
     telegram: e6qmaouf40ikg9lc7amg

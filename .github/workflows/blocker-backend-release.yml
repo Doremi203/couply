@@ -11,6 +11,6 @@ jobs:
     uses: ./.github/workflows/backend-service-release.yml
     with:
       service_name: blocker
-      needs_migrations: false
+      db_name: blocker
       instance_group_name: blocker-testing
     secrets: inherit

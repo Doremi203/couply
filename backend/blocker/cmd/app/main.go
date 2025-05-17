@@ -2,10 +2,13 @@ package main
 
 import (
 	"context"
-	"fmt"
-	"time"
 
+	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
+	blockerservicegrpc "github.com/Doremi203/couply/backend/blocker/gen/api/blocker-service/v1"
+	"github.com/Doremi203/couply/backend/blocker/internal/storage/facade"
+	"github.com/Doremi203/couply/backend/blocker/internal/storage/postgres"
+	"github.com/Doremi203/couply/backend/blocker/internal/storage/postgres/blocker"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
@@ -17,11 +20,23 @@ import (
 
 func main() {
 	webapp.Run(func(ctx context.Context, app *webapp.App) error {
+		dbConfig := postgrespkg.Config{}
+		err := app.Config.ReadSection("database", &dbConfig)
+		if err != nil {
+			return err
+		}
+
+		dbClient, err := postgrespkg.NewClient(ctx, dbConfig)
+		if err != nil {
+			return errors.WrapFail(err, "create postgres client")
+		}
+		app.AddCloser(dbClient.Close)
+
 		var telegramConfig struct {
 			Token       string `secret:"telegram-token"`
 			AdminChatID int64  `secret:"telegram-admin-chat-id"`
 		}
-		err := app.Config.ReadSection("telegram", &telegramConfig)
+		err = app.Config.ReadSection("telegram", &telegramConfig)
 		if err != nil {
 			return errors.WrapFail(err, "read telegram config")
 		}
@@ -50,9 +65,14 @@ func main() {
 			return errors.WrapFail(err, "create telegram bot")
 		}
 
+		txManager := postgres.NewTxManager(dbClient)
+		blockerStorage := blocker.NewPgStorageBlocker(txManager)
+		blockerFacade := facade.NewStorageFacadeBlocker(txManager, blockerStorage)
+
 		blockUseCase := blocker_usecase.NewUseCase(
 			userServiceClient,
 			bot,
+			blockerFacade,
 			app.Log,
 		)
 
@@ -61,39 +81,37 @@ func main() {
 			app.Log,
 		)
 
+		app.AddGRPCUnaryInterceptor(
+			token.NewUnaryTokenInterceptor(
+				token.NewJWTProvider(tokenConfig),
+				app.Log,
+				blockerservicegrpc.BlockerService_GetBlockInfoV1_FullMethodName,
+			),
+		)
 		app.RegisterGRPCServices(
 			blockService,
 		)
-
 		app.AddGatewayHandlers(
 			blockService,
 		)
 
-		app.AddBackgroundProcess(func(ctx context.Context) error {
-			bot.StartCallbackHandler(func(userID string) error {
-				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-				defer cancel()
+		initBotHandlers(app, userServiceClient, blockerFacade, bot)
 
-				userFromClient, err := userServiceClient.GetUserByIDV1(ctx, userID)
-				if err != nil {
-					return fmt.Errorf("failed getting user: %v", err)
-				}
+		return nil
+	})
+}
 
-				userFromClient.IsBlocked = true
+func initBotHandlers(
+	app *webapp.App,
+	userClient *user.Client,
+	blockerFacade *facade.StorageFacadeBlocker,
+	bot *telegram_client.BotClient,
+) {
+	botHandler := telegram_client.NewBotHandler(userClient, blockerFacade, bot, app.Log)
 
-				if err := userServiceClient.UpdateUserByIDV1(
-					ctx,
-					userFromClient,
-				); err != nil {
-					return fmt.Errorf("failed blocking user: %v", err)
-				}
-
-				app.Log.Infof("User %s blocked successfully", userID)
-				return nil
-			})
-			return nil
-		})
-
+	app.AddBackgroundProcess(func(ctx context.Context) error {
+		botHandler.SetupRoutes()
+		bot.StartCallbackHandler()
 		return nil
 	})
 }
