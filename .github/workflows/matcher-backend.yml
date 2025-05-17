@@ -22,7 +22,7 @@ jobs:
       additional_paths: 'backend/auth/pkg/**'
     secrets: inherit
 
-  ci-success:
+  success:
     name: CI success
     needs:
       - ci

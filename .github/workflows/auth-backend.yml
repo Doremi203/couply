@@ -20,7 +20,7 @@ jobs:
       service_name: auth
     secrets: inherit
 
-  ci-success:
+  success:
     name: CI success
     needs:
       - ci

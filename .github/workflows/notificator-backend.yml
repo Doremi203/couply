@@ -22,7 +22,7 @@ jobs:
       service_name: notificator
     secrets: inherit
 
-  ci-success:
+  success:
     name: CI success
     needs:
       - ci
