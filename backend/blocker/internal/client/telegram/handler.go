@@ -64,13 +64,13 @@ func (h *BotHandler) handleDismissAction(callbackData string) CallbackResult {
 	return h.processDismissRequest(userID)
 }
 
-func (h *BotHandler) processBlockRequest(userID string) CallbackResult {
+func (h *BotHandler) processBlockRequest(userID string) (retErr CallbackResult) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	userUUID, err := uuid.Parse(userID)
 	if err != nil {
-		return CallbackResult{
+		retErr = CallbackResult{
 			Error: fmt.Errorf("invalid user ID format: %w", err),
 		}
 	}
@@ -79,7 +79,7 @@ func (h *BotHandler) processBlockRequest(userID string) CallbackResult {
 
 	userData, err := h.userClient.GetUserByIDV1(ctx, userID)
 	if err != nil {
-		return h.errorResult(
+		retErr = h.errorResult(
 			err,
 			"❌ Ошибка блокировки",
 			"❌ Не удалось получить данные пользователя",
@@ -88,7 +88,7 @@ func (h *BotHandler) processBlockRequest(userID string) CallbackResult {
 
 	userData.IsBlocked = true
 	if err := h.userClient.UpdateUserByIDV1(ctx, userData); err != nil {
-		return h.errorResult(
+		retErr = h.errorResult(
 			err,
 			"❌ Ошибка блокировки",
 			"❌ Не удалось обновить статус пользователя",
