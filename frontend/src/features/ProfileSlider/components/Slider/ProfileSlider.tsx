@@ -22,6 +22,11 @@ import {
   Children,
   getIsPremium,
   setUserVerified,
+  Music,
+  FoodDrink,
+  MoviesTV,
+  PersonalityTraits,
+  Pets,
 } from '../../../../entities/user';
 import { MessageModal } from '../../../../pages/HomePage/components/MessageModal/MessageModal';
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
@@ -36,78 +41,6 @@ import { ComplaintModal } from '../ComplaintModal/CompliantModal';
 
 import styles from './profileSlider.module.css';
 
-// const profiles = [
-//   {
-//     id: 1,
-//     name: 'Максим',
-//     age: 25,
-//     bio: 'Увлекаюсь фотографией и кулинарией.',
-//     photos: ['man5.jpeg', 'man3.jpeg', 'man4.jpeg'],
-//     location: 'Москва, Россия',
-//     verified: true,
-//     interests: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
-//     lifestyle: {
-//       kids: 'Нет детей',
-//       smoking: 'Не курю',
-//       alcohol: 'Иногда',
-//       education: 'Высшее образование',
-//     },
-//     passion: ['Музыка', 'Путешествия', 'Фотография', 'Спорт', 'Искусство'],
-//   },
-//   {
-//     id: 2,
-//     name: 'Иван',
-//     age: 30,
-//     bio: 'Пишу музыку и люблю кататься на велосипедецшуатмщышоватмщшоывтамдоытвдаломтыдвоамтлдыоватмдлывоатмдылова.',
-//     photos: ['photo1.png', 'photo2.png', 'photo3.png'],
-//     location: 'Санкт-Петербург, Россия',
-//     verified: false,
-//     interests: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
-//     lifestyle: {
-//       kids: 'Нет детей',
-//       smoking: 'Не курю',
-//       alcohol: 'Редко',
-//       education: 'Высшее образование',
-//     },
-//     passion: ['Музыка', 'Велоспорт', 'Технологии', 'Кино', 'Путешествия'],
-//   },
-//   {
-//     id: 3,
-//     name: 'Ольга',
-//     age: 28,
-//     bio: 'Увлекаюсь фотографией и кулинарией.',
-//     photos: ['woman1.jpg', 'woman1.jpg', 'woman1.jpg'],
-//     location: 'Казань, Россия',
-//     verified: true,
-//     interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-//     lifestyle: {
-//       kids: 'Нет детей',
-//       smoking: 'Не курю',
-//       alcohol: 'Не пью',
-//       education: 'Высшее образование',
-//     },
-//     passion: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-//   },
-//   {
-//     id: 3,
-//     name: 'Превиак',
-//     age: 20,
-//     bio: 'пидорское млекопитающее',
-//     photos: ['previak.jpg'],
-//     location: 'Казань, Россия',
-//     verified: true,
-//     interests: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-//     lifestyle: {
-//       kids: 'Нет детей',
-//       smoking: 'Не курю',
-//       alcohol: 'Не пью',
-//       education: 'Высшее образование',
-//     },
-//     passion: ['Фотография', 'Кулинария', 'Книги', 'Йога', 'Природа'],
-//   },
-// ];
-
-// Advertisement profiles
 const adProfiles = [
   {
     id: 'ad1',
@@ -128,7 +61,7 @@ const adProfiles = [
 
 const getDefaultFilter = () => {
   return {
-    genderPriority: GenderPriority.male,
+    genderPriority: GenderPriority.any,
     minAge: 18,
     maxAge: 100,
     minHeight: 100,
@@ -144,6 +77,11 @@ const getDefaultFilter = () => {
       sport: [Sport.unspecified],
       selfDevelopment: [Selfdevelopment.unspecified],
       hobby: [Hobby.unspecified],
+      music: [Music.unspecified],
+      moviesTv: [MoviesTV.unspecified],
+      foodDrink: [FoodDrink.unspecified],
+      personalityTraits: [PersonalityTraits.unspecified],
+      pets: [Pets.unspecified],
     },
     onlyVerified: false,
     onlyPremium: false,

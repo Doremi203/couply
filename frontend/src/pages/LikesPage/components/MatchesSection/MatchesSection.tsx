@@ -19,7 +19,8 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
   onSocialClick,
   showChatMessage,
 }) => {
-  if (matches.length === 0) {
+  const users = matches.users;
+  if (users === undefined || users.length === 0) {
     return (
       <EmptyState title="У вас пока нет мэтчей" subtitle="Лайкайте профили, чтобы найти мэтчи" />
     );
@@ -28,7 +29,7 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
   return (
     <div className={styles.section}>
       <div className={styles.matchesContainer}>
-        {matches.map(match => (
+        {users.map(match => (
           <MatchCard
             key={match.id}
             // @ts-ignore

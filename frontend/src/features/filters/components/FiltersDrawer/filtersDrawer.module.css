@@ -132,17 +132,13 @@
   transition: all 0.3s;
 }
 
-.chip:hover {
-  background-color: var(--border-color);
-}
-
 .chipSelected {
   background-color: var(--primary-color);
   color: var(--header-text-color);
 }
 
 .chipSelected:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
 }
 
 .toggleContainer {
@@ -206,12 +202,6 @@ input:checked + .slider:before {
   margin: 5px 0 0 0;
 }
 
-/* .buttonContainer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-} */
-
 .buttonContainer {
   position: fixed;
   display: flex;
@@ -242,4 +232,13 @@ input:checked + .slider:before {
 
 .customSlider {
   margin-top: -17px;
+}
+
+.button {
+  width: 120px;
+  background-color: var(--tag-background);
+  color: black;
+  font-weight: 500;
+  margin-right: 250px;
+  margin-top: 10px;
 }
