@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/token"

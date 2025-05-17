@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+
 	userservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 )
 
