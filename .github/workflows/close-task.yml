@@ -24,6 +24,7 @@ jobs:
           task_url: true
           yandex_org_id: ${{ secrets.YANDEX_ORG_ID }}
           yandex_oauth2_token: ${{ secrets.YANDEX_OAUTH2_TOKEN }}
+          is_yandex_cloud_org: true
 
       - name: Move Task When PR Merged
         if: github.event.pull_request.merged == true
@@ -32,3 +33,4 @@ jobs:
           token: ${{secrets.GITHUB_TOKEN}}
           yandex_org_id: ${{ secrets.YANDEX_ORG_ID }}
           yandex_oauth2_token: ${{ secrets.YANDEX_OAUTH2_TOKEN }}
+          is_yandex_cloud_org: true
