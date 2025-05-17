@@ -24,7 +24,7 @@ type InterestFilterProps = {
 
 const InterestFilter: React.FC<InterestFilterProps> = ({
   title,
-  options,
+  // options,
   selectedOptions,
   onSelect,
 }) => {
@@ -86,7 +86,6 @@ const InterestFilter: React.FC<InterestFilterProps> = ({
         text={selectedOptions.length ? 'Изменить' : 'Добавить'}
         onClick={handleOpenModal}
         className={styles.button}
-        variant="outlined"
       />
 
       <Dialog fullScreen open={isModalOpen} onClose={handleCloseModal}>
@@ -153,8 +152,8 @@ const InterestFilter: React.FC<InterestFilterProps> = ({
         </DialogContent>
 
         <DialogActions sx={{ p: 2, borderTop: '1px solid #eee' }}>
-          <CustomButton text="Отмена" onClick={handleCloseModal} variant="outlined" />
-          <CustomButton text="Сохранить" onClick={handleSave} sx={{ ml: 2 }} />
+          <CustomButton text="Отмена" onClick={handleCloseModal} />
+          <CustomButton text="Сохранить" onClick={handleSave} />
         </DialogActions>
       </Dialog>
     </div>

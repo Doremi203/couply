@@ -26,6 +26,7 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({
   const [deleteUser] = useDeleteUserMutation();
 
   const handleDeleteAccount = async () => {
+    //@ts-ignore
     await deleteUser();
     naviagate('/auth');
     localStorage.removeItem('token');

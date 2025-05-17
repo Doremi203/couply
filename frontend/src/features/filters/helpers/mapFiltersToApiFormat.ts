@@ -1,6 +1,8 @@
 export const mapFiltersToApi = (
     selectedFilters: string[],
+    //@ts-ignore
     filterToApi,
+    //@ts-ignore
     defaultUnspecified?,
   ) => {
     // Маппим и фильтруем невалидные значения

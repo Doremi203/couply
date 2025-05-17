@@ -20,7 +20,6 @@ import {
   smokingOptions,
   smokingToApi,
   zodiacOptions,
-  zodiacToApi,
 } from '../constants';
 
 import ChipFilter from './components/ChipFilter';
@@ -99,6 +98,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const handleSmokingToggle = createToggleHandler(setSelectedSmoking, selectedSmoking);
 
   const handleGoalSelect = (value: string) => {
+    //@ts-ignore
     setSelectedGoal(value);
   };
 
@@ -114,21 +114,24 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
 
   // console.log(selectedGoal);
   // console.log(Goal[selectedGoal]);
-  console.log(mapFiltersToApi(selectedZodiac, zodiacToApi, Zodiac.unspecified));
-  // console.log(goalToApi.selectedGoal);
-  console.log(goalToApi[selectedGoal]);
+  // console.log(mapFiltersToApi(selectedZodiac, zodiacToApi, Zodiac.unspecified));
+  // // console.log(goalToApi.selectedGoal);
 
-  console.log(selectedZodiac);
-  console.log(mapInterestsToBackendFormat(selectedInterests));
+  // console.log(goalToApi[selectedGoal]);
+
+  // console.log(selectedZodiac);
+  // console.log(mapInterestsToBackendFormat(selectedInterests));
 
   const handleApplyFilters = () => {
     updateFilter({
+      //@ts-ignore
       genderPriority: genderToApi[interestedIn],
       minAge: ageRange[0],
       maxAge: ageRange[1],
       minHeight: heightRange[0],
       maxHeight: heightRange[1],
       distance: distance,
+      //@ts-ignore
       goal: goalToApi[selectedGoal],
       // zodiac: mapFiltersToApi(selectedZodiac, zodiacToApi, Zodiac.unspecified),
       zodiac: Zodiac.unspecified, //TODO
@@ -138,6 +141,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
       smoking: mapFiltersToApi(selectedSmoking, smokingToApi, Smoking.unspecified)[0],
 
       // Группа интересов с множественным выбором
+      //@ts-ignore
       interest: mapInterestsToBackendFormat(selectedInterests),
       // interest: null,
       onlyVerified: verificationStatus,

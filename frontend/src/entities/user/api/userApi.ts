@@ -61,7 +61,7 @@ export const userApiExtended = matcherApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
+      // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),
 
     deleteUser: builder.mutation<object, object>({

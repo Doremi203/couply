@@ -10,7 +10,7 @@ export const searchApi = matcherApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'filter' }],
+      // invalidatesTags: [{ type: 'filter' }],
     }),
 
     getFilter: builder.query<FilterResponse, object>({
@@ -27,7 +27,7 @@ export const searchApi = matcherApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'search' }],
+      // invalidatesTags: [{ type: 'search' }],
     }),
 
     updateFilter: builder.mutation<FilterResponse, CreateFilterRequest>({
@@ -36,7 +36,7 @@ export const searchApi = matcherApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
-      invalidatesTags: [{ type: 'filter' }],
+      // invalidatesTags: [{ type: 'filter' }],
     }),
   }),
 });

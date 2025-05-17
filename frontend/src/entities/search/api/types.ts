@@ -63,7 +63,14 @@ export interface FilterResponse {
     alcohol: Alcohol;
     smoking: Smoking;
     interest: {
-      null //TODO
+      sport: [Sport],
+      selfDevelopment: [Selfdevelopment],
+      hobby: [Hobby],
+      music: [Music],
+      moviesTv: [MoviesTV],
+      foodDrink: [FoodDrink],
+      personalityTraits: [PersonalityTraits],
+      pets: [Pets],
     };
     onlyVerified: boolean;
     onlyPremium: boolean;
@@ -87,7 +94,14 @@ export interface SearchResponse {
       bio: string;
       goal: Goal;
       interest: {
-        null //TODO
+        sport: [Sport],
+        selfDevelopment: [Selfdevelopment],
+        hobby: [Hobby],
+        music: [Music],
+        moviesTv: [MoviesTV],
+        foodDrink: [FoodDrink],
+        personalityTraits: [PersonalityTraits],
+        pets: [Pets],
       };
       zodiac: Zodiac;
       height: number;

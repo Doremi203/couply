@@ -35,19 +35,17 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         id: 'theme',
         label: 'Темная тема',
         icon: <BedtimeIcon />,
-        //@ts-ignore
-        enabled: theme.isDark,
+        enabled: theme === 'dark',
       },
       {
         id: 'theme',
         label: 'Отменить подписку',
         icon: <CreditCardOffOutlinedIcon />,
         //@ts-ignore
-        enabled: theme.isDark,
+        enabled: theme.isDark, //TODO
       },
     ]);
-    // ts-ignore
-  }, [theme.isDark]);
+  }, [theme]);
 
   const handleToggle = (id: string) => {
     if (id === 'theme') {

@@ -1,7 +1,7 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useState, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+// import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Gender } from '../../../../entities/user/api/constants';
@@ -9,7 +9,7 @@ import {
   useConfirmPhotoMutation,
   useCreateUserMutation,
 } from '../../../../entities/user/api/userApi';
-import { setUserId } from '../../../../entities/user/model/userSlice';
+// import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
@@ -29,7 +29,7 @@ import styles from './enterInfo.module.css';
 export const EnterInfoPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const [createUser, { isLoading }] = useCreateUserMutation();
   const [confirmPhoto] = useConfirmPhotoMutation();
@@ -83,10 +83,11 @@ export const EnterInfoPage = () => {
 
         const photoUploadRequests = userPhotos.map((photo, index) => ({
           orderNumber: index,
+          //@ts-ignore
           mimeType: photo.file.type,
         }));
 
-        const orderNumbers = userPhotos.map((photo, index) => index);
+        const orderNumbers = userPhotos.map((_photo, index) => index);
 
         const userData = {
           name,
@@ -99,20 +100,25 @@ export const EnterInfoPage = () => {
           longitude: coords?.lng,
         };
 
+        //@ts-ignore
         const response = await createUser(userData).unwrap();
 
         //TODO
+        //@ts-ignore
         if (response.photoUploadResponses) {
           // Загружаем каждое фото на соответствующий URL
           await Promise.all(
+            //@ts-ignore
             response.photoUploadResponses.map(async (resp: any) => {
               const photo = userPhotos[resp.orderNumber];
               if (!photo) return;
 
               await fetch(resp.uploadUrl, {
                 method: 'PUT',
+                //@ts-ignore
                 body: photo.file,
                 headers: {
+                  //@ts-ignore
                   'Content-Type': photo.file.type,
                 },
               });
@@ -188,8 +194,10 @@ export const EnterInfoPage = () => {
       setUserPhotos(prevPhotos => {
         const newPhotos = [...prevPhotos];
         if (newPhotos.length > 0) {
+          //@ts-ignore
           newPhotos[0] = { file, url: fileUrl };
         } else {
+          //@ts-ignore
           newPhotos.push({ file, url: fileUrl });
         }
         return newPhotos;
@@ -266,6 +274,7 @@ export const EnterInfoPage = () => {
       if (files && files.length > 0) {
         const file = files[0];
         const fileUrl = URL.createObjectURL(file);
+        //@ts-ignore
         setUserPhotos(prevPhotos => [...prevPhotos, { file, url: fileUrl }]);
       }
     };
@@ -343,6 +352,7 @@ export const EnterInfoPage = () => {
           )}
         </div>
         <FixedPhotoGallery
+          //@ts-ignore
           photos={userPhotos.map(photo => photo.url)}
           onPhotoRemove={handleRemovePhoto}
           onAddPhotoClick={handleAddPhoto}

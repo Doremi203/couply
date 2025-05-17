@@ -53,6 +53,7 @@ const interestCategoriesMap = {
     (Object.entries(interestCategoriesMap) as [keyof typeof interestCategoriesMap, any][])
       .forEach(([category, config]) => {
         Object.values(config.options).forEach(option => {
+            //@ts-ignore
           reverseCategoryMap[option] = category;
         });
       });

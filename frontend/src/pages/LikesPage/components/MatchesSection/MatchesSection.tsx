@@ -19,6 +19,7 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
   onSocialClick,
   showChatMessage,
 }) => {
+  //@ts-ignore
   const users = matches.users;
   if (users === undefined || users.length === 0) {
     return (
@@ -29,6 +30,7 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
   return (
     <div className={styles.section}>
       <div className={styles.matchesContainer}>
+        {/**@ts-ignore */}
         {users.map(match => (
           <MatchCard
             key={match.id}

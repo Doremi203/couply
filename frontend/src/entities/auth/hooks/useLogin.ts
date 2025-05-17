@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import { useLoginMutation } from '../api/authApi';
 import { LoginParams, LoginResponse } from '../api/types';

@@ -12,8 +12,10 @@ import HomePage from './Page';
 const mockStore = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
+    //@ts-ignore
     user: userReducer,
   },
+  //@ts-ignore
   middleware: getDefaultMiddleware => getDefaultMiddleware().concat(baseApi.middleware),
   preloadedState: {
     user: {

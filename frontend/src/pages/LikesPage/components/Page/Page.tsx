@@ -78,10 +78,9 @@ export const LikesPage = () => {
     matchedProfile,
     showChatMessage,
     handleLike,
-    handleSendMessage,
+    //handleSendMessage,
     handleKeepSwiping,
     handleSocialClick,
-    likes,
     matchesUsers,
     likesUsers,
   } = useLikesAndMatches();
