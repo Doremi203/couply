@@ -1,0 +1,13 @@
+name: Stub ci success
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  success:
+    name: CI success
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "Stub required check passed!"

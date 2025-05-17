@@ -7,7 +7,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (b *BotClient) StartCallbackHandler(blockCallback func(userID string)) {
+func (b *BotClient) StartCallbackHandler(blockCallback func(userID string) error) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
@@ -23,19 +23,24 @@ func (b *BotClient) StartCallbackHandler(blockCallback func(userID string)) {
 			var responseText string
 			var actionText string
 
-			if strings.HasPrefix(data, "block_") {
-				blockCallback(userID)
-				responseText = "Пользователь был успешно заблокирован"
-				actionText = "⛔ Заблокировано"
-			} else {
-				responseText = "Жалоба отклонена"
-				actionText = "✅ Отклонено"
-			}
-
 			callback := tgbotapi.NewCallback(update.CallbackQuery.ID, "Обработано")
 			if _, err := b.api.Request(callback); err != nil {
 				log.Println(err)
 				continue
+			}
+
+			if strings.HasPrefix(data, "block_") {
+				err := blockCallback(userID)
+				if err != nil {
+					responseText = "❌ Ошибка при блокировке пользователя: " + err.Error()
+					actionText = "❌ Ошибка блокировки"
+				} else {
+					responseText = "✅ Пользователь успешно заблокирован"
+					actionText = "✅ Заблокировано"
+				}
+			} else {
+				responseText = "✅ Жалоба отклонена"
+				actionText = "✅ Отклонено"
 			}
 
 			editedText := msg.Text + "\n\n" + actionText

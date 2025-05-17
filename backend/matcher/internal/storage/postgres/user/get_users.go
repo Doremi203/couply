@@ -15,7 +15,7 @@ func (s *PgStorageUser) GetUsers(ctx context.Context, userIDs []uuid.UUID) ([]*u
 	}
 
 	query, args, err := sq.Select(
-		"id", "name", "age", "gender", "location", "bio", "goal", "zodiac",
+		"id", "name", "age", "gender", "latitude", "longitude", "bio", "goal", "zodiac",
 		"height", "education", "children", "alcohol", "smoking", "is_hidden",
 		"is_verified", "is_premium", "is_blocked", "created_at", "updated_at",
 	).

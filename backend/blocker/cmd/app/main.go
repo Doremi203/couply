@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
-	"google.golang.org/grpc/metadata"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
@@ -70,27 +70,27 @@ func main() {
 		)
 
 		app.AddBackgroundProcess(func(ctx context.Context) error {
-			bot.StartCallbackHandler(func(userID string) {
-				ctx := context.Background()
-				ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+			bot.StartCallbackHandler(func(userID string) error {
+				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 				defer cancel()
 
-				token, found := blockUseCase.GetCache().Get(userID)
-				if !found {
-					app.Log.Infof("token not found for user %s", userID)
-					return
+				userFromClient, err := userServiceClient.GetUserByIDV1(ctx, userID)
+				if err != nil {
+					return fmt.Errorf("failed getting user: %v", err)
 				}
 
-				md := metadata.New(map[string]string{"user-token": token.(string)})
-				ctx = metadata.NewIncomingContext(ctx, md)
+				userFromClient.IsBlocked = true
 
-				if err := userServiceClient.UpdateUserV1(ctx, true); err != nil {
-					app.Log.Infof("failed to block user %s with error %v", userID, err)
-				} else {
-					app.Log.Infof("successfully blocked user %s", userID)
+				if err := userServiceClient.UpdateUserByIDV1(
+					ctx,
+					userFromClient,
+				); err != nil {
+					return fmt.Errorf("failed blocking user: %v", err)
 				}
+
+				app.Log.Infof("User %s blocked successfully", userID)
+				return nil
 			})
-
 			return nil
 		})
 

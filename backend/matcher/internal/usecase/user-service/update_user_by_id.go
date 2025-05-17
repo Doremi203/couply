@@ -7,22 +7,16 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
-	"github.com/Doremi203/couply/backend/matcher/utils"
 )
 
-func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (*dto.UpdateUserV1Response, error) {
-	userID, err := utils.GetUserIDFromContext(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	photos, err := c.createPhotos(ctx, userID, in.GetPhotoUploadRequests())
+func (c *UseCase) UpdateUserByID(ctx context.Context, in *dto.UpdateUserByIDV1Request) (*dto.UpdateUserByIDV1Response, error) {
+	photos, err := c.createPhotos(ctx, in.GetID(), in.GetPhotoUploadRequests())
 	if err != nil {
 		return nil, errors.WrapFail(err, "create photos")
 	}
 
 	user := user.NewUserBuilder().
-		SetID(userID).
+		SetID(in.GetID()).
 		SetName(in.GetName()).
 		SetAge(in.GetAge()).
 		SetGender(in.GetGender()).
@@ -50,5 +44,5 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		return nil, err
 	}
 
-	return &dto.UpdateUserV1Response{User: updatedUser}, nil
+	return &dto.UpdateUserByIDV1Response{User: updatedUser}, nil
 }
