@@ -32,8 +32,7 @@ import { MessageModal } from '../../../../pages/HomePage/components/MessageModal
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
 import { LikeButton } from '../../../../shared/components/LikeButton';
-//@ts-ignore
-import MessageButton from '../../../../shared/components/MessageButton/messageButton';
+import MessageButton from '../../../../shared/components/MessageButton/MessageButton';
 import UndoButton from '../../../../shared/components/UndoButton/UndoButton';
 import { PremiumModal } from '../../../../widgets/PremiumModal';
 import { ProfileView } from '../../../../widgets/ProfileView';
