@@ -7,6 +7,7 @@ import (
 type BotClient struct {
 	api         *tgbotapi.BotAPI
 	adminChatID int64
+	handlers    map[string]CallbackHandler
 }
 
 func NewBotClient(token string, chatID int64) (*BotClient, error) {
@@ -19,4 +20,11 @@ func NewBotClient(token string, chatID int64) (*BotClient, error) {
 		api:         bot,
 		adminChatID: chatID,
 	}, nil
+}
+
+func (b *BotClient) RegisterCallbackHandler(prefix string, handler CallbackHandler) {
+	if b.handlers == nil {
+		b.handlers = make(map[string]CallbackHandler)
+	}
+	b.handlers[prefix] = handler
 }

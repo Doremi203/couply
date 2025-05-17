@@ -13,9 +13,13 @@ import (
 func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker.ReportReason, message string) error {
 	createdAt := user.GetCreatedAt().AsTime().Format("02.01.2006 15:04")
 
-	parsedReasons := make([]string, len(reasons))
-	for i, reason := range reasons {
-		parsedReasons[i] = reason.String()
+	var reasonsText strings.Builder
+	if len(reasons) > 0 {
+		for i, reason := range reasons {
+			reasonsText.WriteString(fmt.Sprintf("%d. %s\n", i+1, reason.String()))
+		}
+	} else {
+		reasonsText.WriteString("не указаны")
 	}
 
 	var photosText strings.Builder
@@ -39,7 +43,7 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 			"Заблокирован: %t\n"+
 			"Фото: %v\n"+
 			"Аккаунт создан: %s\n\n"+
-			"Причины жалобы: %v\n"+
+			"Причины жалобы:\n %v"+
 			"Сообщение жалобы: %s",
 		user.GetId(),
 		user.GetName(),
@@ -51,7 +55,7 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 		user.GetIsBlocked(),
 		photosStr,
 		createdAt,
-		parsedReasons,
+		reasonsText.String(),
 		message,
 	)
 

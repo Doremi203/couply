@@ -187,3 +187,17 @@ blocker/start: blocker/generate
 
 blocker/generate:
 	cd blocker && go generate ./...
+
+BLOCKER_MIGRATIONS = blocker/migrations
+
+blocker/migrate/up:
+	goose -v -dir "$(BLOCKER_MIGRATIONS)" "$(DB)blocker$(DB_PARAMS)" up
+
+blocker/migrate/down:
+	goose -v -dir "$(BLOCKER_MIGRATIONS)" "$(DB)blocker$(DB_PARAMS)" reset
+
+blocker/migrate/down-one:
+	goose -v -dir "$(BLOCKER_MIGRATIONS)" "$(DB)blocker$(DB_PARAMS)" down
+
+blocker/migrate/create:
+	cd $(BLOCKER_MIGRATIONS) && $(MIGRATE_CREATE)
