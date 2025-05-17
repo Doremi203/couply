@@ -1,7 +1,5 @@
 {
-    "compilerOptions": {
-        "types": [
-            "testplane"
-        ]
-    }
+  "compilerOptions": {
+    "types": ["testplane"]
+  }
 }

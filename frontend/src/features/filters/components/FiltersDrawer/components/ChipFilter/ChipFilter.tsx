@@ -9,19 +9,14 @@ type ChipFilterProps = {
   onToggle: (option: string) => void;
 };
 
-const ChipFilter: React.FC<ChipFilterProps> = ({
-  title,
-  options,
-  selectedOptions,
-  onToggle,
-}) => {
+const ChipFilter: React.FC<ChipFilterProps> = ({ title, options, selectedOptions, onToggle }) => {
   return (
     <div className={styles.section}>
       <h3 className={styles.sectionTitle}>{title}</h3>
       <div className={styles.chipContainer}>
         {options.map((option, index) => (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className={`${styles.chip} ${selectedOptions.includes(option) ? styles.chipSelected : ''}`}
             onClick={() => onToggle(option)}
           >

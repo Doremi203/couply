@@ -1,1 +1,10 @@
-[{"fullTitle":"User Registration Scenario should show validation errors for invalid registration data","browserId":"chrome"},{"fullTitle":"User Registration Scenario should show validation errors for invalid registration data","browserId":"chrome"}]
+[
+  {
+    "fullTitle": "User Registration Scenario should show validation errors for invalid registration data",
+    "browserId": "chrome"
+  },
+  {
+    "fullTitle": "User Registration Scenario should show validation errors for invalid registration data",
+    "browserId": "chrome"
+  }
+]

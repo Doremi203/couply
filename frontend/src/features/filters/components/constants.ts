@@ -4,7 +4,6 @@ export const genderOptions = [
   { label: 'Оба', value: 'Both' },
 ];
 
-
 export const educationOptions = {
   secondary: 'Среднее',
   higher: 'Высшее',
@@ -35,7 +34,6 @@ export const goalOptions = {
   friendship: 'Дружба',
   justChatting: 'Общение',
 };
-
 
 export const sportOptions = {
   gym: 'Тренажерный зал',
@@ -96,10 +94,10 @@ export const zodiacOptions = {
 };
 
 export const goalToApi = {
-  'Знакомства': 'GOAL_DATING',
-  'Отношения': 'GOAL_RELATIONSHIP',
-  'Дружба': 'GOAL_FRIENDSHIP',
-  'Общение': 'GOAL_JUST_CHATTING',
+  Знакомства: 'GOAL_DATING',
+  Отношения: 'GOAL_RELATIONSHIP',
+  Дружба: 'GOAL_FRIENDSHIP',
+  Общение: 'GOAL_JUST_CHATTING',
 };
 
 export const moviesTVOptions = {
@@ -165,18 +163,16 @@ export const petsOptions = {
   none: 'Без питомцев',
 };
 
-
-
 export const genderToApi = {
-  'Женщины': 'GENDER_FEMALE',
-  'Мужчины': 'GENDER_MALE',
-  'Оба': 'GENDER_UNSPECIFIED',
+  Женщины: 'GENDER_FEMALE',
+  Мужчины: 'GENDER_MALE',
+  Оба: 'GENDER_UNSPECIFIED',
 };
 
 export const educationToApi = {
-  'Среднее': 'EDUCATION_SECONDARY',
-  'Высшее': 'EDUCATION_HIGHER',
-  'Phd': 'EDUCATION_PHD',
+  Среднее: 'EDUCATION_SECONDARY',
+  Высшее: 'EDUCATION_HIGHER',
+  Phd: 'EDUCATION_PHD',
 };
 
 export const childrenToApi = {
@@ -186,112 +182,112 @@ export const childrenToApi = {
 };
 
 export const alcoholToApi = {
-  'Негативно': 'ALCOHOL_NEGATIVELY',
-  'Нейтрально': 'ALCOHOL_NEUTRALLY',
-  'Положительно': 'ALCOHOL_POSITIVELY',
+  Негативно: 'ALCOHOL_NEGATIVELY',
+  Нейтрально: 'ALCOHOL_NEUTRALLY',
+  Положительно: 'ALCOHOL_POSITIVELY',
 };
 
 export const smokingToApi = {
-  'Негативно': 'SMOKING_NEGATIVELY',
-  'Нейтрально': 'SMOKING_NEUTRALLY',
-  'Положительно': 'SMOKING_POSITIVELY',
+  Негативно: 'SMOKING_NEGATIVELY',
+  Нейтрально: 'SMOKING_NEUTRALLY',
+  Положительно: 'SMOKING_POSITIVELY',
 };
 
 export const sportToApi = {
   'Тренажерный зал': 'SPORT_GYM',
-  'Бег': 'SPORT_RUNNING',
-  'Плавание': 'SPORT_SWIMMING',
-  'Велоспорт': 'SPORT_CYCLING',
-  'Теннис': 'SPORT_TENNIS',
-  'Баскетбол': 'SPORT_BASKETBALL',
-  'Походы': 'SPORT_HIKING',
-  'Танцы': 'SPORT_DANCING',
+  Бег: 'SPORT_RUNNING',
+  Плавание: 'SPORT_SWIMMING',
+  Велоспорт: 'SPORT_CYCLING',
+  Теннис: 'SPORT_TENNIS',
+  Баскетбол: 'SPORT_BASKETBALL',
+  Походы: 'SPORT_HIKING',
+  Танцы: 'SPORT_DANCING',
   'Боевые искусства': 'SPORT_MARTIAL_ARTS',
-  'Футбол': 'SPORT_FOOTBALL',
+  Футбол: 'SPORT_FOOTBALL',
   'Лыжи/Сноуборд': 'SPORT_SKIING',
-  'Скалолазание': 'SPORT_CLIMBING',
+  Скалолазание: 'SPORT_CLIMBING',
 };
 
 export const selfdevelopmentToApi = {
   'Изучение языков': 'SELFDEVELOPMENT_LANGUAGES',
-  'Лекции': 'SELFDEVELOPMENT_LECTURES',
+  Лекции: 'SELFDEVELOPMENT_LECTURES',
   'Онлайн-курсы': 'SELFDEVELOPMENT_ONLINE_COURSES',
-  'Самообразование': 'SELFDEVELOPMENT_SELF_EDUCATION',
-  'Медитация': 'SELFDEVELOPMENT_MEDITATION',
-  'Психология': 'SELFDEVELOPMENT_PSYCHOLOGY',
-  'Философия': 'SELFDEVELOPMENT_PHILOSOPHY',
-  'История': 'SELFDEVELOPMENT_HISTORY',
-  'Технологии': 'SELFDEVELOPMENT_TECHNOLOGY',
-  'Чтение': 'SELFDEVELOPMENT_READING',
+  Самообразование: 'SELFDEVELOPMENT_SELF_EDUCATION',
+  Медитация: 'SELFDEVELOPMENT_MEDITATION',
+  Психология: 'SELFDEVELOPMENT_PSYCHOLOGY',
+  Философия: 'SELFDEVELOPMENT_PHILOSOPHY',
+  История: 'SELFDEVELOPMENT_HISTORY',
+  Технологии: 'SELFDEVELOPMENT_TECHNOLOGY',
+  Чтение: 'SELFDEVELOPMENT_READING',
 };
 
 export const hobbyToApi = {
-  'Фотография': 'HOBBY_PHOTOGRAPHY',
-  'Рисование': 'HOBBY_PAINTING',
+  Фотография: 'HOBBY_PHOTOGRAPHY',
+  Рисование: 'HOBBY_PAINTING',
   'Настольные игры': 'HOBBY_BOARD_GAMES',
-  'Чтение': 'HOBBY_READING',
-  'Готовка': 'HOBBY_COOKING',
-  'Садоводство': 'HOBBY_GARDENING',
-  'Путешествия': 'HOBBY_TRAVEL',
-  'Писательство': 'HOBBY_WRITING',
-  'Шахматы': 'HOBBY_CHESS',
+  Чтение: 'HOBBY_READING',
+  Готовка: 'HOBBY_COOKING',
+  Садоводство: 'HOBBY_GARDENING',
+  Путешествия: 'HOBBY_TRAVEL',
+  Писательство: 'HOBBY_WRITING',
+  Шахматы: 'HOBBY_CHESS',
   'Рукоделие/DIY': 'HOBBY_CRAFTS',
   'Уход за животными': 'HOBBY_ANIMALS',
-  'Астрология': 'HOBBY_ASTROLOGY',
+  Астрология: 'HOBBY_ASTROLOGY',
 };
 
 export const zodiacToApi = {
-  'Овен': 'ZODIAC_ARIES',
-  'Телец': 'ZODIAC_TAURUS',
-  'Близнецы': 'ZODIAC_GEMINI',
-  'Рак': 'ZODIAC_CANCER',
-  'Лев': 'ZODIAC_LEO',
-  'Дева': 'ZODIAC_VIRGO',
-  'Весы': 'ZODIAC_LIBRA',
-  'Скорпион': 'ZODIAC_SCORPIO',
-  'Стрелец': 'ZODIAC_SAGITTARIUS',
-  'Козерог': 'ZODIAC_CAPRICORN',
-  'Водолей': 'ZODIAC_AQUARIUS',
-  'Рыбы': 'ZODIAC_PISCES',
+  Овен: 'ZODIAC_ARIES',
+  Телец: 'ZODIAC_TAURUS',
+  Близнецы: 'ZODIAC_GEMINI',
+  Рак: 'ZODIAC_CANCER',
+  Лев: 'ZODIAC_LEO',
+  Дева: 'ZODIAC_VIRGO',
+  Весы: 'ZODIAC_LIBRA',
+  Скорпион: 'ZODIAC_SCORPIO',
+  Стрелец: 'ZODIAC_SAGITTARIUS',
+  Козерог: 'ZODIAC_CAPRICORN',
+  Водолей: 'ZODIAC_AQUARIUS',
+  Рыбы: 'ZODIAC_PISCES',
 };
 
 export const moviesTVToApi = {
-  'Боевики': 'MOVIESTV_ACTION',
-  'Комедии': 'MOVIESTV_COMEDY',
-  'Драмы': 'MOVIESTV_DRAMA',
+  Боевики: 'MOVIESTV_ACTION',
+  Комедии: 'MOVIESTV_COMEDY',
+  Драмы: 'MOVIESTV_DRAMA',
   'Научная фантастика': 'MOVIESTV_SCIFI',
-  'Аниме': 'MOVIESTV_ANIME',
-  'Документалки': 'MOVIESTV_DOCUMENTARIES',
-  'Ужасы': 'MOVIESTV_HORROR',
-  'Фэнтези': 'MOVIESTV_FANTASY',
-  'Триллеры': 'MOVIESTV_THRILLER',
-  'Мелодрамы': 'MOVIESTV_ROMANCE',
-  'Исторические': 'MOVIESTV_HISTORICAL',
+  Аниме: 'MOVIESTV_ANIME',
+  Документалки: 'MOVIESTV_DOCUMENTARIES',
+  Ужасы: 'MOVIESTV_HORROR',
+  Фэнтези: 'MOVIESTV_FANTASY',
+  Триллеры: 'MOVIESTV_THRILLER',
+  Мелодрамы: 'MOVIESTV_ROMANCE',
+  Исторические: 'MOVIESTV_HISTORICAL',
 };
 
 export const musicToApi = {
-  'Поп': 'MUSIC_POP',
-  'Рок': 'MUSIC_ROCK',
+  Поп: 'MUSIC_POP',
+  Рок: 'MUSIC_ROCK',
   'Хип-хоп': 'MUSIC_HIPHOP',
-  'Рэп': 'MUSIC_RAP',
-  'Электронная': 'MUSIC_ELECTRONIC',
-  'Джаз': 'MUSIC_JAZZ',
-  'Классическая': 'MUSIC_CLASSICAL',
-  'Инди': 'MUSIC_INDIE',
+  Рэп: 'MUSIC_RAP',
+  Электронная: 'MUSIC_ELECTRONIC',
+  Джаз: 'MUSIC_JAZZ',
+  Классическая: 'MUSIC_CLASSICAL',
+  Инди: 'MUSIC_INDIE',
   'R&B': 'MUSIC_RNB',
-  'Метал': 'MUSIC_METAL',
-  'Фолк': 'MUSIC_FOLK',
-  'Кантри': 'MUSIC_COUNTRY',
-  'Альтернатива': 'MUSIC_ALTERNATIVE',
+  Метал: 'MUSIC_METAL',
+  Фолк: 'MUSIC_FOLK',
+  Кантри: 'MUSIC_COUNTRY',
+  Альтернатива: 'MUSIC_ALTERNATIVE',
 };
 
 export const foodDrinkToApi = {
-  'Кофе': 'FOODDRINK_COFFEE',
-  'Вино': 'FOODDRINK_WINE',
-  'Коктейли': 'FOODDRINK_COCKTAILS',
-  'Веганство': 'FOODDRINK_VEGAN',
-  'Выпечка': 'FOODDRINK_BAKING',
-  'Рестораны': 'FOODDRINK_FINE_DINING',
+  Кофе: 'FOODDRINK_COFFEE',
+  Вино: 'FOODDRINK_WINE',
+  Коктейли: 'FOODDRINK_COCKTAILS',
+  Веганство: 'FOODDRINK_VEGAN',
+  Выпечка: 'FOODDRINK_BAKING',
+  Рестораны: 'FOODDRINK_FINE_DINING',
   'Уличная еда': 'FOODDRINK_STREET_FOOD',
   'Чайные церемонии': 'FOODDRINK_TEA',
   'Шашлыки/Гриль': 'FOODDRINK_BARBECUE',
@@ -299,21 +295,21 @@ export const foodDrinkToApi = {
 };
 
 export const personalityTraitsToApi = {
-  'Интроверт': 'TRAIT_INTROVERT',
-  'Экстраверт': 'TRAIT_EXTROVERT',
-  'Авантюрист': 'TRAIT_ADVENTUROUS',
-  'Домосед': 'TRAIT_HOMEBODY',
-  'Оптимист': 'TRAIT_OPTIMIST',
-  'Амбициозный': 'TRAIT_AMBITIOUS',
-  'Творческий': 'TRAIT_CREATIVE',
-  'Эмпат': 'TRAIT_EMPATHIC',
-  'Аналитик': 'TRAIT_ANALYTICAL',
-  'Саркастичность': 'TRAIT_SARCASM',
+  Интроверт: 'TRAIT_INTROVERT',
+  Экстраверт: 'TRAIT_EXTROVERT',
+  Авантюрист: 'TRAIT_ADVENTUROUS',
+  Домосед: 'TRAIT_HOMEBODY',
+  Оптимист: 'TRAIT_OPTIMIST',
+  Амбициозный: 'TRAIT_AMBITIOUS',
+  Творческий: 'TRAIT_CREATIVE',
+  Эмпат: 'TRAIT_EMPATHIC',
+  Аналитик: 'TRAIT_ANALYTICAL',
+  Саркастичность: 'TRAIT_SARCASM',
 };
 
 export const petsToApi = {
-  'Собаки': 'PETS_DOGS',
-  'Кошки': 'PETS_CATS',
+  Собаки: 'PETS_DOGS',
+  Кошки: 'PETS_CATS',
   'Другие питомцы': 'PETS_OTHER',
   'Без питомцев': 'PETS_NONE',
 };

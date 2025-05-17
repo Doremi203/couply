@@ -7,7 +7,7 @@ const meta: Meta = {
   title: 'Pages/LikesPage',
   component: LikesPage,
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
         <Story />
       </BrowserRouter>

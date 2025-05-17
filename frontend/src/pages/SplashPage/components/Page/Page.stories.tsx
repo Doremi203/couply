@@ -7,7 +7,7 @@ const meta: Meta = {
   title: 'Pages/SplashPage',
   component: Page,
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
         <Story />
       </BrowserRouter>
