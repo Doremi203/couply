@@ -28,29 +28,29 @@ export const filtersSlice = createSlice({
     setAgeRange: (state, action: PayloadAction<[number, number]>) => {
       state.ageRange = action.payload;
     },
-    
+
     // Установка дистанции
     setDistance: (state, action: PayloadAction<number>) => {
       state.distance = action.payload;
     },
-    
+
     // Добавление интереса
     addInterest: (state, action: PayloadAction<string>) => {
       if (!state.interests.includes(action.payload)) {
         state.interests.push(action.payload);
       }
     },
-    
+
     // Удаление интереса
     removeInterest: (state, action: PayloadAction<string>) => {
       state.interests = state.interests.filter(interest => interest !== action.payload);
     },
-    
+
     // Переключение опции "только с фото"
-    toggleShowOnlyWithPhoto: (state) => {
+    toggleShowOnlyWithPhoto: state => {
       state.showOnlyWithPhoto = !state.showOnlyWithPhoto;
     },
-    
+
     // Сброс всех фильтров
     resetFilters: () => initialState,
   },

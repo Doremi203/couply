@@ -31,14 +31,14 @@ export interface CreateFilterRequest {
   alcohol: Alcohol;
   smoking: Smoking;
   interest: {
-    sport: [Sport],
-    selfDevelopment: [Selfdevelopment],
-    hobby: [Hobby],
-    music: [Music],
-    moviesTv: [MoviesTV],
-    foodDrink: [FoodDrink],
-    personalityTraits: [PersonalityTraits],
-    pets: [Pets],
+    sport: [Sport];
+    selfDevelopment: [Selfdevelopment];
+    hobby: [Hobby];
+    music: [Music];
+    moviesTv: [MoviesTV];
+    foodDrink: [FoodDrink];
+    personalityTraits: [PersonalityTraits];
+    pets: [Pets];
   };
   onlyVerified: boolean;
   onlyPremium: boolean;
@@ -63,14 +63,14 @@ export interface FilterResponse {
     alcohol: Alcohol;
     smoking: Smoking;
     interest: {
-      sport: [Sport],
-      selfDevelopment: [Selfdevelopment],
-      hobby: [Hobby],
-      music: [Music],
-      moviesTv: [MoviesTV],
-      foodDrink: [FoodDrink],
-      personalityTraits: [PersonalityTraits],
-      pets: [Pets],
+      sport: [Sport];
+      selfDevelopment: [Selfdevelopment];
+      hobby: [Hobby];
+      music: [Music];
+      moviesTv: [MoviesTV];
+      foodDrink: [FoodDrink];
+      personalityTraits: [PersonalityTraits];
+      pets: [Pets];
     };
     onlyVerified: boolean;
     onlyPremium: boolean;
@@ -94,14 +94,14 @@ export interface SearchResponse {
       bio: string;
       goal: Goal;
       interest: {
-        sport: [Sport],
-        selfDevelopment: [Selfdevelopment],
-        hobby: [Hobby],
-        music: [Music],
-        moviesTv: [MoviesTV],
-        foodDrink: [FoodDrink],
-        personalityTraits: [PersonalityTraits],
-        pets: [Pets],
+        sport: [Sport];
+        selfDevelopment: [Selfdevelopment];
+        hobby: [Hobby];
+        music: [Music];
+        moviesTv: [MoviesTV];
+        foodDrink: [FoodDrink];
+        personalityTraits: [PersonalityTraits];
+        pets: [Pets];
       };
       zodiac: Zodiac;
       height: number;

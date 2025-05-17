@@ -7,12 +7,7 @@ interface CustomButtonProps {
   disabled?: boolean;
 }
 
-export const CustomButton = ({
-  text,
-  onClick,
-  className,
-  disabled = false,
-}: CustomButtonProps) => {
+export const CustomButton = ({ text, onClick, className, disabled = false }: CustomButtonProps) => {
   return (
     <div className={styles.customButtonWrapper}>
       <button

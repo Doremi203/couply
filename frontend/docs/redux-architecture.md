@@ -49,8 +49,7 @@ export const store = configureStore({
     // Feature reducers
     filters: filtersReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware),
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(baseApi.middleware),
 });
 
 // Необходимо для refetchOnFocus/refetchOnReconnect
@@ -70,9 +69,9 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const baseApi = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ 
+  baseQuery: fetchBaseQuery({
     baseUrl: API_BASE_URL,
-    prepareHeaders: (headers) => {
+    prepareHeaders: headers => {
       // Добавление авторизационных заголовков
       const token = localStorage.getItem('token');
       if (token) {
@@ -99,16 +98,16 @@ export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 ```
 
-### 4. API сервисы (src/entities/*/api/*.ts)
+### 4. API сервисы (src/entities/_/api/_.ts)
 
 API сервисы расширяют базовый API и предоставляют endpoints для работы с конкретными сущностями:
 
 ```typescript
 // Пример API для профилей
 export const profileApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     getProfile: builder.query<Profile, string>({
-      query: (id) => `/profiles/${id}`,
+      query: id => `/profiles/${id}`,
       providesTags: (result, error, id) => [{ type: 'Profile', id }],
     }),
     // Другие endpoints...
@@ -116,14 +115,10 @@ export const profileApi = baseApi.injectEndpoints({
 });
 
 // Экспорт хуков для использования в компонентах
-export const {
-  useGetProfileQuery,
-  useGetProfilesQuery,
-  useUpdateProfileMutation,
-} = profileApi;
+export const { useGetProfileQuery, useGetProfilesQuery, useUpdateProfileMutation } = profileApi;
 ```
 
-### 5. Слайсы (src/features/*/model/*.ts)
+### 5. Слайсы (src/features/_/model/_.ts)
 
 Слайсы для управления состоянием:
 
@@ -141,7 +136,7 @@ export const filtersSlice = createSlice({
 });
 
 // Экспорт actions
-export const { setAgeRange, setDistance, /* ... */ } = filtersSlice.actions;
+export const { setAgeRange, setDistance /* ... */ } = filtersSlice.actions;
 
 // Экспорт reducer
 export default filtersSlice.reducer;
@@ -195,7 +190,7 @@ const handleResetFilters = () => {
 ```typescript
 // Пример нового API сервиса
 export const newEntityApi = baseApi.injectEndpoints({
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     // Определите endpoints...
   }),
 });

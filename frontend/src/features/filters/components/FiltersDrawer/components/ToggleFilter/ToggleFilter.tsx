@@ -9,28 +9,17 @@ type ToggleFilterProps = {
   onChange: () => void;
 };
 
-const ToggleFilter: React.FC<ToggleFilterProps> = ({
-  title,
-  description,
-  value,
-  onChange,
-}) => {
+const ToggleFilter: React.FC<ToggleFilterProps> = ({ title, description, value, onChange }) => {
   return (
     <div className={styles.section}>
       <div className={styles.toggleContainer}>
         <h3 className={styles.sectionTitle}>{title}</h3>
         <label className={styles.switch}>
-          <input 
-            type="checkbox" 
-            checked={value}
-            onChange={onChange}
-          />
+          <input type="checkbox" checked={value} onChange={onChange} />
           <span className={styles.slider} />
         </label>
       </div>
-      <p className={styles.verificationText}>
-        {description}
-      </p>
+      <p className={styles.verificationText}>{description}</p>
     </div>
   );
 };
