@@ -65,7 +65,10 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Upload codegen results
+      - name: List build output
+        run: ls -l dist
+
+      - name: Upload build results
         uses: actions/upload-artifact@v4
         with:
           name: frontend-build
