@@ -8,6 +8,9 @@ inputs:
   s3-bucket:
     description: S3 bucket name
     required: true
+  yc-service-key:
+    description: Yandex Cloud service key
+    required: true
 
 runs:
   using: composite
@@ -29,7 +32,7 @@ runs:
       shell: bash
       run: |
         curl -sSL https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash -s -- -i /opt/yc -n
-        echo '${{ secrets.YC_SERVICE_KEY }}' > sa-key.json
+        echo '${{ inputs.yc-service-key }}' > sa-key.json
         /opt/yc/bin/yc config set folder-id b1ggapscf0p06cohndtt
         /opt/yc/bin/yc config set service-account-key sa-key.json
 

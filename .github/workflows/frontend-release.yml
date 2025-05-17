@@ -90,6 +90,7 @@ jobs:
         with:
           build-dir: frontend/dist
           s3-bucket: couply-frontend-testing
+          yc-service-key: ${{ secrets.YC_SERVICE_KEY }}
 
   publish-release:
     name: Create GitHub Release
