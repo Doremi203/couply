@@ -9,7 +9,6 @@ on:
       - '.github/workflows/auth-backend.yml'
       - '.github/actions/codegen/**'
 
-# Cancel any in-progress job or run for the same branch/PR to save resources
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -20,3 +19,12 @@ jobs:
     with:
       service_name: auth
     secrets: inherit
+
+  success:
+    name: CI success
+    needs:
+      - ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "All required checks passed!"

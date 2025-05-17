@@ -18,16 +18,21 @@ jobs:
 
       - name: Move Task When PR Opened
         if: github.event.action != 'closed'
-        uses: evrone-erp/yandex-tracker-action@v1
+        uses: evrone-erp/yandex-tracker-action@v1.5.0
         with:
           token: ${{secrets.GITHUB_TOKEN}}
+          task_url: true
           yandex_org_id: ${{ secrets.YANDEX_ORG_ID }}
           yandex_oauth2_token: ${{ secrets.YANDEX_OAUTH2_TOKEN }}
+          to: inReview
+          is_yandex_cloud_org: true
 
       - name: Move Task When PR Merged
         if: github.event.pull_request.merged == true
-        uses: evrone-erp/yandex-tracker-action@v1
+        uses: evrone-erp/yandex-tracker-action@v1.5.0
         with:
           token: ${{secrets.GITHUB_TOKEN}}
           yandex_org_id: ${{ secrets.YANDEX_ORG_ID }}
           yandex_oauth2_token: ${{ secrets.YANDEX_OAUTH2_TOKEN }}
+          to: close
+          is_yandex_cloud_org: true
