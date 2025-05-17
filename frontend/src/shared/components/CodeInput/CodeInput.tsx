@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, KeyboardEvent } from 'react';
 
-import styles from './CodeInput.module.css';
+import styles from './codeInput.module.css';
 
 interface CodeInputProps {
   length?: number;
