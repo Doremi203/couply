@@ -3,8 +3,6 @@ name: Stub ci success
 on:
   pull_request:
     branches: ["main"]
-    paths:
-      - './**'
 
 jobs:
   ci-success:
