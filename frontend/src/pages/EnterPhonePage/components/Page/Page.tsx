@@ -53,7 +53,7 @@ export const EnterPhonePage = () => {
       const timeout = await sendCode({ phone: formattedPhone }).unwrap();
       setSendAgainIn(timeout.sendAgainIn);
       setError('');
-    } catch (err) {
+    } catch {
       setError('Ошибка отправки кода. Попробуйте снова.');
     } finally {
       setIsLoading(false);
@@ -74,7 +74,7 @@ export const EnterPhonePage = () => {
     try {
       await confirm({ phone: formattedPhone, code }).unwrap();
       navigate('/enterInfo');
-    } catch (err) {
+    } catch {
       setError('Неверный код подтверждения');
     } finally {
       setIsLoading(false);
