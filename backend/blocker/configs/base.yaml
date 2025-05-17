@@ -14,7 +14,7 @@ swagger-ui:
 
 secrets:
   ids:
-    telegram: e6qgotvn596k4k5331cq
+    telegram: e6qmaouf40ikg9lc7amg
 
 user_service:
   address:  "matcher:7002"
