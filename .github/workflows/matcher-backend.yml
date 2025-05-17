@@ -21,3 +21,12 @@ jobs:
       service_name: matcher
       additional_paths: 'backend/auth/pkg/**'
     secrets: inherit
+
+  ci-success:
+    name: CI success
+    needs:
+      - ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "All required checks passed!"
