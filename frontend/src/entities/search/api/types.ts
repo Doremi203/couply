@@ -83,6 +83,7 @@ export interface SearchRequest {
   offset: number;
   limit: number;
 }
+
 export interface SearchResponse {
   users: [
     {
@@ -124,6 +125,12 @@ export interface SearchResponse {
       updatedAt: string;
     },
   ];
+  pagination: {
+    totalCount: number;
+    totalPages: number;
+    currentPage: number;
+    hasMore: boolean;
+  };
 }
 
 export interface AddViewRequest {

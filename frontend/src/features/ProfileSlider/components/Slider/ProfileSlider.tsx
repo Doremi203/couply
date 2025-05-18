@@ -122,6 +122,11 @@ export const ProfileSlider = () => {
   const [messageOpen, setMessageOpen] = useState(false);
   const [premiumOpen, setPremiumOpen] = useState(false);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const PAGE_SIZE = 10;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -130,12 +135,18 @@ export const ProfileSlider = () => {
         const defaultFilter = getDefaultFilter();
         //@ts-ignore
         await createFilter(defaultFilter).unwrap();
-        const response = await searchUsers({ limit: 10, offset: 0 }).unwrap();
+        const response = await searchUsers({ limit: PAGE_SIZE, offset: 0 }).unwrap();
         // console.log(response);
         //@ts-ignore
-        if (response.usersSearchInfo.length > 0) {
+        if (response.usersSearchInfo?.length > 0) {
           //@ts-ignore
           setProfiles(response.usersSearchInfo || []);
+          // Update pagination info
+          setHasMore(response.pagination?.hasMore || false);
+          setCurrentPage(0);
+          setLoading(false);
+        } else {
+          setHasMore(false);
           setLoading(false);
         }
       } catch {
@@ -149,6 +160,43 @@ export const ProfileSlider = () => {
 
     fetchData();
   }, [createFilter, searchUsers]);
+
+  // Load more profiles when needed
+  const loadMoreProfiles = async () => {
+    if (!hasMore || loading) return;
+
+    try {
+      setLoading(true);
+      const nextPage = currentPage + 1;
+      const offset = nextPage * PAGE_SIZE;
+
+      const response = await searchUsers({
+        limit: PAGE_SIZE,
+        offset: offset,
+      }).unwrap();
+
+      //@ts-ignore
+      if (response.usersSearchInfo?.length > 0) {
+        //@ts-ignore
+        setProfiles(prevProfiles => [...prevProfiles, ...response.usersSearchInfo]);
+        setCurrentPage(nextPage);
+        setHasMore(response.pagination?.hasMore || false);
+      } else {
+        setHasMore(false);
+      }
+    } catch (err) {
+      console.error('Error loading more profiles', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Check if we need to load more profiles when approaching the end
+  useEffect(() => {
+    if (profiles.length > 0 && currentIndex >= profiles.length - 3 && hasMore) {
+      loadMoreProfiles();
+    }
+  }, [currentIndex, profiles.length, hasMore]);
 
   useEffect(() => {
     const storedUndoCount = localStorage.getItem('undoCount');
@@ -223,7 +271,9 @@ export const ProfileSlider = () => {
 
       // Use ts-ignore as done elsewhere in the codebase
       //@ts-ignore
-      await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
+      if (profiles[currentIndex] && profiles[currentIndex].user) {
+        await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
+      }
 
       if (newSwipeCount % 15 === 0) {
         setShowingAd(true);
@@ -611,13 +661,13 @@ export const ProfileSlider = () => {
         isOpen={complaintOpen}
         onClose={() => setComplaintOpen(false)}
         //@ts-ignore
-        targetUserId={profiles[currentIndex].user.id}
+        targetUserId={profiles[currentIndex]?.user?.id || ''}
       />
       <MessageModal
         isOpen={messageOpen}
         onClose={() => setMessageOpen(false)}
         //@ts-ignore
-        targetUserId={profiles[currentIndex].user.id}
+        targetUserId={profiles[currentIndex]?.user?.id || ''}
       />
       <PremiumModal isOpen={premiumOpen} onClose={() => setPremiumOpen(false)} />
     </div>
