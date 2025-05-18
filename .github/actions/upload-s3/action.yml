@@ -47,7 +47,7 @@ runs:
       shell: bash
       run: |
         echo "Listing build dir:"
-        ls -lR ./${{ inputs.build-dir }}
+        ls -lR ./
 
     - name: Deploy to MinIO
       shell: bash
