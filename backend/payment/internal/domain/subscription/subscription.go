@@ -6,13 +6,13 @@ import (
 )
 
 type Subscription struct {
-	ID         uuid.UUID
-	UserID     uuid.UUID
-	Plan       SubscriptionPlan
-	Status     SubscriptionStatus
-	AutoRenew  bool
-	StartDate  time.Time
-	EndDate    time.Time
+	ID         uuid.UUID          `db:"id"`
+	UserID     uuid.UUID          `db:"user_id"`
+	Plan       SubscriptionPlan   `db:"plan"`
+	Status     SubscriptionStatus `db:"status"`
+	AutoRenew  bool               `db:"auto_renew"`
+	StartDate  time.Time          `db:"start_date"`
+	EndDate    time.Time          `db:"end_date"`
 	PaymentIDs []uuid.UUID
 }
 

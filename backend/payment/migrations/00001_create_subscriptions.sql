@@ -6,9 +6,9 @@ create table if not exists subscriptions
     user_id uuid not null,
     plan int not null,
     status int not null,
+    auto_renew boolean not null,
     start_date timestamptz not null,
-    end_date timestamptz not null,
-    auto_renew boolean not null
+    end_date timestamptz not null
 );
 -- +goose StatementEnd
 

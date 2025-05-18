@@ -48,12 +48,12 @@ func (c *UseCase) CreateSubscription(ctx context.Context, in *dto.CreateSubscrip
 	}, nil
 }
 
-func (s *UseCase) calculateEndDate(now time.Time, plan subscription.SubscriptionPlan) time.Time {
+func (c *UseCase) calculateEndDate(now time.Time, plan subscription.SubscriptionPlan) time.Time {
 	durationMap := map[subscription.SubscriptionPlan]time.Duration{
 		subscription.SubscriptionPlanMonthly:    30 * 24 * time.Hour,
 		subscription.SubscriptionPlanSemiAnnual: 180 * 24 * time.Hour,
 		subscription.SubscriptionPlanAnnual:     365 * 24 * time.Hour,
 	}
 
-	return time.Now().Add(durationMap[plan])
+	return now.Add(durationMap[plan])
 }

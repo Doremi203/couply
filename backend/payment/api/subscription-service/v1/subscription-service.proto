@@ -62,6 +62,26 @@ service SubscriptionService {
       }
     };
   }
+  rpc GetActiveSubscriptionV1 (GetActiveSubscriptionV1Request) returns (GetActiveSubscriptionV1Response) {
+    option (google.api.http) = {
+      post: "/v1/subscriptions/active/get"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение активной подписки";
+      description: "Принимает важные поля для получения активной подписки";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateSubscriptionV1Request {
@@ -70,6 +90,18 @@ message CreateSubscriptionV1Request {
 }
 
 message CreateSubscriptionV1Response {
+  string subscription_id = 1;
+  SubscriptionPlan plan = 2;
+  SubscriptionStatus status = 3;
+  bool auto_renew = 4;
+  google.protobuf.Timestamp start_date = 5;
+  google.protobuf.Timestamp end_date = 6;
+  repeated string payment_ids = 7;
+}
+
+message GetActiveSubscriptionV1Request {}
+
+message GetActiveSubscriptionV1Response {
   string subscription_id = 1;
   SubscriptionPlan plan = 2;
   SubscriptionStatus status = 3;

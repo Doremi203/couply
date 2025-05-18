@@ -11,6 +11,7 @@ import (
 
 type subscriptionServiceUseCase interface {
 	CreateSubscription(ctx context.Context, in *dto.CreateSubscriptionV1Request) (*dto.CreateSubscriptionV1Response, error)
+	GetActiveSubscription(ctx context.Context, in *dto.GetActiveSubscriptionV1Request) (*dto.GetActiveSubscriptionV1Response, error)
 }
 
 type Implementation struct {
