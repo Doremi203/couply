@@ -92,8 +92,7 @@ func Test_repo_GetByEmail(t *testing.T) {
 			},
 			want: user.User{},
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				var nfErr user.NotFoundError
-				return assert.ErrorAs(t, err, &nfErr)
+				return assert.ErrorIs(t, err, user.ErrNotFound)
 			},
 		},
 		{

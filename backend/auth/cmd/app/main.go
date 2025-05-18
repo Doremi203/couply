@@ -5,12 +5,15 @@ import (
 
 	phoneconfirmgrpc "github.com/Doremi203/couply/backend/auth/gen/api/phone-confirm"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/oauth"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/token"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
+	"github.com/Doremi203/couply/backend/auth/internal/grpc/login"
 	phoneconfirmpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/phoneconfirm/postgres"
 	userpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
+	loginUC "github.com/Doremi203/couply/backend/auth/internal/usecase/login"
 	"github.com/Doremi203/couply/backend/auth/pkg/argon"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	idempotencypostgres "github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
@@ -61,11 +64,14 @@ func main() {
 		app.AddCloser(dbClient.Close)
 
 		userRepo := userpostgres.NewRepo(dbClient)
+		oauthAccountRepo := userpostgres.NewOAuthAccountRepo(dbClient)
 
 		hashProvider := hash.NewDefaultProvider(
 			salt.DefaultProvider{},
 			argon.V2Provider{},
 		)
+
+		var oauthInfoFetcherFactory oauth.InfoFetcherFactory
 
 		tokenIssuer, err := token.NewJWTIssuer(jwtTokenConfig)
 		if err != nil {
@@ -87,12 +93,17 @@ func main() {
 			idempotencypostgres.NewRepo(dbClient),
 		)
 
-		loginUseCase := usecase.NewLogin(
+		loginUseCase := loginUC.NewUseCase(
 			userRepo,
+			oauthAccountRepo,
+			oauthInfoFetcherFactory,
 			hashProvider,
 			tokenIssuer,
+			txProvider,
+			app.Log,
+			uuidProvider,
 		)
-		loginService := grpc.NewLoginService(
+		loginService := login.NewGRPCService(
 			loginUseCase,
 			app.Log,
 		)

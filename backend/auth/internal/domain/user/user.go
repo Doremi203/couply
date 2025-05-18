@@ -53,4 +53,6 @@ type User struct {
 	Email    Email
 	Phone    Phone
 	Password pswrd.HashedPassword
+
+	OAuthAccounts []OAuthAccount
 }

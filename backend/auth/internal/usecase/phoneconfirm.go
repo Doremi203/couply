@@ -53,7 +53,7 @@ func (u PhoneConfirmation) SendCodeV1(ctx context.Context, userID user.ID, phone
 	case err == nil:
 		return phoneconfirm.Request{}, ErrPhoneAlreadyConfirmed
 
-	case errors.As(err, &user.NotFoundError{}):
+	case errors.Is(err, user.ErrNotFound):
 	// continue
 
 	case err != nil:
@@ -150,7 +150,7 @@ func (u PhoneConfirmation) ConfirmV1(
 	case err == nil:
 		return ErrPhoneAlreadyConfirmed
 
-	case errors.As(err, &user.NotFoundError{}):
+	case errors.Is(err, user.ErrNotFound):
 	// continue
 
 	case err != nil:
