@@ -4,13 +4,19 @@ import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
 import { useUpdateUserMutation } from '../../entities/user';
 import { useConfirmPhotoMutation } from '../../entities/user/api/userApi';
 import {
+  alcoholFromApi,
   alcoholOptions,
   alcoholToApi,
+  childrenFromApi,
   childrenOptions,
   childrenToApi,
+  educationFromApi,
   educationOptions,
+  educationToApi,
+  goalFromApi,
   goalOptions,
   goalToApi,
+  smokingFromApi,
   smokingOptions,
   smokingToApi,
 } from '../../features/filters/components/constants';
@@ -34,7 +40,6 @@ export interface EditProfileProps {
   onPhotoRemove: (index: number) => void;
 }
 
-// Interface for photo objects
 interface PhotoItem {
   file: File;
   url: string;
@@ -54,22 +59,28 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAvatarUpload, setIsAvatarUpload] = useState(false);
 
-  const [selectedEducation, setSelectedEducation] = useState<string[]>([]);
-  const [selectedChildren, setSelectedChildren] = useState<string[]>([]);
-  const [selectedAlcohol, setSelectedAlcohol] = useState<string[]>([]);
-  const [selectedSmoking, setSelectedSmoking] = useState<string[]>([]);
-  const [selectedGoal, setSelectedGoal] = useState<string[]>([]);
+  const [selectedEducation, setSelectedEducation] = useState<string[]>([
+    educationFromApi[profileData.education],
+  ]);
+  const [selectedChildren, setSelectedChildren] = useState<string[]>([
+    childrenFromApi[profileData.children],
+  ]);
+  const [selectedAlcohol, setSelectedAlcohol] = useState<string[]>([
+    alcoholFromApi[profileData.alcohol],
+  ]);
+  const [selectedSmoking, setSelectedSmoking] = useState<string[]>([
+    smokingFromApi[profileData.smoking],
+  ]);
+  const [selectedGoal, setSelectedGoal] = useState<string[]>([goalFromApi[profileData.goal]]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [bio, setBio] = useState(profileData.bio || '');
   const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
 
-  // Store photo files for upload
   const [photoFiles, setPhotoFiles] = useState<PhotoItem[]>([]);
 
   const MAX_PHOTOS = 6;
 
   const handleCameraClick = (isAvatar: boolean = false) => {
-    // If we're trying to add a photo and already at max, don't proceed
     if (!isAvatar && Array.isArray(profileData.photos) && profileData.photos.length >= MAX_PHOTOS) {
       alert(`Максимальное количество фото: ${MAX_PHOTOS}`);
       return;
@@ -84,7 +95,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
-      // Check if we're at the photo limit
       if (
         !isAvatarUpload &&
         Array.isArray(profileData.photos) &&
@@ -98,7 +108,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       const file = files[0];
       const fileUrl = URL.createObjectURL(file);
 
-      // Store the file for later upload
       const orderNumber = photoFiles.length;
       const newPhotoItem = {
         file,
@@ -107,7 +116,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       };
       setPhotoFiles(prev => [...prev, newPhotoItem]);
 
-      // Add the photo to UI
       onPhotoAdd(file, isAvatarUpload);
       event.target.value = '';
     }
@@ -146,10 +154,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     setIsHidden(!isHidden);
   };
 
-  // Function to handle saving profile data and uploading photos
   const handleSave = async () => {
     try {
-      // Prepare photo upload requests if there are photos to upload
       const photoUploadRequests =
         photoFiles.length > 0
           ? photoFiles.map(photo => ({
@@ -158,11 +164,13 @@ export const EditProfile: React.FC<EditProfileProps> = ({
             }))
           : undefined;
 
-      // First update the user profile data with photoUploadRequests
       const userData = {
         name: profileData.name,
         age: profileData.age,
         bio: bio,
+        latitude: profileData.latitude,
+        longitude: profileData.longitude,
+        gender: profileData.gender,
         isHidden: isHidden,
         //@ts-ignore
         children: childrenToApi[selectedChildren],
@@ -174,17 +182,19 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         goal: goalToApi[selectedGoal],
         interests: mapInterestsToBackendFormat(selectedInterests),
         height: profileData.height,
-        // Include photoUploadRequests directly in the userData object
         photoUploadRequests,
+        zodiac: profileData.zodiac,
+        height: profileData.height,
+        education: educationToApi[selectedEducation],
+        isVerified: profileData.isVerified,
+        isPremium: profileData.isPremium,
+        isBlocked: profileData.isBlocked,
       };
 
-      // Update basic user data
       // @ts-ignore - The API seems to work differently in practice vs type definition
       const response: any = await updateUser(userData).unwrap();
 
-      // If we have photos to upload and received upload URLs
       if (photoFiles.length > 0 && response && response.photoUploadResponses) {
-        // Upload each photo to S3 using the provided URLs
         await Promise.all(
           response.photoUploadResponses.map(
             async (resp: { orderNumber: number; uploadUrl: string }) => {
@@ -203,7 +213,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           ),
         );
 
-        // Confirm photos after upload
         const orderNumbers = photoFiles.map(photo => photo.orderNumber);
         await confirmPhoto({ orderNumbers }).unwrap();
       }

@@ -97,61 +97,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     setIsVerified(true);
   };
 
-  // Upload photos to backend using updateUser directly
-  const uploadPhotosToBackend = async () => {
-    if (newPhotoFiles.length === 0) return;
-
-    try {
-      // Prepare photo upload requests
-      const photoUploadRequests = newPhotoFiles.map(photo => ({
-        orderNumber: photo.orderNumber,
-        mimeType: photo.file.type,
-      }));
-
-      // Send minimal update with photoUploadRequests
-      // @ts-ignore - The API accepts photoUploadRequests directly
-      const response: any = await updateUser({
-        //@ts-ignore
-        photoUploadRequests,
-      }).unwrap();
-
-      // If we received upload URLs in the response
-      if (response && response.photoUploadResponses) {
-        // Upload each photo to S3 using the provided URLs
-        await Promise.all(
-          response.photoUploadResponses.map(
-            async (resp: { orderNumber: number; uploadUrl: string }) => {
-              const photo = newPhotoFiles.find(p => p.orderNumber === resp.orderNumber);
-              if (!photo?.file) return;
-
-              try {
-                await uploadFile({
-                  url: resp.uploadUrl,
-                  file: photo.file,
-                }).unwrap();
-              } catch (error) {
-                console.error('Error uploading file:', error);
-              }
-            },
-          ),
-        );
-
-        // Confirm photos after upload
-        const orderNumbers = newPhotoFiles.map(photo => photo.orderNumber);
-        await confirmPhoto({ orderNumbers }).unwrap();
-
-        // Clear the new photo files list after successful upload
-        setNewPhotoFiles([]);
-
-        // Refresh user data to get updated photos
-        const userData = await getUser({}).unwrap();
-        setProfileData(userData.user);
-      }
-    } catch (error) {
-      console.error('Error uploading photos:', error);
-    }
-  };
-
   const handlePhotoAdd = (file?: File, isAvatar: boolean = false) => {
     if (!file) return;
 
@@ -225,9 +170,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             profileData={profileData}
             onBack={() => {
               // Upload any pending photos before going back
-              if (newPhotoFiles.length > 0) {
-                uploadPhotosToBackend();
-              }
+              // if (newPhotoFiles.length > 0) {
+              //   uploadPhotosToBackend();
+              // }
               setActiveTab('profile');
             }}
             onPhotoAdd={handlePhotoAdd}
