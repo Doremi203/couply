@@ -195,6 +195,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
               //@ts-ignore
               await updateUser(userData).unwrap();
+
+              onBack();
             } catch (error) {
               console.error('Failed to save profile data:', error);
             }

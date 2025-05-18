@@ -458,12 +458,24 @@ export const ProfileSlider = () => {
 
   const handleCloseProfile = () => {
     setSelectedProfile(null);
-    handleNextUser();
+    // Only go to next user if this is from the swipe flow, not from profile preview
+    if (
+      !document.querySelector('#likes-page-container') &&
+      !document.querySelector('.pageContainer')
+    ) {
+      handleNextUser();
+    }
   };
 
   const handleLike = () => {
     handleCloseProfile();
-    handleNextUser();
+    // Only go to next user if this is from the swipe flow, not from profile preview
+    if (
+      !document.querySelector('#likes-page-container') &&
+      !document.querySelector('.pageContainer')
+    ) {
+      handleNextUser();
+    }
   };
 
   const renderName = (nameClass: string) => {

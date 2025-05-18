@@ -37,39 +37,41 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  //TODO delete
-  const samplePhotos = [
-    profile.imageUrl,
-    'woman1.jpg',
-    'man1.jpg',
-    'photo1.png',
-    'woman1.jpg',
-    'man1.jpg',
-  ];
+  const user = profile.user;
 
   //TODO delete
-  const profileDetails = {
-    //@ts-ignore
-    bio: profile.user.bio || 'Hello, I am a fashion designer based in Florida.',
-    //@ts-ignore
-    location: profile.user.location || 'Miami Beach, Florida',
-    //@ts-ignore
-    lifestyle: profile.user.lifestyle || {
-      kids: "I don't have kids",
-    },
-    //@ts-ignore
-    passion: profile.user.passion ||
-      //@ts-ignore
-      profile.user.interests || [
-        'Music',
-        'Travel',
-        'Tea',
-        'Photography',
-        'Fashion',
-        'House Parties',
-      ],
-    photos: profile.photos || samplePhotos,
-  };
+  // const samplePhotos = [
+  //   profile.imageUrl,
+  //   'woman1.jpg',
+  //   'man1.jpg',
+  //   'photo1.png',
+  //   'woman1.jpg',
+  //   'man1.jpg',
+  // ];
+
+  //TODO delete
+  // const profileDetails = {
+  //   //@ts-ignore
+  //   bio: profile.user.bio || 'Hello, I am a fashion designer based in Florida.',
+  //   //@ts-ignore
+  //   location: profile.user.location || 'Miami Beach, Florida',
+  //   //@ts-ignore
+  //   lifestyle: profile.user.lifestyle || {
+  //     kids: "I don't have kids",
+  //   },
+  //   //@ts-ignore
+  //   passion: profile.user.passion ||
+  //     //@ts-ignore
+  //     profile.user.interests || [
+  //       'Music',
+  //       'Travel',
+  //       'Tea',
+  //       'Photography',
+  //       'Fashion',
+  //       'House Parties',
+  //     ],
+  //   photos: profile.photos,
+  // };
 
   const commonInterests = ['Music', 'Travel', 'Photography'];
 
@@ -86,8 +88,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
 
   const handleLike = () => {
     //@ts-ignore
-    likeUser({ targetUserId: profile.user.id });
-    onLike(profile.id);
+    likeUser({ targetUserId: user.id });
+    onLike(user.id);
   };
 
   useEffect(() => {
@@ -185,6 +187,9 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
     setTouchEnd(null);
   };
 
+  console.log(profile);
+  console.log(user);
+
   return (
     <div
       className={styles.profileViewContainer}
@@ -198,6 +203,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
       >
         <BackButton
           onClose={() => {
+            // Just call onClose without additional actions
             onClose();
             setTimeout(() => {
               document.body.style.overflow = 'auto';
@@ -205,16 +211,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
           }}
         />
 
-        <img src={profile.imageUrl} alt={profile.name} className={styles.profileImage} />
+        <img src={user.photos[0].url} alt={user.name} className={styles.profileImage} />
         <div className={styles.profileGradient} />
 
         <div className={styles.photoContent}>
           <div className={styles.nameAndButtons}>
             <h2 className={styles.photoName}>
               {/**@ts-ignore */}
-              {profile.user.name}
+              {user.name}
               {/**@ts-ignore */}
-              {profile.user.verified && (
+              {user.verified && (
                 <div className={styles.verifiedBadge}>
                   <VerifiedIcon />
                 </div>
@@ -242,16 +248,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
 
           <p className={styles.photoInfo}>
             {/**@ts-ignore */}
-            {profile.user.age} | {profileDetails.location}
+            {user.age} | {user.location}
           </p>
 
           <div className={styles.photoTags}>
             {/**@ts-ignore */}
-            {profileDetails.passion.slice(0, 5).map((interest, index) => (
+            {/* {user.interest.slice(0, 5).map((interest, index) => (
               <span key={index} className={styles.photoTag}>
                 {interest}
               </span>
-            ))}
+            ))} */}
           </div>
 
           <div
@@ -284,8 +290,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
       </div>
 
       <ProfileInfo
-        profile={profile}
-        profileDetails={profileDetails}
+        profile={user}
+        // profileDetails={}
         menuPosition={menuPosition}
         handleToggleClick={handleToggleClick}
         handleTouchStart={handleTouchStart}
