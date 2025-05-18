@@ -45,16 +45,42 @@ export const EnterPhonePage = () => {
     }
   };
 
+  const validatePhone = () => {
+    // Очищаем телефон от всех символов, кроме цифр
+    const cleanPhone = phone.replace(/\D/g, '');
+
+    if (!phone || cleanPhone.length < 11) {
+      setError('Пожалуйста, введите корректный номер телефона');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSendCode = async () => {
+    if (!validatePhone()) {
+      return;
+    }
+
     setIsLoading(true);
+    setError('');
+
     try {
-      setCurrentStep(1);
       const formattedPhone = getFormattedPhone(phone);
       const timeout = await sendCode({ phone: formattedPhone }).unwrap();
       setSendAgainIn(timeout.sendAgainIn);
-      setError('');
-    } catch {
-      setError('Ошибка отправки кода. Попробуйте снова.');
+      setCurrentStep(1);
+    } catch (err: any) {
+      // Handle specific API errors
+      if (err?.status === 429) {
+        setError('Слишком много попыток. Пожалуйста, попробуйте позже.');
+      } else if (err?.status === 400) {
+        setError('Некорректный формат номера телефона');
+      } else if (err?.data?.message) {
+        setError(err.data.message);
+      } else {
+        setError('Ошибка отправки кода. Попробуйте снова.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -67,15 +93,38 @@ export const EnterPhonePage = () => {
     return `Отправить снова (${sendAgainIn} сек)`;
   };
 
+  const validateCode = () => {
+    if (!code || code.length !== 6 || !/^\d+$/.test(code)) {
+      setError('Пожалуйста, введите правильный код подтверждения (6 цифр)');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleConfirmCode = async () => {
-    const formattedPhone = getFormattedPhone(phone);
+    if (!validateCode()) {
+      return;
+    }
 
     setIsLoading(true);
+    setError('');
+
     try {
+      const formattedPhone = getFormattedPhone(phone);
       await confirm({ phone: formattedPhone, code }).unwrap();
       navigate('/enterInfo');
-    } catch (err) {
-      setError('Неверный код подтверждения');
+    } catch (err: any) {
+      // Handle specific API errors
+      if (err?.status === 400) {
+        setError('Неверный код подтверждения');
+      } else if (err?.status === 404) {
+        setError('Код подтверждения истек. Пожалуйста, запросите новый код.');
+      } else if (err?.data?.message) {
+        setError(err.data.message);
+      } else {
+        setError('Ошибка при подтверждении номера. Пожалуйста, попробуйте снова.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -100,6 +149,7 @@ export const EnterPhonePage = () => {
           <button
             onClick={handleSendCode}
             className={sendAgainIn === null || sendAgainIn <= 0 ? styles.activeResend : ''}
+            disabled={sendAgainIn !== null && sendAgainIn > 0}
           >
             {getResendButtonText()}
           </button>
@@ -118,7 +168,15 @@ export const EnterPhonePage = () => {
 
       <CustomButton
         onClick={currentStep === 0 ? handleSendCode : handleConfirmCode}
-        text={isLoading ? 'Отправка...' : currentStep === 0 ? 'Получить код' : 'Подтвердить'}
+        text={
+          isLoading
+            ? currentStep === 0
+              ? 'Отправка...'
+              : 'Проверка...'
+            : currentStep === 0
+              ? 'Получить код'
+              : 'Подтвердить'
+        }
         disabled={isLoading || (currentStep === 0 ? !phone : code.length < 6)}
         className={styles.nextButton}
       />

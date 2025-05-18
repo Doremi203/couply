@@ -67,7 +67,6 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch();
 
-  //TODO
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);
   const { isSupported, permission, subscribe, isInitializing } = usePushNotifications();
@@ -81,6 +80,35 @@ function App() {
       }
     }
   }, [userId, dispatch]);
+
+  // Check for existing geolocation permission
+  useEffect(() => {
+    // Only check if geolocation is available
+    if (navigator.geolocation) {
+      // Use a one-time permission check to set the initial state
+      navigator.permissions
+        .query({ name: 'geolocation' })
+        .then(permissionStatus => {
+          if (permissionStatus.state === 'granted') {
+            localStorage.setItem('userLocationAllowed', 'true');
+          } else if (permissionStatus.state === 'denied') {
+            localStorage.setItem('userLocationAllowed', 'false');
+          }
+
+          // Set up a listener for future changes
+          permissionStatus.onchange = () => {
+            localStorage.setItem(
+              'userLocationAllowed',
+              permissionStatus.state === 'granted' ? 'true' : 'false',
+            );
+          };
+        })
+        .catch(() => {
+          // If permissions API fails, we'll rely on the manual permission setting
+          // in GeoLocationRequest component
+        });
+    }
+  }, []);
 
   // Подписка на push-уведомления только если разрешение уже получено
   useEffect(() => {

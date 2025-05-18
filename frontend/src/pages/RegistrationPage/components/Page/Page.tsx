@@ -14,11 +14,13 @@ export const RegistrationPage = () => {
   const [contactValue, setContactValue] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     contactValue: '',
     password: '',
     confirmPassword: '',
+    general: '',
   });
 
   const { registerAndLogin } = useRegister();
@@ -33,6 +35,7 @@ export const RegistrationPage = () => {
       contactValue: '',
       password: '',
       confirmPassword: '',
+      general: '',
     };
 
     if (!contactValue) {
@@ -66,21 +69,44 @@ export const RegistrationPage = () => {
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
+        setIsLoading(true);
+        setErrors({ contactValue: '', password: '', confirmPassword: '', general: '' });
+
         const registrationData = {
           password,
           ...{ email: contactValue },
         };
 
-        await registerAndLogin(registrationData);
+        const result = await registerAndLogin(registrationData);
 
-        navigate('/enterPhone');
-      } catch (error) {
-        console.error('Registration failed:', error);
-
+        if (result.data) {
+          navigate('/enterPhone');
+        } else if (result.error) {
+          // Handle specific error types
+          if (result.error.includes('email') || result.error.includes('существует')) {
+            setErrors({
+              ...errors,
+              contactValue: result.error,
+            });
+          } else if (result.error.includes('пароль') || result.error.includes('password')) {
+            setErrors({
+              ...errors,
+              password: result.error,
+            });
+          } else {
+            setErrors({
+              ...errors,
+              general: result.error,
+            });
+          }
+        }
+      } catch {
         setErrors({
           ...errors,
-          contactValue: 'Ошибка регистрации. Пожалуйста, попробуйте снова.',
+          general: 'Произошла ошибка при регистрации. Пожалуйста, попробуйте позже.',
         });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -128,13 +154,15 @@ export const RegistrationPage = () => {
             <span className={styles.errorText}>{errors.confirmPassword}</span>
           )}
         </div>
+
+        {errors.general && <div className={styles.generalError}>{errors.general}</div>}
       </div>
 
       <CustomButton
         onClick={handleSubmit}
-        text="Зарегистрироваться"
-        // disabled={isLoading}
+        text={isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
         className={styles.submitButton}
+        disabled={isLoading}
       />
     </div>
   );

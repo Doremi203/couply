@@ -220,6 +220,8 @@ export const ProfileSlider = () => {
     if (!showingAd) {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
+
+      // Use ts-ignore as done elsewhere in the codebase
       //@ts-ignore
       await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
 
@@ -339,7 +341,13 @@ export const ProfileSlider = () => {
 
         setTimeout(() => {
           setCurrentPhotoIndex(0);
-          handleNextUser();
+          if (e.deltaX > 0) {
+            // Swiping right is a like
+            handleLikeUser();
+          } else {
+            // Swiping left is a pass
+            handleNextUser();
+          }
 
           setTimeout(() => {
             setTranslateX(0);
