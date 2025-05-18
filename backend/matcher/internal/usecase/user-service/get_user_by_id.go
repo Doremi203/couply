@@ -13,12 +13,10 @@ func (c *UseCase) GetUserByID(ctx context.Context, req *dto.GetUserByIDV1Request
 		return nil, err
 	}
 
-	downloadablePhotos, err := c.downloadablePhotos(ctx, *user)
+	err = user.GenerateDownloadPhotoURLS(ctx, c.photoURLGenerator)
 	if err != nil {
-		return nil, errors.WrapFail(err, "get downloadable photos")
+		return nil, errors.WrapFail(err, "generate download photo urls")
 	}
-
-	user.Photos = downloadablePhotos
 
 	return &dto.GetUserByIDV1Response{User: user}, nil
 }
