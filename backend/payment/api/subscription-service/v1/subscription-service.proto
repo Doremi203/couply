@@ -82,15 +82,37 @@ service SubscriptionService {
       }
     };
   }
+  rpc CancelSubscriptionV1 (CancelSubscriptionV1Request) returns (CancelSubscriptionV1Response) {
+    option (google.api.http) = {
+      post: "/v1/subscriptions/cancel/by-id"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Отмена подписки";
+      description: "Принимает важные поля для отмены подписки";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreateSubscriptionV1Request {
-  SubscriptionPlan plan = 2;
-  bool auto_renew = 3;
+  SubscriptionPlan plan = 1 [
+    (validate.rules).enum.defined_only = true
+  ];
+  bool auto_renew = 2;
 }
 
 message CreateSubscriptionV1Response {
-  string subscription_id = 1;
+  string subscription_id = 1 ;
   SubscriptionPlan plan = 2;
   SubscriptionStatus status = 3;
   bool auto_renew = 4;
@@ -110,6 +132,14 @@ message GetActiveSubscriptionV1Response {
   google.protobuf.Timestamp end_date = 6;
   repeated string payment_ids = 7;
 }
+
+message CancelSubscriptionV1Request {
+  string subscription_id = 1 [
+    (validate.rules).string.min_len = 1
+  ];
+}
+
+message CancelSubscriptionV1Response {}
 
 enum SubscriptionPlan {
   SUBSCRIPTION_PLAN_UNSPECIFIED = 0;
