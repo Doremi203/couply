@@ -23,6 +23,12 @@ type repo struct {
 }
 
 func (r *repo) Create(ctx context.Context, u user.User) error {
+	var phone *string
+	if u.Phone != "" {
+		phoneStr := string(u.Phone)
+		phone = &phoneStr
+	}
+
 	const query = `
 		INSERT INTO users (id, email, password, phone)
 		VALUES ($1, $2, $3, $4)
@@ -33,7 +39,7 @@ func (r *repo) Create(ctx context.Context, u user.User) error {
 		u.ID,
 		u.Email,
 		u.Password,
-		u.Phone,
+		phone,
 	)
 	if err != nil {
 		return errors.WrapFail(err, "save user")
@@ -94,15 +100,14 @@ func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, err
 
 func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, error) {
 	query := `
-		SELECT id, email, phone, password
+		SELECT id, email, password
 		FROM users
 		WHERE phone = $1
 	`
 	row := r.db.QueryRow(ctx, query, phone)
 
 	var u user.User
-	var p *string
-	err := row.Scan(&u.ID, &u.Email, &p, &u.Password)
+	err := row.Scan(&u.ID, &u.Email, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return user.User{}, errors.Wrapf(
@@ -113,9 +118,7 @@ func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, err
 	case err != nil:
 		return user.User{}, errors.WrapFail(err, "fetch user by email")
 	}
-	if p != nil {
-		u.Phone = user.Phone(*p)
-	}
+	u.Phone = phone
 
 	return u, nil
 }
@@ -130,7 +133,8 @@ func (r *repo) GetByOAuthProviderUserID(ctx context.Context, provider oauth.Prov
 	row := r.db.QueryRow(ctx, query, provider, providerUserID)
 
 	var u user.User
-	err := row.Scan(&u.ID, &u.Email, &u.Phone, &u.Password)
+	var phone *string
+	err := row.Scan(&u.ID, &u.Email, &phone, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return user.User{}, errors.Wrapf(
@@ -142,6 +146,9 @@ func (r *repo) GetByOAuthProviderUserID(ctx context.Context, provider oauth.Prov
 
 	case err != nil:
 		return user.User{}, errors.WrapFail(err, "fetch oauth account by provider and provider user id")
+	}
+	if phone != nil {
+		u.Phone = user.Phone(*phone)
 	}
 
 	return u, nil
