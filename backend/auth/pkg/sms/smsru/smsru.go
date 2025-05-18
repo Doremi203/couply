@@ -59,7 +59,7 @@ func (s *sender) Send(ctx context.Context, text, phoneE164 string) error {
 		query["test"] = "1"
 		s.logger.Infof(
 			"Sending %v to %v",
-			errors.Token("msg", text),
+			errors.Token("code", text),
 			errors.Token("phone", phoneE164),
 		)
 	}
