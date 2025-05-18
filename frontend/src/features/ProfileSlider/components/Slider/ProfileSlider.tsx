@@ -65,7 +65,6 @@ const getDefaultFilter = () => {
     maxAge: 100,
     minHeight: 100,
     maxHeight: 250,
-    distance: 100,
     minDistanceKm: 0,
     maxDistanceKm: 100,
     goal: Goal.unspecified,
@@ -290,19 +289,31 @@ export const ProfileSlider = () => {
 
   const handleNextPhoto = () => {
     if (currentIndex < 0 || currentIndex >= profiles.length) return;
+    if (showingAd) return;
 
     const currentUser = profiles[currentIndex];
-    //@ts-ignore
-    setCurrentPhotoIndex(prevIndex => (prevIndex + 1) % currentUser.photos.length);
+    // Check if photos array exists and has more than one photo
+    //@ts-ignore - Needed to handle possible ad profile case
+    if (!currentUser?.user?.photos || currentUser.user.photos.length <= 1) return;
+
+    //@ts-ignore - Needed to handle possible ad profile case
+    setCurrentPhotoIndex(prevIndex => (prevIndex + 1) % currentUser.user.photos.length);
   };
 
   const handlePrevPhoto = () => {
     if (currentIndex < 0 || currentIndex >= profiles.length) return;
+    if (showingAd) return;
 
+    //@ts-ignore - Needed to handle possible ad profile case
     const currentUser = profiles[currentIndex];
+    // Check if photos array exists and has more than one photo
+    //@ts-ignore - Needed to handle possible ad profile case
+    if (!currentUser?.user?.photos || currentUser.user.photos.length <= 1) return;
+
+    //@ts-ignore - Needed to handle possible ad profile case
     setCurrentPhotoIndex(
-      //@ts-ignore
-      prevIndex => (prevIndex - 1 + currentUser.photos.length) % currentUser.photos.length,
+      prevIndex =>
+        (prevIndex - 1 + currentUser.user.photos.length) % currentUser.user.photos.length,
     );
   };
 
@@ -420,10 +431,10 @@ export const ProfileSlider = () => {
         console.log(currentProfile);
 
         //@ts-ignore
-        if (currentProfile.user.bio.length > 0 && currentProfile.user.bio.length <= 50) {
+        if (currentProfile.user.bio?.length > 0 && currentProfile.user.bio?.length <= 50) {
           bioLines = 1;
           //@ts-ignore
-        } else if (currentProfile.user.bio.length > 50) {
+        } else if (currentProfile.user.bio?.length > 50) {
           bioLines = 2;
         }
 
@@ -438,7 +449,7 @@ export const ProfileSlider = () => {
           <>
             {renderName(nameClass)}
             {/** @ts-ignore */}
-            <div className={styles.bio}>{currentProfile.user.bio}</div>
+            <div className={styles.bio}>{currentProfile.user.bio || ''}</div>
           </>
         );
       }
@@ -462,11 +473,11 @@ export const ProfileSlider = () => {
             <div className={styles.interests}>
               <div className={styles.interestsList}>
                 {/** @ts-ignore */}
-                {currentProfile.user.interests.slice(0, 3).map((interest, index) => (
+                {currentProfile.user.interests?.slice?.(0, 3)?.map?.((interest, index) => (
                   <span key={index} className={styles.interestTag}>
                     {interest}
                   </span>
-                ))}
+                )) || null}
               </div>
             </div>
           </>
@@ -494,7 +505,7 @@ export const ProfileSlider = () => {
 
   const isAd = showingAd;
 
-  console.log(currentProfile);
+  console.log(currentProfile?.user?.name, currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (
@@ -516,7 +527,7 @@ export const ProfileSlider = () => {
             )}
             <img
               //@ts-ignore
-              src={currentProfile.user.photos[currentPhotoIndex].url}
+              src={currentProfile.user?.photos?.[currentPhotoIndex]?.url || ''}
               // src="man1.jpg"
               alt={currentProfile.name}
               className={styles.profileImage}
@@ -556,8 +567,8 @@ export const ProfileSlider = () => {
 
             {!isAd && (
               <div className={styles.photoCounter}>
-                {/**@ts-ignore */}
-                {currentPhotoIndex + 1}/{currentProfile.user.photos.length}
+                {/*//@ts-ignore - Handling potential undefined photos array */}
+                {currentPhotoIndex + 1}/{currentProfile?.user?.photos?.length || 1}
               </div>
             )}
           </div>
