@@ -43,14 +43,15 @@ message BasicLoginResponseV1 {
 message OAuthLoginV1Request {
   string provider = 1;
   string access_token = 2;
-  string token_type = 3;
-  string expires_in = 4;
-  string scope = 5;
-  string state = 6;
+  string code = 3;
+  string token_type = 4;
+  string expires_in = 5;
+  string scope = 6;
+  string state = 7;
 
-  string error = 7;
-  string error_description = 8;
-  string error_uri = 9;
+  string error = 8;
+  string error_description = 9;
+  string error_uri = 10;
 }
 
 message OAuthLoginV1Response {

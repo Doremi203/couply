@@ -10,42 +10,62 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/tx"
 )
 
+type OAuthV1Response struct {
+	Token        token.Token
+	IsFirstLogin bool
+}
+
 func (u UseCase) OAuthV1(
 	ctx context.Context,
 	req oauth.Request,
-) (token.Token, error) {
-	oauthInfoFetcher, err := u.oauthInfoFetcherFactory.New(req.Provider)
+) (OAuthV1Response, error) {
+	oauthProvider, err := u.oauthProviderFactory.New(req.Provider)
 	if err != nil {
-		return token.Token{}, errors.WrapFailf(
+		return OAuthV1Response{}, errors.WrapFailf(
 			err,
 			"create oauth info fetcher for %v",
 			errors.Token("provider", req.Provider),
 		)
 	}
 
-	oauthInfo, err := oauthInfoFetcher.Fetch(ctx, req.AccessToken)
+	accessToken := req.AccessToken
+	if accessToken == "" {
+		accessToken, err = oauthProvider.ExchangeCodeForToken(ctx, req.Code, req.State)
+		if err != nil {
+			return OAuthV1Response{}, errors.WrapFailf(
+				err,
+				"exchange code for token from %v",
+				errors.Token("provider", req.Provider),
+			)
+		}
+	}
+
+	oauthInfo, err := oauthProvider.FetchUserInfo(ctx, accessToken)
 	if err != nil {
-		return token.Token{}, errors.WrapFailf(
+		return OAuthV1Response{}, errors.WrapFailf(
 			err,
 			"fetch oauth info for user from %v",
 			errors.Token("provider", req.Provider),
 		)
 	}
 
+	ret := OAuthV1Response{}
+
 	usr, err := u.userRepo.GetByOAuthProviderUserID(ctx, req.Provider, oauthInfo.ProviderUserID)
 	switch {
 	case errors.Is(err, user.ErrNotFound):
 		usr, err = u.createUser(ctx, req.Provider, oauthInfo)
 		if err != nil {
-			return token.Token{}, errors.WrapFailf(
+			return OAuthV1Response{}, errors.WrapFailf(
 				err,
 				"create user with %v",
 				errors.Token("provider_user_id", oauthInfo.ProviderUserID),
 			)
 		}
+		ret.IsFirstLogin = true
 
 	case err != nil:
-		return token.Token{}, errors.WrapFailf(
+		return OAuthV1Response{}, errors.WrapFailf(
 			err,
 			"get user by %v",
 			errors.Token("provider_user_id", oauthInfo.ProviderUserID),
@@ -54,16 +74,16 @@ func (u UseCase) OAuthV1(
 
 	t, err := u.tokenIssuer.Issue(usr)
 	if err != nil {
-		return token.Token{}, errors.WrapFailf(err, "issue token")
+		return OAuthV1Response{}, errors.WrapFailf(err, "issue token")
 	}
+	ret.Token = t
 
-	return t, nil
+	return ret, nil
 }
 
-// Write method for creating a new user
 func (u UseCase) createUser(
 	ctx context.Context,
-	provider oauth.Provider,
+	provider oauth.ProviderType,
 	oauthInfo oauth.UserInfo,
 ) (user.User, error) {
 	ctx, err := u.txProvider.ContextWithTx(ctx, tx.IsolationReadCommitted)

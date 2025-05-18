@@ -13,11 +13,11 @@ type Repo interface {
 	UpdatePhone(context.Context, ID, Phone) error
 	GetByEmail(context.Context, Email) (User, error)
 	GetByPhone(context.Context, Phone) (User, error)
-	GetByOAuthProviderUserID(context.Context, oauth.Provider, oauth.ProviderUserID) (User, error)
+	GetByOAuthProviderUserID(context.Context, oauth.ProviderType, oauth.ProviderUserID) (User, error)
 }
 
 type OAuthAccountRepo interface {
 	Create(context.Context, OAuthAccount) error
-	GetByProviderUserID(context.Context, oauth.Provider, oauth.ProviderUserID) (OAuthAccount, error)
+	GetByProviderUserID(context.Context, oauth.ProviderType, oauth.ProviderUserID) (OAuthAccount, error)
 	GetByUserID(context.Context, ID) (OAuthAccount, error)
 }

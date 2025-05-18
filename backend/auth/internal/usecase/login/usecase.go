@@ -13,7 +13,7 @@ import (
 func NewUseCase(
 	userRepo user.Repo,
 	userOAuthAccountRepo user.OAuthAccountRepo,
-	oauthInfoFetcherFactory oauth.InfoFetcherFactory,
+	oauthInfoFetcherFactory oauth.ProviderFactory,
 	hashProvider hash.Provider,
 	tokenIssuer token.Issuer,
 	txProvider tx.Provider,
@@ -21,24 +21,24 @@ func NewUseCase(
 	uuidProvider uuid.Provider,
 ) UseCase {
 	return UseCase{
-		userRepo:                userRepo,
-		userOAuthAccountRepo:    userOAuthAccountRepo,
-		oauthInfoFetcherFactory: oauthInfoFetcherFactory,
-		hashProvider:            hashProvider,
-		tokenIssuer:             tokenIssuer,
-		txProvider:              txProvider,
-		logger:                  logger,
-		uuidProvider:            uuidProvider,
+		userRepo:             userRepo,
+		userOAuthAccountRepo: userOAuthAccountRepo,
+		oauthProviderFactory: oauthInfoFetcherFactory,
+		hashProvider:         hashProvider,
+		tokenIssuer:          tokenIssuer,
+		txProvider:           txProvider,
+		logger:               logger,
+		uuidProvider:         uuidProvider,
 	}
 }
 
 type UseCase struct {
-	userRepo                user.Repo
-	userOAuthAccountRepo    user.OAuthAccountRepo
-	oauthInfoFetcherFactory oauth.InfoFetcherFactory
-	hashProvider            hash.Provider
-	tokenIssuer             token.Issuer
-	txProvider              tx.Provider
-	logger                  log.Logger
-	uuidProvider            uuid.Provider
+	userRepo             user.Repo
+	userOAuthAccountRepo user.OAuthAccountRepo
+	oauthProviderFactory oauth.ProviderFactory
+	hashProvider         hash.Provider
+	tokenIssuer          token.Issuer
+	txProvider           tx.Provider
+	logger               log.Logger
+	uuidProvider         uuid.Provider
 }

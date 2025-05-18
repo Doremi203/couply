@@ -9,21 +9,84 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-func newYandexFetcher() *yandexFetcher {
+type YandexConfig struct {
+	ClientID     string `secret:"oauth-yandex-client-id"`
+	ClientSecret string `secret:"oauth-yandex-client-secret"`
+}
+
+func newYandexProvider(config YandexConfig) *yandexProvider {
 	client := resty.New().
 		SetRetryCount(3).
 		SetRetryWaitTime(1 * time.Second).
 		SetRetryMaxWaitTime(5 * time.Second)
-	return &yandexFetcher{client: client}
+	return &yandexProvider{
+		config: config,
+		client: client,
+	}
 }
 
-type yandexFetcher struct {
+type yandexProvider struct {
+	config YandexConfig
 	client *resty.Client
 }
 
-func (f *yandexFetcher) Fetch(ctx context.Context, token Token) (UserInfo, error) {
-	var apiResp apiResponse
-	resp, err := f.client.R().
+func (p *yandexProvider) ExchangeCodeForToken(ctx context.Context, code Code, state State) (Token, error) {
+	var accessTokenResponse accessTokenOKResponse
+	var errorResponse accessTokenErrorResponse
+
+	formData := map[string]string{
+		"grant_type":    "authorization_code",
+		"code":          string(code),
+		"client_id":     p.config.ClientID,
+		"client_secret": p.config.ClientSecret,
+	}
+	if state != "" {
+		formData["state"] = string(state)
+	}
+
+	resp, err := p.client.R().
+		SetContext(ctx).
+		SetHeader("Content-Type", "application/x-www-form-urlencoded").
+		SetFormData(formData).
+		SetResult(&accessTokenResponse).
+		SetError(&errorResponse).
+		Post("https://oauth.yandex.ru/token")
+	if err != nil {
+		return "", errors.Wrapf(
+			err,
+			"failed to exchange code for token from %v",
+			errors.Token("provider", YandexProvider),
+		)
+	}
+	if !resp.IsSuccess() {
+		return "", errors.Errorf(
+			"got unsuccessful %v from %v api: %v %v",
+			errors.Token("status_code", resp.StatusCode()),
+			errors.Token("provider", YandexProvider),
+			errors.Token("error", errorResponse.Error),
+			errors.Token("error_description", errorResponse.ErrorDescription),
+		)
+	}
+
+	return Token(accessTokenResponse.AccessToken), nil
+}
+
+type accessTokenOKResponse struct {
+	TokenType    string `json:"token_type"`
+	AccessToken  string `json:"access_token"`
+	ExpiresIn    int64  `json:"expires_in"`
+	RefreshToken string `json:"refresh_token"`
+	Scope        string `json:"scope"`
+}
+
+type accessTokenErrorResponse struct {
+	ErrorDescription string `json:"error_description"`
+	Error            string `json:"error"`
+}
+
+func (p *yandexProvider) FetchUserInfo(ctx context.Context, token Token) (UserInfo, error) {
+	var apiResp userInfoResponse
+	resp, err := p.client.R().
 		SetContext(ctx).
 		SetHeader("Authorization", fmt.Sprintf("OAuth %s", token)).
 		SetResult(&apiResp).
@@ -69,7 +132,7 @@ func (f *yandexFetcher) Fetch(ctx context.Context, token Token) (UserInfo, error
 	}, nil
 }
 
-type apiResponse struct {
+type userInfoResponse struct {
 	Id           string   `json:"id"`
 	Login        string   `json:"login"`
 	ClientId     string   `json:"client_id"`

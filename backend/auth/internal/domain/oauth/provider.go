@@ -6,24 +6,33 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 
-type Provider string
+type ProviderType string
 
 const (
-	YandexProvider Provider = "yandex"
+	YandexProvider ProviderType = "yandex"
 )
 
 type ProviderUserID string
 
-type InfoFetcher interface {
-	Fetch(context.Context, Token) (UserInfo, error)
+type Provider interface {
+	ExchangeCodeForToken(context.Context, Code, State) (Token, error)
+	FetchUserInfo(context.Context, Token) (UserInfo, error)
 }
 
-type InfoFetcherFactory struct{}
+func NewProviderFactory(yandexConfig YandexConfig) ProviderFactory {
+	return ProviderFactory{
+		yandexConfig: yandexConfig,
+	}
+}
 
-func (InfoFetcherFactory) New(provider Provider) (InfoFetcher, error) {
+type ProviderFactory struct {
+	yandexConfig YandexConfig
+}
+
+func (f ProviderFactory) New(provider ProviderType) (Provider, error) {
 	switch provider {
 	case YandexProvider:
-		return newYandexFetcher(), nil
+		return newYandexProvider(f.yandexConfig), nil
 	default:
 		return nil, errors.Errorf("unknown %v", errors.Token("provider_name", provider))
 	}

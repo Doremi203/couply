@@ -52,7 +52,7 @@ func (r *oauthAccountRepo) Create(ctx context.Context, account user.OAuthAccount
 
 func (r *oauthAccountRepo) GetByProviderUserID(
 	ctx context.Context,
-	provider oauth.Provider,
+	provider oauth.ProviderType,
 	providerUserID oauth.ProviderUserID,
 ) (user.OAuthAccount, error) {
 	const query = `
