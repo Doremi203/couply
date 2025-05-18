@@ -43,6 +43,12 @@ runs:
         SECRET_KEY=$(/opt/yc/bin/yc lockbox payload get --name aws-testing --key aws-secret-key)
         ./mc alias set ycs3 https://storage.yandexcloud.net $ACCESS_KEY $SECRET_KEY
 
+    - name: Debug build directory
+      shell: bash
+      run: |
+        echo "Listing build dir:"
+        ls -lR ./${{ inputs.build-dir }}
+
     - name: Deploy to MinIO
       shell: bash
       run: |
