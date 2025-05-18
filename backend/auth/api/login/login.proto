@@ -24,8 +24,8 @@ service Login {
       get: "/v1/login/oauth/{provider}"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      summary: "Вход с помощью почты/телефона и пароля";
-      description: "Выдает токен пользователя в обмен на почту/телефон и пароль";
+      summary: "Redirect endpoint для OAuth провайдеров";
+      description: "Выдает токен пользователя в обмен на access_token от OAuth провайдера";
     };
   }
 }
