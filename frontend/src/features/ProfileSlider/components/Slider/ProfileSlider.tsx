@@ -587,7 +587,11 @@ export const ProfileSlider = () => {
         />
       )}
 
-      <ComplaintModal isOpen={complaintOpen} onClose={() => setComplaintOpen(false)} />
+      <ComplaintModal
+        isOpen={complaintOpen}
+        onClose={() => setComplaintOpen(false)}
+        targetUserId={profiles[currentIndex].user.id}
+      />
       <MessageModal
         isOpen={messageOpen}
         onClose={() => setMessageOpen(false)}

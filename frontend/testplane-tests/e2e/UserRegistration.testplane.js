@@ -108,7 +108,7 @@ describe('User Registration Scenario', () => {
     await browser.pause(500);
     try {
       await browser.acceptAlert();
-    } catch (error) {
+    } catch {
       console.log('No alert present, continuing test');
     }
 

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { usePushNotifications } from '../../../../shared/lib/hooks/usePushNotifications';
+
 import styles from './pushToggle.module.css';
 
 interface PushToggleProps {

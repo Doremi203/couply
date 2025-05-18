@@ -13,20 +13,22 @@ import {
   TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { useCreateComplaintMutation } from '../../../../entities/blocker';
+import { reportOptions, reportToApi } from '../../../../entities/blocker/constants';
 
-const reportReasons = [
-  'Спам',
-  'Фейковый профиль',
-  'Оскорбительное поведение',
-  'Неприемлемый контент',
-  'Возраст',
-  'Другая причина',
-];
+const reportReasons = Object.values(reportOptions);
 
-//@ts-ignore
-export const ComplaintModal = ({ isOpen, onClose }) => {
+export interface ComplaintModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  targetUserId: string;
+}
+
+export const ComplaintModal = ({ isOpen, onClose, targetUserId }: ComplaintModalProps) => {
   const [selectedReason, setSelectedReason] = useState('');
   const [customText, setCustomText] = useState('');
+
+  const [createComplaint] = useCreateComplaintMutation();
 
   useEffect(() => {
     if (!isOpen) {
@@ -37,6 +39,13 @@ export const ComplaintModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = () => {
     if (!selectedReason && !customText) return;
+
+    createComplaint({
+      targetUserId: targetUserId,
+      //@ts-ignore
+      reasons: [reportToApi[selectedReason]],
+      message: customText,
+    });
 
     onClose();
   };
