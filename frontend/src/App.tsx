@@ -70,7 +70,7 @@ function App() {
   //TODO
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);
-  const { isSupported, permission, initialize, isInitializing } = usePushNotifications();
+  const { isSupported, permission, subscribe, isInitializing } = usePushNotifications();
 
   // Load userId from localStorage on initial load
   useEffect(() => {
@@ -82,14 +82,14 @@ function App() {
     }
   }, [userId, dispatch]);
 
-  // Инициализация push-уведомлений только если разрешение уже получено
+  // Подписка на push-уведомления только если разрешение уже получено
   useEffect(() => {
     if (isSupported && permission === 'granted' && !isInitializing) {
-      initialize(userId || 'user123').then(success => {
-        console.log('Push notifications initialized:', success);
+      subscribe().then(success => {
+        console.log('Push notifications subscription status:', success);
       });
     }
-  }, [isSupported, permission, isInitializing, initialize, userId]);
+  }, [isSupported, permission, isInitializing, subscribe]);
 
   return (
     <ThemeProvider>

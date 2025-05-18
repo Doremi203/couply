@@ -7,7 +7,8 @@ const PUBLIC_VAPID_KEY =
   'BLBz-HVJLnXooDAeahFWQK8qQwJgm8Tw0HOTW_-qTINeW5-3CRe7NKfXWGNzCj_y7A6qYSHJZsYYCwL1Vd4kSFo';
 
 // URL для отправки подписки на сервер
-const SUBSCRIPTION_ENDPOINT = 'https://api.example.com/push-subscriptions';
+const SUBSCRIPTION_ENDPOINT = '/v1/push/subscribe';
+const UNSUBSCRIPTION_ENDPOINT = '/v1/push/unsubscribe';
 
 /**
  * Проверяет поддержку push-уведомлений в браузере
@@ -67,17 +68,24 @@ export const createPushSubscription = async (
  */
 export const sendSubscriptionToServer = async (
   subscription: PushSubscription,
-  userId: string,
+  _userId: string, // Unused parameter but kept for API compatibility
 ): Promise<boolean> => {
   try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('User token not found');
+    }
+
     const response = await fetch(SUBSCRIPTION_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'User-Token': token,
       },
       body: JSON.stringify({
-        subscription,
-        userId,
+        endpoint: subscription.endpoint,
+        p256dh: btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('p256dh') as ArrayBuffer))),
+        authKey: btoa(String.fromCharCode(...new Uint8Array(subscription.getKey('auth') as ArrayBuffer))),
       }),
     });
 
@@ -89,6 +97,45 @@ export const sendSubscriptionToServer = async (
     return true;
   } catch (error) {
     console.error('Error sending subscription to server:', error);
+    return false;
+  }
+};
+
+/**
+ * Отправляет запрос на отписку от push-уведомлений
+ */
+export const unsubscribeFromPushNotifications = async (
+  subscription: PushSubscription,
+): Promise<boolean> => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('User token not found');
+    }
+
+    // Отправляем запрос на сервер для отписки
+    const response = await fetch(UNSUBSCRIPTION_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Token': token,
+      },
+      body: JSON.stringify({
+        endpoint: subscription.endpoint,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to unsubscribe from server');
+    }
+
+    // Отписываемся на стороне браузера
+    await subscription.unsubscribe();
+
+    console.log('Successfully unsubscribed from push notifications');
+    return true;
+  } catch (error) {
+    console.error('Error unsubscribing from push notifications:', error);
     return false;
   }
 };

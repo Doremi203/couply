@@ -5,6 +5,7 @@ import { Switch } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
 import { useTheme } from '../../../../shared/lib/context/ThemeContext';
+import { usePushNotifications } from '../../../../shared/lib/hooks/usePushNotifications';
 
 import styles from './notificationSettings.module.css';
 
@@ -21,6 +22,7 @@ interface NotificationSettingsProps {
 
 export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ className }) => {
   const { theme, toggleTheme } = useTheme();
+  const { isSupported, isSubscribed, subscribe, unsubscribe } = usePushNotifications();
   const [notifications, setNotifications] = useState<NotificationOption[]>([]);
 
   useEffect(() => {
@@ -29,7 +31,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         id: 'push',
         label: 'Push-уведомления',
         icon: <NotificationsIcon />,
-        enabled: true,
+        enabled: isSubscribed,
       },
       {
         id: 'theme',
@@ -45,11 +47,21 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         enabled: theme.isDark, //TODO
       },
     ]);
-  }, [theme]);
+  }, [theme, isSubscribed]);
 
-  const handleToggle = (id: string) => {
+  const handleToggle = async (id: string) => {
     if (id === 'theme') {
       toggleTheme();
+    } else if (id === 'push') {
+      if (isSupported) {
+        if (isSubscribed) {
+          await unsubscribe();
+        } else {
+          await subscribe();
+        }
+      } else {
+        alert('Ваш браузер не поддерживает push-уведомления');
+      }
     } else {
       setNotifications(prev =>
         prev.map(notification =>
@@ -70,8 +82,13 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
             <span className={styles.label}>{notification.label}</span>
           </div>
           <Switch
-            //@ts-ignore
-            checked={notification.id === 'theme' ? theme.isDark : notification.enabled}
+            checked={
+              notification.id === 'theme'
+                ? theme === 'dark'
+                : notification.id === 'push'
+                  ? isSubscribed
+                  : notification.enabled
+            }
             onChange={() => handleToggle(notification.id)}
             color="primary"
             className={styles.switch}

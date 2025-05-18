@@ -1,15 +1,14 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useState, useRef } from 'react';
-// import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { useUploadFileToS3Mutation } from '../../../../entities/photo/api/photoApi';
 import { Gender } from '../../../../entities/user/api/constants';
 import {
   useConfirmPhotoMutation,
   useCreateUserMutation,
 } from '../../../../entities/user/api/userApi';
-// import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
@@ -50,6 +49,17 @@ export const EnterInfoPage = () => {
 
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
     setCoords(coordinates);
+  };
+
+  const [uploadFile] = useUploadFileToS3Mutation();
+
+  const handleUpload = async (uploadUrl: string, file: File) => {
+    try {
+      await uploadFile({ url: uploadUrl, file }).unwrap();
+      console.log('Файл успешно загружен!');
+    } catch (error) {
+      console.error('Ошибка загрузки:', error);
+    }
   };
 
   const nextStep = async () => {
@@ -103,25 +113,49 @@ export const EnterInfoPage = () => {
         //@ts-ignore
         const response = await createUser(userData).unwrap();
 
-        //TODO
-        //@ts-ignore
-        if (response.photoUploadResponses) {
-          // Загружаем каждое фото на соответствующий URL
-          await Promise.all(
-            //@ts-ignore
-            response.photoUploadResponses.map(async (resp: any) => {
-              const photo = userPhotos[resp.orderNumber];
-              if (!photo) return;
+        // if (response.photoUploadResponses) {
+        //   await Promise.all(
+        //     response.photoUploadResponses.map(async (resp: any) => {
+        //       const photo = userPhotos[resp.orderNumber];
+        //       if (!photo) return;
 
-              await fetch(resp.uploadUrl, {
-                method: 'PUT',
-                //@ts-ignore
-                body: photo.file,
-                headers: {
-                  //@ts-ignore
-                  'Content-Type': photo.file.type,
-                },
-              });
+        //       console.log(photo);
+
+        //       try {
+        //         const uploadResponse = await fetch(resp.uploadUrl, {
+        //           method: 'PUT',
+        //           body: photo.file,
+        //           headers: {
+        //             'Content-Type': photo.file.type,
+        //           },
+        //         });
+
+        //         if (!uploadResponse.ok) {
+        //           throw new Error(`Upload failed: ${uploadResponse.statusText}`);
+        //         }
+
+        //         console.log('File uploaded successfully');
+        //       } catch (error) {
+        //         console.error('Error uploading file:', error);
+        //       }
+        //     }),
+        //   );
+        // }
+
+        if (response.photoUploadResponses) {
+          await Promise.all(
+            response.photoUploadResponses.map(async resp => {
+              const photo = userPhotos[resp.orderNumber];
+              if (!photo?.file) return;
+
+              try {
+                await uploadFile({
+                  url: resp.uploadUrl,
+                  file: photo.file,
+                }).unwrap();
+              } catch (error) {
+                console.error(`Ошибка загрузки файла ${photo.file.name}:`, error);
+              }
             }),
           );
         }
