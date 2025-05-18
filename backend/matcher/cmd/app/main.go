@@ -84,8 +84,8 @@ func main() {
 
 		pgStorageSearch := search.NewPgStorageSearch(txManager)
 		storageFacadeSearch := search_service_facade.NewStorageFacadeSearch(txManager, pgStorageSearch, pgStorageUser)
-		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch)
-		implSearchService := search_service.NewImplementation(app.Log, useCaseSearchService)
+		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch, photoURLGenerator, app.Log)
+		implSearchService := search_service.NewImplementation(app.Log, useCaseSearchService, photoURLGenerator)
 
 		app.AddGRPCUnaryInterceptor(
 			token.NewUnaryTokenInterceptor(

@@ -4,9 +4,8 @@ import (
 	"context"
 	"math"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
-	"github.com/Doremi203/couply/backend/matcher/internal/logger"
-
 	"github.com/Doremi203/couply/backend/matcher/utils"
 
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
@@ -33,7 +32,15 @@ func (c *UseCase) SearchUsers(ctx context.Context, in *dto.SearchUsersV1Request)
 		dist, ok := distances[u.ID]
 		if !ok {
 			// TODO: решить что делать
-			logger.Warnf(ctx, "no distance found for user %s", u.GetID())
+			c.logger.Warn(errors.Errorf(
+				"no distance found for %v",
+				errors.Token("user_id", u.ID),
+			))
+		}
+
+		err = u.GenerateDownloadPhotoURLS(ctx, c.photoURLGenerator)
+		if err != nil {
+			c.logger.Warn(errors.WrapFail(err, "get download urls user photos"))
 		}
 
 		response = append(response, &search.UserSearchInfo{

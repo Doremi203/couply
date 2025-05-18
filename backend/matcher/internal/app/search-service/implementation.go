@@ -5,6 +5,7 @@ import (
 
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -20,17 +21,20 @@ type searchServiceUseCase interface {
 
 type Implementation struct {
 	desc.UnimplementedSearchServiceServer
-	usecase searchServiceUseCase
-	logger  log.Logger
+	usecase           searchServiceUseCase
+	photoURLGenerator user.PhotoURLGenerator
+	logger            log.Logger
 }
 
 func NewImplementation(
 	logger log.Logger,
 	usecase searchServiceUseCase,
+	photoURLGenerator user.PhotoURLGenerator,
 ) *Implementation {
 	return &Implementation{
-		logger:  logger,
-		usecase: usecase,
+		logger:            logger,
+		usecase:           usecase,
+		photoURLGenerator: photoURLGenerator,
 	}
 }
 

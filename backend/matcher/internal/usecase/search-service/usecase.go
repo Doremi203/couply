@@ -3,6 +3,7 @@ package search_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -20,8 +21,18 @@ type searchStorageFacade interface {
 
 type UseCase struct {
 	searchStorageFacade searchStorageFacade
+	photoURLGenerator   user.PhotoURLGenerator
+	logger              log.Logger
 }
 
-func NewUseCase(searchStorageFacade searchStorageFacade) *UseCase {
-	return &UseCase{searchStorageFacade: searchStorageFacade}
+func NewUseCase(
+	searchStorageFacade searchStorageFacade,
+	photoURLGenerator user.PhotoURLGenerator,
+	logger log.Logger,
+) *UseCase {
+	return &UseCase{
+		searchStorageFacade: searchStorageFacade,
+		photoURLGenerator:   photoURLGenerator,
+		logger:              logger,
+	}
 }

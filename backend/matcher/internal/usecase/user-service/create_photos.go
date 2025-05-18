@@ -15,7 +15,7 @@ func (c *UseCase) createPhotos(ctx context.Context, userID uuid.UUID, requests [
 		photo := user.Photo{
 			UserID:      userID,
 			OrderNumber: req.OrderNumber,
-			ObjectKey:   fmt.Sprintf("users/%s/slots/%d.%s", userID, req.OrderNumber, req.MimeType),
+			ObjectKey:   fmt.Sprintf("users/%s/slot/%d.jpg", userID, req.OrderNumber),
 			MimeType:    req.MimeType,
 		}
 
@@ -35,27 +35,4 @@ func (c *UseCase) createPhotos(ctx context.Context, userID uuid.UUID, requests [
 	}
 
 	return photos, nil
-}
-
-func (c *UseCase) downloadablePhotos(ctx context.Context, u user.User) ([]user.Photo, error) {
-	ret := make([]user.Photo, 0, len(u.Photos))
-	for _, photo := range u.Photos {
-		if photo.UploadedAt == nil {
-			continue
-		}
-		downloadURL, err := c.photoURLGenerator.GenerateDownload(ctx, photo.ObjectKey)
-		if err != nil {
-			return nil, errors.WrapFailf(
-				err,
-				"generate download url for photo with %v and user with %v",
-				errors.Token("order_number", photo.OrderNumber),
-				errors.Token("user_id", photo.UserID),
-			)
-		}
-
-		photo.DownloadURL = &downloadURL
-		ret = append(ret, photo)
-	}
-
-	return ret, nil
 }
