@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 
+import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
 import { useUpdateUserMutation } from '../../entities/user';
+import { useConfirmPhotoMutation } from '../../entities/user/api/userApi';
 import {
   alcoholOptions,
   alcoholToApi,
@@ -32,6 +34,13 @@ export interface EditProfileProps {
   onPhotoRemove: (index: number) => void;
 }
 
+// Interface for photo objects
+interface PhotoItem {
+  file: File;
+  url: string;
+  orderNumber: number;
+}
+
 export const EditProfile: React.FC<EditProfileProps> = ({
   profileData,
   onBack,
@@ -39,6 +48,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   onPhotoRemove,
 }) => {
   const [updateUser] = useUpdateUserMutation();
+  const [uploadFile] = useUploadFileToS3Mutation();
+  const [confirmPhoto] = useConfirmPhotoMutation();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAvatarUpload, setIsAvatarUpload] = useState(false);
 
@@ -50,6 +62,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [bio, setBio] = useState(profileData.bio || '');
   const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
+
+  // Store photo files for upload
+  const [photoFiles, setPhotoFiles] = useState<PhotoItem[]>([]);
 
   const MAX_PHOTOS = 6;
 
@@ -80,7 +95,20 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         return;
       }
 
-      onPhotoAdd(files[0], isAvatarUpload);
+      const file = files[0];
+      const fileUrl = URL.createObjectURL(file);
+
+      // Store the file for later upload
+      const orderNumber = photoFiles.length;
+      const newPhotoItem = {
+        file,
+        url: fileUrl,
+        orderNumber,
+      };
+      setPhotoFiles(prev => [...prev, newPhotoItem]);
+
+      // Add the photo to UI
+      onPhotoAdd(file, isAvatarUpload);
       event.target.value = '';
     }
   };
@@ -116,6 +144,74 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
   const handleVisibilityChange = () => {
     setIsHidden(!isHidden);
+  };
+
+  // Function to handle saving profile data and uploading photos
+  const handleSave = async () => {
+    try {
+      // Prepare photo upload requests if there are photos to upload
+      const photoUploadRequests =
+        photoFiles.length > 0
+          ? photoFiles.map(photo => ({
+              orderNumber: photo.orderNumber,
+              mimeType: photo.file.type,
+            }))
+          : undefined;
+
+      // First update the user profile data with photoUploadRequests
+      const userData = {
+        name: profileData.name,
+        age: profileData.age,
+        bio: bio,
+        isHidden: isHidden,
+        //@ts-ignore
+        children: childrenToApi[selectedChildren],
+        //@ts-ignore
+        alcohol: alcoholToApi[selectedAlcohol],
+        //@ts-ignore
+        smoking: smokingToApi[selectedSmoking],
+        //@ts-ignore
+        goal: goalToApi[selectedGoal],
+        interests: mapInterestsToBackendFormat(selectedInterests),
+        height: profileData.height,
+        // Include photoUploadRequests directly in the userData object
+        photoUploadRequests,
+      };
+
+      // Update basic user data
+      // @ts-ignore - The API seems to work differently in practice vs type definition
+      const response: any = await updateUser(userData).unwrap();
+
+      // If we have photos to upload and received upload URLs
+      if (photoFiles.length > 0 && response && response.photoUploadResponses) {
+        // Upload each photo to S3 using the provided URLs
+        await Promise.all(
+          response.photoUploadResponses.map(
+            async (resp: { orderNumber: number; uploadUrl: string }) => {
+              const photo = photoFiles.find(p => p.orderNumber === resp.orderNumber);
+              if (!photo?.file) return;
+
+              try {
+                await uploadFile({
+                  url: resp.uploadUrl,
+                  file: photo.file,
+                }).unwrap();
+              } catch (error) {
+                console.error('Error uploading file:', error);
+              }
+            },
+          ),
+        );
+
+        // Confirm photos after upload
+        const orderNumbers = photoFiles.map(photo => photo.orderNumber);
+        await confirmPhoto({ orderNumbers }).unwrap();
+      }
+
+      onBack();
+    } catch (error) {
+      console.error('Failed to save profile data:', error);
+    }
   };
 
   return (
@@ -192,35 +288,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
         <ProfileVisibilitySection isHidden={isHidden} onInputChange={handleVisibilityChange} />
 
-        <SaveButtonSection
-          onSave={async () => {
-            try {
-              const userData = {
-                name: profileData.name,
-                age: profileData.age,
-                bio: bio,
-                isHidden: isHidden,
-                //@ts-ignore
-                children: childrenToApi[selectedChildren],
-                //@ts-ignore
-                alcohol: alcoholToApi[selectedAlcohol],
-                //@ts-ignore
-                smoking: smokingToApi[selectedSmoking],
-                //@ts-ignore
-                goal: goalToApi[selectedGoal],
-                interests: mapInterestsToBackendFormat(selectedInterests),
-                height: profileData.height,
-              };
-
-              //@ts-ignore
-              await updateUser(userData).unwrap();
-
-              onBack();
-            } catch (error) {
-              console.error('Failed to save profile data:', error);
-            }
-          }}
-        />
+        <SaveButtonSection onSave={handleSave} />
       </div>
     </div>
   );

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
-import { useGetUserMutation } from '../../../../entities/user';
+import { useUploadFileToS3Mutation } from '../../../../entities/photo/api/photoApi';
+import { useGetUserMutation, useUpdateUserMutation } from '../../../../entities/user';
+import { useConfirmPhotoMutation } from '../../../../entities/user/api/userApi';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -14,12 +16,21 @@ interface ProfilePageProps {
   initialVerified?: boolean;
 }
 
+interface PhotoItem {
+  file: File;
+  url: string;
+  orderNumber: number;
+}
+
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   initialTab = 'profile',
   initialEditMode = false,
   initialVerified = false,
 }) => {
   const [getUser] = useGetUserMutation();
+  const [updateUser] = useUpdateUserMutation();
+  const [uploadFile] = useUploadFileToS3Mutation();
+  const [confirmPhoto] = useConfirmPhotoMutation();
 
   const [profileData, setProfileData] = useState<any>({
     name: '',
@@ -38,6 +49,8 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     photos: [],
     bio: '',
   });
+
+  const [newPhotoFiles, setNewPhotoFiles] = useState<PhotoItem[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,7 +74,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [isProfileHidden, setIsProfileHidden] = useState(false);
   const [isVerified, setIsVerified] = useState(initialVerified);
 
-  // Maximum number of photos (6)
   const MAX_PHOTOS = 6;
 
   if (isLoading) {
@@ -85,6 +97,60 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     setIsVerified(true);
   };
 
+  // Upload photos to backend using updateUser directly
+  const uploadPhotosToBackend = async () => {
+    if (newPhotoFiles.length === 0) return;
+
+    try {
+      // Prepare photo upload requests
+      const photoUploadRequests = newPhotoFiles.map(photo => ({
+        orderNumber: photo.orderNumber,
+        mimeType: photo.file.type,
+      }));
+
+      // Send minimal update with photoUploadRequests
+      // @ts-ignore - The API accepts photoUploadRequests directly
+      const response: any = await updateUser({
+        photoUploadRequests,
+      }).unwrap();
+
+      // If we received upload URLs in the response
+      if (response && response.photoUploadResponses) {
+        // Upload each photo to S3 using the provided URLs
+        await Promise.all(
+          response.photoUploadResponses.map(
+            async (resp: { orderNumber: number; uploadUrl: string }) => {
+              const photo = newPhotoFiles.find(p => p.orderNumber === resp.orderNumber);
+              if (!photo?.file) return;
+
+              try {
+                await uploadFile({
+                  url: resp.uploadUrl,
+                  file: photo.file,
+                }).unwrap();
+              } catch (error) {
+                console.error('Error uploading file:', error);
+              }
+            },
+          ),
+        );
+
+        // Confirm photos after upload
+        const orderNumbers = newPhotoFiles.map(photo => photo.orderNumber);
+        await confirmPhoto({ orderNumbers }).unwrap();
+
+        // Clear the new photo files list after successful upload
+        setNewPhotoFiles([]);
+
+        // Refresh user data to get updated photos
+        const userData = await getUser({}).unwrap();
+        setProfileData(userData.user);
+      }
+    } catch (error) {
+      console.error('Error uploading photos:', error);
+    }
+  };
+
   const handlePhotoAdd = (file?: File, isAvatar: boolean = false) => {
     if (!file) return;
 
@@ -92,19 +158,30 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     const fileUrl = URL.createObjectURL(file);
     const currentPhotos = [...(profileData.photos || [])];
 
+    // Get the next order number
+    const orderNumber = newPhotoFiles.length;
+
+    // Add to newPhotoFiles for later upload
+    const newPhotoItem = {
+      file,
+      url: fileUrl,
+      orderNumber,
+    };
+    setNewPhotoFiles(prev => [...prev, newPhotoItem]);
+
     if (isAvatar) {
       // If it's an avatar, place it at the first position
       if (currentPhotos.length > 0) {
         // Replace the first photo with the new avatar
-        currentPhotos[0] = { url: fileUrl };
+        currentPhotos[0] = { url: fileUrl, isNew: true };
       } else {
         // If there are no photos, add the avatar as the first one
-        currentPhotos.push({ url: fileUrl });
+        currentPhotos.push({ url: fileUrl, isNew: true });
       }
     } else {
       // Regular photo addition, limit to MAX_PHOTOS
       if (currentPhotos.length < MAX_PHOTOS) {
-        currentPhotos.push({ url: fileUrl });
+        currentPhotos.push({ url: fileUrl, isNew: true });
       } else {
         alert(`Максимальное количество фото: ${MAX_PHOTOS}`);
         return;
@@ -120,6 +197,17 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const handlePhotoRemove = (index: number) => {
     const updatedPhotos = [...profileData.photos];
     if (index >= 0 && index < updatedPhotos.length) {
+      // Check if it's a new photo that hasn't been uploaded yet
+      const removedPhoto = updatedPhotos[index];
+      if (removedPhoto.isNew) {
+        // Also remove from newPhotoFiles
+        setNewPhotoFiles(prev => prev.filter(p => p.url !== removedPhoto.url));
+      } else {
+        // For existing photos, we'd need to call an API to remove them
+        // This depends on your backend API
+      }
+
+      // Remove from UI
       updatedPhotos.splice(index, 1);
       setProfileData({
         ...profileData,
@@ -134,7 +222,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         return (
           <EditProfile
             profileData={profileData}
-            onBack={() => setActiveTab('profile')}
+            onBack={() => {
+              // Upload any pending photos before going back
+              if (newPhotoFiles.length > 0) {
+                uploadPhotosToBackend();
+              }
+              setActiveTab('profile');
+            }}
             onPhotoAdd={handlePhotoAdd}
             onPhotoRemove={handlePhotoRemove}
           />

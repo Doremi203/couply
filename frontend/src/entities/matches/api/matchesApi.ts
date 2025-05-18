@@ -31,7 +31,7 @@ export const matchesApi = matcherApi.injectEndpoints({
 
     deleteMatch: builder.mutation<object, MatchRequest>({
       query: data => ({
-        url: '/v1/matches/delete/byId',
+        url: '/v1/matches/delete/by-id',
         method: 'POST',
         body: data,
       }),
@@ -49,7 +49,7 @@ export const matchesApi = matcherApi.injectEndpoints({
 
     fetchMatchesUserIds: builder.mutation<FetchMatchesUserIdsResponse, FetchMatchesRequest>({
       query: data => ({
-        url: '/v1/matches/likes/outgoing/list',
+        url: '/v1/matches/list',
         method: 'POST',
         body: data,
       }),
@@ -58,7 +58,7 @@ export const matchesApi = matcherApi.injectEndpoints({
 
     fetchOutgoingLikes: builder.mutation<FetchMatchesResponse, FetchMatchesRequest>({
       query: data => ({
-        url: '/v1/matches/list',
+        url: '/v1/match/likes/outgoing/list',
         method: 'POST',
         body: data,
       }),

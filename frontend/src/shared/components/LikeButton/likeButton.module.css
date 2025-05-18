@@ -4,3 +4,11 @@
   background: var(--primary-color);
   border-radius: 50%;
 }
+
+.likeCircle:hover {
+  transform: scale(1.1);
+}
+
+.likeCircle:active {
+  transform: scale(0.95);
+}
