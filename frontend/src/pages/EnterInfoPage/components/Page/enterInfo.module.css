@@ -232,3 +232,31 @@
   color: var(--secondary-text-color);
   text-align: center;
 }
+
+.selectedLocation {
+  margin-top: 10px;
+  background-color: rgba(59, 94, 218, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.selectedLocation p {
+  margin: 0;
+  color: #3b5eda;
+  font-weight: 500;
+}
+
+.manualLocationInput {
+  margin-top: 15px;
+}
+
+.manualLocationOption {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.smallButton {
+  margin-top: 10px;
+  font-size: 14px;
+  padding: 8px 16px;
+}

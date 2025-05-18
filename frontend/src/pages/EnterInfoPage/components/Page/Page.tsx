@@ -21,6 +21,7 @@ import {
 } from '../../../../shared/lib/services/PushNotificationService';
 import getAge from '../../helpers/getAge';
 import { GeoLocationRequest } from '../GeoLocationRequest';
+import LocationSelector from '../LocationSelector/LocationSelector';
 import { FixedPhotoGallery } from '../PhotoGallery/PhotoGallery';
 
 import styles from './enterInfo.module.css';
@@ -46,7 +47,7 @@ export const EnterInfoPage = () => {
 
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [useManualLocation, setUseManualLocation] = useState(false);
-  const [manualLocation, setManualLocation] = useState('');
+  const [locationName, setLocationName] = useState('');
 
   // Add proper interface for the photo object
   interface PhotoItem {
@@ -94,7 +95,7 @@ export const EnterInfoPage = () => {
 
         const locationString = coords
           ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}`
-          : manualLocation;
+          : locationName;
 
         if (profilePhoto) {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
@@ -273,7 +274,7 @@ export const EnterInfoPage = () => {
       case 3:
         return userPhotos.length > 0;
       case 4:
-        return coords !== null || (useManualLocation && manualLocation.trim() !== '');
+        return coords !== null || (useManualLocation && locationName.trim() !== '');
       default:
         return false;
     }
@@ -322,6 +323,11 @@ export const EnterInfoPage = () => {
 
       return newPhotos;
     });
+  };
+
+  const handleLocationSelected = (location: { name: string; lat: number; lng: number }) => {
+    setCoords({ lat: location.lat, lng: location.lng });
+    setLocationName(location.name);
   };
 
   const sections = [
@@ -438,13 +444,12 @@ export const EnterInfoPage = () => {
           ) : (
             <div className={styles.manualLocationInput}>
               <h3>Укажите ваше местоположение</h3>
-              <CustomInput
-                placeholder="Например: Москва"
-                type="text"
-                value={manualLocation}
-                onChange={e => setManualLocation(e.target.value)}
-                className={styles.input}
-              />
+              <LocationSelector onLocationSelected={handleLocationSelected} />
+              {locationName && (
+                <div className={styles.selectedLocation}>
+                  <p>Выбранное местоположение: {locationName}</p>
+                </div>
+              )}
               <CustomButton
                 onClick={() => setUseManualLocation(false)}
                 text="Использовать геопозицию"
