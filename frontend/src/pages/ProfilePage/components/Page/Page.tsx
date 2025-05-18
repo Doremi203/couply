@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useGetUserMutation, useUpdateUserMutation } from '../../../../entities/user';
+import { useGetUserMutation } from '../../../../entities/user';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileView } from '../../../../widgets/ProfileView';

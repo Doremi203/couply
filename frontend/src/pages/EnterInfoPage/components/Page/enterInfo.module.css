@@ -28,46 +28,90 @@
   width: 290px;
 }
 
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1900;
+  animation: fadeInOverlay 0.3s ease-out;
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .notificationPrompt {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: var(--section-background);
   border-radius: 16px;
-  padding: 20px;
-  margin-top: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   text-align: center;
+  width: 85%;
+  max-width: 400px;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -40%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
 
 .notificationPrompt h3 {
   margin-top: 0;
   color: var(--primary-color);
-  font-size: 18px;
+  font-size: 22px;
+  margin-bottom: 15px;
 }
 
 .notificationPrompt p {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   color: var(--secondary-text-color);
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .promptButtons {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .allowButton {
   background-color: var(--primary-color) !important;
   color: white !important;
+  padding: 12px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
 }
 
 .skipButton {
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
 .outlinedButton {
   background-color: transparent !important;
   color: var(--primary-color) !important;
   border: 1px solid var(--primary-color) !important;
+  padding: 10px !important;
 }
 
 .photoUploadContainer {

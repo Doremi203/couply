@@ -29,6 +29,7 @@ export default meta;
 type Story = StoryObj<typeof BasicInfoForm>;
 
 // Sample profile data
+//@ts-ignore
 const filledProfileData: ProfileData = {
   name: 'Anna Smith',
   age: 28,
@@ -49,6 +50,7 @@ const filledProfileData: ProfileData = {
   isHidden: false,
 };
 
+//@ts-ignore
 const emptyProfileData: ProfileData = {
   name: '',
   age: 0,

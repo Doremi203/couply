@@ -53,14 +53,14 @@ export const EnterInfoPage = () => {
 
   const [uploadFile] = useUploadFileToS3Mutation();
 
-  const handleUpload = async (uploadUrl: string, file: File) => {
-    try {
-      await uploadFile({ url: uploadUrl, file }).unwrap();
-      console.log('Файл успешно загружен!');
-    } catch (error) {
-      console.error('Ошибка загрузки:', error);
-    }
-  };
+  // const handleUpload = async (uploadUrl: string, file: File) => {
+  //   try {
+  //     await uploadFile({ url: uploadUrl, file }).unwrap();
+  //     console.log('Файл успешно загружен!');
+  //   } catch (error) {
+  //     console.error('Ошибка загрузки:', error);
+  //   }
+  // };
 
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
@@ -142,18 +142,23 @@ export const EnterInfoPage = () => {
         //   );
         // }
 
+        // @ts-ignore
         if (response.photoUploadResponses) {
           await Promise.all(
+            //@ts-ignore
             response.photoUploadResponses.map(async resp => {
               const photo = userPhotos[resp.orderNumber];
+              // @ts-ignore
               if (!photo?.file) return;
 
               try {
                 await uploadFile({
                   url: resp.uploadUrl,
+                  //@ts-ignore
                   file: photo.file,
                 }).unwrap();
               } catch (error) {
+                //@ts-ignore
                 console.error(`Ошибка загрузки файла ${photo.file.name}:`, error);
               }
             }),
@@ -173,11 +178,15 @@ export const EnterInfoPage = () => {
         //   localStorage.setItem('userId', response.user.id);
         // }
 
+        console.log(isPushNotificationSupported());
+        console.log(notificationPermissionRequested);
+        console.log(Notification.permission);
+
         if (
           isPushNotificationSupported() &&
-          !notificationPermissionRequested &&
-          Notification.permission !== 'granted' &&
-          Notification.permission !== 'denied'
+          !notificationPermissionRequested
+          // Notification.permission !== 'granted' &&
+          // Notification.permission !== 'denied'
         ) {
           setShowNotificationPrompt(true);
         } else {

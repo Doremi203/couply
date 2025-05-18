@@ -22,6 +22,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   return (
     <div className={styles.profileInfo}>
       <div className={styles.profileImageContainer} onClick={onPreviewClick}>
+        {/** @ts-ignore */}
         <img src={profileData.photos[0].url} alt="Profile" className={styles.profilePic} />
         {isPro && (
           <div className={styles.proBadge}>

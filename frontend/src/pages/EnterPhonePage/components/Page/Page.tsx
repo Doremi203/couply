@@ -53,7 +53,7 @@ export const EnterPhonePage = () => {
       const timeout = await sendCode({ phone: formattedPhone }).unwrap();
       setSendAgainIn(timeout.sendAgainIn);
       setError('');
-    } catch (err) {
+    } catch {
       setError('Ошибка отправки кода. Попробуйте снова.');
     } finally {
       setIsLoading(false);

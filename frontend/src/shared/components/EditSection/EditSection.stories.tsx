@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { EditSection } from './EditSection';
+import { EditSection } from '../../../widgets/EditProfile/components/EditSection/EditSection';
 
 const meta = {
   title: 'Shared/InterestsSection',
@@ -32,7 +32,7 @@ export const Empty: Story = {
     placeholder: 'Add your interests (e.g. hiking, reading)',
     values: [],
     fieldName: 'interests',
-    onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
+    // onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
   },
 };
 
@@ -42,7 +42,7 @@ export const WithValues: Story = {
     placeholder: 'Add your interests (e.g. hiking, reading)',
     values: ['hiking', 'reading', 'cooking', 'photography'],
     fieldName: 'interests',
-    onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
+    // onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
   },
 };
 
@@ -52,7 +52,7 @@ export const Hobbies: Story = {
     placeholder: 'What do you enjoy doing?',
     values: ['painting', 'cycling', 'gaming'],
     fieldName: 'hobbies',
-    onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
+    // onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
   },
 };
 
@@ -62,6 +62,6 @@ export const MusicTastes: Story = {
     placeholder: 'What music do you like?',
     values: ['rock', 'jazz', 'classical'],
     fieldName: 'musicTastes',
-    onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
+    // onArrayInputChange: (field, value) => console.log(`${field} changed to ${value}`),
   },
 };

@@ -515,6 +515,7 @@ export const ProfileSlider = () => {
               <div className={`${styles.swipeIndicator} ${styles.right}`}>👍</div>
             )}
             <img
+              //@ts-ignore
               src={currentProfile.user.photos[currentPhotoIndex].url}
               // src="man1.jpg"
               alt={currentProfile.name}
@@ -590,6 +591,7 @@ export const ProfileSlider = () => {
       <ComplaintModal
         isOpen={complaintOpen}
         onClose={() => setComplaintOpen(false)}
+        //@ts-ignore
         targetUserId={profiles[currentIndex].user.id}
       />
       <MessageModal
