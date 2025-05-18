@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useUploadFileToS3Mutation } from '../../../../entities/photo/api/photoApi';
-import { useGetUserMutation, useUpdateUserMutation } from '../../../../entities/user';
-import { useConfirmPhotoMutation } from '../../../../entities/user/api/userApi';
+import { useGetUserMutation } from '../../../../entities/user';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -28,9 +26,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   initialVerified = false,
 }) => {
   const [getUser] = useGetUserMutation();
-  const [updateUser] = useUpdateUserMutation();
-  const [uploadFile] = useUploadFileToS3Mutation();
-  const [confirmPhoto] = useConfirmPhotoMutation();
+  // const [updateUser] = useUpdateUserMutation();
+  // const [uploadFile] = useUploadFileToS3Mutation();
+  // const [confirmPhoto] = useConfirmPhotoMutation();
 
   const [profileData, setProfileData] = useState<any>({
     name: '',

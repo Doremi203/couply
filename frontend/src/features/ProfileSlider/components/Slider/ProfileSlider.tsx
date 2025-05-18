@@ -460,13 +460,7 @@ export const ProfileSlider = () => {
 
   const handleCloseProfile = () => {
     setSelectedProfile(null);
-    // Only go to next user if this is from the swipe flow, not from profile preview
-    if (
-      !document.querySelector('#likes-page-container') &&
-      !document.querySelector('.pageContainer')
-    ) {
-      handleNextUser();
-    }
+    // We don't want to go to next user when pressing the back button
   };
 
   const handleLike = () => {

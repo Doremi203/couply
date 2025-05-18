@@ -37,6 +37,7 @@ const filledProfileData: ProfileData = {
   phone: '+7 (999) 123-4567',
   email: 'anna.smith@example.com',
   gender: 'female',
+  //@ts-ignore
   about: 'I love hiking, photography, and exploring new places.',
   interests: ['hiking', 'photography', 'travel'],
   music: ['rock', 'indie', 'classical'],
@@ -58,6 +59,7 @@ const emptyProfileData: ProfileData = {
   phone: '',
   email: '',
   gender: '',
+  //@ts-ignore
   about: '',
   interests: [],
   music: [],

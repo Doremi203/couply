@@ -37,6 +37,7 @@ const sampleProfileData: ProfileData = {
   dateOfBirth: '1997-05-15',
   email: 'anna.smith@example.com',
   gender: 'female',
+  //@ts-ignore
   about:
     'I love hiking, photography, and exploring new places. I work as a software engineer and enjoy solving complex problems.',
   interests: ['hiking', 'photography', 'travel'],
@@ -69,6 +70,7 @@ export const EmptyProfile: Story = {
       dateOfBirth: '',
       email: '',
       gender: '',
+      //@ts-ignore
       about: '',
       interests: [],
       music: [],

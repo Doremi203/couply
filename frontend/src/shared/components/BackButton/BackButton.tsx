@@ -1,12 +1,18 @@
 import styles from './backButton.module.css';
 
 interface BackButtonProps {
-  onClose: () => void;
+  onClose: (e?: React.MouseEvent) => void;
 }
 
 export const BackButton = ({ onClose }: BackButtonProps) => {
   return (
-    <button className={styles.backButton} onClick={onClose}>
+    <button
+      className={styles.backButton}
+      onClick={e => {
+        e.stopPropagation();
+        onClose(e);
+      }}
+    >
       <svg
         width="24"
         height="24"

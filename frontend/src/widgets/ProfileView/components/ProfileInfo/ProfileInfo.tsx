@@ -39,25 +39,13 @@ interface ProfileInfoProps {
     passion: string[];
     photos: (string | { url: string })[];
   };
-  menuPosition: 'collapsed' | 'expanded';
-  handleToggleClick: () => void;
-  handleTouchStart: (e: React.TouchEvent) => void;
-  handleTouchMove: (e: React.TouchEvent) => void;
-  handleTouchEnd: () => void;
   isCommonInterest: (interest: string) => boolean;
-  profileInfoRef: React.RefObject<HTMLDivElement>;
 }
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   profile,
   profileDetails: _profileDetails,
-  menuPosition,
-  handleToggleClick,
-  handleTouchStart,
-  handleTouchMove,
-  handleTouchEnd,
   isCommonInterest,
-  profileInfoRef,
 }) => {
   // Helper function to get photo URL whether it's a string or object
   const getPhotoUrl = (photo: string | { url: string }): string => {
@@ -93,8 +81,6 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
       : null,
   ].filter(Boolean) as { key: string; value: string }[];
 
-  console.log(basicInfoFields);
-
   // Check if sections have content
   const hasBio = !!profile.bio;
   const hasBasicInfo = basicInfoFields.length > 0;
@@ -102,19 +88,12 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   const hasPhotos = profile.photos && profile.photos.length > 0;
   const hasGoal = !!profile.goal && !!goalFromApi[profile.goal as keyof typeof goalFromApi];
 
-  console.log('INTERST', profile.interest);
-
   return (
-    <div
-      ref={profileInfoRef}
-      className={`${styles.profileInfo} ${
-        menuPosition === 'expanded' ? styles.expanded : styles.collapsed
-      }`}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      onClick={handleToggleClick}
-    >
+    <div className={styles.profileInfo}>
+      <div className={styles.profileInfoHandle}>
+        <div className={styles.profileInfoHandleBar} />
+      </div>
+
       <div className={styles.profileNameContainer}>
         <div>
           <h2 className={styles.profileName}>{profile.name}</h2>
