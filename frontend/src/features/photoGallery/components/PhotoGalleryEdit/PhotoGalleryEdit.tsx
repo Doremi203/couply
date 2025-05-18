@@ -23,7 +23,7 @@ export const PhotoGalleryEdit: React.FC<PhotoGalleryEditProps> = ({
       <div className={styles.grid}>
         {photos.map((photo, index) => (
           <div key={index} className={styles.photoItem}>
-            <img src={photo} alt={`Photo ${index + 1}`} />
+            <img src={photo.url} alt={`Photo ${index + 1}`} />
             <div className={styles.removeIcon} onClick={() => onPhotoRemove(index)}>
               <CloseIcon />
             </div>

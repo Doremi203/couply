@@ -1,4 +1,20 @@
-import { Gender, Goal, Zodiac, Education, Children, Alcohol, Smoking, FoodDrink, Hobby, MoviesTV, Music, PersonalityTraits, Pets, Selfdevelopment, Sport } from './constants';
+import {
+  Gender,
+  Goal,
+  Zodiac,
+  Education,
+  Children,
+  Alcohol,
+  Smoking,
+  FoodDrink,
+  Hobby,
+  MoviesTV,
+  Music,
+  PersonalityTraits,
+  Pets,
+  Selfdevelopment,
+  Sport,
+} from './constants';
 
 //TODO
 export interface UserRequest {
@@ -10,14 +26,14 @@ export interface UserRequest {
   bio: string;
   goal: Goal;
   interest: {
-    sport: [Sport],
-    selfDevelopment: [Selfdevelopment],
-    hobby: [Hobby],
-    music: [Music],
-    moviesTv: [MoviesTV],
-    foodDrink: [FoodDrink],
-    personalityTraits: [PersonalityTraits],
-    pets: [Pets],
+    sport: [Sport];
+    selfDevelopment: [Selfdevelopment];
+    hobby: [Hobby];
+    music: [Music];
+    moviesTv: [MoviesTV];
+    foodDrink: [FoodDrink];
+    personalityTraits: [PersonalityTraits];
+    pets: [Pets];
   };
   zodiac: Zodiac;
   height: number;
@@ -40,14 +56,14 @@ export interface UserResponse {
     bio: string;
     goal: Goal;
     interest: {
-      sport: [Sport],
-      selfDevelopment: [Selfdevelopment],
-      hobby: [Hobby],
-      music: [Music],
-      moviesTv: [MoviesTV],
-      foodDrink: [FoodDrink],
-      personalityTraits: [PersonalityTraits],
-      pets: [Pets],
+      sport: [Sport];
+      selfDevelopment: [Selfdevelopment];
+      hobby: [Hobby];
+      music: [Music];
+      moviesTv: [MoviesTV];
+      foodDrink: [FoodDrink];
+      personalityTraits: [PersonalityTraits];
+      pets: [Pets];
     };
     zodiac: Zodiac;
     height: number;

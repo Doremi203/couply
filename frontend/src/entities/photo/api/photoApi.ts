@@ -4,7 +4,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const fileUploadApi = createApi({
   reducerPath: 'fileUploadApi',
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
-  endpoints: (builder) => ({
+  endpoints: builder => ({
     uploadFileToS3: builder.mutation<void, { url: string; file: File }>({
       query: ({ url, file }) => ({
         url: url,

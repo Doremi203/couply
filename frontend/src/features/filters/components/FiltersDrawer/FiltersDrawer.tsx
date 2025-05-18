@@ -54,7 +54,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [distance, setDistance] = useState<number>(40);
   const [ageRange, setAgeRange] = useState<number[]>([18, 28]);
   const [heightRange, setHeightRange] = useState<number[]>([170, 190]);
-  const interestOptions = ['Спорт', 'Путешествия', 'Музыка', 'Искусство', 'Гастрономия'];
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
   const [selectedZodiac, setSelectedZodiac] = useState<string[]>([]);
@@ -198,7 +197,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
 
           <InterestFilter
             title="Интересы"
-            options={interestOptions}
             selectedOptions={selectedInterests}
             onSelect={selected => setSelectedInterests(selected)}
           />

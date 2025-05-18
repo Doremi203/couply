@@ -1,4 +1,6 @@
 export interface ProfileData {
+  bio: string;
+  height: any;
   name: string;
   age: number;
   phone: string;

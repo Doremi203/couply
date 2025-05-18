@@ -2,7 +2,9 @@
 
 self.addEventListener('push', evt => {
   let data = {};
-  try { data = evt.data.json(); } catch(error) {
+  try {
+    data = evt.data.json();
+  } catch (error) {
     console.error('Error parsing push notification data:', error);
   }
   const title = data.title || 'Новое уведомление';
@@ -11,7 +13,7 @@ self.addEventListener('push', evt => {
     icon: '/icon512_rounded.png',
     badge: '/icon512_maskable.png',
     vibrate: [100, 50, 100],
-    data: data,       // передадим метаданные (например, chatId)
+    data: data, // передадим метаданные (например, chatId)
   };
   evt.waitUntil(self.registration.showNotification(title, opts));
 });

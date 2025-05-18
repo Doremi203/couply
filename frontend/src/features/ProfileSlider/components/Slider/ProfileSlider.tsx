@@ -66,6 +66,8 @@ const getDefaultFilter = () => {
     minHeight: 100,
     maxHeight: 250,
     distance: 100,
+    minDistanceKm: 0,
+    maxDistanceKm: 100,
     goal: Goal.unspecified,
     zodiac: Zodiac.unspecified,
     education: Education.unspecified,
@@ -492,6 +494,7 @@ export const ProfileSlider = () => {
 
   const isAd = showingAd;
 
+  console.log(currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (
@@ -512,8 +515,8 @@ export const ProfileSlider = () => {
               <div className={`${styles.swipeIndicator} ${styles.right}`}>👍</div>
             )}
             <img
-              // src={currentProfile.photos[currentPhotoIndex]}
-              src="man1.jpg"
+              src={currentProfile.user.photos[currentPhotoIndex].url}
+              // src="man1.jpg"
               alt={currentProfile.name}
               className={styles.profileImage}
               draggable="false"

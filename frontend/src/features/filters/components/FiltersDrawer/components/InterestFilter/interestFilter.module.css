@@ -1,9 +1,9 @@
 .button {
-    width: 120px;
-    background-color: var(--tag-background);
-    color: black;
-    font-weight: 500;
-    margin-right: 250px;
+  width: 120px;
+  background-color: var(--tag-background);
+  color: black;
+  font-weight: 500;
+  margin-right: 250px;
 }
 
 .sectionTitle {

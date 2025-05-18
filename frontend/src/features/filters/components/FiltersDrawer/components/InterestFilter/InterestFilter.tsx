@@ -17,17 +17,11 @@ import ChipFilter from '../ChipFilter';
 
 type InterestFilterProps = {
   title: string;
-  options: string[];
   selectedOptions: string[];
   onSelect: (selected: string[]) => void;
 };
 
-const InterestFilter: React.FC<InterestFilterProps> = ({
-  title,
-  // options,
-  selectedOptions,
-  onSelect,
-}) => {
+const InterestFilter: React.FC<InterestFilterProps> = ({ title, selectedOptions, onSelect }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempSelected, setTempSelected] = useState<string[]>([]);
 

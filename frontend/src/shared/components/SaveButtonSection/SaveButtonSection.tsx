@@ -11,7 +11,7 @@ interface SaveButtonSectionProps {
 
 export const SaveButtonSection: React.FC<SaveButtonSectionProps> = ({
   onSave,
-  text = 'Save Changes',
+  text = 'Cохранить',
 }) => {
   return (
     <div className={styles.container}>

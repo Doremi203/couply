@@ -65,10 +65,10 @@ export const userApiExtended = matcherApi.injectEndpoints({
     }),
 
     updateUser: builder.mutation<UserResponse, UpdateUserParams>({
-      query: ({ data }) => ({
+      query: userData => ({
         url: 'v1/users/update/me',
         method: 'POST',
-        body: data,
+        body: { ...userData },
       }),
       // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),

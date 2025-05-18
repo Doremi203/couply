@@ -1,22 +1,33 @@
 import React, { useRef, useState } from 'react';
 
+import { useUpdateUserMutation } from '../../entities/user';
+import {
+  alcoholOptions,
+  alcoholToApi,
+  childrenOptions,
+  childrenToApi,
+  educationOptions,
+  goalOptions,
+  goalToApi,
+  smokingOptions,
+  smokingToApi,
+} from '../../features/filters/components/constants';
+import { mapInterestsToBackendFormat } from '../../features/filters/helpers/mapInterestsToApiFormat';
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
-import { BasicInfoForm, ProfileData } from '../../features/profileEdit';
+import { ProfileData } from '../../features/profileEdit';
 import { ProfilePhotoEdit } from '../../features/profileEdit/components/ProfilePhotoEdit';
 import { ProfileVisibilitySection } from '../../features/profileVisibility/components/ProfileVisibilitySection';
 import AboutMeSection from '../../shared/components/AboutMeSection';
-import { InterestsSection } from '../../shared/components/InterestsSection';
 import PageHeader from '../../shared/components/PageHeader';
 import { SaveButtonSection } from '../../shared/components/SaveButtonSection';
 
+import { EditSection } from './components/EditSection/EditSection';
+import { InterestSection } from './components/InterestsSection/InterestsSection';
 import styles from './editProfile.module.css';
 
 export interface EditProfileProps {
   profileData: ProfileData;
   onBack: () => void;
-  onSave: () => void;
-  onInputChange: (field: string, value: string) => void;
-  onArrayInputChange: (field: string, value: string) => void;
   onPhotoAdd: (file?: File, isAvatar?: boolean) => void;
   onPhotoRemove: (index: number) => void;
 }
@@ -24,14 +35,21 @@ export interface EditProfileProps {
 export const EditProfile: React.FC<EditProfileProps> = ({
   profileData,
   onBack,
-  onSave,
-  onInputChange,
-  onArrayInputChange,
   onPhotoAdd,
   onPhotoRemove,
 }) => {
+  const [updateUser] = useUpdateUserMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isAvatarUpload, setIsAvatarUpload] = useState(false);
+
+  const [selectedEducation, setSelectedEducation] = useState<string[]>([]);
+  const [selectedChildren, setSelectedChildren] = useState<string[]>([]);
+  const [selectedAlcohol, setSelectedAlcohol] = useState<string[]>([]);
+  const [selectedSmoking, setSelectedSmoking] = useState<string[]>([]);
+  const [selectedGoal, setSelectedGoal] = useState<string[]>([]);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [bio, setBio] = useState(profileData.bio || '');
+  const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
 
   const handleCameraClick = (isAvatar: boolean = false) => {
     setIsAvatarUpload(isAvatar);
@@ -48,6 +66,34 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     }
   };
 
+  const handleGoalSelect = (value: string) => {
+    setSelectedGoal(value);
+  };
+
+  const handleSmokingSelect = (value: string) => {
+    setSelectedSmoking(value);
+  };
+
+  const handleAlcoholSelect = (value: string) => {
+    setSelectedAlcohol(value);
+  };
+
+  const handleChildrenSelect = (value: string) => {
+    setSelectedChildren(value);
+  };
+
+  const handleEducationSelect = (value: string) => {
+    setSelectedEducation(value);
+  };
+
+  const handleBioChange = (value: string) => {
+    setBio(value);
+  };
+
+  const handleVisibilityChange = () => {
+    setIsHidden(!isHidden);
+  };
+
   return (
     <div>
       <input
@@ -61,7 +107,16 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       <PageHeader onBack={onBack} title="Редактирование" />
 
       <div className={styles.editContent}>
-        <ProfilePhotoEdit profilePhoto={profileData.photos[0]} onCameraClick={handleCameraClick} />
+        <ProfilePhotoEdit
+          profilePhoto={
+            Array.isArray(profileData.photos) && profileData.photos.length > 0
+              ? typeof profileData.photos[0] === 'string'
+                ? profileData.photos[0]
+                : (profileData.photos[0] as any)?.url || ''
+              : ''
+          }
+          onCameraClick={handleCameraClick}
+        />
 
         <PhotoGalleryEdit
           photos={profileData.photos}
@@ -69,53 +124,72 @@ export const EditProfile: React.FC<EditProfileProps> = ({
           onAddPhotoClick={() => handleCameraClick(false)}
         />
 
-        <BasicInfoForm profileData={profileData} onInputChange={onInputChange} />
+        <AboutMeSection about={bio} onInputChange={handleBioChange} />
 
-        <AboutMeSection about={profileData.about || ''} onInputChange={onInputChange} />
-
-        <InterestsSection
-          title="Интересы"
-          placeholder="Interests (comma separated)"
-          values={profileData.interests || []}
-          fieldName="interests"
-          onArrayInputChange={onArrayInputChange}
+        <EditSection
+          title="Цель"
+          options={Object.values(goalOptions)}
+          selectedOptions={selectedGoal}
+          onToggle={handleGoalSelect}
         />
 
-        <InterestsSection
-          title="Music"
-          placeholder="Favorite music (comma separated)"
-          values={profileData.music || []}
-          fieldName="music"
-          onArrayInputChange={onArrayInputChange}
+        <InterestSection
+          selectedOptions={selectedInterests}
+          onSelect={selected => setSelectedInterests(selected)}
         />
 
-        <InterestsSection
-          title="Movies"
-          placeholder="Favorite movies (comma separated)"
-          values={profileData.movies || []}
-          fieldName="movies"
-          onArrayInputChange={onArrayInputChange}
+        <EditSection
+          title="Образование"
+          options={Object.values(educationOptions)}
+          selectedOptions={selectedEducation}
+          onToggle={handleEducationSelect}
         />
 
-        <InterestsSection
-          title="Books"
-          placeholder="Favorite books (comma separated)"
-          values={profileData.books || []}
-          fieldName="books"
-          onArrayInputChange={onArrayInputChange}
+        <EditSection
+          title="Курение"
+          options={Object.values(smokingOptions)}
+          selectedOptions={selectedSmoking}
+          onToggle={handleSmokingSelect}
         />
 
-        <InterestsSection
-          title="Hobbies"
-          placeholder="Hobbies (comma separated)"
-          values={profileData.hobbies || []}
-          fieldName="hobbies"
-          onArrayInputChange={onArrayInputChange}
+        <EditSection
+          title="Алкоголь"
+          options={Object.values(alcoholOptions)}
+          selectedOptions={selectedAlcohol}
+          onToggle={handleAlcoholSelect}
         />
 
-        <ProfileVisibilitySection isHidden={profileData.isHidden} onInputChange={onInputChange} />
+        <EditSection
+          title="Дети"
+          options={Object.values(childrenOptions)}
+          selectedOptions={selectedChildren}
+          onToggle={handleChildrenSelect}
+        />
 
-        <SaveButtonSection onSave={onSave} />
+        <ProfileVisibilitySection isHidden={isHidden} onInputChange={handleVisibilityChange} />
+
+        <SaveButtonSection
+          onSave={async () => {
+            try {
+              const userData = {
+                name: profileData.name,
+                age: profileData.age,
+                bio: bio,
+                isHidden: isHidden,
+                children: childrenToApi[selectedChildren],
+                alcohol: alcoholToApi[selectedAlcohol],
+                smoking: smokingToApi[selectedSmoking],
+                goal: goalToApi[selectedGoal],
+                interests: mapInterestsToBackendFormat(selectedInterests),
+                height: profileData.height,
+              };
+
+              await updateUser(userData).unwrap();
+            } catch (error) {
+              console.error('Failed to save profile data:', error);
+            }
+          }}
+        />
       </div>
     </div>
   );

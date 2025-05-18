@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { useGetUserMutation } from '../../../../entities/user';
+import { useGetUserMutation, useUpdateUserMutation } from '../../../../entities/user';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -21,14 +21,30 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const [getUser] = useGetUserMutation();
 
-  const [profileData, setProfileData] = useState({});
+  const [profileData, setProfileData] = useState<any>({
+    name: '',
+    age: 0,
+    phone: '',
+    dateOfBirth: '',
+    email: '',
+    gender: '',
+    interests: [],
+    about: '',
+    music: [],
+    movies: [],
+    books: [],
+    hobbies: [],
+    isHidden: false,
+    photos: [],
+    bio: '',
+  });
 
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getUser().unwrap();
+        const data = await getUser({}).unwrap();
         setProfileData(data.user);
       } catch (error) {
         console.error('Failed to fetch user:', error);
@@ -64,21 +80,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const handleVerificationRequest = () => {
     setIsVerified(true);
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setProfileData({
-      ...profileData,
-      [field]: value,
-    });
-  };
-
-  const handleArrayInputChange = (field: string, value: string) => {
-    const values = value.split(',').map(item => item.trim());
-    setProfileData({
-      ...profileData,
-      [field]: values,
-    });
   };
 
   const handlePhotoAdd = (file?: File, isAvatar: boolean = false) => {
@@ -126,11 +127,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     });
   };
 
-  const handleSaveChanges = () => {
-    setIsEditMode(false);
-    setActiveTab('profile');
-  };
-
   const renderContent = () => {
     switch (activeTab) {
       case 'edit':
@@ -138,9 +134,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <EditProfile
             profileData={profileData}
             onBack={() => setActiveTab('profile')}
-            onSave={handleSaveChanges}
-            onInputChange={handleInputChange}
-            onArrayInputChange={handleArrayInputChange}
             onPhotoAdd={handlePhotoAdd}
             onPhotoRemove={handlePhotoRemove}
           />

@@ -1,6 +1,12 @@
 import { matcherApi } from '../../../shared/api/baseApi';
 
-import { AddViewRequest, CreateFilterRequest, FilterResponse, SearchRequest, SearchResponse } from './types';
+import {
+  AddViewRequest,
+  CreateFilterRequest,
+  FilterResponse,
+  SearchRequest,
+  SearchResponse,
+} from './types';
 
 export const searchApi = matcherApi.injectEndpoints({
   endpoints: builder => ({

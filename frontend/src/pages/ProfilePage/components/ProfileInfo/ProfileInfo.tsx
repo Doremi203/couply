@@ -22,11 +22,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   return (
     <div className={styles.profileInfo}>
       <div className={styles.profileImageContainer} onClick={onPreviewClick}>
-        <img
-          src={profileData.photos[0] || '/photo1.png'}
-          alt="Profile"
-          className={styles.profilePic}
-        />
+        <img src={profileData.photos[0].url} alt="Profile" className={styles.profilePic} />
         {isPro && (
           <div className={styles.proBadge}>
             <span>PRO</span>

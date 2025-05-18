@@ -4,7 +4,7 @@ import styles from './aboutMeSection.module.css';
 
 interface AboutMeSectionProps {
   about: string;
-  onInputChange: (field: string, value: string) => void;
+  onInputChange: (value: string) => void;
   title?: string;
   maxLength?: number;
   placeholder?: string;
@@ -25,7 +25,7 @@ export const AboutMeSection: React.FC<AboutMeSectionProps> = ({
           className={styles.textareaInput}
           placeholder={placeholder}
           value={about}
-          onChange={e => onInputChange('about', e.target.value)}
+          onChange={e => onInputChange(e.target.value)}
           maxLength={maxLength}
         />
         <div className={styles.characterCount}>

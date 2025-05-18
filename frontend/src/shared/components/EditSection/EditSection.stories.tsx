@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import { InterestsSection } from './InterestsSection';
+import { EditSection } from './EditSection';
 
 const meta = {
   title: 'Shared/InterestsSection',
-  component: InterestsSection,
+  component: EditSection,
   parameters: {
     layout: 'centered',
     docs: {
@@ -21,7 +21,7 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof InterestsSection>;
+} satisfies Meta<typeof EditSection>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

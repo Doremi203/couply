@@ -13,17 +13,17 @@ interface ProfileVisibilitySectionProps {
 export const ProfileVisibilitySection: React.FC<ProfileVisibilitySectionProps> = ({
   isHidden,
   onInputChange,
-  title = 'Profile Visibility',
+  title = 'Видимость профиля',
 }) => {
   return (
     <div className={styles.section}>
       <h3>{title}</h3>
       <div className={styles.toggleOption}>
-        <span>Hide my profile</span>
+        <span>Скрыть профиль</span>
         <ToggleButtons
           options={[
-            { label: 'No', value: 'visible' },
-            { label: 'Yes', value: 'hidden' },
+            { label: 'Нет', value: 'visible' },
+            { label: 'Да', value: 'hidden' },
           ]}
           value={isHidden ? 'hidden' : 'visible'}
           onSelect={value => onInputChange('isHidden', value === 'hidden' ? 'true' : 'false')}

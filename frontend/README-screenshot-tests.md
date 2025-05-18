@@ -11,6 +11,7 @@ The screenshot tests are set up to capture screenshots of components rendered in
 To run the mobile screenshot tests, follow these steps:
 
 1. Start the Storybook server:
+
    ```
    npm run storybook
    ```
@@ -41,12 +42,14 @@ The mobile screenshots are organized in the following directories:
 The following components are covered by screenshot tests:
 
 1. **Shared Components**:
+
    - NavBar
    - CustomButton (Default and Disabled states)
    - CustomInput (Text, Password, and Email types)
    - ToggleButtons (Default, Three Options, and No Selection states)
 
 2. **Feature Components**:
+
    - ProfileSlider
 
 3. **Page Components**:
@@ -74,6 +77,7 @@ The mobile screenshot tests are implemented using Playwright, which provides a w
 ### Mobile Device Emulation
 
 The tests use Playwright's device emulation capabilities to simulate an iPhone 8 with the following characteristics:
+
 - Viewport: 375x667 pixels
 - Device scale factor: 2
 - Mobile user agent
