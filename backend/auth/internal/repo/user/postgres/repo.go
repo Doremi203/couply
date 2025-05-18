@@ -123,7 +123,7 @@ func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, err
 	return u, nil
 }
 
-func (r *repo) GetByOAuthProviderUserID(ctx context.Context, provider oauth.Provider, providerUserID oauth.ProviderUserID) (user.User, error) {
+func (r *repo) GetByOAuthProviderUserID(ctx context.Context, provider oauth.ProviderType, providerUserID oauth.ProviderUserID) (user.User, error) {
 	const query = `
 		SELECT u.id, u.email, u.phone, u.password
 		FROM users u

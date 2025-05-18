@@ -10,6 +10,6 @@ type OAuthAccountID uuid.UUID
 type OAuthAccount struct {
 	ID             OAuthAccountID
 	UserID         ID
-	Provider       oauth.Provider
+	Provider       oauth.ProviderType
 	ProviderUserID oauth.ProviderUserID
 }

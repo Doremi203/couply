@@ -12,10 +12,12 @@ import (
 
 func NewGRPCService(
 	loginUseCase loginUC.UseCase,
+	config Config,
 	logger log.Logger,
 ) *grpcService {
 	return &grpcService{
 		loginUseCase: loginUseCase,
+		config:       config,
 		logger:       logger,
 	}
 }
@@ -23,6 +25,7 @@ func NewGRPCService(
 type grpcService struct {
 	loginUseCase loginUC.UseCase
 
+	config Config
 	logger log.Logger
 	login.UnimplementedLoginServer
 }

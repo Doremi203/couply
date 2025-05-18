@@ -137,6 +137,7 @@ func initApp() *App {
 					return runtime.DefaultHeaderMatcher(s)
 				}
 			}),
+			runtime.WithForwardResponseOption(redirectHeaderMatcher),
 		},
 	}
 

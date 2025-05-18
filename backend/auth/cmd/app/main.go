@@ -57,6 +57,18 @@ func main() {
 			return err
 		}
 
+		oauthLoginConfig := login.Config{}
+		err = app.Config.ReadSection("oauth", &oauthLoginConfig)
+		if err != nil {
+			return err
+		}
+
+		yandexOAuthConfig := oauth.YandexConfig{}
+		err = app.Config.ReadSection("oauth-yandex", &yandexOAuthConfig)
+		if err != nil {
+			return err
+		}
+
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")
@@ -71,7 +83,7 @@ func main() {
 			argon.V2Provider{},
 		)
 
-		var oauthInfoFetcherFactory oauth.InfoFetcherFactory
+		providerFactory := oauth.NewProviderFactory(yandexOAuthConfig)
 
 		tokenIssuer, err := token.NewJWTIssuer(jwtTokenConfig)
 		if err != nil {
@@ -96,7 +108,7 @@ func main() {
 		loginUseCase := loginUC.NewUseCase(
 			userRepo,
 			oauthAccountRepo,
-			oauthInfoFetcherFactory,
+			providerFactory,
 			hashProvider,
 			tokenIssuer,
 			txProvider,
@@ -105,6 +117,7 @@ func main() {
 		)
 		loginService := login.NewGRPCService(
 			loginUseCase,
+			oauthLoginConfig,
 			app.Log,
 		)
 

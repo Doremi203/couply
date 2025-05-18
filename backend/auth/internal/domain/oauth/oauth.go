@@ -2,7 +2,13 @@ package oauth
 
 type Token string
 
+type Code string
+
+type State string
+
 type Request struct {
-	Provider    Provider
+	Provider    ProviderType
+	Code        Code
+	State       State
 	AccessToken Token
 }

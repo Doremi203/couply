@@ -27,9 +27,13 @@ phone-confirmation:
 jwt:
   tokenLifetime: 30m
 
+oauth:
+  oAuthRedirectFrontendDomain: https://testing.couply.ru
+
 secrets:
   ids:
     smsru: e6qeb7ef6o0sgb12n3r0
+    yandex-id-oauth: e6qqk1qrp2mbbsuamdv5
 
 smsru:
   test: true
