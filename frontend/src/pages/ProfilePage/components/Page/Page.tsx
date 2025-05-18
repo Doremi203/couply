@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { useGetUserMutation } from '../../../../entities/user';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileView } from '../../../../widgets/ProfileView';
-import { ProfileData } from '../../types';
 import { Profile } from '../Profile';
 
 import styles from './profilePage.module.css';
@@ -19,29 +19,35 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   initialEditMode = false,
   initialVerified = false,
 }) => {
+  const [getUser] = useGetUserMutation();
+
+  const [profileData, setProfileData] = useState({});
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getUser().unwrap();
+        setProfileData(data.user);
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [getUser]);
+
   const [isEditMode, setIsEditMode] = useState(initialEditMode);
   const [activeTab, setActiveTab] = useState(initialTab);
   const [isProfileHidden, setIsProfileHidden] = useState(false);
   const [isVerified, setIsVerified] = useState(initialVerified);
 
-  const [profileData, setProfileData] = useState<ProfileData>({
-    name: 'Майя',
-    age: 21,
-    phone: '+91 9876543210',
-    dateOfBirth: '1997-05-02',
-    email: 'abcqwertyu@gmail.com',
-    gender: 'female',
-    interests: ['Музыка', 'Путешествия', 'Спорт'],
-    about: 'Я люблю человека-паука, викенда и пить бабл ти.',
-    music: ['Pop', 'Rock', 'Jazz'],
-    movies: ['Comedy', 'Action', 'Drama'],
-    books: ['Fiction', 'Biography'],
-    hobbies: ['Photography', 'Cooking', 'Hiking'],
-    isHidden: false,
-    photos: ['/photo1.png', '/woman1.jpg'],
-    //@ts-ignore
-    imageUrl: '/photo1.png',
-  });
+  if (isLoading) {
+    return <div className={styles.loader} />;
+  }
 
   const handleEditToggle = () => {
     setIsEditMode(!isEditMode);
@@ -77,48 +83,42 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const handlePhotoAdd = (file?: File, isAvatar: boolean = false) => {
     if (file) {
-      // Create a URL for the selected file
       const fileUrl = URL.createObjectURL(file);
 
       if (isAvatar) {
-        // If this is an avatar upload, set it as the first photo
-        const updatedPhotos = [...profileData.photos];
-        updatedPhotos.unshift(fileUrl); // Add to the beginning of the array
+        const updatedPhotos = ['man1.jpg'];
+        updatedPhotos.unshift(fileUrl);
         setProfileData({
           ...profileData,
           photos: updatedPhotos,
         });
       } else {
-        // Otherwise, add it to the end of the photos array
         setProfileData({
           ...profileData,
-          photos: [...profileData.photos, fileUrl],
+          photos: ['man1.jpg', fileUrl],
         });
       }
     } else {
-      // Fallback to placeholder if no file is provided
       const placeholderUrl = '/man1.jpg';
 
       if (isAvatar) {
-        // If this is an avatar upload, set it as the first photo
-        const updatedPhotos = [...profileData.photos];
-        updatedPhotos.unshift(placeholderUrl); // Add to the beginning of the array
+        const updatedPhotos = ['man1.jpg'];
+        updatedPhotos.unshift(placeholderUrl);
         setProfileData({
           ...profileData,
           photos: updatedPhotos,
         });
       } else {
-        // Otherwise, add it to the end of the photos array
         setProfileData({
           ...profileData,
-          photos: [...profileData.photos, placeholderUrl],
+          photos: ['man1.jpg', placeholderUrl],
         });
       }
     }
   };
 
   const handlePhotoRemove = (index: number) => {
-    const updatedPhotos = [...profileData.photos];
+    const updatedPhotos = ['man1.jpg'];
     updatedPhotos.splice(index, 1);
     setProfileData({
       ...profileData,

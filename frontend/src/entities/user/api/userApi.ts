@@ -30,7 +30,7 @@ export const userApiExtended = matcherApi.injectEndpoints({
   endpoints: builder => ({
     createUser: builder.mutation<UserResponse, Partial<UserRequest>>({
       query: userData => ({
-        url: '/v1/CreateUserV1',
+        url: '/v1/users/create',
         method: 'POST',
         body: { ...userData, ...basicData },
       }),
@@ -39,16 +39,25 @@ export const userApiExtended = matcherApi.injectEndpoints({
 
     getUser: builder.mutation<UserResponse, object>({
       query: id => ({
-        url: '/v1/GetUserV1',
+        url: '/v1/users/get/me',
         method: 'POST',
         body: id,
       }),
       // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),
 
+    getUserById: builder.mutation<UserResponse, object>({
+      query: () => ({
+        url: '/v1/users/get/by-id',
+        method: 'POST',
+        // body: id,
+      }),
+      // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
+    }),
+
     getUsers: builder.mutation<UsersResponse, GetUsersRequest>({
       query: userIds => ({
-        url: '/v1/GetUsersV1',
+        url: '/v1/users/batch/get',
         method: 'POST',
         body: { userIds: userIds },
       }),
@@ -57,7 +66,16 @@ export const userApiExtended = matcherApi.injectEndpoints({
 
     updateUser: builder.mutation<UserResponse, UpdateUserParams>({
       query: ({ data }) => ({
-        url: 'v1/UpdateUserV1',
+        url: 'v1/users/update/me',
+        method: 'POST',
+        body: data,
+      }),
+      // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
+    }),
+
+    updateUserById: builder.mutation<UserResponse, UpdateUserParams>({
+      query: ({ data }) => ({
+        url: 'v1/users/update/by-id',
         method: 'POST',
         body: data,
       }),
@@ -66,7 +84,7 @@ export const userApiExtended = matcherApi.injectEndpoints({
 
     deleteUser: builder.mutation<object, object>({
       query: () => ({
-        url: '/v1/DeleteUserV1',
+        url: '/v1/users/delete/me',
         method: 'POST',
         body: {},
       }),
@@ -77,7 +95,7 @@ export const userApiExtended = matcherApi.injectEndpoints({
     }),
     confirmPhoto: builder.mutation<object, PhotoParams>({
       query: data => ({
-        url: 'v1/ConfirmPhotoUploadV1',
+        url: 'v1/users/me/photos/confirm',
         method: 'POST',
         body: data,
       }),

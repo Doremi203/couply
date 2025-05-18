@@ -125,3 +125,8 @@ export interface SearchResponse {
     },
   ];
 }
+
+
+export interface AddViewRequest {
+  viewedId: string;
+}

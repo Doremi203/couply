@@ -71,12 +71,12 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
         <BasicInfoForm profileData={profileData} onInputChange={onInputChange} />
 
-        <AboutMeSection about={profileData.about} onInputChange={onInputChange} />
+        <AboutMeSection about={profileData.about || ''} onInputChange={onInputChange} />
 
         <InterestsSection
           title="Интересы"
           placeholder="Interests (comma separated)"
-          values={profileData.interests}
+          values={profileData.interests || []}
           fieldName="interests"
           onArrayInputChange={onArrayInputChange}
         />
@@ -84,7 +84,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <InterestsSection
           title="Music"
           placeholder="Favorite music (comma separated)"
-          values={profileData.music}
+          values={profileData.music || []}
           fieldName="music"
           onArrayInputChange={onArrayInputChange}
         />
@@ -92,7 +92,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <InterestsSection
           title="Movies"
           placeholder="Favorite movies (comma separated)"
-          values={profileData.movies}
+          values={profileData.movies || []}
           fieldName="movies"
           onArrayInputChange={onArrayInputChange}
         />
@@ -100,7 +100,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <InterestsSection
           title="Books"
           placeholder="Favorite books (comma separated)"
-          values={profileData.books}
+          values={profileData.books || []}
           fieldName="books"
           onArrayInputChange={onArrayInputChange}
         />
@@ -108,7 +108,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <InterestsSection
           title="Hobbies"
           placeholder="Hobbies (comma separated)"
-          values={profileData.hobbies}
+          values={profileData.hobbies || []}
           fieldName="hobbies"
           onArrayInputChange={onArrayInputChange}
         />
