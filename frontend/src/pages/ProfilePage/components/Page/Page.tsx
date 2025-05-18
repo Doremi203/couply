@@ -111,6 +111,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       // Send minimal update with photoUploadRequests
       // @ts-ignore - The API accepts photoUploadRequests directly
       const response: any = await updateUser({
+        //@ts-ignore
         photoUploadRequests,
       }).unwrap();
 

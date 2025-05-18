@@ -272,6 +272,7 @@ export const ProfileSlider = () => {
       // Use ts-ignore as done elsewhere in the codebase
       //@ts-ignore
       if (profiles[currentIndex] && profiles[currentIndex].user) {
+        //@ts-ignore
         await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
       }
 
@@ -365,6 +366,7 @@ export const ProfileSlider = () => {
     //@ts-ignore - Needed to handle possible ad profile case
     setCurrentPhotoIndex(
       prevIndex =>
+        //@ts-ignore
         (prevIndex - 1 + currentUser.user.photos.length) % currentUser.user.photos.length,
     );
   };
@@ -575,7 +577,8 @@ export const ProfileSlider = () => {
 
   const isAd = showingAd;
 
-  console.log(currentProfile?.user?.name, currentProfile);
+  // //
+  // console.log(currentProfile?.user?.name, currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (

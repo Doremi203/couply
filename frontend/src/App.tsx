@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -64,8 +64,22 @@ const router = createBrowserRouter([
   },
 ]);
 
+// Компонент для отображения сообщения о повороте устройства
+const OrientationMessage: React.FC = () => {
+  return (
+    <div className="orientation-message">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)">
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M17 1.01L7 1C5.9 1 5 1.9 5 3v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
+      </svg>
+      <p>Пожалуйста, поверните устройство в портретную ориентацию для лучшего взаимодействия</p>
+    </div>
+  );
+};
+
 function App() {
   const dispatch = useDispatch();
+  const [isLandscape, setIsLandscape] = useState(false);
 
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);
@@ -80,6 +94,33 @@ function App() {
       }
     }
   }, [userId, dispatch]);
+
+  // Функция проверки ориентации экрана
+  const checkOrientation = () => {
+    // Проверяем, находимся ли мы на мобильном устройстве
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent,
+    );
+
+    // Если это мобильное устройство и ширина экрана больше высоты, значит альбомная ориентация
+    if (isMobile && window.innerWidth > window.innerHeight) {
+      setIsLandscape(true);
+    } else {
+      setIsLandscape(false);
+    }
+  };
+
+  // Проверка ориентации при загрузке и изменении размеров окна
+  useEffect(() => {
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
 
   // Check for existing geolocation permission
   useEffect(() => {
@@ -121,6 +162,7 @@ function App() {
 
   return (
     <ThemeProvider>
+      {isLandscape && <OrientationMessage />}
       <RouterProvider router={router} />
     </ThemeProvider>
   );

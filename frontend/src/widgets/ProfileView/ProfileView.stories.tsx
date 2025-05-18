@@ -71,6 +71,7 @@ export const HasLikedYou: Story = {
 
 export const MinimalProfile: Story = {
   args: {
+    //@ts-ignore
     profile: {
       // @ts-ignore
       user: {
