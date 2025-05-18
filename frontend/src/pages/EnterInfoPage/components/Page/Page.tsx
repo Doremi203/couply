@@ -4,7 +4,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUploadFileToS3Mutation } from '../../../../entities/photo/api/photoApi';
-import { Gender } from '../../../../entities/user/api/constants';
+import { Gender, Goal } from '../../../../entities/user/api/constants';
 import {
   useConfirmPhotoMutation,
   useCreateUserMutation,
@@ -28,15 +28,16 @@ import styles from './enterInfo.module.css';
 export const EnterInfoPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   const [createUser, { isLoading }] = useCreateUserMutation();
   const [confirmPhoto] = useConfirmPhotoMutation();
 
   const [name, setName] = useState('');
+  const [telegram, setTelegram] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [height, setHeight] = useState('');
   const [userGender, setUserGender] = useState('');
+  const [userGoal, setUserGoal] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,6 +45,8 @@ export const EnterInfoPage = () => {
   const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
 
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [useManualLocation, setUseManualLocation] = useState(false);
+  const [manualLocation, setManualLocation] = useState('');
 
   const [userPhotos, setUserPhotos] = useState([]);
 
@@ -53,14 +56,12 @@ export const EnterInfoPage = () => {
 
   const [uploadFile] = useUploadFileToS3Mutation();
 
-  // const handleUpload = async (uploadUrl: string, file: File) => {
-  //   try {
-  //     await uploadFile({ url: uploadUrl, file }).unwrap();
-  //     console.log('Файл успешно загружен!');
-  //   } catch (error) {
-  //     console.error('Ошибка загрузки:', error);
-  //   }
-  // };
+  const goalOptions = [
+    { label: 'Отношения', value: 'relationship', enum: Goal.relationship },
+    { label: 'Дружба', value: 'friendship', enum: Goal.friendship },
+    { label: 'Общение', value: 'justChatting', enum: Goal.justChatting },
+    { label: 'Свидания', value: 'dating', enum: Goal.dating },
+  ];
 
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
@@ -80,7 +81,13 @@ export const EnterInfoPage = () => {
             genderEnum = Gender.unspecified;
         }
 
-        const locationString = coords ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}` : '';
+        // Find the selected goal enum directly from our mapping
+        const selectedGoalOption = goalOptions.find(option => option.value === userGoal);
+        const goalEnum = selectedGoalOption ? selectedGoalOption.enum : Goal.unspecified;
+
+        const locationString = coords
+          ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}`
+          : manualLocation;
 
         if (profilePhoto) {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
@@ -101,46 +108,18 @@ export const EnterInfoPage = () => {
 
         const userData = {
           name,
+          telegram,
           age: ageValue,
           gender: genderEnum,
-          height: String(height),
+          height: Number(height),
+          goal: goalEnum,
           ...(locationString ? { location: locationString } : {}),
-          photoUploadRequests, // Добавляем массив метаданных
+          photoUploadRequests,
           latitude: coords?.lat,
           longitude: coords?.lng,
         };
 
-        //@ts-ignore
         const response = await createUser(userData).unwrap();
-
-        // if (response.photoUploadResponses) {
-        //   await Promise.all(
-        //     response.photoUploadResponses.map(async (resp: any) => {
-        //       const photo = userPhotos[resp.orderNumber];
-        //       if (!photo) return;
-
-        //       console.log(photo);
-
-        //       try {
-        //         const uploadResponse = await fetch(resp.uploadUrl, {
-        //           method: 'PUT',
-        //           body: photo.file,
-        //           headers: {
-        //             'Content-Type': photo.file.type,
-        //           },
-        //         });
-
-        //         if (!uploadResponse.ok) {
-        //           throw new Error(`Upload failed: ${uploadResponse.statusText}`);
-        //         }
-
-        //         console.log('File uploaded successfully');
-        //       } catch (error) {
-        //         console.error('Error uploading file:', error);
-        //       }
-        //     }),
-        //   );
-        // }
 
         // @ts-ignore
         if (response.photoUploadResponses) {
@@ -171,16 +150,6 @@ export const EnterInfoPage = () => {
           console.error('Photo confirmation failed:', error);
           throw error;
         }
-
-        // надо ли сохранять в локал TODO
-        // if (response && response.user && response.user.id) {
-        //   dispatch(setUserId(response.user.id));
-        //   localStorage.setItem('userId', response.user.id);
-        // }
-
-        console.log(isPushNotificationSupported());
-        console.log(notificationPermissionRequested);
-        console.log(Notification.permission);
 
         if (
           isPushNotificationSupported() &&
@@ -220,6 +189,10 @@ export const EnterInfoPage = () => {
 
   const handleUserGenderSelect = (value: string) => {
     setUserGender(value);
+  };
+
+  const handleUserGoalSelect = (value: string) => {
+    setUserGoal(value);
   };
 
   const handleCameraClick = () => {
@@ -288,17 +261,23 @@ export const EnterInfoPage = () => {
   const isCurrentStepValid = () => {
     switch (currentStep) {
       case 0:
-        return name.trim() !== '';
+        return name.trim() !== '' && telegram.trim() !== '';
       case 1: {
         const calculatedAge = getAge(birthDate);
-        return birthDate !== '' && typeof calculatedAge === 'number' && calculatedAge >= 18;
+        return (
+          birthDate !== '' &&
+          typeof calculatedAge === 'number' &&
+          calculatedAge >= 18 &&
+          userGender !== '' &&
+          height.trim() !== ''
+        );
       }
       case 2:
-        return true;
+        return userGoal !== '';
       case 3:
-        return true;
+        return userPhotos.length > 0;
       case 4:
-        return true;
+        return coords !== null || (useManualLocation && manualLocation.trim() !== '');
       default:
         return false;
     }
@@ -339,6 +318,14 @@ export const EnterInfoPage = () => {
         onChange={e => setName(e.target.value)}
         className={styles.input}
       />
+      <h2 className={styles.genderLabel}>Ваш Telegram</h2>
+      <CustomInput
+        placeholder="@username"
+        type="text"
+        value={telegram}
+        onChange={e => setTelegram(e.target.value)}
+        className={styles.input}
+      />
     </div>,
     <div key="birthDateSection">
       <h2>Дата рождения</h2>
@@ -376,6 +363,15 @@ export const EnterInfoPage = () => {
         className={styles.input}
       />
     </div>,
+    <div key="goalSection">
+      <h2>Какова ваша цель?</h2>
+      <ToggleButtons
+        options={goalOptions.map(({ label, value }) => ({ label, value }))}
+        onSelect={handleUserGoalSelect}
+        value={userGoal}
+        className={styles.toggleButtons}
+      />
+    </div>,
     <div key="datingSettingsSection">
       <h2>Загрузите ваше фото</h2>
       <div>
@@ -403,14 +399,44 @@ export const EnterInfoPage = () => {
         />
       </div>
     </div>,
-    <div key="datingSettingsSection">
+    <div key="locationSection">
       <h2>Включите геопозицию</h2>
       <div>
         <div>
           <div className={styles.geoText}>
             Чтобы мы подобрали вам людей не только близких по духу, но и по расположению
           </div>
-          <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+          {!useManualLocation ? (
+            <>
+              <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+              {!coords && (
+                <div className={styles.manualLocationOption}>
+                  <p>Не хотите разрешать доступ к геопозиции?</p>
+                  <CustomButton
+                    onClick={() => setUseManualLocation(true)}
+                    text="Ввести вручную"
+                    className={styles.outlinedButton}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className={styles.manualLocationInput}>
+              <h3>Укажите ваше местоположение</h3>
+              <CustomInput
+                placeholder="Например: Москва"
+                type="text"
+                value={manualLocation}
+                onChange={e => setManualLocation(e.target.value)}
+                className={styles.input}
+              />
+              <CustomButton
+                onClick={() => setUseManualLocation(false)}
+                text="Использовать геопозицию"
+                className={`${styles.outlinedButton} ${styles.smallButton}`}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>,

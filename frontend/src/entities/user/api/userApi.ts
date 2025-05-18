@@ -1,6 +1,6 @@
 import { matcherApi } from '../../../shared/api/baseApi';
 
-import { Alcohol, Children, Education, Goal, Smoking, Zodiac } from './constants';
+import { Alcohol, Children, Education, Smoking, Zodiac } from './constants';
 import {
   UserResponse,
   UserRequest,
@@ -14,7 +14,6 @@ import {
 const basicData = {
   location: 'Москва, Россия', // todo
   bio: 'bio',
-  goal: Goal.dating, // УБРАТЬ
   education: Education.unspecified,
   children: Children.unspecified,
   alcohol: Alcohol.neutrally,
@@ -22,8 +21,7 @@ const basicData = {
   zodiac: Zodiac.unspecified,
   hidden: false,
   verified: false,
-  interest: null, //TODO
-  //photos: null, //сллетаь
+  interest: null,
 };
 
 export const userApiExtended = matcherApi.injectEndpoints({
