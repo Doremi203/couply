@@ -13,10 +13,10 @@ import styles from '../../profileView.module.css';
 
 interface ProfileInfoProps {
   profile: {
-    id: number;
+    id?: number;
     name: string;
     age: number;
-    imageUrl: string;
+    imageUrl?: string;
     hasLikedYou?: boolean;
     bio?: string;
     location?: string;
@@ -24,7 +24,7 @@ interface ProfileInfoProps {
     interest?: string[];
     lifestyle?: { [key: string]: string };
     passion?: string[];
-    photos?: { url: string }[];
+    photos?: (string | { url: string })[];
     children?: string;
     education?: string;
     alcohol?: string;
@@ -37,7 +37,7 @@ interface ProfileInfoProps {
     location: string;
     lifestyle: { [key: string]: string };
     passion: string[];
-    photos: string[];
+    photos: (string | { url: string })[];
   };
   menuPosition: 'collapsed' | 'expanded';
   handleToggleClick: () => void;
@@ -50,7 +50,7 @@ interface ProfileInfoProps {
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   profile,
-  // profileDetails,
+  profileDetails: _profileDetails,
   menuPosition,
   handleToggleClick,
   handleTouchStart,
@@ -59,6 +59,16 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   isCommonInterest,
   profileInfoRef,
 }) => {
+  // Helper function to get photo URL whether it's a string or object
+  const getPhotoUrl = (photo: string | { url: string }): string => {
+    if (typeof photo === 'string') {
+      return photo;
+    } else if (typeof photo === 'object' && photo !== null) {
+      return photo.url || '';
+    }
+    return '';
+  };
+
   const basicInfoFields = [
     profile.children && childrenFromApi[profile.children as keyof typeof childrenFromApi]
       ? {
@@ -160,7 +170,13 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
             <div className={styles.photosGrid}>
               {profile.photos.map((photo, index) => (
                 <div key={index} className={styles.photoItem}>
-                  <img src={photo.url} alt={`Photo ${index + 1}`} />
+                  <img
+                    src={getPhotoUrl(photo)}
+                    alt={`Photo ${index + 1}`}
+                    onError={e => {
+                      (e.target as HTMLImageElement).src = '/photo1.png';
+                    }}
+                  />
                 </div>
               ))}
             </div>

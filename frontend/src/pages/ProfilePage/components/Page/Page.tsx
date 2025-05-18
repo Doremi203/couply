@@ -61,6 +61,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   const [isProfileHidden, setIsProfileHidden] = useState(false);
   const [isVerified, setIsVerified] = useState(initialVerified);
 
+  // Maximum number of photos (6)
+  const MAX_PHOTOS = 6;
+
   if (isLoading) {
     return <div className={styles.loader} />;
   }
@@ -83,48 +86,46 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   };
 
   const handlePhotoAdd = (file?: File, isAvatar: boolean = false) => {
-    if (file) {
-      const fileUrl = URL.createObjectURL(file);
+    if (!file) return;
 
-      if (isAvatar) {
-        const updatedPhotos = ['man1.jpg'];
-        updatedPhotos.unshift(fileUrl);
-        setProfileData({
-          ...profileData,
-          photos: updatedPhotos,
-        });
+    // Create object URL from the file
+    const fileUrl = URL.createObjectURL(file);
+    const currentPhotos = [...(profileData.photos || [])];
+
+    if (isAvatar) {
+      // If it's an avatar, place it at the first position
+      if (currentPhotos.length > 0) {
+        // Replace the first photo with the new avatar
+        currentPhotos[0] = { url: fileUrl };
       } else {
-        setProfileData({
-          ...profileData,
-          photos: ['man1.jpg', fileUrl],
-        });
+        // If there are no photos, add the avatar as the first one
+        currentPhotos.push({ url: fileUrl });
       }
     } else {
-      const placeholderUrl = '/man1.jpg';
-
-      if (isAvatar) {
-        const updatedPhotos = ['man1.jpg'];
-        updatedPhotos.unshift(placeholderUrl);
-        setProfileData({
-          ...profileData,
-          photos: updatedPhotos,
-        });
+      // Regular photo addition, limit to MAX_PHOTOS
+      if (currentPhotos.length < MAX_PHOTOS) {
+        currentPhotos.push({ url: fileUrl });
       } else {
-        setProfileData({
-          ...profileData,
-          photos: ['man1.jpg', placeholderUrl],
-        });
+        alert(`Максимальное количество фото: ${MAX_PHOTOS}`);
+        return;
       }
     }
+
+    setProfileData({
+      ...profileData,
+      photos: currentPhotos,
+    });
   };
 
   const handlePhotoRemove = (index: number) => {
-    const updatedPhotos = ['man1.jpg'];
-    updatedPhotos.splice(index, 1);
-    setProfileData({
-      ...profileData,
-      photos: updatedPhotos,
-    });
+    const updatedPhotos = [...profileData.photos];
+    if (index >= 0 && index < updatedPhotos.length) {
+      updatedPhotos.splice(index, 1);
+      setProfileData({
+        ...profileData,
+        photos: updatedPhotos,
+      });
+    }
   };
 
   const renderContent = () => {

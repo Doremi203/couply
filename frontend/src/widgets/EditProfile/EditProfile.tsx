@@ -51,7 +51,15 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const [bio, setBio] = useState(profileData.bio || '');
   const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
 
+  const MAX_PHOTOS = 6;
+
   const handleCameraClick = (isAvatar: boolean = false) => {
+    // If we're trying to add a photo and already at max, don't proceed
+    if (!isAvatar && Array.isArray(profileData.photos) && profileData.photos.length >= MAX_PHOTOS) {
+      alert(`Максимальное количество фото: ${MAX_PHOTOS}`);
+      return;
+    }
+
     setIsAvatarUpload(isAvatar);
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -61,6 +69,17 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
+      // Check if we're at the photo limit
+      if (
+        !isAvatarUpload &&
+        Array.isArray(profileData.photos) &&
+        profileData.photos.length >= MAX_PHOTOS
+      ) {
+        alert(`Максимальное количество фото: ${MAX_PHOTOS}`);
+        event.target.value = '';
+        return;
+      }
+
       onPhotoAdd(files[0], isAvatarUpload);
       event.target.value = '';
     }
@@ -124,7 +143,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         />
 
         <PhotoGalleryEdit
-          photos={profileData.photos}
+          photos={profileData.photos || []}
           onPhotoRemove={onPhotoRemove}
           onAddPhotoClick={() => handleCameraClick(false)}
         />

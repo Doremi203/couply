@@ -11,67 +11,55 @@ import styles from './profileView.module.css';
 
 interface ProfileViewProps {
   profile: {
-    id: number;
+    id?: number;
     name: string;
     age: number;
-    imageUrl: string;
+    imageUrl?: string;
     hasLikedYou?: boolean;
     verified?: boolean;
     bio?: string;
     location?: string;
     interests?: string[];
+    interest?: string[];
     lifestyle?: { [key: string]: string };
     passion?: string[];
-    photos?: string[];
+    photos?: (string | { url: string })[];
+    children?: string;
+    education?: string;
+    alcohol?: string;
+    smoking?: string;
+    zodiac?: string;
+    goal?: string;
+    user?: any;
   };
   onClose: () => void;
-  onLike: (id: number) => void;
+  onLike?: (id: number) => void;
 }
 
-//@ts-ignore
 export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLike }) => {
   const [likeUser] = useLikeUserMutation();
-
   const [menuPosition, setMenuPosition] = useState<'collapsed' | 'expanded'>('expanded');
-
   const profileInfoRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const user = profile.user;
+  // Handle the profile data - it might come directly or nested in a user property
+  const profileData = profile.user || profile;
 
-  //TODO delete
-  // const samplePhotos = [
-  //   profile.imageUrl,
-  //   'woman1.jpg',
-  //   'man1.jpg',
-  //   'photo1.png',
-  //   'woman1.jpg',
-  //   'man1.jpg',
-  // ];
+  // Get the profile photo safely
+  const getProfilePhoto = () => {
+    if (!profileData.photos || !profileData.photos.length) {
+      return '/photo1.png';
+    }
 
-  //TODO delete
-  // const profileDetails = {
-  //   //@ts-ignore
-  //   bio: profile.user.bio || 'Hello, I am a fashion designer based in Florida.',
-  //   //@ts-ignore
-  //   location: profile.user.location || 'Miami Beach, Florida',
-  //   //@ts-ignore
-  //   lifestyle: profile.user.lifestyle || {
-  //     kids: "I don't have kids",
-  //   },
-  //   //@ts-ignore
-  //   passion: profile.user.passion ||
-  //     //@ts-ignore
-  //     profile.user.interests || [
-  //       'Music',
-  //       'Travel',
-  //       'Tea',
-  //       'Photography',
-  //       'Fashion',
-  //       'House Parties',
-  //     ],
-  //   photos: profile.photos,
-  // };
+    const firstPhoto = profileData.photos[0];
+    if (typeof firstPhoto === 'string') {
+      return firstPhoto;
+    } else if (firstPhoto && typeof firstPhoto === 'object') {
+      return firstPhoto.url || '/photo1.png';
+    }
+
+    return '/photo1.png';
+  };
 
   const commonInterests = ['Music', 'Travel', 'Photography'];
 
@@ -87,9 +75,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
   };
 
   const handleLike = () => {
-    //@ts-ignore
-    likeUser({ targetUserId: user.id });
-    onLike(user.id);
+    const userId = profileData.id;
+    if (userId && onLike) {
+      likeUser({
+        targetUserId: userId,
+        message: '', // Add empty message to satisfy LikeRequest interface
+      });
+      onLike(userId);
+    }
   };
 
   useEffect(() => {
@@ -187,8 +180,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
     setTouchEnd(null);
   };
 
-  console.log(profile);
-  console.log(user);
+  // Prepare profile details for ProfileInfo component
+  const profileDetails = {
+    bio: profileData.bio || '',
+    location: profileData.location || '',
+    lifestyle: profileData.lifestyle || {},
+    passion: profileData.passion || profileData.interests || [],
+    photos: profileData.photos || [],
+  };
 
   return (
     <div
@@ -203,7 +202,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
       >
         <BackButton
           onClose={() => {
-            // Just call onClose without additional actions
             onClose();
             setTimeout(() => {
               document.body.style.overflow = 'auto';
@@ -211,16 +209,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
           }}
         />
 
-        <img src={user.photos[0].url} alt={user.name} className={styles.profileImage} />
+        <img
+          src={getProfilePhoto()}
+          alt={profileData.name}
+          className={styles.profileImage}
+          onError={e => {
+            (e.target as HTMLImageElement).src = '/photo1.png';
+          }}
+        />
         <div className={styles.profileGradient} />
 
         <div className={styles.photoContent}>
           <div className={styles.nameAndButtons}>
             <h2 className={styles.photoName}>
-              {/**@ts-ignore */}
-              {user.name}
-              {/**@ts-ignore */}
-              {user.verified && (
+              {profileData.name}
+              {profileData.verified && (
                 <div className={styles.verifiedBadge}>
                   <VerifiedIcon />
                 </div>
@@ -247,51 +250,15 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
           </div>
 
           <p className={styles.photoInfo}>
-            {/**@ts-ignore */}
-            {user.age} | {user.location}
+            {profileData.age}
+            {profileData.location ? `, ${profileData.location}` : ''}
           </p>
-
-          <div className={styles.photoTags}>
-            {/**@ts-ignore */}
-            {/* {user.interest.slice(0, 5).map((interest, index) => (
-              <span key={index} className={styles.photoTag}>
-                {interest}
-              </span>
-            ))} */}
-          </div>
-
-          <div
-            className={`${styles.photoScrollIndicator} ${
-              menuPosition === 'collapsed' ? styles.showScrollBack : ''
-            }`}
-            onClick={handleToggleClick}
-          >
-            {menuPosition === 'collapsed' ? 'Scroll back to photo' : 'Scroll up to view details'}
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-              style={{
-                transform: menuPosition === 'collapsed' ? 'rotate(180deg)' : 'none',
-              }}
-            >
-              <path
-                d="M7 10L12 15L17 10"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
         </div>
       </div>
 
       <ProfileInfo
-        profile={user}
-        // profileDetails={}
+        profile={profileData}
+        profileDetails={profileDetails}
         menuPosition={menuPosition}
         handleToggleClick={handleToggleClick}
         handleTouchStart={handleTouchStart}
