@@ -1,0 +1,16 @@
+name: Payment Service Release Flow
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  release:
+    uses: ./.github/workflows/backend-service-release.yml
+    with:
+      service_name: payment
+      db_name: payment
+      instance_group_name: payment-testing
+    secrets: inherit
