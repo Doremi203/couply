@@ -79,16 +79,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend_build
-          path: frontend/dist
-
       - name: Upload to Object Storage
         uses: ./.github/actions/upload-s3
         with:
-          build-dir: frontend/dist
+          artifact-name: frontend_build
+          artifact-path: frontend/dist
           s3-bucket: couply-frontend-testing
           yc-service-key: ${{ secrets.YC_SERVICE_KEY }}
 

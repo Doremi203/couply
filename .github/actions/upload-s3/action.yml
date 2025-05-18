@@ -2,8 +2,11 @@ name: 'Upload to s3'
 description: 'Upload build to s3'
 
 inputs:
-  build-dir:
-    description: Directory with build
+  artifact-name:
+    description: Name of the artifact
+    required: true
+  artifact-path:
+    description: Path to the artifact
     required: true
   s3-bucket:
     description: S3 bucket name
@@ -16,6 +19,12 @@ runs:
   using: composite
   steps:
     - uses: actions/checkout@v4
+
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: ${{ inputs.artifact-name }}
+        path: ${{ inputs.artifact-path }}
 
     - name: Set release version
       shell: bash
@@ -52,4 +61,4 @@ runs:
     - name: Deploy to MinIO
       shell: bash
       run: |
-        ./mc cp -r ./${{ inputs.build-dir }}/. ycs3/${{ inputs.s3-bucket }}/
+        ./mc cp -r ./${{ inputs.build-dir }}/* ycs3/${{ inputs.s3-bucket }}/
