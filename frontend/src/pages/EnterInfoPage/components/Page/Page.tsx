@@ -48,7 +48,14 @@ export const EnterInfoPage = () => {
   const [useManualLocation, setUseManualLocation] = useState(false);
   const [manualLocation, setManualLocation] = useState('');
 
-  const [userPhotos, setUserPhotos] = useState([]);
+  // Add proper interface for the photo object
+  interface PhotoItem {
+    file: File;
+    url: string;
+  }
+
+  // Update the userPhotos state with the proper type
+  const [userPhotos, setUserPhotos] = useState<PhotoItem[]>([]);
 
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
     setCoords(coordinates);
@@ -93,14 +100,8 @@ export const EnterInfoPage = () => {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
 
-        // TODO
-        if (profilePhoto) {
-          localStorage.setItem('profilePhotoUrl', profilePhoto);
-        }
-
         const photoUploadRequests = userPhotos.map((photo, index) => ({
           orderNumber: index,
-          //@ts-ignore
           mimeType: photo.file.type,
         }));
 
@@ -127,17 +128,14 @@ export const EnterInfoPage = () => {
             //@ts-ignore
             response.photoUploadResponses.map(async resp => {
               const photo = userPhotos[resp.orderNumber];
-              // @ts-ignore
               if (!photo?.file) return;
 
               try {
                 await uploadFile({
                   url: resp.uploadUrl,
-                  //@ts-ignore
                   file: photo.file,
                 }).unwrap();
               } catch (error) {
-                //@ts-ignore
                 console.error(`Ошибка загрузки файла ${photo.file.name}:`, error);
               }
             }),
@@ -210,10 +208,8 @@ export const EnterInfoPage = () => {
       setUserPhotos(prevPhotos => {
         const newPhotos = [...prevPhotos];
         if (newPhotos.length > 0) {
-          //@ts-ignore
           newPhotos[0] = { file, url: fileUrl };
         } else {
-          //@ts-ignore
           newPhotos.push({ file, url: fileUrl });
         }
         return newPhotos;
@@ -296,16 +292,36 @@ export const EnterInfoPage = () => {
       if (files && files.length > 0) {
         const file = files[0];
         const fileUrl = URL.createObjectURL(file);
-        //@ts-ignore
-        setUserPhotos(prevPhotos => [...prevPhotos, { file, url: fileUrl }]);
+
+        setUserPhotos(prevPhotos => {
+          // If this is the first photo, also set it as the profile photo
+          if (prevPhotos.length === 0) {
+            setProfilePhoto(fileUrl);
+          }
+          return [...prevPhotos, { file, url: fileUrl }];
+        });
       }
     };
     input.click();
   };
 
   const handleRemovePhoto = (index: number) => {
-    const newPhotos = userPhotos.filter((_, i) => i !== index);
-    setUserPhotos(newPhotos);
+    setUserPhotos(prevPhotos => {
+      const newPhotos = prevPhotos.filter((_, i) => i !== index);
+
+      // Update profile photo if we're removing the first photo
+      if (index === 0) {
+        // If there are still photos left, set the new first photo as profile
+        if (newPhotos.length > 0) {
+          setProfilePhoto(newPhotos[0].url);
+        } else {
+          // Otherwise clear the profile photo
+          setProfilePhoto(null);
+        }
+      }
+
+      return newPhotos;
+    });
   };
 
   const sections = [
@@ -391,7 +407,6 @@ export const EnterInfoPage = () => {
           )}
         </div>
         <FixedPhotoGallery
-          //@ts-ignore
           photos={userPhotos.map(photo => photo.url)}
           onPhotoRemove={handleRemovePhoto}
           onAddPhotoClick={handleAddPhoto}
