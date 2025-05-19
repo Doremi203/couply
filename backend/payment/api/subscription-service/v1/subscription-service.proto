@@ -106,9 +106,12 @@ service SubscriptionService {
 
 message CreateSubscriptionV1Request {
   SubscriptionPlan plan = 1 [
-    (validate.rules).enum.defined_only = true
+    (validate.rules).enum.defined_only = true,
+    (google.api.field_behavior) = REQUIRED
   ];
-  bool auto_renew = 2;
+  bool auto_renew = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
 }
 
 message CreateSubscriptionV1Response {
@@ -135,7 +138,8 @@ message GetActiveSubscriptionV1Response {
 
 message CancelSubscriptionV1Request {
   string subscription_id = 1 [
-    (validate.rules).string.min_len = 1
+    (validate.rules).string.min_len = 1,
+    (google.api.field_behavior) = REQUIRED
   ];
 }
 
