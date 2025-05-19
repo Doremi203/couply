@@ -13,8 +13,15 @@ import styles from './likesPage.module.css';
 export const LikesPage = () => {
   const [activeTab, setActiveTab] = useState<'лайки' | 'мэтчи'>('лайки');
 
-  const { showChatMessage, handleLike, handleSocialClick, matchesUsers, likesUsers, likes } =
-    useLikesAndMatches();
+  const {
+    showChatMessage,
+    handleLike,
+    handleSocialClick,
+    matchesUsers,
+    likesUsers,
+    likes,
+    handleDislike,
+  } = useLikesAndMatches();
 
   const { selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile } =
     useProfileView();
@@ -24,12 +31,6 @@ export const LikesPage = () => {
   }, []);
 
   const firstRender = useRef(true);
-
-  const [dislike] = useDislikeUserMutation();
-
-  const handleDislike = () => {
-    dislike({ targetUserId: selectedProfile.id });
-  };
 
   useEffect(() => {
     if (firstRender.current) {

@@ -84,7 +84,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   };
 
   const handleDislike = () => {
-    onDislike();
+    onDislike(profile.id);
     onClose();
   };
 

@@ -48,6 +48,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
     fetchData();
   }, [getUser]);
 
+  if (!like) return;
+
   const message = like.message;
 
   const handleLikeClick = async (e: React.MouseEvent) => {

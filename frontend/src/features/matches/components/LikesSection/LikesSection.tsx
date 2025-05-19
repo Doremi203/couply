@@ -37,7 +37,7 @@ export const LikesSection: React.FC<LikesSectionProps> = ({
             onClick={() => onProfileClick(profile)}
             onLike={onLike}
             className={styles.profileCard}
-            like={likes.likes[index]}
+            like={likes[index]}
           />
         ))}
       </div>
