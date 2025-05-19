@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+import { useDislikeUserMutation } from '../../../../entities/matches';
 import { LikesSection, useLikesAndMatches } from '../../../../features/matches';
 import { NavBar } from '../../../../shared/components/NavBar';
 import TabsSection from '../../../../shared/components/TabsSection';
@@ -23,6 +24,12 @@ export const LikesPage = () => {
   }, []);
 
   const firstRender = useRef(true);
+
+  const [dislike] = useDislikeUserMutation();
+
+  const handleDislike = () => {
+    dislike({ targetUserId: selectedProfile.id });
+  };
 
   useEffect(() => {
     if (firstRender.current) {
@@ -66,7 +73,12 @@ export const LikesPage = () => {
       )}
 
       {selectedProfile && (
-        <ProfileView profile={selectedProfile} onClose={handleCloseProfile} onLike={handleLike} />
+        <ProfileView
+          profile={selectedProfile}
+          onClose={handleCloseProfile}
+          onLike={handleLike}
+          onDislike={handleDislike}
+        />
       )}
 
       <div style={{ position: 'relative', zIndex: 1010 }}>

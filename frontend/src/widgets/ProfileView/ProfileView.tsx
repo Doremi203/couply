@@ -76,20 +76,19 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
     if (userId && onLike) {
       likeUser({
         targetUserId: userId,
-        message: '', // Add empty message to satisfy LikeRequest interface
+        message: '',
       });
       onLike(userId);
+      onClose();
     }
   };
 
   const handleDislike = () => {
-    console.log('dislike');
     onDislike();
     onClose();
   };
 
   useEffect(() => {
-    // Fix for iOS momentum scrolling
     document.body.style.overflow = 'hidden';
 
     return () => {
@@ -97,7 +96,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
     };
   }, []);
 
-  // Prepare profile details for ProfileInfo component
   const profileDetails = {
     bio: profileData.bio || '',
     location: profileData.location || '',
@@ -115,7 +113,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       <div className={styles.profileImageContainer}>
         <BackButton
           onClose={e => {
-            e?.stopPropagation?.(); // Stop event propagation if it's an event
+            e?.stopPropagation?.();
             onClose();
             setTimeout(() => {
               document.body.style.overflow = 'auto';
