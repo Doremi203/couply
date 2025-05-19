@@ -3,28 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no, orientation=portrait"
+    />
     <meta name="theme-color" content="#3b5eda" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="description" content="Приложение для знакомств Couply" />
-    <meta
-      name="viewport"
-      content="width=device-width, 
-               initial-scale=1.0, 
-               maximum-scale=1.0, 
-               user-scalable=no,
-               shrink-to-fit=no"
-    />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="orientation" content="portrait" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="apple-touch-icon" href="/pv3.jpg" />
-    <title>Vite + React + TS</title>
+    <title>Couply</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
+    <script src="https://yastatic.net/s3/passport-sdk/autofill/v1/sdk-suggest-with-polyfills-latest.js"></script>
+    <script>
+      // Блокировка ориентации экрана для мобильных устройств
+      function lockScreenOrientation() {
+        if (window.screen && window.screen.orientation && window.screen.orientation.lock) {
+          window.screen.orientation.lock('portrait').catch(function (error) {
+            console.log('Ошибка при блокировке ориентации:', error);
+          });
+        }
+      }
+
+      // Вызываем функцию при загрузке страницы
+      window.addEventListener('load', lockScreenOrientation);
+    </script>
   </head>
   <body>
     <div id="root"></div>

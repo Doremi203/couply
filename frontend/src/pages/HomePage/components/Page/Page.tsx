@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
+import { getUserId } from '../../../../entities/user/model/userSlice';
 import FiltersDrawer from '../../../../features/filters/components/FiltersDrawer';
 import { ProfileSlider } from '../../../../features/ProfileSlider';
 import { FiltersIcon } from '../../../../shared/components/FiltersIcon';
 import { NavBar } from '../../../../shared/components/NavBar';
+import { useGeolocation } from '../../../../shared/lib/hooks/useGeolocation';
 import { HiddenAcc } from '../HiddenAcc/HiddenAcc';
 
 import styles from './homePage.module.css';
@@ -16,7 +19,23 @@ export const HomePage = () => {
     };
   }, []);
 
+  const userId = useSelector(getUserId);
+  const { updateUserLocation } = useGeolocation();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+
+  useEffect(() => {
+    if (userId) {
+      updateUserLocation()
+        .then(success => {
+          if (success) {
+            console.log('Location updated successfully on HomePage');
+          }
+        })
+        .catch(err => {
+          console.error('Failed to update location on HomePage:', err);
+        });
+    }
+  }, [userId, updateUserLocation]);
 
   const handleFiltersOpen = () => {
     setIsFiltersOpen(true);

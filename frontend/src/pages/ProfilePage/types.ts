@@ -12,7 +12,8 @@ export interface ProfileData {
   books: string[];
   hobbies: string[];
   isHidden: boolean;
-  photos: string[];
+  photos: (string | { url: string })[];
+  bio?: string;
 }
 
 export interface ActivityItem {

@@ -1,10 +1,11 @@
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Switch } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import { Switch, CircularProgress } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { useTheme } from '../../../../shared/lib/context/ThemeContext';
+import { usePushNotifications } from '../../../../shared/lib/hooks/usePushNotifications';
 
 import styles from './notificationSettings.module.css';
 
@@ -21,7 +22,10 @@ interface NotificationSettingsProps {
 
 export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ className }) => {
   const { theme, toggleTheme } = useTheme();
+  const { isSupported, isSubscribed, subscribe, unsubscribe } = usePushNotifications();
   const [notifications, setNotifications] = useState<NotificationOption[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
     setNotifications([
@@ -29,7 +33,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         id: 'push',
         label: 'Push-уведомления',
         icon: <NotificationsIcon />,
-        enabled: true,
+        enabled: isSubscribed,
       },
       {
         id: 'theme',
@@ -38,28 +42,62 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         enabled: theme === 'dark',
       },
       {
-        id: 'theme',
+        id: 'unsubscribe',
         label: 'Отменить подписку',
         icon: <CreditCardOffOutlinedIcon />,
-        //@ts-ignore
-        enabled: theme.isDark, //TODO
+        enabled: false,
       },
     ]);
-  }, [theme]);
+  }, [theme, isSubscribed]);
 
-  const handleToggle = (id: string) => {
-    if (id === 'theme') {
-      toggleTheme();
-    } else {
-      setNotifications(prev =>
-        prev.map(notification =>
-          notification.id === id
-            ? { ...notification, enabled: !notification.enabled }
-            : notification,
-        ),
-      );
-    }
-  };
+  const handleToggle = useCallback(
+    async (id: string) => {
+      if (isLoading) return;
+
+      setActiveId(id);
+      setIsLoading(true);
+
+      try {
+        if (id === 'theme') {
+          toggleTheme();
+          // Для темы не нужен await, сразу заканчиваем обработку
+          setIsLoading(false);
+          setActiveId(null);
+          return;
+        } else if (id === 'push') {
+          // if (!isSupported) {
+          //   alert('Ваш браузер не поддерживает push-уведомления');
+          //   setIsLoading(false);
+          //   setActiveId(null);
+          //   return;
+          // }
+
+          if (isSubscribed) {
+            await unsubscribe();
+          } else {
+            await subscribe();
+          }
+          // await refreshState();
+        } else if (id === 'unsubscribe') {
+          // Простое переключение состояния без реальной логики
+          setNotifications(prev =>
+            prev.map(notification =>
+              notification.id === id
+                ? { ...notification, enabled: !notification.enabled }
+                : notification,
+            ),
+          );
+        }
+      } catch (error) {
+        console.error('Error toggling:', error);
+        alert('Произошла ошибка при изменении настроек');
+      } finally {
+        setIsLoading(false);
+        setActiveId(null);
+      }
+    },
+    [isSupported, isSubscribed, subscribe, unsubscribe, toggleTheme],
+  );
 
   return (
     <div className={`${styles.container} ${className || ''}`}>
@@ -69,13 +107,24 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
             <div className={styles.icon}>{notification.icon}</div>
             <span className={styles.label}>{notification.label}</span>
           </div>
-          <Switch
-            //@ts-ignore
-            checked={notification.id === 'theme' ? theme.isDark : notification.enabled}
-            onChange={() => handleToggle(notification.id)}
-            color="primary"
-            className={styles.switch}
-          />
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            {isLoading && activeId === notification.id && (
+              <CircularProgress size={16} style={{ marginRight: 8 }} />
+            )}
+            <Switch
+              checked={
+                notification.id === 'theme'
+                  ? theme === 'dark'
+                  : notification.id === 'push'
+                    ? isSubscribed
+                    : notification.enabled
+              }
+              onChange={() => handleToggle(notification.id)}
+              disabled={isLoading && activeId !== notification.id}
+              color="primary"
+              className={styles.switch}
+            />
+          </div>
         </div>
       ))}
     </div>

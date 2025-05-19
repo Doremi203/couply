@@ -20,14 +20,14 @@
     opacity 0.3s;
   outline: none;
   text-align: center;
-  height: 3.125rem;
+  height: 41px;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   max-width: 290px;
   box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.3);
   position: relative;
-  width: 300px;
+  width: 270px;
 }
 
 .buttonWithIcon:hover {

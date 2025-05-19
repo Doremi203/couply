@@ -14,13 +14,13 @@ export const LoginPage = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
 
   const [errors, setErrors] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
+    general: '',
   });
 
   const { loginUser } = useLogin();
@@ -38,7 +38,7 @@ export const LoginPage = () => {
     const newErrors = {
       email: '',
       password: '',
-      confirmPassword: '',
+      general: '',
     };
 
     if (!email) {
@@ -65,33 +65,49 @@ export const LoginPage = () => {
     setShowRegistrationModal(false);
   };
 
-  // const handleNavigateToRegistration = () => {
-  //   navigate('/registration');
-  //   setShowRegistrationModal(false);
-  // };
-
   const handleSubmit = async () => {
     if (validateForm()) {
       try {
+        setIsLoading(true);
+        setErrors({ email: '', password: '', general: '' });
+
         const loginData = {
           password,
           email,
         };
 
-        //@ts-ignore
         const result = await loginUser(loginData);
 
-        if (result.token) {
+        if (result.data?.token) {
           navigate('/home');
-        } else {
-          navigate('/registration');
+        } else if (result.error) {
+          console.log(result.error);
+          // Handle specific error types
+          if (result.error.includes('не найден')) {
+            setShowRegistrationModal(true);
+            setErrors({
+              ...errors,
+              email: 'Такого аккаунта не существует',
+            });
+          } else if (result.error.includes('пароль')) {
+            setErrors({
+              ...errors,
+              password: result.error,
+            });
+          } else {
+            setErrors({
+              ...errors,
+              general: result.error,
+            });
+          }
         }
       } catch {
-        setShowRegistrationModal(true);
         setErrors({
           ...errors,
-          email: 'Такого аккаунта не существует',
+          general: 'Произошла ошибка при входе. Пожалуйста, попробуйте позже.',
         });
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -126,33 +142,34 @@ export const LoginPage = () => {
           />
           {errors.password && <span className={styles.errorText}>{errors.password}</span>}
         </div>
+
+        {errors.general && <div className={styles.generalError}>{errors.general}</div>}
       </div>
 
-      <CustomButton onClick={handleSubmit} text="Войти" className={styles.submitButton} />
+      <CustomButton
+        onClick={handleSubmit}
+        text={isLoading ? 'Вход...' : 'Войти'}
+        className={styles.submitButton}
+        disabled={isLoading}
+      />
       <Link onClick={onRegister} className={styles.regLink}>
         Зарегистрироваться
       </Link>
 
-      {showRegistrationModal && (
-        <Dialog
-          open={showRegistrationModal}
-          onClose={handleCloseModal}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <div className={styles.notificationPrompt}>
-            <h3>Аккаунт не найден</h3>
-            <p>Аккаунт с указанным email не существует. Хотите зарегистрироваться?</p>
-            <div className={styles.promptButtons}>
-              <CustomButton
-                onClick={onRegister}
-                text="Зарегистрироваться"
-                className={styles.allowButton}
-              />
-            </div>
+      <Dialog open={showRegistrationModal} onClose={handleCloseModal}>
+        <div className={styles.notificationPrompt}>
+          <h3>Аккаунт не найден</h3>
+          <p>Такого аккаунта не существует. Хотите зарегистрироваться?</p>
+          <div className={styles.promptButtons}>
+            <CustomButton
+              onClick={onRegister}
+              text="Зарегистрироваться"
+              className={styles.allowButton}
+            />
+            <CustomButton onClick={handleCloseModal} text="Отмена" className={styles.skipButton} />
           </div>
-        </Dialog>
-      )}
+        </div>
+      </Dialog>
     </div>
   );
 };

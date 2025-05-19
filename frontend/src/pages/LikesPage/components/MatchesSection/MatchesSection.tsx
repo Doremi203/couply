@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import EmptyState from '../../../../shared/components/EmptyState';
 import { MatchProfile } from '../../types';
@@ -20,8 +20,13 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
   showChatMessage,
 }) => {
   //@ts-ignore
-  const users = matches.users;
-  if (users === undefined || users.length === 0) {
+  const [displayedUsers, setDisplayedUsers] = useState<any[]>(matches.users || []);
+
+  const handleRemoveMatch = (id: number) => {
+    setDisplayedUsers((prevUsers: any[]) => prevUsers.filter((user: any) => user.id !== id));
+  };
+
+  if (displayedUsers.length === 0) {
     return (
       <EmptyState title="У вас пока нет мэтчей" subtitle="Лайкайте профили, чтобы найти мэтчи" />
     );
@@ -31,7 +36,7 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
     <div className={styles.section}>
       <div className={styles.matchesContainer}>
         {/**@ts-ignore */}
-        {users.map(match => (
+        {displayedUsers.map(match => (
           <MatchCard
             key={match.id}
             // @ts-ignore
@@ -40,6 +45,7 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
             onClick={onMatchClick}
             onSocialClick={onSocialClick}
             showChatMessage={showChatMessage}
+            onRemove={handleRemoveMatch}
           />
         ))}
       </div>

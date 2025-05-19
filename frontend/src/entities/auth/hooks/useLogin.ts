@@ -7,19 +7,21 @@ export const useLogin = () => {
   const [login] = useLoginMutation();
 
   const loginUser = useCallback(
-    async (loginParams: LoginParams): Promise<LoginResponse> => {
+    async (loginParams: LoginParams): Promise<{ data?: LoginResponse; error?: string }> => {
       try {
-        await login(loginParams).unwrap();
-
         const loginResponse = await login(loginParams).unwrap();
-
         localStorage.setItem('token', loginResponse.token);
-
-        return loginResponse;
-      } catch (error) {
-        // TODO
-        //@ts-ignore
-        throw new Error(error?.data?.message || 'An error occurred during registration or login');
+        return { data: loginResponse };
+      } catch (error: any) {
+        if (error?.status === 404) {
+          return { error: 'Пользователь с таким email не найден' };
+        } else if (error?.status === 401) {
+          return { error: 'Неверный пароль' };
+        } else if (error?.data?.message) {
+          return { error: error.data.message };
+        } else {
+          return { error: 'Произошла ошибка при входе в систему' };
+        }
       }
     },
     [login],

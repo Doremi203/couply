@@ -71,6 +71,9 @@ const GeoLocationRequest: React.FC<GeoLocationRequestProps> = ({ onLocationRecei
         // Store coordinates in localStorage for persistence
         localStorage.setItem('userLocation', JSON.stringify(coords));
 
+        // Mark that user has allowed geolocation
+        localStorage.setItem('userLocationAllowed', 'true');
+
         // Call the callback if provided
         if (onLocationReceived) {
           onLocationReceived(coords);

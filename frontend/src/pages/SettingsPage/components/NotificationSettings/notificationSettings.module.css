@@ -39,4 +39,14 @@
 
 .switch {
   color: var(--primary-color, #6366f1);
+  transition: opacity 0.2s ease-in-out;
+}
+
+.switchLoading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.switchDisabled {
+  opacity: 0.5;
 }

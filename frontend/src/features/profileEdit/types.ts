@@ -1,16 +1,20 @@
 export interface ProfileData {
+  education: any;
+  latitude: any;
+  longitude: any;
+  children: any;
+  zodiac: any;
+  isVerified: any;
+  isPremium: any;
+  isBlocked: any;
+  bio: string;
+  height: any;
   name: string;
   age: number;
   phone: string;
   dateOfBirth: string;
   email: string;
   gender: string;
-  interests: string[];
-  about: string;
-  music: string[];
-  movies: string[];
-  books: string[];
-  hobbies: string[];
   isHidden: boolean;
   photos: string[];
 }

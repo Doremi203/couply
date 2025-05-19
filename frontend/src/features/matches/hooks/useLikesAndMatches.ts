@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   useFetchIncomingLikesMutation,
   useFetchMatchesUserIdsMutation,
+  useLikeUserMutation,
   // useLikeUserMutation,
 } from '../../../entities/matches/api/matchesApi';
 import { useGetUsersMutation } from '../../../entities/user';
@@ -11,10 +12,10 @@ import { LikeProfile, MatchProfile } from '../types';
 export const useLikesAndMatches = () => {
   const [fetchMatchesUserIds] = useFetchMatchesUserIdsMutation();
   const [fetchIncomingLikes, { isLoading: isLoadingIncoming }] = useFetchIncomingLikesMutation();
-  //@ts-ignore
-  // const [likeUser] = useLikeUserMutation();
+
   const [getUsers] = useGetUsersMutation();
   //const [getUser] = useGetUserMutation();
+  const [likeUser] = useLikeUserMutation();
 
   const [matchesUsers, setMatchesUsers] = useState([]);
   const [likesUsers, setLikesUsers] = useState([]);
@@ -46,12 +47,9 @@ export const useLikesAndMatches = () => {
         }).unwrap();
 
         const likesIds = incomingResult.likes.map(el => el.senderId);
-        console.log('IDS', likesIds);
 
         //@ts-ignore
         const likesUsers = await getUsers(likesIds).unwrap();
-
-        console.log('1', likesUsers);
 
         //@ts-ignore
         setLikesUsers(likesUsers);
@@ -83,18 +81,10 @@ export const useLikesAndMatches = () => {
 
       if (likedProfile) {
         try {
-          // await updateMatch({
-          //   mainUserId: likedProfile,
-          //   // @ts-ignore
-          //   chosenUserId: userId,
-          //   approved: true,
-          // });
-
-          // await likeUser({
-          //   targetUserId: likedProfile,
-          //   // @ts-ignore
-          //   chosenUserId: userId,
-          // });
+          await likeUser({
+            targetUserId: likedProfile,
+            message: '',
+          });
 
           setShowMatchModal(true);
 

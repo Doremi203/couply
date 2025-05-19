@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
+import { useGetUserMutation } from '../../../../entities/user';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileView } from '../../../../widgets/ProfileView';
-import { ProfileData } from '../../types';
 import { Profile } from '../Profile';
 
 import styles from './profilePage.module.css';
@@ -14,34 +14,69 @@ interface ProfilePageProps {
   initialVerified?: boolean;
 }
 
+interface PhotoItem {
+  file: File;
+  url: string;
+  orderNumber: number;
+}
+
 export const ProfilePage: React.FC<ProfilePageProps> = ({
   initialTab = 'profile',
   initialEditMode = false,
   initialVerified = false,
 }) => {
+  const [getUser] = useGetUserMutation();
+  // const [updateUser] = useUpdateUserMutation();
+  // const [uploadFile] = useUploadFileToS3Mutation();
+  // const [confirmPhoto] = useConfirmPhotoMutation();
+
+  const [profileData, setProfileData] = useState<any>({
+    name: '',
+    age: 0,
+    phone: '',
+    dateOfBirth: '',
+    email: '',
+    gender: '',
+    interests: [],
+    about: '',
+    music: [],
+    movies: [],
+    books: [],
+    hobbies: [],
+    isHidden: false,
+    photos: [],
+    bio: '',
+  });
+
+  const [newPhotoFiles, setNewPhotoFiles] = useState<PhotoItem[]>([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getUser({}).unwrap();
+        setProfileData(data.user);
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [getUser]);
+
   const [isEditMode, setIsEditMode] = useState(initialEditMode);
   const [activeTab, setActiveTab] = useState(initialTab);
   const [isProfileHidden, setIsProfileHidden] = useState(false);
   const [isVerified, setIsVerified] = useState(initialVerified);
 
-  const [profileData, setProfileData] = useState<ProfileData>({
-    name: 'Майя',
-    age: 21,
-    phone: '+91 9876543210',
-    dateOfBirth: '1997-05-02',
-    email: 'abcqwertyu@gmail.com',
-    gender: 'female',
-    interests: ['Музыка', 'Путешествия', 'Спорт'],
-    about: 'Я люблю человека-паука, викенда и пить бабл ти.',
-    music: ['Pop', 'Rock', 'Jazz'],
-    movies: ['Comedy', 'Action', 'Drama'],
-    books: ['Fiction', 'Biography'],
-    hobbies: ['Photography', 'Cooking', 'Hiking'],
-    isHidden: false,
-    photos: ['/photo1.png', '/woman1.jpg'],
-    //@ts-ignore
-    imageUrl: '/photo1.png',
-  });
+  const MAX_PHOTOS = 6;
+
+  if (isLoading) {
+    return <div className={styles.loader} />;
+  }
 
   const handleEditToggle = () => {
     setIsEditMode(!isEditMode);
@@ -60,75 +95,69 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     setIsVerified(true);
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setProfileData({
-      ...profileData,
-      [field]: value,
-    });
-  };
-
-  const handleArrayInputChange = (field: string, value: string) => {
-    const values = value.split(',').map(item => item.trim());
-    setProfileData({
-      ...profileData,
-      [field]: values,
-    });
-  };
-
   const handlePhotoAdd = (file?: File, isAvatar: boolean = false) => {
-    if (file) {
-      // Create a URL for the selected file
-      const fileUrl = URL.createObjectURL(file);
+    if (!file) return;
 
-      if (isAvatar) {
-        // If this is an avatar upload, set it as the first photo
-        const updatedPhotos = [...profileData.photos];
-        updatedPhotos.unshift(fileUrl); // Add to the beginning of the array
-        setProfileData({
-          ...profileData,
-          photos: updatedPhotos,
-        });
+    // Create object URL from the file
+    const fileUrl = URL.createObjectURL(file);
+    const currentPhotos = [...(profileData.photos || [])];
+
+    // Get the next order number
+    const orderNumber = newPhotoFiles.length;
+
+    // Add to newPhotoFiles for later upload
+    const newPhotoItem = {
+      file,
+      url: fileUrl,
+      orderNumber,
+    };
+    setNewPhotoFiles(prev => [...prev, newPhotoItem]);
+
+    if (isAvatar) {
+      // If it's an avatar, place it at the first position
+      if (currentPhotos.length > 0) {
+        // Replace the first photo with the new avatar
+        currentPhotos[0] = { url: fileUrl, isNew: true };
       } else {
-        // Otherwise, add it to the end of the photos array
-        setProfileData({
-          ...profileData,
-          photos: [...profileData.photos, fileUrl],
-        });
+        // If there are no photos, add the avatar as the first one
+        currentPhotos.push({ url: fileUrl, isNew: true });
       }
     } else {
-      // Fallback to placeholder if no file is provided
-      const placeholderUrl = '/man1.jpg';
-
-      if (isAvatar) {
-        // If this is an avatar upload, set it as the first photo
-        const updatedPhotos = [...profileData.photos];
-        updatedPhotos.unshift(placeholderUrl); // Add to the beginning of the array
-        setProfileData({
-          ...profileData,
-          photos: updatedPhotos,
-        });
+      // Regular photo addition, limit to MAX_PHOTOS
+      if (currentPhotos.length < MAX_PHOTOS) {
+        currentPhotos.push({ url: fileUrl, isNew: true });
       } else {
-        // Otherwise, add it to the end of the photos array
-        setProfileData({
-          ...profileData,
-          photos: [...profileData.photos, placeholderUrl],
-        });
+        alert(`Максимальное количество фото: ${MAX_PHOTOS}`);
+        return;
       }
     }
+
+    setProfileData({
+      ...profileData,
+      photos: currentPhotos,
+    });
   };
 
   const handlePhotoRemove = (index: number) => {
     const updatedPhotos = [...profileData.photos];
-    updatedPhotos.splice(index, 1);
-    setProfileData({
-      ...profileData,
-      photos: updatedPhotos,
-    });
-  };
+    if (index >= 0 && index < updatedPhotos.length) {
+      // Check if it's a new photo that hasn't been uploaded yet
+      const removedPhoto = updatedPhotos[index];
+      if (removedPhoto.isNew) {
+        // Also remove from newPhotoFiles
+        setNewPhotoFiles(prev => prev.filter(p => p.url !== removedPhoto.url));
+      } else {
+        // For existing photos, we'd need to call an API to remove them
+        // This depends on your backend API
+      }
 
-  const handleSaveChanges = () => {
-    setIsEditMode(false);
-    setActiveTab('profile');
+      // Remove from UI
+      updatedPhotos.splice(index, 1);
+      setProfileData({
+        ...profileData,
+        photos: updatedPhotos,
+      });
+    }
   };
 
   const renderContent = () => {
@@ -137,10 +166,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         return (
           <EditProfile
             profileData={profileData}
-            onBack={() => setActiveTab('profile')}
-            onSave={handleSaveChanges}
-            onInputChange={handleInputChange}
-            onArrayInputChange={handleArrayInputChange}
+            onBack={() => {
+              // Upload any pending photos before going back
+              // if (newPhotoFiles.length > 0) {
+              //   uploadPhotosToBackend();
+              // }
+              setActiveTab('profile');
+            }}
             onPhotoAdd={handlePhotoAdd}
             onPhotoRemove={handlePhotoRemove}
           />

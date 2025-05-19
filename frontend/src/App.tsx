@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
@@ -64,13 +64,26 @@ const router = createBrowserRouter([
   },
 ]);
 
+// Компонент для отображения сообщения о повороте устройства
+const OrientationMessage: React.FC = () => {
+  return (
+    <div className="orientation-message">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="var(--primary-color)">
+        <path d="M0 0h24v24H0z" fill="none" />
+        <path d="M17 1.01L7 1C5.9 1 5 1.9 5 3v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z" />
+      </svg>
+      <p>Пожалуйста, поверните устройство в портретную ориентацию для лучшего взаимодействия</p>
+    </div>
+  );
+};
+
 function App() {
   const dispatch = useDispatch();
+  const [isLandscape, setIsLandscape] = useState(false);
 
-  //TODO
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);
-  const { isSupported, permission, initialize, isInitializing } = usePushNotifications();
+  const { isSupported, permission, subscribe, isInitializing } = usePushNotifications();
 
   // Load userId from localStorage on initial load
   useEffect(() => {
@@ -82,17 +95,74 @@ function App() {
     }
   }, [userId, dispatch]);
 
-  // Инициализация push-уведомлений только если разрешение уже получено
+  // Функция проверки ориентации экрана
+  const checkOrientation = () => {
+    // Проверяем, находимся ли мы на мобильном устройстве
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent,
+    );
+
+    // Если это мобильное устройство и ширина экрана больше высоты, значит альбомная ориентация
+    if (isMobile && window.innerWidth > window.innerHeight) {
+      setIsLandscape(true);
+    } else {
+      setIsLandscape(false);
+    }
+  };
+
+  // Проверка ориентации при загрузке и изменении размеров окна
+  useEffect(() => {
+    checkOrientation();
+    window.addEventListener('resize', checkOrientation);
+    window.addEventListener('orientationchange', checkOrientation);
+
+    return () => {
+      window.removeEventListener('resize', checkOrientation);
+      window.removeEventListener('orientationchange', checkOrientation);
+    };
+  }, []);
+
+  // Check for existing geolocation permission
+  useEffect(() => {
+    // Only check if geolocation is available
+    if (navigator.geolocation) {
+      // Use a one-time permission check to set the initial state
+      navigator.permissions
+        .query({ name: 'geolocation' })
+        .then(permissionStatus => {
+          if (permissionStatus.state === 'granted') {
+            localStorage.setItem('userLocationAllowed', 'true');
+          } else if (permissionStatus.state === 'denied') {
+            localStorage.setItem('userLocationAllowed', 'false');
+          }
+
+          // Set up a listener for future changes
+          permissionStatus.onchange = () => {
+            localStorage.setItem(
+              'userLocationAllowed',
+              permissionStatus.state === 'granted' ? 'true' : 'false',
+            );
+          };
+        })
+        .catch(() => {
+          // If permissions API fails, we'll rely on the manual permission setting
+          // in GeoLocationRequest component
+        });
+    }
+  }, []);
+
+  // Подписка на push-уведомления только если разрешение уже получено
   useEffect(() => {
     if (isSupported && permission === 'granted' && !isInitializing) {
-      initialize(userId || 'user123').then(success => {
-        console.log('Push notifications initialized:', success);
+      subscribe().then(success => {
+        console.log('Push notifications subscription status:', success);
       });
     }
-  }, [isSupported, permission, isInitializing, initialize, userId]);
+  }, [isSupported, permission, isInitializing, subscribe]);
 
   return (
     <ThemeProvider>
+      {isLandscape && <OrientationMessage />}
       <RouterProvider router={router} />
     </ThemeProvider>
   );

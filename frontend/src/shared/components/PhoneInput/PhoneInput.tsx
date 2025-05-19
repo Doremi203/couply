@@ -1,4 +1,4 @@
-import { useRef, KeyboardEvent } from 'react';
+import { useRef, KeyboardEvent, useState, useEffect } from 'react';
 
 import styles from './phoneInput.module.css';
 
@@ -9,6 +9,17 @@ interface PhoneInputProps {
 
 export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isValid, setIsValid] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // Only validate when user has entered something
+    if (value.length > 3) {
+      const cleanPhone = value.replace(/\D/g, '');
+      setIsValid(cleanPhone.length >= 11);
+    } else {
+      setIsValid(null);
+    }
+  }, [value]);
 
   const formatPhone = (input: string): string => {
     // Сохраняем только цифры и плюс
@@ -39,9 +50,8 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     // Запрещаем удаление базовой маски "+7"
-
-    //@ts-ignore
-    if (e.key === 'Backspace' && inputRef.current?.selectionStart <= 3) {
+    const selectionStart = inputRef.current?.selectionStart ?? 0;
+    if (e.key === 'Backspace' && selectionStart <= 3) {
       e.preventDefault();
     }
   };
@@ -50,7 +60,7 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
     if (value === '') {
       onChange('+7 ');
     }
-    // setShowPlaceholder(false);
+
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.setSelectionRange(4, 4); // Устанавливаем курсор после +7
@@ -58,11 +68,19 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
     }, 0);
   };
 
+  const inputClassName = [
+    styles.input,
+    isValid === true ? styles.valid : '',
+    isValid === false ? styles.invalid : '',
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return (
     <input
       type="tel"
       inputMode="tel"
-      className={styles.input}
+      className={inputClassName}
       value={value}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

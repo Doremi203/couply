@@ -1,15 +1,14 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useState, useRef } from 'react';
-// import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Gender } from '../../../../entities/user/api/constants';
+import { useUploadFileToS3Mutation } from '../../../../entities/photo/api/photoApi';
+import { Gender, Goal } from '../../../../entities/user/api/constants';
 import {
   useConfirmPhotoMutation,
   useCreateUserMutation,
 } from '../../../../entities/user/api/userApi';
-// import { setUserId } from '../../../../entities/user/model/userSlice';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
@@ -22,6 +21,7 @@ import {
 } from '../../../../shared/lib/services/PushNotificationService';
 import getAge from '../../helpers/getAge';
 import { GeoLocationRequest } from '../GeoLocationRequest';
+import LocationSelector from '../LocationSelector/LocationSelector';
 import { FixedPhotoGallery } from '../PhotoGallery/PhotoGallery';
 
 import styles from './enterInfo.module.css';
@@ -29,15 +29,16 @@ import styles from './enterInfo.module.css';
 export const EnterInfoPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   const [createUser, { isLoading }] = useCreateUserMutation();
   const [confirmPhoto] = useConfirmPhotoMutation();
 
   const [name, setName] = useState('');
+  const [telegram, setTelegram] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [height, setHeight] = useState('');
   const [userGender, setUserGender] = useState('');
+  const [userGoal, setUserGoal] = useState('');
   const [profilePhoto, setProfilePhoto] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,12 +46,30 @@ export const EnterInfoPage = () => {
   const [notificationPermissionRequested, setNotificationPermissionRequested] = useState(false);
 
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [useManualLocation, setUseManualLocation] = useState(false);
+  const [locationName, setLocationName] = useState('');
 
-  const [userPhotos, setUserPhotos] = useState([]);
+  // Add proper interface for the photo object
+  interface PhotoItem {
+    file: File;
+    url: string;
+  }
+
+  // Update the userPhotos state with the proper type
+  const [userPhotos, setUserPhotos] = useState<PhotoItem[]>([]);
 
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
     setCoords(coordinates);
   };
+
+  const [uploadFile] = useUploadFileToS3Mutation();
+
+  const goalOptions = [
+    { label: 'Отношения', value: 'relationship', enum: Goal.relationship },
+    { label: 'Дружба', value: 'friendship', enum: Goal.friendship },
+    { label: 'Общение', value: 'justChatting', enum: Goal.justChatting },
+    { label: 'Свидания', value: 'dating', enum: Goal.dating },
+  ];
 
   const nextStep = async () => {
     if (currentStep === sections.length - 1) {
@@ -70,20 +89,20 @@ export const EnterInfoPage = () => {
             genderEnum = Gender.unspecified;
         }
 
-        const locationString = coords ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}` : '';
+        // Find the selected goal enum directly from our mapping
+        const selectedGoalOption = goalOptions.find(option => option.value === userGoal);
+        const goalEnum = selectedGoalOption ? selectedGoalOption.enum : Goal.unspecified;
 
-        if (profilePhoto) {
-          localStorage.setItem('profilePhotoUrl', profilePhoto);
-        }
+        const locationString = coords
+          ? `${coords.lat.toFixed(6)},${coords.lng.toFixed(6)}`
+          : locationName;
 
-        // TODO
         if (profilePhoto) {
           localStorage.setItem('profilePhotoUrl', profilePhoto);
         }
 
         const photoUploadRequests = userPhotos.map((photo, index) => ({
           orderNumber: index,
-          //@ts-ignore
           mimeType: photo.file.type,
         }));
 
@@ -91,37 +110,35 @@ export const EnterInfoPage = () => {
 
         const userData = {
           name,
+          telegram,
           age: ageValue,
           gender: genderEnum,
-          height: String(height),
+          height: Number(height),
+          goal: goalEnum,
           ...(locationString ? { location: locationString } : {}),
-          photoUploadRequests, // Добавляем массив метаданных
+          photoUploadRequests,
           latitude: coords?.lat,
           longitude: coords?.lng,
         };
 
-        //@ts-ignore
         const response = await createUser(userData).unwrap();
 
-        //TODO
-        //@ts-ignore
+        // @ts-ignore
         if (response.photoUploadResponses) {
-          // Загружаем каждое фото на соответствующий URL
           await Promise.all(
             //@ts-ignore
-            response.photoUploadResponses.map(async (resp: any) => {
+            response.photoUploadResponses.map(async resp => {
               const photo = userPhotos[resp.orderNumber];
-              if (!photo) return;
+              if (!photo?.file) return;
 
-              await fetch(resp.uploadUrl, {
-                method: 'PUT',
-                //@ts-ignore
-                body: photo.file,
-                headers: {
-                  //@ts-ignore
-                  'Content-Type': photo.file.type,
-                },
-              });
+              try {
+                await uploadFile({
+                  url: resp.uploadUrl,
+                  file: photo.file,
+                }).unwrap();
+              } catch (error) {
+                console.error(`Ошибка загрузки файла ${photo.file.name}:`, error);
+              }
             }),
           );
         }
@@ -133,17 +150,11 @@ export const EnterInfoPage = () => {
           throw error;
         }
 
-        // надо ли сохранять в локал TODO
-        // if (response && response.user && response.user.id) {
-        //   dispatch(setUserId(response.user.id));
-        //   localStorage.setItem('userId', response.user.id);
-        // }
-
         if (
           isPushNotificationSupported() &&
-          !notificationPermissionRequested &&
-          Notification.permission !== 'granted' &&
-          Notification.permission !== 'denied'
+          !notificationPermissionRequested
+          // Notification.permission !== 'granted' &&
+          // Notification.permission !== 'denied'
         ) {
           setShowNotificationPrompt(true);
         } else {
@@ -179,6 +190,10 @@ export const EnterInfoPage = () => {
     setUserGender(value);
   };
 
+  const handleUserGoalSelect = (value: string) => {
+    setUserGoal(value);
+  };
+
   const handleCameraClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -194,10 +209,8 @@ export const EnterInfoPage = () => {
       setUserPhotos(prevPhotos => {
         const newPhotos = [...prevPhotos];
         if (newPhotos.length > 0) {
-          //@ts-ignore
           newPhotos[0] = { file, url: fileUrl };
         } else {
-          //@ts-ignore
           newPhotos.push({ file, url: fileUrl });
         }
         return newPhotos;
@@ -245,17 +258,23 @@ export const EnterInfoPage = () => {
   const isCurrentStepValid = () => {
     switch (currentStep) {
       case 0:
-        return name.trim() !== '';
+        return name.trim() !== '' && telegram.trim() !== '';
       case 1: {
         const calculatedAge = getAge(birthDate);
-        return birthDate !== '' && typeof calculatedAge === 'number' && calculatedAge >= 18;
+        return (
+          birthDate !== '' &&
+          typeof calculatedAge === 'number' &&
+          calculatedAge >= 18 &&
+          userGender !== '' &&
+          height.trim() !== ''
+        );
       }
       case 2:
-        return true;
+        return userGoal !== '';
       case 3:
-        return true;
+        return userPhotos.length > 0;
       case 4:
-        return true;
+        return coords !== null || (useManualLocation && locationName.trim() !== '');
       default:
         return false;
     }
@@ -274,16 +293,41 @@ export const EnterInfoPage = () => {
       if (files && files.length > 0) {
         const file = files[0];
         const fileUrl = URL.createObjectURL(file);
-        //@ts-ignore
-        setUserPhotos(prevPhotos => [...prevPhotos, { file, url: fileUrl }]);
+
+        setUserPhotos(prevPhotos => {
+          // If this is the first photo, also set it as the profile photo
+          if (prevPhotos.length === 0) {
+            setProfilePhoto(fileUrl);
+          }
+          return [...prevPhotos, { file, url: fileUrl }];
+        });
       }
     };
     input.click();
   };
 
   const handleRemovePhoto = (index: number) => {
-    const newPhotos = userPhotos.filter((_, i) => i !== index);
-    setUserPhotos(newPhotos);
+    setUserPhotos(prevPhotos => {
+      const newPhotos = prevPhotos.filter((_, i) => i !== index);
+
+      // Update profile photo if we're removing the first photo
+      if (index === 0) {
+        // If there are still photos left, set the new first photo as profile
+        if (newPhotos.length > 0) {
+          setProfilePhoto(newPhotos[0].url);
+        } else {
+          // Otherwise clear the profile photo
+          setProfilePhoto(null);
+        }
+      }
+
+      return newPhotos;
+    });
+  };
+
+  const handleLocationSelected = (location: { name: string; lat: number; lng: number }) => {
+    setCoords({ lat: location.lat, lng: location.lng });
+    setLocationName(location.name);
   };
 
   const sections = [
@@ -294,6 +338,14 @@ export const EnterInfoPage = () => {
         type="text"
         value={name}
         onChange={e => setName(e.target.value)}
+        className={styles.input}
+      />
+      <h2 className={styles.genderLabel}>Ваш Telegram</h2>
+      <CustomInput
+        placeholder="@username"
+        type="text"
+        value={telegram}
+        onChange={e => setTelegram(e.target.value)}
         className={styles.input}
       />
     </div>,
@@ -333,6 +385,15 @@ export const EnterInfoPage = () => {
         className={styles.input}
       />
     </div>,
+    <div key="goalSection">
+      <h2>Какова ваша цель?</h2>
+      <ToggleButtons
+        options={goalOptions.map(({ label, value }) => ({ label, value }))}
+        onSelect={handleUserGoalSelect}
+        value={userGoal}
+        className={styles.toggleButtons}
+      />
+    </div>,
     <div key="datingSettingsSection">
       <h2>Загрузите ваше фото</h2>
       <div>
@@ -352,7 +413,6 @@ export const EnterInfoPage = () => {
           )}
         </div>
         <FixedPhotoGallery
-          //@ts-ignore
           photos={userPhotos.map(photo => photo.url)}
           onPhotoRemove={handleRemovePhoto}
           onAddPhotoClick={handleAddPhoto}
@@ -360,14 +420,43 @@ export const EnterInfoPage = () => {
         />
       </div>
     </div>,
-    <div key="datingSettingsSection">
+    <div key="locationSection">
       <h2>Включите геопозицию</h2>
       <div>
         <div>
           <div className={styles.geoText}>
             Чтобы мы подобрали вам людей не только близких по духу, но и по расположению
           </div>
-          <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+          {!useManualLocation ? (
+            <>
+              <GeoLocationRequest onLocationReceived={handleLocationReceived} />
+              {!coords && (
+                <div className={styles.manualLocationOption}>
+                  <p>Не хотите разрешать доступ к геопозиции?</p>
+                  <CustomButton
+                    onClick={() => setUseManualLocation(true)}
+                    text="Ввести вручную"
+                    className={styles.outlinedButton}
+                  />
+                </div>
+              )}
+            </>
+          ) : (
+            <div className={styles.manualLocationInput}>
+              <h3>Укажите ваше местоположение</h3>
+              <LocationSelector onLocationSelected={handleLocationSelected} />
+              {locationName && (
+                <div className={styles.selectedLocation}>
+                  <p>Выбранное местоположение: {locationName}</p>
+                </div>
+              )}
+              <CustomButton
+                onClick={() => setUseManualLocation(false)}
+                text="Использовать геопозицию"
+                className={`${styles.outlinedButton} ${styles.smallButton}`}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>,

@@ -1,19 +1,19 @@
 import React from 'react';
 
+import { useDeleteMatchMutation } from '../../../../entities/matches';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
 import { TelegramIcon } from '../../../../shared/components/TelegramIcon';
 
 import styles from './matchCard.module.css';
 
 export interface MatchProfile {
-  match: {
-    id: number;
-    name: string;
-    age: number;
-    imageUrl: string;
-    telegram: string;
-    instagram: string;
-  };
+  id: number;
+  name: string;
+  age: number;
+  imageUrl: string;
+  telegram: string;
+  instagram: string;
+  photos: { url: string }[];
 }
 
 interface MatchCardProps {
@@ -21,6 +21,7 @@ interface MatchCardProps {
   onClick: (match: MatchProfile) => void;
   onSocialClick: (matchId: number, type: 'telegram' | 'instagram') => void;
   showChatMessage: number | null;
+  onRemove: (id: number) => void;
 }
 
 //TODO вернуть profile.user
@@ -30,17 +31,25 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   onClick,
   // onSocialClick,
   showChatMessage,
+  onRemove,
 }) => {
+  const [deleteMatch] = useDeleteMatchMutation();
+  const handleDeleteMatch = async () => {
+    try {
+      await deleteMatch({ targetUserId: String(match.id) });
+      onRemove(match.id);
+    } catch (error) {
+      console.error('Error deleting match:', error);
+    }
+  };
+
   return (
     <div className={styles.matchCard} onClick={() => onClick(match)}>
-      {/* @ts-ignore */}
-      <img src={match.imageUrl} alt={match.name} className={styles.matchImage} />
+      <img src={match.photos[0].url} alt={match.name} className={styles.matchImage} />
       <div className={styles.matchInfo}>
         <div className={styles.matchName}>
-          {/* @ts-ignore */}
           {match.name}, {match.age}
         </div>
-        {/* @ts-ignore */}
         {showChatMessage === match.id && (
           <div className={styles.chatMessage}>Открыто в новой вкладке</div>
         )}
@@ -49,12 +58,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         <div className={styles.telegram}>
           <TelegramIcon />
         </div>
-        <DislikeButton
-          onClick={function (): void {
-            throw new Error('Function not implemented.');
-          }}
-          className={styles.dislikeButton}
-        />
+        <DislikeButton onClick={handleDeleteMatch} className={styles.dislikeButton} />
       </div>
     </div>
   );

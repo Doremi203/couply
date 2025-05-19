@@ -15,6 +15,7 @@
   touch-action: pan-y;
   width: 100%;
   max-width: 100vw;
+  overscroll-behavior: contain;
 }
 
 .header {
@@ -45,9 +46,10 @@
 .profileImageContainer {
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: 92vh;
   transition: height 0.3s ease;
   max-width: 100%;
+  flex-shrink: 0;
 }
 
 .profileImageContainer.expanded {
@@ -59,6 +61,7 @@
   height: 100%;
   object-fit: cover;
   max-width: 100%;
+  max-height: 95vh;
 }
 
 .profileGradient {
@@ -152,51 +155,42 @@
   background-color: var(--section-background);
   border-top-left-radius: 1.25rem;
   border-top-right-radius: 1.25rem;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  position: relative;
   z-index: 5;
-  min-height: 70vh;
-  max-height: 80vh;
-  overflow-y: auto;
-  transition:
-    transform 0.3s ease,
-    max-height 0.3s ease,
-    visibility 0.3s,
-    opacity 0.3s;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
-  -webkit-overflow-scrolling: touch;
-  user-select: none;
-  transform: translateY(100vh);
   width: 100%;
   max-width: 768px;
-  margin: 0 auto;
+  margin: -2rem auto 0;
+  overflow-y: visible;
+  user-select: none;
+  box-shadow: 0 -10px 20px rgba(0, 0, 0, 0.2);
 }
 
-.profileInfo.expanded {
-  transform: translateY(100vh);
-  max-height: 80vh;
-  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.1);
-  visibility: hidden;
-  opacity: 0;
-  transition:
-    transform 0.3s ease,
-    max-height 0.3s ease,
-    visibility 0.3s,
-    opacity 0.3s;
-}
-
+.profileInfoHandle,
+.profileInfo.expanded,
 .profileInfo.collapsed {
-  transform: translateY(50vh);
+  transform: none;
   visibility: visible;
   opacity: 1;
-  transition:
-    transform 0.3s ease,
-    max-height 0.3s ease,
-    visibility 0.3s,
-    opacity 0.3s;
+  max-height: none;
+  min-height: auto;
+}
+
+.profileInfoHandle {
+  width: 100%;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+  cursor: grab;
+}
+
+.profileInfoHandleBar {
+  width: 40px;
+  height: 4px;
+  background-color: var(--secondary-text-color);
+  border-radius: 4px;
+  opacity: 0.5;
 }
 
 .profileNameContainer {
@@ -293,8 +287,8 @@
 }
 
 .detailedInfo {
-  margin-top: 0.625rem;
-  width: 100%;
+  padding-bottom: 70px;
+  overflow-y: visible;
 }
 
 .infoSection {

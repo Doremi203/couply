@@ -21,6 +21,7 @@ const meta: Meta<typeof MatchCard> = {
 export default meta;
 type Story = StoryObj<typeof MatchCard>;
 
+//@ts-ignore
 const sampleMatch: MatchProfile = {
   // @ts-ignore
   id: 1,

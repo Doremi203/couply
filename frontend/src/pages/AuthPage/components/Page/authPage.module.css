@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
+  align-items: center;
 }
 
 .page {
@@ -51,4 +53,41 @@
 
 .vkIcon {
   margin-left: 2px;
+}
+
+/* Обертка для контроля размеров кнопки Яндекс */
+.yandexButtonWrapper {
+  /* width: 280px; */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Стили для контейнера кнопки Яндекс */
+.yandexButton {
+  /* width: 100%; */
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+/* Общий стиль для кнопок на странице */
+.buttons button {
+  /* width: 280px !important; */
+  box-sizing: border-box !important;
+}
+
+/* Стиль для всех кнопок на странице, включая ButtonWithIcon */
+.buttons > button {
+  /* width: 280px !important;
+  max-width: 280px !important;
+  min-width: 280px !important; */
+  box-sizing: border-box !important;
+}
+
+/* Применяем единую ширину к дочерним элементам внутри .buttons */
+.buttons > * {
+  /* width: 280px !important;
+  max-width: 280px !important;
+  min-width: 280px !important; */
+  box-sizing: border-box !important;
 }

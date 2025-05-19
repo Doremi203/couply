@@ -29,6 +29,7 @@ type Story = StoryObj<typeof AboutMeSection>;
 export const Empty: Story = {
   args: {
     about: '',
+    //@ts-ignore
     onInputChange: (field, value) => console.log(`${field} changed to: ${value}`),
   },
 };
@@ -37,6 +38,7 @@ export const WithContent: Story = {
   args: {
     about:
       'I love hiking, photography, and exploring new places. I work as a software engineer and enjoy solving complex problems.',
+    //@ts-ignore
     onInputChange: (field, value) => console.log(`${field} changed to: ${value}`),
   },
 };
@@ -44,6 +46,7 @@ export const WithContent: Story = {
 export const CustomTitle: Story = {
   args: {
     about: 'I am a passionate chef who loves to experiment with new recipes and flavors.',
+    //@ts-ignore
     onInputChange: (field, value) => console.log(`${field} changed to: ${value}`),
     title: 'Bio',
   },
@@ -52,6 +55,7 @@ export const CustomTitle: Story = {
 export const CustomPlaceholder: Story = {
   args: {
     about: '',
+    //@ts-ignore
     onInputChange: (field, value) => console.log(`${field} changed to: ${value}`),
     placeholder: 'Share your interests, hobbies, and what makes you unique...',
   },

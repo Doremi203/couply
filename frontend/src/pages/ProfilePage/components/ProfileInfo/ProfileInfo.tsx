@@ -19,13 +19,33 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   onPreviewClick,
 }) => {
   const isPro = false;
+
+  // Get profile image URL safely
+  const getProfileImageUrl = () => {
+    if (!profileData.photos || profileData.photos.length === 0) {
+      return '/photo1.png'; // Default image
+    }
+
+    const firstPhoto = profileData.photos[0];
+    if (typeof firstPhoto === 'string') {
+      return firstPhoto;
+    } else if (typeof firstPhoto === 'object' && firstPhoto !== null) {
+      return (firstPhoto as any).url || '/photo1.png';
+    }
+
+    return '/photo1.png'; // Fallback
+  };
+
   return (
     <div className={styles.profileInfo}>
       <div className={styles.profileImageContainer} onClick={onPreviewClick}>
         <img
-          src={profileData.photos[0] || '/photo1.png'}
+          src={getProfileImageUrl()}
           alt="Profile"
           className={styles.profilePic}
+          onError={e => {
+            (e.target as HTMLImageElement).src = '/photo1.png';
+          }}
         />
         {isPro && (
           <div className={styles.proBadge}>
