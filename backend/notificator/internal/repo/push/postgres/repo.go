@@ -7,6 +7,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/Doremi203/couply/backend/notificator/internal/domain/push"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -89,4 +90,41 @@ func (r *repo) GetSubscriptionsByRecipientID(ctx context.Context, userID push.Re
 			RecipientID: push.RecipientID(from.RecipientID),
 		}
 	}), nil
+}
+
+func (r *repo) GetAllRecipients(ctx context.Context) ([]push.Recipient, error) {
+	const query = `
+		SELECT 
+		    endpoint,
+		    p256dh,
+		    auth_key,
+		    recipient_id
+		FROM push_subscriptions
+	`
+	rows, err := r.db.Query(ctx, query)
+	if err != nil {
+		return nil, errors.WrapFail(err, "exec select all push subscriptions query")
+	}
+	defer rows.Close()
+
+	subsriptions, err := pgx.CollectRows(rows, pgx.RowToStructByName[subscriptionEntity])
+	if err != nil {
+		return nil, errors.WrapFail(err, "collect all push subscriptions rows")
+	}
+
+	subsriptionsMap := make(map[uuid.UUID][]subscriptionEntity, len(subsriptions))
+
+	for i := range subsriptions {
+		subsriptionsMap[subsriptions[i].RecipientID] = append(subsriptionsMap[subsriptions[i].RecipientID], subsriptions[i])
+	}
+
+	recipients := make([]push.Recipient, 0, len(subsriptionsMap))
+	for recipientID, subscriptions := range subsriptionsMap {
+		recipients = append(recipients, push.Recipient{
+			ID:            push.RecipientID(recipientID),
+			Subscriptions: slices.Map(subscriptions, entityToDomain),
+		})
+	}
+
+	return recipients, nil
 }

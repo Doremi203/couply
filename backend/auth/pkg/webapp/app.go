@@ -59,6 +59,8 @@ type App struct {
 	healthCheckFunc   func() bool
 	livenessCheckFunc func() bool
 
+	protectedEndpoints []string
+
 	grpcUnaryInterceptors []grpc.UnaryServerInterceptor
 	gatewayOptions        []runtime.ServeMuxOption
 	grpcServices          []grpcService
@@ -131,7 +133,7 @@ func initApp() *App {
 		gatewayOptions: []runtime.ServeMuxOption{
 			runtime.WithIncomingHeaderMatcher(func(s string) (string, bool) {
 				switch s = strings.ToLower(s); s {
-				case "idempotency-key", "user-token", "x-api-key":
+				case "idempotency-key", "user-token", xAPIKeyHeader:
 					return s, true
 				default:
 					return runtime.DefaultHeaderMatcher(s)
@@ -255,6 +257,10 @@ func run(a *App, setupFunc func(ctx context.Context, app *App) error) (err error
 	return nil
 }
 
+func (a *App) AddAPIKeyProtectedEndpoints(endpointNames ...string) {
+	a.protectedEndpoints = append(a.protectedEndpoints, endpointNames...)
+}
+
 func (a *App) HTTPClient() *resty.Client {
 	return a.httpClient
 }
@@ -325,10 +331,17 @@ func (a *App) registerGatewayHandler(
 }
 
 func (a *App) initGRPCServer(grpcMux *runtime.ServeMux) (*grpc.Server, error) {
+	var xApiCfg xAPIKeyConfig
+	err := a.Config.ReadSection("x-api-key", &xApiCfg)
+	if err != nil {
+		return nil, errors.WrapFail(err, "read x-api-key config")
+	}
+
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(
 			NewUnaryPanicInterceptor(a.Log),
 			NewUnaryInternalErrorLogInterceptor(a.Log),
+			newUnaryAPIKeyInterceptor(xApiCfg.SecretAPIKey, a.protectedEndpoints...),
 		),
 		grpc.ChainUnaryInterceptor(a.grpcUnaryInterceptors...),
 	)

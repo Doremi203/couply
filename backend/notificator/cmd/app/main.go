@@ -11,6 +11,7 @@ import (
 	"github.com/Doremi203/couply/backend/notificator/internal/grpc"
 	pushpostgres "github.com/Doremi203/couply/backend/notificator/internal/repo/push/postgres"
 	"github.com/Doremi203/couply/backend/notificator/internal/usecase"
+	"github.com/SherClockHolmes/webpush-go"
 )
 
 func main() {
@@ -28,8 +29,9 @@ func main() {
 		}
 
 		webPushConfig := struct {
-			VapidPublicKey  string
-			VapidPrivateKey string
+			VapidPublicKey  string `secret:"web-push-vapid-public-key"`
+			VapidPrivateKey string `secret:"web-push-vapid-private-key"`
+			Subscriber      string `secret:"web-push-subscriber"`
 		}{}
 		err = app.Config.ReadSection("web-push", &webPushConfig)
 		if err != nil {
@@ -52,8 +54,26 @@ func main() {
 			app.Log,
 		)
 
+		pushSenderUseCase := usecase.NewPushSender(
+			&webpush.Options{
+				Subscriber:      webPushConfig.Subscriber,
+				TTL:             60,
+				VAPIDPublicKey:  webPushConfig.VapidPublicKey,
+				VAPIDPrivateKey: webPushConfig.VapidPrivateKey,
+			},
+			pushRepo,
+			app.Log,
+		)
+
+		pushAdminService := grpc.NewAdminService(
+			pushRepo,
+			pushSenderUseCase,
+			app.Log,
+		)
+
 		tokenProvider := tokenpkg.NewJWTProvider(pkgTokenConfig)
 
+		app.AddAPIKeyProtectedEndpoints(pushgrpc.Admin_SendPushV1_FullMethodName)
 		app.AddGRPCUnaryInterceptor(
 			tokenpkg.NewUnaryTokenInterceptor(
 				tokenProvider,
@@ -64,9 +84,11 @@ func main() {
 		)
 		app.RegisterGRPCServices(
 			pushSubscriptionService,
+			pushAdminService,
 		)
 		app.AddGatewayHandlers(
 			pushSubscriptionService,
+			pushAdminService,
 		)
 
 		return nil

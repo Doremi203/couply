@@ -2,12 +2,25 @@ package usecase
 
 import (
 	"context"
+	"io"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"github.com/Doremi203/couply/backend/notificator/internal/domain/push"
 	"github.com/SherClockHolmes/webpush-go"
 )
+
+func NewPushSender(
+	webPushOptions *webpush.Options,
+	pushRepo push.Repo,
+	logger log.Logger,
+) PushSender {
+	return PushSender{
+		webPushOptions: webPushOptions,
+		pushRepo:       pushRepo,
+		logger:         logger,
+	}
+}
 
 type PushSender struct {
 	webPushOptions *webpush.Options
@@ -17,6 +30,7 @@ type PushSender struct {
 
 func (u PushSender) Send(ctx context.Context, r push.Recipient, p push.Push) error {
 	for _, sub := range r.Subscriptions {
+		var body []byte
 		resp, err := webpush.SendNotificationWithContext(ctx, []byte(p.Text), &webpush.Subscription{
 			Endpoint: string(sub.Endpoint),
 			Keys: webpush.Keys{
@@ -30,10 +44,15 @@ func (u PushSender) Send(ctx context.Context, r push.Recipient, p push.Push) err
 				"send push to %v",
 				errors.Token("endpoint", sub.Endpoint),
 			))
-		}
-		err = resp.Body.Close()
-		if err != nil {
-			u.logger.Warn(errors.WrapFailf(err, "close response body"))
+		} else {
+			body, err = io.ReadAll(resp.Body)
+			if err != nil {
+				u.logger.Error(errors.WrapFail(err, "read response body"))
+			}
+			err = resp.Body.Close()
+			if err != nil {
+				u.logger.Warn(errors.WrapFailf(err, "close response body"))
+			}
 		}
 
 		switch resp.StatusCode {
@@ -49,11 +68,11 @@ func (u PushSender) Send(ctx context.Context, r push.Recipient, p push.Push) err
 				))
 			}
 		default:
-			u.logger.Error(errors.Wrapf(
-				err,
-				"got unexpected %v sending push for %v",
+			u.logger.Error(errors.Errorf(
+				"got unexpected %v sending push for %v %v",
 				errors.Token("status_code", resp.StatusCode),
 				errors.Token("endpoint", sub.Endpoint),
+				errors.Token("body", string(body)),
 			))
 		}
 	}

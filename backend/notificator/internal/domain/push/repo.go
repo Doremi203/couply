@@ -10,4 +10,5 @@ type Repo interface {
 	UpsertSubscription(context.Context, Subscription) error
 	DeleteSubscription(context.Context, Subscription) error
 	GetSubscriptionsByRecipientID(context.Context, RecipientID) ([]Subscription, error)
+	GetAllRecipients(context.Context) ([]Recipient, error)
 }
