@@ -4,7 +4,6 @@ import {
   useFetchIncomingLikesMutation,
   useFetchMatchesUserIdsMutation,
   useLikeUserMutation,
-  // useLikeUserMutation,
 } from '../../../entities/matches/api/matchesApi';
 import { useGetUsersMutation } from '../../../entities/user';
 import { LikeProfile, MatchProfile } from '../types';
@@ -12,9 +11,7 @@ import { LikeProfile, MatchProfile } from '../types';
 export const useLikesAndMatches = () => {
   const [fetchMatchesUserIds] = useFetchMatchesUserIdsMutation();
   const [fetchIncomingLikes, { isLoading: isLoadingIncoming }] = useFetchIncomingLikesMutation();
-
   const [getUsers] = useGetUsersMutation();
-  //const [getUser] = useGetUserMutation();
   const [likeUser] = useLikeUserMutation();
 
   const [matchesUsers, setMatchesUsers] = useState([]);
@@ -32,14 +29,9 @@ export const useLikesAndMatches = () => {
           offset: 0,
         }).unwrap();
 
-        //@ts-ignore
         const matchesUsers = await getUsers(matchesIds.userIds).unwrap();
 
-        //@ts-ignore
         setMatchesUsers(matchesUsers);
-
-        // @ts-ignore
-        // setMatches(matchesResult.match.map(el => el.mainUserId));
 
         const incomingResult = await fetchIncomingLikes({
           limit: 10,
@@ -48,16 +40,11 @@ export const useLikesAndMatches = () => {
 
         const likesIds = incomingResult.likes.map(el => el.senderId);
 
-        //@ts-ignore
         const likesUsers = await getUsers(likesIds).unwrap();
 
-        //@ts-ignore
         setLikesUsers(likesUsers);
 
-        // @ts-ignore
-        // const likes = incomingResult.match.map(el => el.mainUserId);
-
-        // setIncomingMatches(likes);
+        setIncomingMatches(incomingResult);
       } catch (error) {
         console.error('Error loading matches data:', error);
       }
@@ -76,7 +63,6 @@ export const useLikesAndMatches = () => {
 
   const handleLike = useCallback(
     async (id: number) => {
-      // @ts-ignore
       const likedProfile = likes.find(like => like === id);
 
       if (likedProfile) {
@@ -88,24 +74,10 @@ export const useLikesAndMatches = () => {
 
           setShowMatchModal(true);
 
-          // @ts-ignore
           setMatchedProfile(await getUser({ id: likedProfile }).unwrap());
-
-          // TODO NOTIFICATION
-          // if (likedProfile.hasLikedYou) {
-          //   setMatchedProfile(likedProfile);
-          //   setShowMatchModal(true);
-          //   sendMatchNotification({
-          //     userId: userId,
-          //     matchId: likedProfile.id,
-          //     matchName: likedProfile.name,
-          //     matchImage: likedProfile.imageUrl,
-          //   });
-          // }
 
           setMatches(matches.concat(likedProfile));
 
-          // @ts-ignore
           setIncomingMatches(incomingMatches.filter(like => like !== id));
         } catch (error) {
           console.error('Error creating match:', error);
@@ -123,14 +95,9 @@ export const useLikesAndMatches = () => {
     setShowMatchModal(false);
   }, []);
 
-  const handleSocialClick = useCallback((matchId: number, type: 'telegram' | 'instagram') => {
-    // Показываем сообщение при клике на кнопки социальных сетей
+  const handleSocialClick = useCallback((matchId: number) => {
     setShowChatMessage(matchId);
 
-    // Логируем, какая социальная сеть была нажата
-    console.log(`Opening ${type} for match ID ${matchId}`);
-
-    // Скрываем сообщение через 2 секунды
     setTimeout(() => {
       setShowChatMessage(null);
     }, 2000);

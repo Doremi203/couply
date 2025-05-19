@@ -1,19 +1,25 @@
 import React from 'react';
 
+import { LikesData, LikesUsersData } from '../../../../entities/matches/types';
 import EmptyState from '../../../../shared/components/EmptyState';
 import { ProfileCard, ProfileData } from '../../../../shared/components/ProfileCard';
 
 import styles from './likesSection.module.css';
 
 interface LikesSectionProps {
-  likes: ProfileData[];
+  likes: LikesData[];
+  likesUsers: LikesUsersData[];
   onProfileClick: (profile: ProfileData) => void;
   onLike: (id: number) => void;
 }
 
-export const LikesSection: React.FC<LikesSectionProps> = ({ likes, onProfileClick, onLike }) => {
-  //@ts-ignore
-  const users = likes.users;
+export const LikesSection: React.FC<LikesSectionProps> = ({
+  likes,
+  likesUsers,
+  onProfileClick,
+  onLike,
+}) => {
+  const users = likesUsers.users;
 
   if (users === undefined || users.length === 0) {
     return (
@@ -24,14 +30,14 @@ export const LikesSection: React.FC<LikesSectionProps> = ({ likes, onProfileClic
   return (
     <div className={styles.section}>
       <div className={styles.profilesGrid}>
-        {/**@ts-ignore */}
-        {users.map(profile => (
+        {users.map((profile, index) => (
           <ProfileCard
             key={profile.id}
             profile={profile}
             onClick={() => onProfileClick(profile)}
             onLike={onLike}
             className={styles.profileCard}
+            like={likes.likes[index]}
           />
         ))}
       </div>
