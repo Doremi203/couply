@@ -663,6 +663,7 @@ export const ProfileSlider = () => {
           }}
           onClose={handleCloseProfile}
           onLike={handleLike}
+          onDislike={handleNextUser}
         />
       )}
 

@@ -34,9 +34,15 @@ interface ProfileViewProps {
   };
   onClose: () => void;
   onLike?: (id: number) => void;
+  onDislike?: (id: number) => void;
 }
 
-export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLike }) => {
+export const ProfileView: React.FC<ProfileViewProps> = ({
+  profile,
+  onClose,
+  onLike,
+  onDislike,
+}) => {
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -74,6 +80,12 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
       });
       onLike(userId);
     }
+  };
+
+  const handleDislike = () => {
+    console.log('dislike');
+    onDislike();
+    onClose();
   };
 
   useEffect(() => {
@@ -134,12 +146,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
 
             <div className={styles.buttons}>
               <div onClick={e => e.stopPropagation()}>
-                <DislikeButton
-                  onClick={() => {
-                    onClose();
-                  }}
-                  className={styles.dislikeButton}
-                />
+                <DislikeButton onClick={handleDislike} className={styles.dislikeButton} />
               </div>
               <div onClick={e => e.stopPropagation()}>
                 <LikeButton

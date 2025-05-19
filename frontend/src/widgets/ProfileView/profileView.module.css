@@ -80,7 +80,7 @@
   right: 0;
   padding: 1.25rem;
   color: white;
-  z-index: 2;
+  z-index: 10;
   width: 100%;
 }
 
@@ -228,16 +228,13 @@
   cursor: pointer;
   border: none;
   transition: transform 0.2s ease;
+  background-color: var(--button-background);
 }
 
 .closeButton:hover,
 .likeButton:hover,
 .dislikeButton:hover {
   transform: scale(1.1);
-}
-
-.closeButton {
-  background-color: var(--button-background);
 }
 
 .profileImageContainer:not(.expanded) .likeButton,
@@ -355,43 +352,52 @@
   margin-top: 5px;
 }
 
-.dislikeButton {
-  background-color: grey;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  width: 3.75rem;
-  height: 3.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition:
-    opacity 0.3s ease,
-    transform 0.2s ease;
-}
-
-.likeButton {
-  transform: translateX(50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 10;
-  width: 3.75rem;
-  height: 3.75rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  transition:
-    opacity 0.3s ease,
-    transform 0.2s ease;
-  margin-right: 15px;
-}
-
 .nameAndButtons {
   display: flex;
   justify-content: space-between;
-  margin-right: 20px;
-  max-width: 330px;
+  align-items: center;
+  width: 100%;
 }
 
 .buttons {
   display: flex;
+  gap: 30px;
+  z-index: 11;
+  position: relative;
+}
+
+.likeButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  /* background-color: rgba(255, 255, 255, 0.9); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 12;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.dislikeButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  /* background-color: rgba(255, 255, 255, 0.9); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 12;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
