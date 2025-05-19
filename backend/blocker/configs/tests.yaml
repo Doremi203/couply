@@ -1,3 +1,11 @@
 logging:
   level: info
   format: console
+
+database:
+  host: db
+  port: 5432
+  user: user
+  password: pass
+  database: blocker
+  options: sslmode=disable

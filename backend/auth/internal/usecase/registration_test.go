@@ -61,7 +61,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 		{
 			name: "hashing password error then error",
 			setup: func(m mocks) {
-				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
+				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.ErrNotFound)
 				m.hasher.EXPECT().Hash("password").Return(nil, assert.AnError)
 			},
 			args: args{
@@ -74,7 +74,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 		{
 			name: "create user error then error",
 			setup: func(m mocks) {
-				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
+				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.ErrNotFound)
 				m.hasher.EXPECT().Hash("password").Return(nil, nil)
 				m.uuidProvider.EXPECT().GenerateV7().Return(uuid.UUID{}, assert.AnError)
 			},
@@ -88,7 +88,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 		{
 			name: "create user error then error",
 			setup: func(m mocks) {
-				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
+				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.ErrNotFound)
 				hashedPassword := pswrd.HashedPassword("password-hash")
 				m.hasher.EXPECT().Hash("password").Return(hashedPassword, nil)
 				id := uuid.New()
@@ -111,7 +111,7 @@ func TestUseCase_BasicRegister(t *testing.T) {
 		{
 			name: "create user success then success",
 			setup: func(m mocks) {
-				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.NotFoundError{})
+				m.userRepository.EXPECT().GetByEmail(gomock.Any(), user.Email("email")).Return(user.User{}, user.ErrNotFound)
 				hashedPassword := pswrd.HashedPassword("password-hash")
 				m.hasher.EXPECT().Hash("password").Return(hashedPassword, nil)
 				id := uuid.New()

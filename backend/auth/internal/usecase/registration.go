@@ -42,7 +42,7 @@ func (u Registration) BasicV1(
 	switch {
 	case err == nil:
 		return errors.Wrapf(ErrAlreadyRegistered, "%v already used", errors.Token("email", email))
-	case errors.As(err, &user.NotFoundError{}):
+	case errors.Is(err, user.ErrNotFound):
 	// continue
 	default:
 		return errors.WrapFailf(err, "get existing user with %v", errors.Token("email", email))

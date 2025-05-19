@@ -19,12 +19,10 @@ func (c *UseCase) GetUser(ctx context.Context, _ *dto.GetUserV1Request) (*dto.Ge
 		return nil, err
 	}
 
-	downloadablePhotos, err := c.downloadablePhotos(ctx, *user)
+	err = user.GenerateDownloadPhotoURLS(ctx, c.photoURLGenerator)
 	if err != nil {
-		return nil, errors.WrapFail(err, "get downloadable photos")
+		return nil, errors.WrapFail(err, "generate download photo urls")
 	}
-
-	user.Photos = downloadablePhotos
 
 	return &dto.GetUserV1Response{User: user}, nil
 }

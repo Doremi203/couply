@@ -115,3 +115,23 @@ func (x *Photo) GetUploadedAt() *time.Time {
 	}
 	return nil
 }
+
+func (x *Photo) GetDownloadURL(ctx context.Context, gen PhotoURLGenerator) error {
+	if x == nil || x.UploadedAt == nil {
+		return nil
+	}
+
+	downloadURL, err := gen.GenerateDownload(ctx, x.ObjectKey)
+	if err != nil {
+		return errors.WrapFailf(
+			err,
+			"generate download url for photo with %v and user with %v",
+			errors.Token("order_number", x.OrderNumber),
+			errors.Token("user_id", x.UserID),
+		)
+	}
+
+	x.DownloadURL = &downloadURL
+
+	return nil
+}

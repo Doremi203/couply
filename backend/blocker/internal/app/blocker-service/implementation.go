@@ -11,7 +11,8 @@ import (
 )
 
 type blockerServiceUseCase interface {
-	ReportUser(ctx context.Context, request *dto.ReportUserRequest) (*dto.ReportUserResponse, error)
+	ReportUser(ctx context.Context, in *dto.ReportUserV1Request) (*dto.ReportUserV1Response, error)
+	GetBlockInfo(ctx context.Context, in *dto.GetBlockInfoV1Request) (*dto.GetBlockInfoV1Response, error)
 }
 
 type Implementation struct {

@@ -2,15 +2,10 @@ package user
 
 import (
 	"errors"
-	"fmt"
 )
 
-type NotFoundError struct {
-	Err error
-}
-
-func (e NotFoundError) Error() string {
-	return fmt.Sprintf("user not found: %v", e.Err)
-}
+var ErrOAuthAccountNotFound = errors.New("oauth account not found")
+var ErrOAuthAccountAlreadyExists = errors.New("oauth account already exists")
+var ErrNotFound = errors.New("user not found")
 
 var ErrAlreadyExists = errors.New("user already exists")

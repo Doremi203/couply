@@ -18,6 +18,16 @@ service Login {
       description: "Выдает токен пользователя в обмен на почту/телефон и пароль";
     };
   }
+
+  rpc OAuthLoginV1(OAuthLoginV1Request) returns (OAuthLoginV1Response) {
+    option (google.api.http) = {
+      get: "/v1/login/oauth/{provider}"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Redirect endpoint для OAuth провайдеров";
+      description: "Выдает токен пользователя в обмен на access_token от OAuth провайдера";
+    };
+  }
 }
 
 message BasicLoginRequestV1 {
@@ -26,6 +36,25 @@ message BasicLoginRequestV1 {
 }
 
 message BasicLoginResponseV1 {
+  string token = 1;
+  int32 expires_in = 2;
+}
+
+message OAuthLoginV1Request {
+  string provider = 1;
+  string access_token = 2;
+  string code = 3;
+  string token_type = 4;
+  string expires_in = 5;
+  string scope = 6;
+  string state = 7;
+
+  string error = 8;
+  string error_description = 9;
+  string error_uri = 10;
+}
+
+message OAuthLoginV1Response {
   string token = 1;
   int32 expires_in = 2;
 }

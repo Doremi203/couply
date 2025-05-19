@@ -1,6 +1,8 @@
 package user
 
 import (
+	"context"
+	"errors"
 	"time"
 
 	"github.com/Doremi203/couply/backend/common/libs/slices"
@@ -37,6 +39,17 @@ type User struct {
 	Photos     []Photo            `db:"photos"`
 	CreatedAt  time.Time          `db:"created_at"`
 	UpdatedAt  time.Time          `db:"updated_at"`
+}
+
+func (x *User) GenerateDownloadPhotoURLS(ctx context.Context, gen PhotoURLGenerator) error {
+	var errs []error
+	for i := range x.Photos {
+		if err := x.Photos[i].GetDownloadURL(ctx, gen); err != nil {
+			errs = append(errs, err)
+		}
+	}
+
+	return errors.Join(errs...)
 }
 
 func (x *User) GetID() uuid.UUID {

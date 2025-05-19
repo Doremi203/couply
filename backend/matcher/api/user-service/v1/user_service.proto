@@ -7,7 +7,6 @@ option go_package = "github.com/Doremi203/couply/backend/matcher/gen/api/user-se
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
-import "google/protobuf/field_mask.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "validate/validate.proto";
 import "api/common/v1/common.proto";
@@ -313,6 +312,7 @@ message UpdateUserV1Request {
 
 message UpdateUserV1Response {
   User user = 1;
+  repeated PhotoUploadResponse photo_upload_responses = 2;
 }
 
 message UpdateUserByIDV1Request {
@@ -368,6 +368,7 @@ message UpdateUserByIDV1Request {
 
 message UpdateUserByIDV1Response {
   User user = 1;
+  repeated PhotoUploadResponse photo_upload_responses = 2;
 }
 
 message DeleteUserV1Request {

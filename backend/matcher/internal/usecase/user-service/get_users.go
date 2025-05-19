@@ -14,12 +14,10 @@ func (c *UseCase) GetUsers(ctx context.Context, in *dto.GetUsersV1Request) (*dto
 	}
 
 	for i := range users {
-		downloadablePhotos, err := c.downloadablePhotos(ctx, *users[i])
+		err = users[i].GenerateDownloadPhotoURLS(ctx, c.photoURLGenerator)
 		if err != nil {
-			return nil, errors.WrapFail(err, "get downloadable photos")
+			return nil, errors.WrapFail(err, "generate download photo urls")
 		}
-
-		users[i].Photos = downloadablePhotos
 	}
 
 	return &dto.GetUsersV1Response{Users: users}, nil

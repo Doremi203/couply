@@ -14,7 +14,7 @@ func (s *PgStorageUser) UpdatePhoto(ctx context.Context, photo user.Photo, userI
 		UPDATE photos SET 
 		    object_key = $3,
 			mime_type = $4,
-			uploaded_at = now()
+			uploaded_at = null
 		WHERE user_id = $1 AND order_number = $2
 	`
 

@@ -117,6 +117,7 @@ func PBToInterest(pb *desc.Interest) *Interest {
 
 	return &Interest{
 		Sport:             PBToSportSlice(pb.GetSport()),
+		SelfDevelopment:   PBToSelfDevelopmentSlice(pb.GetSelfDevelopment()),
 		Hobby:             PBToHobbySlice(pb.GetHobby()),
 		Music:             PBToMusicSlice(pb.GetMusic()),
 		MoviesTV:          PBToMoviesTVSlice(pb.GetMoviesTv()),

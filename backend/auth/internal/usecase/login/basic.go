@@ -1,4 +1,4 @@
-package usecase
+package login
 
 import (
 	"context"
@@ -10,27 +10,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 
-func NewLogin(
-	userRepo user.Repo,
-	hashProvider hash.Provider,
-	tokenIssuer token.Issuer,
-) Login {
-	return Login{
-		userRepo:     userRepo,
-		hashProvider: hashProvider,
-		tokenIssuer:  tokenIssuer,
-	}
-}
-
-type Login struct {
-	userRepo     user.Repo
-	hashProvider hash.Provider
-	tokenIssuer  token.Issuer
-}
-
-var ErrInvalidCredentials = errors.Error("invalid credentials")
-
-func (u Login) BasicV1(
+func (u UseCase) BasicV1(
 	ctx context.Context,
 	email user.Email,
 	password pswrd.Password,

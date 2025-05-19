@@ -6,6 +6,7 @@ option go_package = "github.com/Doremi203/couply/backend/blocker/gen/api/blocker
 
 import "google/api/annotations.proto";
 import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
 import "validate/validate.proto";
 import "api/user-service/v1/user_service.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -61,10 +62,30 @@ service BlockerService {
       }
     };
   }
+  rpc GetBlockInfoV1(GetBlockInfoV1Request) returns (GetBlockInfoV1Response) {
+    option (google.api.http) = {
+      post: "/v1/block/get"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получить информацию о блокировке";
+      description: "Принимает важные поля для получения информации о блокировке пользователя";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message ReportUserV1Request {
-  string user_id = 1 [
+  string target_user_id = 1 [
     (validate.rules).string.min_len = 1,
     (google.api.field_behavior) = REQUIRED
   ];
@@ -81,6 +102,16 @@ message ReportUserV1Request {
 }
 
 message ReportUserV1Response {}
+
+message GetBlockInfoV1Request {}
+
+message GetBlockInfoV1Response {
+  string block_id = 1;
+  string blocked_user_id = 2;
+  string message = 3;
+  repeated ReportReason reasons = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
 
 enum ReportReason {
   REASON_UNSPECIFIED = 0;

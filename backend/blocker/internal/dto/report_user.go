@@ -5,48 +5,48 @@ import (
 	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
 )
 
-type ReportUserRequest struct {
-	UserID        string
+type ReportUserV1Request struct {
+	TargetUserID  string
 	ReportReasons []blocker.ReportReason
 	Message       string
 }
 
-func (x *ReportUserRequest) GetUserID() string {
+func (x *ReportUserV1Request) GetTargetUserID() string {
 	if x != nil {
-		return x.UserID
+		return x.TargetUserID
 	}
 	return ""
 }
 
-func (x *ReportUserRequest) GetReportReasons() []blocker.ReportReason {
+func (x *ReportUserV1Request) GetReportReasons() []blocker.ReportReason {
 	if x != nil {
 		return x.ReportReasons
 	}
 	return nil
 }
 
-func (x *ReportUserRequest) GetMessage() string {
+func (x *ReportUserV1Request) GetMessage() string {
 	if x != nil {
 		return x.Message
 	}
 	return ""
 }
 
-type ReportUserResponse struct{}
+type ReportUserV1Response struct{}
 
-func PBToReportUserRequest(req *desc.ReportUserV1Request) *ReportUserRequest {
+func PBToReportUserRequest(req *desc.ReportUserV1Request) *ReportUserV1Request {
 	reportReasons := make([]blocker.ReportReason, len(req.GetReasons()))
 	for i, reason := range req.GetReasons() {
 		reportReasons[i] = blocker.ReportReason(reason)
 	}
 
-	return &ReportUserRequest{
-		UserID:        req.GetUserId(),
+	return &ReportUserV1Request{
+		TargetUserID:  req.GetTargetUserId(),
 		ReportReasons: reportReasons,
 		Message:       req.GetMessage(),
 	}
 }
 
-func ReportUserResponseToPB(resp *ReportUserResponse) *desc.ReportUserV1Response {
+func ReportUserResponseToPB(_ *ReportUserV1Response) *desc.ReportUserV1Response {
 	return &desc.ReportUserV1Response{}
 }

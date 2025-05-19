@@ -3,6 +3,7 @@ package userpostgres
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/internal/domain/oauth"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
@@ -22,12 +23,24 @@ type repo struct {
 }
 
 func (r *repo) Create(ctx context.Context, u user.User) error {
+	var phone *string
+	if u.Phone != "" {
+		phoneStr := string(u.Phone)
+		phone = &phoneStr
+	}
+
 	const query = `
-		INSERT INTO users (id, email, password)
-		VALUES ($1, $2, $3)
+		INSERT INTO users (id, email, password, phone)
+		VALUES ($1, $2, $3, $4)
 		ON CONFLICT (email) DO NOTHING;
 	`
-	res, err := r.db.Exec(ctx, query, u.ID, u.Email, u.Password)
+	res, err := r.db.Exec(
+		ctx, query,
+		u.ID,
+		u.Email,
+		u.Password,
+		phone,
+	)
 	if err != nil {
 		return errors.WrapFail(err, "save user")
 	}
@@ -48,9 +61,11 @@ func (r *repo) UpdatePhone(ctx context.Context, userID user.ID, phone user.Phone
 		return errors.WrapFail(err, "update user phone")
 	}
 	if res.RowsAffected() == 0 {
-		return user.NotFoundError{
-			Err: errors.Errorf("no user rows with %v", errors.Token("id", userID)),
-		}
+		return errors.Wrapf(
+			user.ErrNotFound,
+			"no rows with %v",
+			errors.Token("id", userID),
+		)
 	}
 
 	return nil
@@ -69,9 +84,10 @@ func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, err
 	err := row.Scan(&u.ID, &u.Email, &phone, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return user.User{}, user.NotFoundError{
-			Err: errors.Errorf("no user rows with %v", errors.Token("email", email)),
-		}
+		return user.User{}, errors.Wrapf(user.ErrNotFound,
+			"no rows with %v",
+			errors.Token("email", email),
+		)
 	case err != nil:
 		return user.User{}, errors.WrapFail(err, "fetch user by email")
 	}
@@ -84,25 +100,55 @@ func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, err
 
 func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, error) {
 	query := `
-		SELECT id, email, phone, password
+		SELECT id, email, password
 		FROM users
 		WHERE phone = $1
 	`
 	row := r.db.QueryRow(ctx, query, phone)
 
 	var u user.User
-	var p *string
-	err := row.Scan(&u.ID, &u.Email, &p, &u.Password)
+	err := row.Scan(&u.ID, &u.Email, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return user.User{}, user.NotFoundError{
-			Err: errors.Errorf("no user rows with %v", errors.Token("phone", phone)),
-		}
+		return user.User{}, errors.Wrapf(
+			user.ErrNotFound,
+			"no rows with %v",
+			errors.Token("phone", phone),
+		)
 	case err != nil:
 		return user.User{}, errors.WrapFail(err, "fetch user by email")
 	}
-	if p != nil {
-		u.Phone = user.Phone(*p)
+	u.Phone = phone
+
+	return u, nil
+}
+
+func (r *repo) GetByOAuthProviderUserID(ctx context.Context, provider oauth.ProviderType, providerUserID oauth.ProviderUserID) (user.User, error) {
+	const query = `
+		SELECT u.id, u.email, u.phone, u.password
+		FROM users u
+		JOIN user_oauth_accounts oa ON u.id = oa.user_id
+		WHERE oa.provider = $1 AND oa.provider_user_id = $2;
+	`
+	row := r.db.QueryRow(ctx, query, provider, providerUserID)
+
+	var u user.User
+	var phone *string
+	err := row.Scan(&u.ID, &u.Email, &phone, &u.Password)
+	switch {
+	case errors.Is(err, pgx.ErrNoRows):
+		return user.User{}, errors.Wrapf(
+			user.ErrNotFound,
+			"no rows with %v and %v",
+			errors.Token("provider", provider),
+			errors.Token("provider_user_id", providerUserID),
+		)
+
+	case err != nil:
+		return user.User{}, errors.WrapFail(err, "fetch oauth account by provider and provider user id")
+	}
+	if phone != nil {
+		u.Phone = user.Phone(*phone)
 	}
 
 	return u, nil
