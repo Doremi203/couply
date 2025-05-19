@@ -206,5 +206,15 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 func UpdateUserResponseToPB(resp *UpdateUserV1Response) *desc.UpdateUserV1Response {
 	return &desc.UpdateUserV1Response{
 		User: user.UserToPB(resp.GetUser()),
+		PhotoUploadResponses: slices.Map(resp.GetUser().GetPhotos(), func(from user.Photo) *desc.PhotoUploadResponse {
+			var uploadURL string
+			if from.UploadURL != nil {
+				uploadURL = *from.UploadURL
+			}
+			return &desc.PhotoUploadResponse{
+				OrderNumber: from.GetOrderNumber(),
+				UploadUrl:   uploadURL,
+			}
+		}),
 	}
 }
