@@ -35,6 +35,7 @@ interface ProfileViewProps {
   onClose: () => void;
   onLike?: (id: number) => void;
   onDislike?: (id: number) => void;
+  isMatchView?: boolean;
 }
 
 export const ProfileView: React.FC<ProfileViewProps> = ({
@@ -42,6 +43,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onClose,
   onLike,
   onDislike,
+  isMatchView = false,
 }) => {
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -142,18 +144,20 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               )}
             </h2>
 
-            <div className={styles.buttons}>
-              <div onClick={e => e.stopPropagation()}>
-                <DislikeButton onClick={handleDislike} className={styles.dislikeButton} />
+            {!isMatchView && (
+              <div className={styles.buttons}>
+                <div onClick={e => e.stopPropagation()}>
+                  <DislikeButton onClick={handleDislike} className={styles.dislikeButton} />
+                </div>
+                <div onClick={e => e.stopPropagation()}>
+                  <LikeButton
+                    onClick={handleLike}
+                    className={styles.likeButton}
+                    likeClassName={styles.like}
+                  />
+                </div>
               </div>
-              <div onClick={e => e.stopPropagation()}>
-                <LikeButton
-                  onClick={handleLike}
-                  className={styles.likeButton}
-                  likeClassName={styles.like}
-                />
-              </div>
-            </div>
+            )}
           </div>
 
           <p className={styles.photoInfo}>

@@ -185,7 +185,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         smoking: smokingToApi[selectedSmoking],
         //@ts-ignore
         goal: goalToApi[selectedGoal],
-        interests: mapInterestsToBackendFormat(selectedInterests),
+        interest: mapInterestsToBackendFormat(selectedInterests),
         height: profileData.height,
         photoUploadRequests,
         zodiac: profileData.zodiac,

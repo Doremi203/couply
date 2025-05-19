@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-import { useDislikeUserMutation } from '../../../../entities/matches';
 import { LikesSection, useLikesAndMatches } from '../../../../features/matches';
 import { NavBar } from '../../../../shared/components/NavBar';
 import TabsSection from '../../../../shared/components/TabsSection';
@@ -79,6 +78,7 @@ export const LikesPage = () => {
           onClose={handleCloseProfile}
           onLike={handleLike}
           onDislike={handleDislike}
+          isMatchView={activeTab === 'мэтчи'}
         />
       )}
 
