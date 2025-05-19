@@ -40,7 +40,8 @@
   font-size: 14px;
 }
 
-.suggestionItem:hover, .suggestionItem:focus {
+.suggestionItem:hover,
+.suggestionItem:focus {
   background-color: #f0f0f0;
 }
 
@@ -53,4 +54,4 @@
   text-align: center;
   color: #666;
   font-size: 14px;
-} 
+}

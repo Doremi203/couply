@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { getUserId } from '../../../../entities/user/model/userSlice';
-import { useGeolocation } from '../../../../shared/lib/hooks/useGeolocation';
 import FiltersDrawer from '../../../../features/filters/components/FiltersDrawer';
 import { ProfileSlider } from '../../../../features/ProfileSlider';
 import { FiltersIcon } from '../../../../shared/components/FiltersIcon';
 import { NavBar } from '../../../../shared/components/NavBar';
+import { useGeolocation } from '../../../../shared/lib/hooks/useGeolocation';
 import { HiddenAcc } from '../HiddenAcc/HiddenAcc';
 
 import styles from './homePage.module.css';

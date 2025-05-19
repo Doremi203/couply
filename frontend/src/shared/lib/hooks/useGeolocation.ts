@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getUserId } from '../../../entities/user/model/userSlice';
+
 import { useUpdateUserMutation } from '../../../entities/user/api/userApi';
+import { getUserId } from '../../../entities/user/model/userSlice';
 
 interface Coordinates {
   lat: number;
@@ -19,10 +20,10 @@ export const useGeolocation = (): UseGeolocationReturn => {
   const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const userId = useSelector(getUserId);
   const [updateUser] = useUpdateUserMutation();
-  
+
   // Initialize with stored coordinates if they exist
   useEffect(() => {
     const storedLocation = localStorage.getItem('userLocation');
@@ -41,7 +42,7 @@ export const useGeolocation = (): UseGeolocationReturn => {
         reject(new Error('Geolocation is not supported by your browser'));
         return;
       }
-      
+
       navigator.geolocation.getCurrentPosition(resolve, reject, {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -54,26 +55,26 @@ export const useGeolocation = (): UseGeolocationReturn => {
     // Check if geolocation is permitted and user is logged in
     const locationAllowed = localStorage.getItem('userLocationAllowed') === 'true';
     const isAuthenticated = !!userId && !!localStorage.getItem('token');
-    
+
     if (!locationAllowed || !isAuthenticated) {
       setError('Geolocation not allowed or user not authenticated');
       return false;
     }
-    
+
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const position = await getPosition();
       const newCoords = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-      
+
       // Save to state and localStorage
       setCoordinates(newCoords);
       localStorage.setItem('userLocation', JSON.stringify(newCoords));
-      
+
       // Update user in backend
       if (userId) {
         await updateUser({
@@ -83,7 +84,7 @@ export const useGeolocation = (): UseGeolocationReturn => {
           },
         });
       }
-      
+
       setIsLoading(false);
       return true;
     } catch (err) {
@@ -100,4 +101,4 @@ export const useGeolocation = (): UseGeolocationReturn => {
     isLoading,
     updateUserLocation,
   };
-}; 
+};

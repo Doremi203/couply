@@ -7,7 +7,7 @@ export const useLogin = () => {
   const [login] = useLoginMutation();
 
   const loginUser = useCallback(
-    async (loginParams: LoginParams): Promise<{data?: LoginResponse; error?: string}> => {
+    async (loginParams: LoginParams): Promise<{ data?: LoginResponse; error?: string }> => {
       try {
         const loginResponse = await login(loginParams).unwrap();
         localStorage.setItem('token', loginResponse.token);

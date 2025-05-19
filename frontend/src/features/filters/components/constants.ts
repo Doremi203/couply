@@ -314,7 +314,6 @@ export const petsToApi = {
   'Без питомцев': 'PETS_NONE',
 };
 
-
 export const goalFromApi = {
   GOAL_DATING: 'Знакомства',
   GOAL_RELATIONSHIP: 'Отношения',

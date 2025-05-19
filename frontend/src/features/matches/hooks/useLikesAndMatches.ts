@@ -15,7 +15,7 @@ export const useLikesAndMatches = () => {
 
   const [getUsers] = useGetUsersMutation();
   //const [getUser] = useGetUserMutation();
-    const [likeUser] = useLikeUserMutation();
+  const [likeUser] = useLikeUserMutation();
 
   const [matchesUsers, setMatchesUsers] = useState([]);
   const [likesUsers, setLikesUsers] = useState([]);
@@ -51,7 +51,6 @@ export const useLikesAndMatches = () => {
         //@ts-ignore
         const likesUsers = await getUsers(likesIds).unwrap();
 
-
         //@ts-ignore
         setLikesUsers(likesUsers);
 
@@ -82,7 +81,6 @@ export const useLikesAndMatches = () => {
 
       if (likedProfile) {
         try {
-
           await likeUser({
             targetUserId: likedProfile,
             message: '',

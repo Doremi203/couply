@@ -8,7 +8,7 @@ export const useRegister = () => {
   const [login] = useLoginMutation();
 
   const registerAndLogin = useCallback(
-    async (registerParams: RegisterParams): Promise<{data?: LoginResponse; error?: string}> => {
+    async (registerParams: RegisterParams): Promise<{ data?: LoginResponse; error?: string }> => {
       try {
         await register(registerParams).unwrap();
 
