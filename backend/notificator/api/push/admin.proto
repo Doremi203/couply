@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package push;
+
+option go_package = "github.com/Doremi203/couply/backend/notificator/api/push";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service Admin {
+  rpc SendPushV1(SendPushV1Request) returns (SendPushV1Response) {
+    option (google.api.http) = {
+      post: "/v1/push/admin/send"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Разослать пуш всем пользователям";
+      description: "Отправляет пуш всем пользователям, которые подписаны на пуши";
+      parameters: {
+        headers: {
+          name: "x-api-key"
+          description: "Ключ администратора"
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
+}
+
+message SendPushV1Request {
+  string text = 1;
+}
+
+message SendPushV1Response {}

@@ -19,3 +19,8 @@ database:
   password: pass
   database: notificator
   options: sslmode=disable
+
+secrets:
+  ids:
+    web-push-api: e6q2fjskiam5gqb224ss
+    x-api-key: e6qrit49b41qnhsrfa8u
