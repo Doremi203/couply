@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package push;
 
-option go_package = "github.com/Doremi203/couply/backend/auth/api/push";
+option go_package = "github.com/Doremi203/couply/backend/notificator/api/push";
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
