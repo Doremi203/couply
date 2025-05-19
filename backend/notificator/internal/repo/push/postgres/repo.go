@@ -107,19 +107,19 @@ func (r *repo) GetAllRecipients(ctx context.Context) ([]push.Recipient, error) {
 	}
 	defer rows.Close()
 
-	subsriptions, err := pgx.CollectRows(rows, pgx.RowToStructByName[subscriptionEntity])
+	subscriptions, err := pgx.CollectRows(rows, pgx.RowToStructByName[subscriptionEntity])
 	if err != nil {
 		return nil, errors.WrapFail(err, "collect all push subscriptions rows")
 	}
 
-	subsriptionsMap := make(map[uuid.UUID][]subscriptionEntity, len(subsriptions))
+	subscriptionsMap := make(map[uuid.UUID][]subscriptionEntity, len(subscriptions))
 
-	for i := range subsriptions {
-		subsriptionsMap[subsriptions[i].RecipientID] = append(subsriptionsMap[subsriptions[i].RecipientID], subsriptions[i])
+	for i := range subscriptions {
+		subscriptionsMap[subscriptions[i].RecipientID] = append(subscriptionsMap[subscriptions[i].RecipientID], subscriptions[i])
 	}
 
-	recipients := make([]push.Recipient, 0, len(subsriptionsMap))
-	for recipientID, subscriptions := range subsriptionsMap {
+	recipients := make([]push.Recipient, 0, len(subscriptionsMap))
+	for recipientID, subscriptions := range subscriptionsMap {
 		recipients = append(recipients, push.Recipient{
 			ID:            push.RecipientID(recipientID),
 			Subscriptions: slices.Map(subscriptions, entityToDomain),
