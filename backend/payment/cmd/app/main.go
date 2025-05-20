@@ -53,8 +53,14 @@ func main() {
 
 		updater := updater2.NewUpdater(payFacade, subFacade, gateway, app.Log)
 
-		go updater.StartPaymentStatusUpdater(context.Background(), 30*time.Second)
-		go updater.StartSubscriptionStatusUpdater(context.Background(), 1*time.Hour)
+		updaterCtx, updaterCancel := context.WithCancel(ctx)
+		app.AddCloser(func() error {
+			updaterCancel()
+			return nil
+		})
+
+		go updater.StartPaymentStatusUpdater(updaterCtx, 30*time.Second)
+		go updater.StartSubscriptionStatusUpdater(updaterCtx, 1*time.Hour)
 
 		subUseCase := subscription_service2.NewUseCase(subFacade)
 		payUseCase := payment_service2.NewUseCase(payFacade, gateway, updater)
