@@ -2,8 +2,9 @@ package userpostgres
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
-	"github.com/Doremi203/couply/backend/auth/internal/domain/oauth"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
@@ -51,6 +52,33 @@ func (r *repo) Create(ctx context.Context, u user.User) error {
 	return nil
 }
 
+func (r *repo) Upsert(ctx context.Context, u user.User) error {
+	var phone *string
+	if u.Phone != "" {
+		phoneStr := string(u.Phone)
+		phone = &phoneStr
+	}
+
+	const query = `
+		INSERT INTO users (id, email, password, phone)
+		VALUES ($1, $2, $3, $4)
+		ON CONFLICT (id) DO UPDATE 
+		SET email = $2, password = $3, phone = $4;
+	`
+	_, err := r.db.Exec(
+		ctx, query,
+		u.ID,
+		u.Email,
+		u.Password,
+		phone,
+	)
+	if err != nil {
+		return errors.WrapFail(err, "upsert user")
+	}
+
+	return nil
+}
+
 func (r *repo) UpdatePhone(ctx context.Context, userID user.ID, phone user.Phone) error {
 	const query = `
 		UPDATE users SET phone = $2
@@ -71,84 +99,72 @@ func (r *repo) UpdatePhone(ctx context.Context, userID user.ID, phone user.Phone
 	return nil
 }
 
-func (r *repo) GetByEmail(ctx context.Context, email user.Email) (user.User, error) {
-	query := `
-		SELECT id, email, phone, password
-		FROM users
-		WHERE email = $1
-	`
-	row := r.db.QueryRow(ctx, query, email)
-
-	var u user.User
-	var phone *string
-	err := row.Scan(&u.ID, &u.Email, &phone, &u.Password)
-	switch {
-	case errors.Is(err, pgx.ErrNoRows):
-		return user.User{}, errors.Wrapf(user.ErrNotFound,
-			"no rows with %v",
-			errors.Token("email", email),
-		)
-	case err != nil:
-		return user.User{}, errors.WrapFail(err, "fetch user by email")
-	}
-	if phone != nil {
-		u.Phone = user.Phone(*phone)
+func (r *repo) GetByAny(ctx context.Context, params user.GetByAnyParams) (user.User, error) {
+	if params.AllEmpty() {
+		return user.User{}, errors.Error("all get by any params are empty")
 	}
 
-	return u, nil
-}
+	var queryBuilder strings.Builder
 
-func (r *repo) GetByPhone(ctx context.Context, phone user.Phone) (user.User, error) {
-	query := `
-		SELECT id, email, password
-		FROM users
-		WHERE phone = $1
-	`
-	row := r.db.QueryRow(ctx, query, phone)
-
-	var u user.User
-	err := row.Scan(&u.ID, &u.Email, &u.Password)
-	switch {
-	case errors.Is(err, pgx.ErrNoRows):
-		return user.User{}, errors.Wrapf(
-			user.ErrNotFound,
-			"no rows with %v",
-			errors.Token("phone", phone),
-		)
-	case err != nil:
-		return user.User{}, errors.WrapFail(err, "fetch user by email")
-	}
-	u.Phone = phone
-
-	return u, nil
-}
-
-func (r *repo) GetByOAuthProviderUserID(ctx context.Context, provider oauth.ProviderType, providerUserID oauth.ProviderUserID) (user.User, error) {
-	const query = `
+	queryBuilder.WriteString(`
 		SELECT u.id, u.email, u.phone, u.password
 		FROM users u
-		JOIN user_oauth_accounts oa ON u.id = oa.user_id
-		WHERE oa.provider = $1 AND oa.provider_user_id = $2;
-	`
-	row := r.db.QueryRow(ctx, query, provider, providerUserID)
+	`)
+	args := make([]interface{}, 0, 4)
+	argPos := 1
+
+	if params.OAuthUserAccount != nil {
+		queryBuilder.WriteString(`
+			LEFT JOIN user_oauth_accounts oa ON u.id = oa.user_id
+		`)
+	}
+
+	queryBuilder.WriteString("WHERE ")
+	conditions := make([]string, 0, 4)
+
+	if params.ID != nil {
+		conditions = append(conditions, fmt.Sprintf("u.id = $%d", argPos))
+		args = append(args, *params.ID)
+		argPos++
+	}
+
+	if params.Email != "" {
+		conditions = append(conditions, fmt.Sprintf("u.email = $%d", argPos))
+		args = append(args, params.Email)
+		argPos++
+	}
+
+	if params.Phone != "" {
+		conditions = append(conditions, fmt.Sprintf("u.phone = $%d", argPos))
+		args = append(args, params.Phone)
+		argPos++
+	}
+
+	if params.OAuthUserAccount != nil {
+		conditions = append(conditions, fmt.Sprintf("oa.provider = $%d AND oa.provider_user_id = $%d",
+			argPos, argPos+1))
+		args = append(args, params.OAuthUserAccount.Provider, params.OAuthUserAccount.ProviderUserID)
+	}
+
+	queryBuilder.WriteString(strings.Join(conditions, " OR "))
+
+	row := r.db.QueryRow(ctx, queryBuilder.String(), args...)
 
 	var u user.User
-	var phone *string
-	err := row.Scan(&u.ID, &u.Email, &phone, &u.Password)
+	var phonePtr *string
+	err := row.Scan(&u.ID, &u.Email, &phonePtr, &u.Password)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
-		return user.User{}, errors.Wrapf(
+		return user.User{}, errors.Wrap(
 			user.ErrNotFound,
-			"no rows with %v and %v",
-			errors.Token("provider", provider),
-			errors.Token("provider_user_id", providerUserID),
+			"no user found with provided parameters",
 		)
-
 	case err != nil:
-		return user.User{}, errors.WrapFail(err, "fetch oauth account by provider and provider user id")
+		return user.User{}, errors.WrapFail(err, "fetch user by parameters")
 	}
-	if phone != nil {
-		u.Phone = user.Phone(*phone)
+
+	if phonePtr != nil {
+		u.Phone = user.Phone(*phonePtr)
 	}
 
 	return u, nil

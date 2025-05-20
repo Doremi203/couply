@@ -24,13 +24,12 @@ type oauthAccountRepo struct {
 
 func (r *oauthAccountRepo) Create(ctx context.Context, account user.OAuthAccount) error {
 	const query = `
-		INSERT INTO user_oauth_accounts (id, user_id, provider, provider_user_id)
-		VALUES ($1, $2, $3, $4)
+		INSERT INTO user_oauth_accounts (user_id, provider, provider_user_id)
+		VALUES ($1, $2, $3)
 		ON CONFLICT (provider, provider_user_id) DO NOTHING;
 	`
 	res, err := r.db.Exec(
 		ctx, query,
-		account.ID,
 		account.UserID,
 		account.Provider,
 		account.ProviderUserID,
@@ -50,20 +49,40 @@ func (r *oauthAccountRepo) Create(ctx context.Context, account user.OAuthAccount
 	return nil
 }
 
+func (r *oauthAccountRepo) Upsert(ctx context.Context, account user.OAuthAccount) error {
+	const query = `
+		INSERT INTO user_oauth_accounts (user_id, provider, provider_user_id)
+		VALUES ($1, $2, $3)
+		ON CONFLICT (provider, provider_user_id) DO UPDATE 
+		SET user_id = $1;
+	`
+	_, err := r.db.Exec(
+		ctx, query,
+		account.UserID,
+		account.Provider,
+		account.ProviderUserID,
+	)
+	if err != nil {
+		return errors.WrapFail(err, "upsert oauth account")
+	}
+
+	return nil
+}
+
 func (r *oauthAccountRepo) GetByProviderUserID(
 	ctx context.Context,
 	provider oauth.ProviderType,
 	providerUserID oauth.ProviderUserID,
 ) (user.OAuthAccount, error) {
 	const query = `
-		SELECT id, provider, provider_user_id
+		SELECT provider, provider_user_id
 		FROM user_oauth_accounts
 		WHERE provider = $1 AND provider_user_id = $2
 	`
 	row := r.db.QueryRow(ctx, query, provider, providerUserID)
 
 	var account user.OAuthAccount
-	err := row.Scan(&account.ID, &account.Provider, &account.ProviderUserID)
+	err := row.Scan(&account.Provider, &account.ProviderUserID)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return user.OAuthAccount{}, errors.Wrapf(
@@ -82,14 +101,14 @@ func (r *oauthAccountRepo) GetByProviderUserID(
 
 func (r *oauthAccountRepo) GetByUserID(ctx context.Context, userID user.ID) (user.OAuthAccount, error) {
 	const query = `
-		SELECT id, provider, provider_user_id
+		SELECT provider, provider_user_id
 		FROM user_oauth_accounts
 		WHERE user_id = $1
 	`
 	row := r.db.QueryRow(ctx, query, userID)
 
 	var account user.OAuthAccount
-	err := row.Scan(&account.ID, &account.Provider, &account.ProviderUserID)
+	err := row.Scan(&account.Provider, &account.ProviderUserID)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		return user.OAuthAccount{}, errors.Wrapf(

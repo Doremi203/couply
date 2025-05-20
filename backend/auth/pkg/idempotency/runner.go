@@ -7,6 +7,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"github.com/Doremi203/couply/backend/auth/pkg/tx"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func RunGRPCHandler[T any](
@@ -14,19 +15,16 @@ func RunGRPCHandler[T any](
 	log log.Logger,
 	txProvider tx.Provider,
 	repo Repo,
-	useCase func(context.Context) (Response[T], error),
-) (Response[T], error) {
+	useCase func(context.Context) (T, error),
+) (ret T, err error) {
 	key, ok := FromGRPCCtx(ctx)
 	if !ok {
-		return Response[T]{
-			Code:    codes.InvalidArgument,
-			Message: "idempotency-key header not provided",
-		}, nil
+		return ret, status.Error(codes.InvalidArgument, "idempotency-key header not provided")
 	}
 
-	ctx, err := txProvider.ContextWithTx(ctx, tx.IsolationReadCommitted)
+	ctx, err = txProvider.ContextWithTx(ctx, tx.IsolationReadCommitted)
 	if err != nil {
-		return Response[T]{}, errors.WrapFail(err, "inject tx into context")
+		return ret, errors.WrapFail(err, "inject tx into context")
 	}
 	defer func() {
 		if err != nil {
@@ -48,32 +46,25 @@ func RunGRPCHandler[T any](
 	err = repo.Create(ctx, key)
 	switch {
 	case errors.Is(err, ErrAlreadyProcessed):
-		var resp Response[T]
-		err = repo.GetData(ctx, key, &resp)
+		err = repo.GetData(ctx, key, &ret)
 		if err != nil {
-			return Response[T]{}, errors.WrapFail(err, "get existing idempotent request result")
+			return ret, errors.WrapFail(err, "get existing idempotent request result")
 		}
+		return ret, nil
 
-		return resp, nil
 	case err != nil:
-		return Response[T]{}, errors.WrapFail(err, "create idempotency request")
+		return ret, errors.WrapFail(err, "create idempotency request")
 	}
 
-	resp, err := useCase(ctx)
+	ret, err = useCase(ctx)
 	if err != nil {
-		return Response[T]{}, errors.WrapFail(err, "run idempotent useCase")
+		return ret, errors.WrapFail(err, "run idempotent useCase")
 	}
 
-	err = repo.UpdateData(ctx, key, resp)
+	err = repo.UpdateData(ctx, key, ret)
 	if err != nil {
-		return Response[T]{}, errors.WrapFail(err, "save idempotent request result")
+		return ret, errors.WrapFail(err, "save idempotent request result")
 	}
 
-	return resp, nil
-}
-
-type Response[T any] struct {
-	Data    *T         `json:"data,omitempty"`
-	Code    codes.Code `json:"code,omitempty"`
-	Message string     `json:"message,omitempty"`
+	return ret, nil
 }

@@ -10,13 +10,24 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 
+var ErrInvalidCredentials = errors.Error("invalid credentials")
+var ErrUserNotRegistered = errors.Error("user not registered")
+
+// BasicV1 выдает токен авторизации для пользователя, если пользователь с таким user.Email существует и pswrd.Password совпадает с паролем в базе данных.
+//
+// Если пользователь не существует, возвращает ошибку ErrUserNotRegistered.
+//
+// Если pswrd.Password не совпадает с паролем в базе данных, возвращает ошибку ErrInvalidCredentials.
 func (u UseCase) BasicV1(
 	ctx context.Context,
 	email user.Email,
 	password pswrd.Password,
 ) (token.Token, error) {
-	usr, err := u.userRepo.GetByEmail(ctx, email)
-	if err != nil {
+	usr, err := u.userRepo.GetByAny(ctx, user.GetByAnyParams{Email: email})
+	switch {
+	case errors.Is(err, user.ErrNotFound):
+		return token.Token{}, ErrUserNotRegistered
+	case err != nil:
 		return token.Token{}, errors.WrapFailf(err, "get user by %v", errors.Token("error", email))
 	}
 

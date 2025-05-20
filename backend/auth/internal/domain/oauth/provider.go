@@ -6,6 +6,11 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 )
 
+type UserAccount struct {
+	Provider       ProviderType
+	ProviderUserID ProviderUserID
+}
+
 type ProviderType string
 
 const (

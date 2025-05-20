@@ -48,7 +48,7 @@ var ErrPhoneAlreadyConfirmed = errors.Error("phone already confirmed for some us
 var ErrUnsupportedPhoneOperator = errors.Error("phone operator not supported")
 
 func (u PhoneConfirmation) SendCodeV1(ctx context.Context, userID user.ID, phone user.Phone) (phoneconfirm.Request, error) {
-	_, err := u.userRepo.GetByPhone(ctx, phone)
+	_, err := u.userRepo.GetByAny(ctx, user.GetByAnyParams{Phone: phone})
 	switch {
 	case err == nil:
 		return phoneconfirm.Request{}, ErrPhoneAlreadyConfirmed
@@ -145,7 +145,7 @@ func (u PhoneConfirmation) ConfirmV1(
 		}
 	}()
 
-	_, err = u.userRepo.GetByPhone(ctx, phone)
+	_, err = u.userRepo.GetByAny(ctx, user.GetByAnyParams{Phone: phone})
 	switch {
 	case err == nil:
 		return ErrPhoneAlreadyConfirmed
