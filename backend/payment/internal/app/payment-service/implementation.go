@@ -11,6 +11,7 @@ import (
 
 type paymentServiceUseCase interface {
 	CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Request) (*dto.CreatePaymentV1Response, error)
+	GetPaymentStatus(ctx context.Context, in *dto.GetPaymentStatusV1Request) (*dto.GetPaymentStatusV1Response, error)
 }
 
 type Implementation struct {

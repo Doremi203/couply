@@ -44,6 +44,8 @@ func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Requ
 		return nil, err
 	}
 
+	go c.checkAndUpdatePaymentStatusWithRetry(context.Background(), createdPayment.GetID(), createdPayment.GetGatewayID())
+
 	return &dto.CreatePaymentV1Response{
 		PaymentID: createdPayment.GetID().String(),
 		Status:    createdPayment.GetStatus(),

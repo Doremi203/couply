@@ -62,6 +62,26 @@ service PaymentService {
       }
     };
   }
+  rpc GetPaymentStatusV1 (GetPaymentStatusV1Request) returns (GetPaymentStatusV1Response) {
+    option (google.api.http) = {
+      post: "/v1/payments/status/by-id"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение статуса платежа";
+      description: "Принимает важные поля для получения статуса платежа";
+      security: {
+        security_requirement: {
+          key: "api-token";
+          value: {};
+        }
+        security_requirement: {
+          key: "user-token";
+          value: {};
+        }
+      }
+    };
+  }
 }
 
 message CreatePaymentV1Request {
@@ -81,6 +101,19 @@ message CreatePaymentV1Request {
 }
 
 message CreatePaymentV1Response {
+  string payment_id = 1;
+  PaymentStatus status = 2;
+  google.protobuf.Timestamp updated_at = 3;
+}
+
+message GetPaymentStatusV1Request {
+  string payment_id = 1 [
+    (validate.rules).string.min_len = 2,
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+message GetPaymentStatusV1Response {
   string payment_id = 1;
   PaymentStatus status = 2;
   google.protobuf.Timestamp updated_at = 3;
