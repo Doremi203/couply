@@ -9,5 +9,5 @@ import (
 var tester postgres.Tester
 
 func TestMain(m *testing.M) {
-	postgres.SetupTests(m, &tester, "notificator/migrations")
+	postgres.SetupTests(m, &tester, "notificator")
 }

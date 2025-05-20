@@ -5,14 +5,13 @@ alter table users
 
 create table user_oauth_accounts
 (
-    id               uuid primary key,
     user_id          uuid        not null
         references users (id)
             on delete cascade,
     provider         varchar(50) not null,
     provider_user_id text        not null,
     created_at       timestamptz not null default now(),
-    unique (provider, provider_user_id)
+    primary key (provider, provider_user_id)
 );
 -- +goose StatementEnd
 

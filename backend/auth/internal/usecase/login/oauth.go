@@ -51,16 +51,37 @@ func (u UseCase) OAuthV1(
 
 	ret := OAuthV1Response{}
 
-	usr, err := u.userRepo.GetByOAuthProviderUserID(ctx, req.Provider, oauthInfo.ProviderUserID)
+	ctx, err = u.txProvider.ContextWithTx(ctx, tx.IsolationReadCommitted)
+	if err != nil {
+		return OAuthV1Response{}, errors.WrapFail(err, "run create user transaction")
+	}
+	defer func() {
+		if err != nil {
+			if txErr := u.txProvider.RollbackTx(ctx); txErr != nil {
+				u.logger.Error(errors.WrapFail(txErr, "rollback create user transaction"))
+			}
+		}
+	}()
+
+	usr, err := u.userRepo.GetByAny(
+		ctx,
+		user.GetByAnyParams{
+			Email: user.Email(oauthInfo.Email),
+			Phone: user.Phone(oauthInfo.Phone),
+			OAuthUserAccount: &oauth.UserAccount{
+				Provider:       req.Provider,
+				ProviderUserID: oauthInfo.ProviderUserID,
+			},
+		})
 	switch {
 	case errors.Is(err, user.ErrNotFound):
-		usr, err = u.createUser(ctx, req.Provider, oauthInfo)
+		id, err := u.uuidProvider.GenerateV7()
 		if err != nil {
-			return OAuthV1Response{}, errors.WrapFailf(
-				err,
-				"create user with %v",
-				errors.Token("provider_user_id", oauthInfo.ProviderUserID),
-			)
+			return OAuthV1Response{}, errors.WrapFail(err, "generate user id")
+		}
+		usr = user.User{
+			ID:    user.ID(id),
+			Email: user.Email(oauthInfo.Email),
 		}
 		ret.IsFirstLogin = true
 
@@ -71,6 +92,33 @@ func (u UseCase) OAuthV1(
 			errors.Token("provider_user_id", oauthInfo.ProviderUserID),
 		)
 	}
+	if usr.Phone == "" {
+		usr.Phone = user.Phone(oauthInfo.Phone)
+	}
+
+	err = u.userRepo.Upsert(ctx, usr)
+	if err != nil {
+		return OAuthV1Response{}, errors.WrapFailf(err, "upsert user")
+	}
+
+	err = u.userOAuthAccountRepo.Upsert(ctx, user.OAuthAccount{
+		UserID:         usr.ID,
+		Provider:       req.Provider,
+		ProviderUserID: oauthInfo.ProviderUserID,
+	})
+	if err != nil {
+		return OAuthV1Response{}, errors.WrapFailf(
+			err,
+			"create oauth account with %v and %v",
+			errors.Token("provider", req.Provider),
+			errors.Token("provider_user_id", oauthInfo.ProviderUserID),
+		)
+	}
+
+	err = u.txProvider.CommitTx(ctx)
+	if err != nil {
+		return OAuthV1Response{}, errors.WrapFail(err, "commit create user transaction")
+	}
 
 	t, err := u.tokenIssuer.Issue(usr)
 	if err != nil {
@@ -79,65 +127,4 @@ func (u UseCase) OAuthV1(
 	ret.Token = t
 
 	return ret, nil
-}
-
-func (u UseCase) createUser(
-	ctx context.Context,
-	provider oauth.ProviderType,
-	oauthInfo oauth.UserInfo,
-) (user.User, error) {
-	ctx, err := u.txProvider.ContextWithTx(ctx, tx.IsolationReadCommitted)
-	if err != nil {
-		return user.User{}, errors.WrapFail(err, "run create user transaction")
-	}
-	defer func() {
-		if err != nil {
-			if txErr := u.txProvider.RollbackTx(ctx); txErr != nil {
-				u.logger.Error(errors.WrapFail(txErr, "rollback create user transaction"))
-			}
-		}
-	}()
-
-	id, err := u.uuidProvider.GenerateV7()
-	if err != nil {
-		return user.User{}, errors.WrapFail(err, "generate user id")
-	}
-
-	usr := user.User{
-		ID:    user.ID(id),
-		Email: user.Email(oauthInfo.Email),
-		Phone: user.Phone(oauthInfo.Phone),
-	}
-
-	err = u.userRepo.Create(ctx, usr)
-	if err != nil {
-		return user.User{}, errors.WrapFailf(err, "create user")
-	}
-
-	accountID, err := u.uuidProvider.GenerateV7()
-	if err != nil {
-		return user.User{}, errors.WrapFail(err, "generate oauth account id")
-	}
-
-	err = u.userOAuthAccountRepo.Create(ctx, user.OAuthAccount{
-		ID:             user.OAuthAccountID(accountID),
-		UserID:         usr.ID,
-		Provider:       provider,
-		ProviderUserID: oauthInfo.ProviderUserID,
-	})
-	if err != nil {
-		return user.User{}, errors.WrapFailf(
-			err,
-			"create oauth account with %v and %v",
-			errors.Token("provider", provider),
-			errors.Token("provider_user_id", oauthInfo.ProviderUserID),
-		)
-	}
-
-	err = u.txProvider.CommitTx(ctx)
-	if err != nil {
-		return user.User{}, errors.WrapFail(err, "commit create user transaction")
-	}
-
-	return usr, nil
 }

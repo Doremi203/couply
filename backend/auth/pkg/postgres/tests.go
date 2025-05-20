@@ -20,7 +20,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 )
 
-func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
+func SetupTests(m *testing.M, tester *Tester, serviceDir string) {
 	start := time.Now()
 	ctx := context.Background()
 
@@ -92,10 +92,11 @@ func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 	if baseMigrationsPath == "" {
 		log.Fatalf("env variable BASE_MIGRATIONS_PATH not set")
 	}
+	baseDir := filepath.Join(baseMigrationsPath, serviceDir)
 
 	migrator, err := goose.NewProvider(
 		goose.DialectPostgres,
-		sqlDB, os.DirFS(filepath.Join(baseMigrationsPath, migrationsDir)),
+		sqlDB, os.DirFS(filepath.Join(baseDir, "migrations")),
 	)
 	if err != nil {
 		log.Fatalf("couldn't create db migrations provider: %v", err)
@@ -105,7 +106,7 @@ func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 		log.Fatalf("couldn't run migrations: %v", err)
 	}
 
-	t, err := newTester(ctx, cfg)
+	t, err := newTester(ctx, cfg, baseDir)
 	if err != nil {
 		log.Fatalf("couldn't create tester: %v", err)
 	}
@@ -116,18 +117,20 @@ func SetupTests(m *testing.M, tester *Tester, migrationsDir string) {
 	m.Run()
 }
 
-func newTester(ctx context.Context, cfg Config) (Tester, error) {
+func newTester(ctx context.Context, cfg Config, baseDir string) (Tester, error) {
 	db, err := NewClient(ctx, cfg)
 	if err != nil {
 		return Tester{}, err
 	}
 	return Tester{
-		db: db,
+		db:           db,
+		testDataPath: filepath.Join(baseDir, "testdata"),
 	}, nil
 }
 
 type Tester struct {
-	db *client
+	db           *client
+	testDataPath string
 }
 
 func (tester Tester) Run(
@@ -155,7 +158,13 @@ func (tester Tester) Run(
 
 		ctx = ContextWithTx(ctx, tx, options)
 		for _, fixture := range fixtures {
-			_, err := tester.db.Exec(ctx, fixture)
+			fixtureName := filepath.Base(fixture)
+			fixturePath := filepath.Join(tester.testDataPath, fixtureName)
+
+			fixtureQuery, err := os.ReadFile(fixturePath) //nolint:gosec
+			require.NoError(t, err)
+
+			_, err = tester.db.Exec(ctx, string(fixtureQuery))
 			require.NoError(t, err)
 		}
 		testFunc(t, ctx, tester.db)

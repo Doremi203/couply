@@ -5,8 +5,10 @@ import (
 	"testing"
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/internal/domain/oauth"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
+	"github.com/Doremi203/couply/backend/common/libs/ptr"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -73,9 +75,9 @@ func Test_repo_Create(t *testing.T) {
 	}
 }
 
-func Test_repo_GetByEmail(t *testing.T) {
+func Test_repo_GetByAny(t *testing.T) {
 	type args struct {
-		email user.Email
+		params user.GetByAnyParams
 	}
 	tests := []struct {
 		name     string
@@ -88,7 +90,9 @@ func Test_repo_GetByEmail(t *testing.T) {
 		{
 			name: "no user with given email then user not found error",
 			args: args{
-				email: "user@example.com",
+				params: user.GetByAnyParams{
+					Email: "user@example.com",
+				},
 			},
 			want: user.User{},
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
@@ -98,7 +102,9 @@ func Test_repo_GetByEmail(t *testing.T) {
 		{
 			name: "user with given email exists then return user",
 			args: args{
-				email: "user@example.com",
+				params: user.GetByAnyParams{
+					Email: "user@example.com",
+				},
 			},
 			setup: func(t *testing.T, ctx context.Context, r *repo) {
 				err := r.Create(ctx, user.User{
@@ -115,6 +121,163 @@ func Test_repo_GetByEmail(t *testing.T) {
 			},
 			wantErr: assert.NoError,
 		},
+		{
+			name: "user with given phone exists then return user",
+			args: args{
+				params: user.GetByAnyParams{
+					Phone: "+79123456789",
+				},
+			},
+			setup: func(t *testing.T, ctx context.Context, r *repo) {
+				err := r.Create(ctx, user.User{
+					ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					Email:    "user@example.com",
+					Phone:    "+79123456789",
+					Password: []byte("password"),
+				})
+				require.NoError(t, err)
+			},
+			want: user.User{
+				ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				Email:    "user@example.com",
+				Phone:    "+79123456789",
+				Password: []byte("password"),
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "email or phone exists then return user",
+			args: args{
+				params: user.GetByAnyParams{
+					Email: "user@example.com",
+					Phone: "+79123456789",
+				},
+			},
+			setup: func(t *testing.T, ctx context.Context, r *repo) {
+				err := r.Create(ctx, user.User{
+					ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					Email:    "user@example.com",
+					Phone:    "+79123456789",
+					Password: []byte("password"),
+				})
+				require.NoError(t, err)
+			},
+			want: user.User{
+				ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				Email:    "user@example.com",
+				Phone:    "+79123456789",
+				Password: []byte("password"),
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "user with oauth exists then return user",
+			args: args{
+				params: user.GetByAnyParams{
+					OAuthUserAccount: &oauth.UserAccount{
+						Provider:       oauth.YandexProvider,
+						ProviderUserID: "123",
+					},
+				},
+			},
+			fixtures: []string{"yandex_oauth.sql"},
+			want: user.User{
+				ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				Email:    "user@example.com",
+				Phone:    "+79123456789",
+				Password: []byte("password"),
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "user with phone or email or oauth exists then return user",
+			args: args{
+				params: user.GetByAnyParams{
+					Email: "user@example.com",
+					Phone: "+79123456789",
+					OAuthUserAccount: &oauth.UserAccount{
+						Provider:       oauth.YandexProvider,
+						ProviderUserID: "123",
+					},
+				},
+			},
+			fixtures: []string{"yandex_oauth.sql"},
+			want: user.User{
+				ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				Email:    "user@example.com",
+				Phone:    "+79123456789",
+				Password: []byte("password"),
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "user with id exists then return user",
+			args: args{
+				params: user.GetByAnyParams{
+					ID: ptr.New[user.ID](user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111"))),
+				},
+			},
+			fixtures: []string{"yandex_oauth.sql"},
+			want: user.User{
+				ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				Email:    "user@example.com",
+				Phone:    "+79123456789",
+				Password: []byte("password"),
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "user with any of params exists then return user",
+			args: args{
+				params: user.GetByAnyParams{
+					ID:    ptr.New[user.ID](user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111"))),
+					Email: "user@example.com",
+					Phone: "+79123456789",
+					OAuthUserAccount: &oauth.UserAccount{
+						Provider:       oauth.YandexProvider,
+						ProviderUserID: "123",
+					},
+				},
+			},
+			fixtures: []string{"yandex_oauth.sql"},
+			want: user.User{
+				ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				Email:    "user@example.com",
+				Phone:    "+79123456789",
+				Password: []byte("password"),
+			},
+			wantErr: assert.NoError,
+		},
+		{
+			name: "any of params but user not oauth then return user",
+			args: args{
+				params: user.GetByAnyParams{
+					ID:    ptr.New[user.ID](user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111"))),
+					Email: "user@example.com",
+					Phone: "+79123456789",
+					OAuthUserAccount: &oauth.UserAccount{
+						Provider:       oauth.YandexProvider,
+						ProviderUserID: "123",
+					},
+				},
+			},
+			setup: func(t *testing.T, ctx context.Context, r *repo) {
+				err := r.Create(ctx, user.User{
+					ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+					Email:    "user@example.com",
+					Phone:    "+79123456789",
+					Password: []byte("password"),
+				})
+				require.NoError(t, err)
+			},
+			want: user.User{
+				ID:       user.ID(uuid.MustParse("11111111-1111-1111-1111-111111111111")),
+				Email:    "user@example.com",
+				Phone:    "+79123456789",
+				Password: []byte("password"),
+			},
+			wantErr: assert.NoError,
+		},
 	}
 	for _, tt := range tests {
 		tester.Run(t, tt.name, tt.fixtures, time.Second*10, func(t *testing.T, ctx context.Context, db postgres.Client) {
@@ -126,7 +289,7 @@ func Test_repo_GetByEmail(t *testing.T) {
 				tt.setup(t, ctx, r)
 			}
 
-			got, err := r.GetByEmail(ctx, tt.args.email)
+			got, err := r.GetByAny(ctx, tt.args.params)
 
 			tt.wantErr(t, err)
 			assert.Equal(t, tt.want, got)
