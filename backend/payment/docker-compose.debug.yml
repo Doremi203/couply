@@ -1,0 +1,8 @@
+services:
+  payment:
+    build:
+      dockerfile: debug.Dockerfile
+    ports:
+      - "40000:40000"
+    security_opt:
+      - seccomp=unconfined

@@ -201,3 +201,38 @@ blocker/migrate/down-one:
 
 blocker/migrate/create:
 	cd $(BLOCKER_MIGRATIONS) && $(MIGRATE_CREATE)
+
+### Payment service targets
+payment/check-coverage:
+	-cd payment && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd payment && go-test-coverage --config=.local.testcoverage.yml
+	@rm payment/cover.out
+
+payment/local-build:
+	cd payment/cmd/app && go build -ldflags="-s -w" -o /dev/null
+
+payment/lint:
+	cd payment && golangci-lint run
+
+payment/run:
+	docker compose up -d payment
+
+payment/start: payment/generate
+	docker compose up --build --force-recreate -d payment
+
+payment/generate:
+	cd payment && go generate ./...
+
+PAYMENT_MIGRATIONS = payment/migrations
+
+payment/migrate/up:
+	goose -v -dir "$(PAYMENT_MIGRATIONS)" "$(DB)payment$(DB_PARAMS)" up
+
+payment/migrate/down:
+	goose -v -dir "$(PAYMENT_MIGRATIONS)" "$(DB)payment$(DB_PARAMS)" reset
+
+payment/migrate/down-one:
+	goose -v -dir "$(PAYMENT_MIGRATIONS)" "$(DB)payment$(DB_PARAMS)" down
+
+payment/migrate/create:
+	cd $(PAYMENT_MIGRATIONS) && $(MIGRATE_CREATE)

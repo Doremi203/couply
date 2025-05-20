@@ -15,6 +15,20 @@ services:
     ports:
       - "5432:5432"
 
+  payment:
+    build:
+      context: .
+      dockerfile: payment/prod.Dockerfile
+    environment:
+      APP_ENV: tests
+      CONFIGS_PATH: /app/configs
+    ports:
+      - "7005:7005"
+      - "7006:7006"
+    depends_on:
+      db:
+        condition: service_healthy
+
   blocker:
     build:
       context: .

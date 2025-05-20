@@ -5,4 +5,5 @@ modules:
   - path: matcher
   - path: blocker
   - path: notificator
+  - path: payment
   - path: common/proto
