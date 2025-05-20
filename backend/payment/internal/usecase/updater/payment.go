@@ -26,6 +26,7 @@ func (u *Updater) StartPaymentStatusUpdater(ctx context.Context, interval time.D
 func (u *Updater) updatePendingPayments(ctx context.Context) {
 	pendingPayments, err := u.paymentStorageFacade.GetPendingPaymentsTx(ctx)
 	if err != nil {
+		u.logger.Error(err)
 		return
 	}
 
@@ -47,24 +48,23 @@ func (u *Updater) CheckAndUpdatePaymentStatusWithRetry(ctx context.Context, paym
 
 		status, err := u.paymentGateway.GetPaymentStatus(ctx, gatewayID)
 		if err != nil {
-			// TODO: add logger
+			u.logger.Error(err)
 			delay *= time.Duration(factor)
 			continue
 		}
 
 		currentPayment, err := u.paymentStorageFacade.GetPaymentStatusTx(ctx, paymentID)
 		if err != nil {
-			// TODO: add logger
+			u.logger.Error(err)
 			return
 		}
 
 		if status != currentPayment.GetStatus() {
 			if err := u.paymentStorageFacade.UpdatePaymentStatusTx(ctx, paymentID, status); err != nil {
-				// TODO: add logger
+				u.logger.Error(err)
 				return
 			}
 
-			// Update related subscriptions
 			u.updateRelatedSubscriptions(ctx, currentPayment.GetSubscriptionID(), status)
 		}
 
@@ -80,7 +80,7 @@ func (u *Updater) CheckAndUpdatePaymentStatusWithRetry(ctx context.Context, paym
 func (u *Updater) updateRelatedSubscriptions(ctx context.Context, subID uuid.UUID, paymentStatus payment.PaymentStatus) {
 	sub, err := u.subscriptionStorageFacade.GetSubscriptionTx(ctx, subID)
 	if err != nil {
-		// TODO: add logger
+		u.logger.Error(err)
 		return
 	}
 
@@ -89,28 +89,24 @@ func (u *Updater) updateRelatedSubscriptions(ctx context.Context, subID uuid.UUI
 	switch paymentStatus {
 	case payment.PaymentStatusSuccess:
 		newStatus = subscription.SubscriptionStatusActive
-		// For new subscriptions, we might want to update the dates
 		if sub.GetStatus() == subscription.SubscriptionStatusPendingPayment {
 			now := time.Now()
 			endDate := u.calculateEndDate(now, sub.GetPlan())
-			// Need to extend the storage facade to handle date updates
 			err := u.subscriptionStorageFacade.UpdateSubscriptionDatesTx(ctx, sub.GetID(), now, endDate)
 			if err != nil {
-				// TODO: add logger
+				u.logger.Error(err)
 				return
 			}
 		}
 	case payment.PaymentStatusFailed:
 		newStatus = subscription.SubscriptionStatusPendingPayment
-	case payment.PaymentStatusRefunded:
-		newStatus = subscription.SubscriptionStatusCanceled
 	default:
 		return
 	}
 
 	err = u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.GetID(), newStatus)
 	if err != nil {
-		// TODO: add logger
+		u.logger.Error(err)
 		return
 	}
 }

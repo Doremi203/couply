@@ -51,7 +51,7 @@ func main() {
 
 		gateway := mock_gateway.NewMockGateway()
 
-		updater := updater2.NewUpdater(payFacade, subFacade, gateway)
+		updater := updater2.NewUpdater(payFacade, subFacade, gateway, app.Log)
 
 		go updater.StartPaymentStatusUpdater(context.Background(), 30*time.Second)
 		go updater.StartSubscriptionStatusUpdater(context.Background(), 1*time.Hour)

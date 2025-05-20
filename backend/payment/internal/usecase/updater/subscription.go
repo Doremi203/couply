@@ -24,10 +24,9 @@ func (u *Updater) StartSubscriptionStatusUpdater(ctx context.Context, interval t
 }
 
 func (u *Updater) updateExpiredSubscriptions(ctx context.Context) {
-	// Get active subscriptions that have end date in the past
 	activeSubs, err := u.subscriptionStorageFacade.GetSubscriptionsByStatusTx(ctx, subscription.SubscriptionStatusActive)
 	if err != nil {
-		// TODO: add logger
+		u.logger.Error(err)
 		return
 	}
 
@@ -35,13 +34,11 @@ func (u *Updater) updateExpiredSubscriptions(ctx context.Context) {
 	for _, sub := range activeSubs {
 		if sub.GetEndDate().Before(now) {
 			if sub.GetAutoRenew() {
-				// Handle auto-renewal logic
 				u.handleAutoRenewal(ctx, sub)
 			} else {
-				// Expire the subscription
 				err := u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.GetID(), subscription.SubscriptionStatusExpired)
 				if err != nil {
-					// TODO: add logger
+					u.logger.Error(err)
 					continue
 				}
 			}
@@ -50,10 +47,9 @@ func (u *Updater) updateExpiredSubscriptions(ctx context.Context) {
 }
 
 func (u *Updater) handleAutoRenewal(ctx context.Context, sub *subscription.Subscription) {
-	// Create a new payment for renewal
 	paymentID, err := uuid.NewV7()
 	if err != nil {
-		// TODO: add logger
+		u.logger.Error(err)
 		return
 	}
 
@@ -61,7 +57,7 @@ func (u *Updater) handleAutoRenewal(ctx context.Context, sub *subscription.Subsc
 
 	gatewayID, err := u.paymentGateway.CreatePayment(ctx, amount, "RUB")
 	if err != nil {
-		// TODO: add logger
+		u.logger.Error(err)
 		return
 	}
 
@@ -80,14 +76,13 @@ func (u *Updater) handleAutoRenewal(ctx context.Context, sub *subscription.Subsc
 
 	_, err = u.paymentStorageFacade.CreatePaymentTx(ctx, newPayment)
 	if err != nil {
-		// TODO: add logger
+		u.logger.Error(err)
 		return
 	}
 
-	// Update subscription status to pending payment
 	err = u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.GetID(), subscription.SubscriptionStatusPendingPayment)
 	if err != nil {
-		// TODO: add logger
+		u.logger.Error(err)
 		return
 	}
 }

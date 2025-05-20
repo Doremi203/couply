@@ -2,6 +2,7 @@ package updater
 
 import (
 	"context"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"time"
 
 	"github.com/Doremi203/couply/backend/payment/internal/domain/payment"
@@ -32,12 +33,14 @@ type Updater struct {
 	paymentStorageFacade      paymentStorageFacade
 	subscriptionStorageFacade subscriptionStorageFacade
 	paymentGateway            paymentGateway
+	logger                    log.Logger
 }
 
-func NewUpdater(ps paymentStorageFacade, subs subscriptionStorageFacade, gateway paymentGateway) *Updater {
+func NewUpdater(ps paymentStorageFacade, subs subscriptionStorageFacade, gateway paymentGateway, logger log.Logger) *Updater {
 	return &Updater{
 		paymentStorageFacade:      ps,
 		subscriptionStorageFacade: subs,
 		paymentGateway:            gateway,
+		logger:                    logger,
 	}
 }

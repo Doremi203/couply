@@ -9,7 +9,6 @@ const (
 	PaymentStatusPending
 	PaymentStatusSuccess
 	PaymentStatusFailed
-	PaymentStatusRefunded
 )
 
 func PBToSPaymentStatus(paymentStatus desc.PaymentStatus) PaymentStatus {
@@ -22,8 +21,6 @@ func PBToSPaymentStatus(paymentStatus desc.PaymentStatus) PaymentStatus {
 		return PaymentStatusSuccess
 	case desc.PaymentStatus_PAYMENT_STATUS_FAILED:
 		return PaymentStatusFailed
-	case desc.PaymentStatus_PAYMENT_STATUS_REFUNDED:
-		return PaymentStatusRefunded
 	default:
 		return PaymentStatus(0)
 	}
@@ -39,8 +36,6 @@ func PaymentStatusToPB(paymentStatus PaymentStatus) desc.PaymentStatus {
 		return desc.PaymentStatus_PAYMENT_STATUS_SUCCESS
 	case PaymentStatusFailed:
 		return desc.PaymentStatus_PAYMENT_STATUS_FAILED
-	case PaymentStatusRefunded:
-		return desc.PaymentStatus_PAYMENT_STATUS_REFUNDED
 	default:
 		return desc.PaymentStatus(0)
 	}
