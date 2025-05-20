@@ -2,8 +2,9 @@ package updater
 
 import (
 	"context"
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 
 	"github.com/Doremi203/couply/backend/payment/internal/domain/payment"
 	"github.com/Doremi203/couply/backend/payment/internal/domain/subscription"
