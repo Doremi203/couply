@@ -2,6 +2,12 @@ package main
 
 import (
 	"context"
+	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
+	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
+	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
 	payment_service3 "github.com/Doremi203/couply/backend/payment/internal/app/payment-service"
 	subscription_service3 "github.com/Doremi203/couply/backend/payment/internal/app/subscription-service"
 	payment_service "github.com/Doremi203/couply/backend/payment/internal/storage/facade/payment-service"
@@ -12,11 +18,7 @@ import (
 	payment_service2 "github.com/Doremi203/couply/backend/payment/internal/usecase/payment-service"
 	"github.com/Doremi203/couply/backend/payment/internal/usecase/payment-service/mock_gateway"
 	subscription_service2 "github.com/Doremi203/couply/backend/payment/internal/usecase/subscription-service"
-
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
-	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
-	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
+	updater2 "github.com/Doremi203/couply/backend/payment/internal/usecase/updater"
 )
 
 func main() {
@@ -49,8 +51,13 @@ func main() {
 
 		gateway := mock_gateway.NewMockGateway()
 
+		updater := updater2.NewUpdater(payFacade, subFacade, gateway)
+
+		go updater.StartPaymentStatusUpdater(context.Background(), 30*time.Second)
+		go updater.StartSubscriptionStatusUpdater(context.Background(), 1*time.Hour)
+
 		subUseCase := subscription_service2.NewUseCase(subFacade)
-		payUseCase := payment_service2.NewUseCase(payFacade, gateway)
+		payUseCase := payment_service2.NewUseCase(payFacade, gateway, updater)
 
 		subService := subscription_service3.NewImplementation(app.Log, subUseCase)
 		payService := payment_service3.NewImplementation(app.Log, payUseCase)
@@ -61,6 +68,7 @@ func main() {
 			tokenpkg.NewUnaryTokenInterceptor(
 				tokenProvider,
 				app.Log,
+				tokenpkg.InterceptAllMethodsOption,
 			),
 		)
 		app.RegisterGRPCServices(

@@ -3,12 +3,13 @@ package subscription
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/couply/backend/payment/internal/domain/subscription"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 )
 
-func (s *PgStorageSubscription) UpdateSubscription(ctx context.Context, subscriptionID uuid.UUID, status subscription.SubscriptionStatus) error {
+func (s *PgStorageSubscription) UpdateSubscriptionStatus(ctx context.Context, subscriptionID uuid.UUID, status subscription.SubscriptionStatus) error {
 	query, args, err := sq.Update("subscriptions").
 		Set("status", status).
 		Where(sq.Eq{

@@ -2,11 +2,12 @@ package subscription_service
 
 import (
 	"context"
+	"time"
+
 	"github.com/Doremi203/couply/backend/payment/internal/domain/subscription"
 	dto "github.com/Doremi203/couply/backend/payment/internal/dto/subscription-service"
 	"github.com/Doremi203/couply/backend/payment/utils"
 	"github.com/google/uuid"
-	"time"
 )
 
 func (c *UseCase) CreateSubscription(ctx context.Context, in *dto.CreateSubscriptionV1Request) (*dto.CreateSubscriptionV1Response, error) {

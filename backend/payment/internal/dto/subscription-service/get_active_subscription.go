@@ -1,11 +1,12 @@
 package subscription_service
 
 import (
+	"time"
+
 	desc "github.com/Doremi203/couply/backend/payment/gen/api/subscription-service/v1"
 	"github.com/Doremi203/couply/backend/payment/internal/domain/subscription"
 	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
-	"time"
 )
 
 type GetActiveSubscriptionV1Request struct{}

@@ -2,6 +2,7 @@ package subscription_service
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/payment/internal/domain/subscription"
 	"github.com/google/uuid"

@@ -2,11 +2,12 @@ package payment_service
 
 import (
 	"context"
+	"time"
+
 	"github.com/Doremi203/couply/backend/payment/internal/domain/payment"
 	dto "github.com/Doremi203/couply/backend/payment/internal/dto/payment-service"
 	"github.com/Doremi203/couply/backend/payment/utils"
 	"github.com/google/uuid"
-	"time"
 )
 
 func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Request) (*dto.CreatePaymentV1Response, error) {
@@ -44,7 +45,7 @@ func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Requ
 		return nil, err
 	}
 
-	go c.checkAndUpdatePaymentStatusWithRetry(context.Background(), createdPayment.GetID(), createdPayment.GetGatewayID())
+	go c.updater.CheckAndUpdatePaymentStatusWithRetry(context.Background(), createdPayment.GetID(), createdPayment.GetGatewayID())
 
 	return &dto.CreatePaymentV1Response{
 		PaymentID: createdPayment.GetID().String(),

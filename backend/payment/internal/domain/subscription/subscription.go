@@ -1,8 +1,9 @@
 package subscription
 
 import (
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Subscription struct {

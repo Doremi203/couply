@@ -2,6 +2,7 @@ package subscription_service
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	desc "github.com/Doremi203/couply/backend/payment/gen/api/subscription-service/v1"
 	dto "github.com/Doremi203/couply/backend/payment/internal/dto/subscription-service"

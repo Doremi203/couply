@@ -3,10 +3,11 @@ package payment
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/Doremi203/couply/backend/payment/internal/domain/payment"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
-	"time"
 )
 
 func (s *PgStoragePayment) UpdatePaymentStatus(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error {

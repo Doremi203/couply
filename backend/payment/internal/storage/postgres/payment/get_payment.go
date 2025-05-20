@@ -3,6 +3,7 @@ package payment
 import (
 	"context"
 	"fmt"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/payment/internal/domain/payment"
 	sq "github.com/Masterminds/squirrel"

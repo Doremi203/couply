@@ -4,9 +4,10 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/binary"
+	"time"
+
 	"github.com/Doremi203/couply/backend/payment/internal/domain/payment"
 	"github.com/google/uuid"
-	"time"
 )
 
 type MockGateway struct {
@@ -16,15 +17,15 @@ func NewMockGateway() *MockGateway {
 	return &MockGateway{}
 }
 
-func (g *MockGateway) CreatePayment(ctx context.Context, amount int64, currency string) (string, error) {
-	id, err := uuid.NewUUID()
+func (g *MockGateway) CreatePayment(_ context.Context, _ int64, _ string) (string, error) {
+	id, err := uuid.NewV7()
 	if err != nil {
 		return "", err
 	}
 	return id.String(), nil
 }
 
-func (g *MockGateway) GetPaymentStatus(ctx context.Context, gatewayID string) (payment.PaymentStatus, error) {
+func (g *MockGateway) GetPaymentStatus(_ context.Context, gatewayID string) (payment.PaymentStatus, error) {
 	parsedGatewayID, err := uuid.Parse(gatewayID)
 	if err != nil {
 		return 0, err
@@ -52,7 +53,7 @@ func extractTimeFromUUIDv7(id uuid.UUID) time.Time {
 
 	millis := binary.BigEndian.Uint64(buf[:]) >> 16
 
-	return time.UnixMilli(int64(millis))
+	return time.UnixMilli(int64(millis)) //nolint:gosec
 }
 
 func isPaymentSuccessful(id uuid.UUID) bool {

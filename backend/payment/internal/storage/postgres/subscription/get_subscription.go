@@ -11,16 +11,11 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var (
-	errSubscriptionNotFound = errors.Error("subscription not found for this user")
-)
-
-func (s *PgStorageSubscription) GetActiveSubscription(ctx context.Context, userID uuid.UUID) (*subscription.Subscription, error) {
+func (s *PgStorageSubscription) GetSubscription(ctx context.Context, subID uuid.UUID) (*subscription.Subscription, error) {
 	query, args, err := sq.Select("id", "user_id", "plan", "status", "auto_renew", "start_date", "end_date").
 		From("subscriptions").
 		Where(sq.Eq{
-			"user_id": userID,
-			"status":  subscription.SubscriptionStatusActive,
+			"id": subID,
 		}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
