@@ -10,7 +10,7 @@ type StorageFacadePayment struct {
 	storage   *payment.PgStoragePayment
 }
 
-func NewStorageFacadeSubscription(
+func NewStorageFacadePayment(
 	txManager postgres.TransactionManager,
 	pgRepository *payment.PgStoragePayment,
 ) *StorageFacadePayment {

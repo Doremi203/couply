@@ -16,19 +16,28 @@ func NewMockGateway() *MockGateway {
 	return &MockGateway{}
 }
 
-func (g *MockGateway) CreatePayment(ctx context.Context, amount int64, currency string) (uuid.UUID, error) {
-	return uuid.NewV7()
+func (g *MockGateway) CreatePayment(ctx context.Context, amount int64, currency string) (string, error) {
+	id, err := uuid.NewUUID()
+	if err != nil {
+		return "", err
+	}
+	return id.String(), nil
 }
 
-func (g *MockGateway) GetPaymentStatus(ctx context.Context, gatewayID uuid.UUID) (payment.PaymentStatus, error) {
-	createdAt := extractTimeFromUUIDv7(gatewayID)
+func (g *MockGateway) GetPaymentStatus(ctx context.Context, gatewayID string) (payment.PaymentStatus, error) {
+	parsedGatewayID, err := uuid.Parse(gatewayID)
+	if err != nil {
+		return 0, err
+	}
+
+	createdAt := extractTimeFromUUIDv7(parsedGatewayID)
 	now := time.Now()
 
 	if now.Sub(createdAt) < 2*time.Second {
 		return payment.PaymentStatusPending, nil
 	}
 
-	if isPaymentSuccessful(gatewayID) {
+	if isPaymentSuccessful(parsedGatewayID) {
 		return payment.PaymentStatusSuccess, nil
 	}
 	return payment.PaymentStatusFailed, nil
