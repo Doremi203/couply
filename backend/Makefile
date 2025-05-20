@@ -202,37 +202,37 @@ blocker/migrate/down-one:
 blocker/migrate/create:
 	cd $(BLOCKER_MIGRATIONS) && $(MIGRATE_CREATE)
 
-### Payment service targets
-payment/check-coverage:
-	-cd payment && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
-	-cd payment && go-test-coverage --config=.local.testcoverage.yml
-	@rm payment/cover.out
+### Payments service targets
+payments/check-coverage:
+	-cd payments && go test ./... -coverprofile=cover.out -covermode=atomic -coverpkg=./...
+	-cd payments && go-test-coverage --config=.local.testcoverage.yml
+	@rm payments/cover.out
 
-payment/local-build:
-	cd payment/cmd/app && go build -ldflags="-s -w" -o /dev/null
+payments/local-build:
+	cd payments/cmd/app && go build -ldflags="-s -w" -o /dev/null
 
-payment/lint:
-	cd payment && golangci-lint run
+payments/lint:
+	cd payments && golangci-lint run
 
-payment/run:
-	docker compose up -d payment
+payments/run:
+	docker compose up -d payments
 
-payment/start: payment/generate
-	docker compose up --build --force-recreate -d payment
+payments/start: payments/generate
+	docker compose up --build --force-recreate -d payments
 
-payment/generate:
-	cd payment && go generate ./...
+payments/generate:
+	cd payments && go generate ./...
 
-PAYMENT_MIGRATIONS = payment/migrations
+PAYMENTS_MIGRATIONS = payments/migrations
 
-payment/migrate/up:
-	goose -v -dir "$(PAYMENT_MIGRATIONS)" "$(DB)payment$(DB_PARAMS)" up
+payments/migrate/up:
+	goose -v -dir "$(PAYMENTS_MIGRATIONS)" "$(DB)payments$(DB_PARAMS)" up
 
-payment/migrate/down:
-	goose -v -dir "$(PAYMENT_MIGRATIONS)" "$(DB)payment$(DB_PARAMS)" reset
+payments/migrate/down:
+	goose -v -dir "$(PAYMENTS_MIGRATIONS)" "$(DB)payments$(DB_PARAMS)" reset
 
-payment/migrate/down-one:
-	goose -v -dir "$(PAYMENT_MIGRATIONS)" "$(DB)payment$(DB_PARAMS)" down
+payments/migrate/down-one:
+	goose -v -dir "$(PAYMENTS_MIGRATIONS)" "$(DB)payments$(DB_PARAMS)" down
 
-payment/migrate/create:
-	cd $(PAYMENT_MIGRATIONS) && $(MIGRATE_CREATE)
+payments/migrate/create:
+	cd $(PAYMENTS_MIGRATIONS) && $(MIGRATE_CREATE)
