@@ -17,10 +17,11 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 4rem;
+  height: 5.3rem;
   padding: 0 1rem;
   max-width: 768px;
   margin: 0 auto;
+  padding-bottom: 30px;
 }
 
 .navItem {
@@ -44,4 +45,9 @@
 .navItem.active,
 .navItem.active svg {
   transition: none !important;
+}
+
+.whiteCont {
+  height: 10px;
+  background-color: blue;
 }

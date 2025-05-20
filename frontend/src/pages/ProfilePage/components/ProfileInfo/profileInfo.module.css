@@ -43,11 +43,10 @@
 }
 
 .verifyButton {
-  margin-top: 10px;
   background-color: #1da1f2;
   color: white;
   border-radius: 20px;
-  margin-top: 20px;
+  margin-top: 3px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
   width: 360px !important;
 }

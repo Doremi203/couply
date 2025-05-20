@@ -305,6 +305,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <ProfileVisibilitySection isHidden={isHidden} onInputChange={handleVisibilityChange} />
 
         <SaveButtonSection onSave={handleSave} />
+
+        <div className={styles.bottom} />
       </div>
     </div>
   );

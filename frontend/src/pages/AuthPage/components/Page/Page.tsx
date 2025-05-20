@@ -37,8 +37,9 @@ export const AuthPage = () => {
 
         <ButtonWithIcon
           onClick={onYandex}
-          icon={<img src="email2.png" width="26px" height="26px" alt="email" />}
-          text="Войти по почте"
+          icon={<img src="yandex.png" width="26px" height="26px" alt="email" />}
+          text="Войти c Яндекс ID"
+          className={styles.yandex}
         />
       </div>
     </div>

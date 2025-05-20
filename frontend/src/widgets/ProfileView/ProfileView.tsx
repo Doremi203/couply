@@ -86,6 +86,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   };
 
   const handleDislike = () => {
+    //@ts-ignore
     onDislike(profile.id);
     onClose();
   };

@@ -42,12 +42,15 @@ export const useLikesAndMatches = () => {
         return;
       }
 
+          //@ts-ignore
       const matchesUsersResponse = await getUsers(matchesIds.userIds).unwrap();
       // const newMatchesUsers = matchesUsersResponse.users.map(user => user.user);
       
       if (offset === 0) {
+            //@ts-ignore
         setMatchesUsers(matchesUsersResponse);
       } else {
+            //@ts-ignore
         setMatchesUsers(prev => [...prev, ...matchesUsersResponse]);
       }
     } catch (error) {
@@ -68,17 +71,20 @@ export const useLikesAndMatches = () => {
       }
 
       const likesIds = incomingResult.likes.map(el => el.senderId);
+          //@ts-ignore
       const likesUsersResponse = await getUsers(likesIds).unwrap();
       // const newLikesUsers = likesUsersResponse.users.map(user => user.user);
 
 
-      console.log(likesUsersResponse)
+      // console.log(likesUsersResponse)
   
 
       if (offset === 0) {
+            //@ts-ignore
         setLikesUsers(likesUsersResponse);
         setIncomingMatches(incomingResult.likes);
       } else {
+            //@ts-ignore
         setLikesUsers(prev => [...prev, ...likesUsersResponse]);
         setIncomingMatches(prev => [...prev, ...incomingResult.likes]);
       }

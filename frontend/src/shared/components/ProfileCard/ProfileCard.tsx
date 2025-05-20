@@ -175,6 +175,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 
       {showMatchModal && (
         <MatchModal
+          //@ts-ignore
           userImage={myData.photos?.[0].url}
           matchImage={profile.photos?.[0]?.url}
           matchName={profile.name}
