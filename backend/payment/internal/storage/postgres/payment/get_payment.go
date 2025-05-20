@@ -15,7 +15,8 @@ var (
 )
 
 func (s *PgStoragePayment) GetPayment(ctx context.Context, paymentID uuid.UUID) (*payment.Payment, error) {
-	query, args, err := sq.Select("id", "status", "updated_at").
+	query, args, err := sq.Select("id", "user_id", "subscription_id", "amount", "currency", "status",
+		"gateway_id", "created_at", "updated_at").
 		From("payments").
 		Where(sq.Eq{
 			"id": paymentID,
@@ -31,7 +32,13 @@ func (s *PgStoragePayment) GetPayment(ctx context.Context, paymentID uuid.UUID) 
 	pay := &payment.Payment{}
 	err = row.Scan(
 		&pay.ID,
+		&pay.UserID,
+		&pay.SubscriptionID,
+		&pay.Amount,
+		&pay.Currency,
 		&pay.Status,
+		&pay.GatewayID,
+		&pay.CreatedAt,
 		&pay.UpdatedAt,
 	)
 	if err != nil {

@@ -10,7 +10,7 @@ func (f *StorageFacadeSubscription) CreateSubscriptionTx(ctx context.Context, ne
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.storage.AddSubscription(ctxTx, newSubscription)
+		err = f.subscriptionStorage.AddSubscription(ctxTx, newSubscription)
 		if err != nil {
 			return errors.WrapFail(err, "add subscription")
 		}

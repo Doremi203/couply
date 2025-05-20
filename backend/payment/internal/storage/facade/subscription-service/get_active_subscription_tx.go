@@ -12,10 +12,26 @@ func (f *StorageFacadeSubscription) GetActiveSubscriptionTx(ctx context.Context,
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		sub, err = f.storage.GetActiveSubscription(ctxTx, userID)
+		sub, err = f.subscriptionStorage.GetActiveSubscription(ctxTx, userID)
 		if err != nil {
 			return errors.WrapFail(err, "get active subscription")
 		}
+
+		ids, err := f.paymentStorage.GetPaymentIDsBySubscriptionID(ctxTx, sub.GetID())
+		if err != nil {
+			return errors.WrapFail(err, "get active subscription ids")
+		}
+
+		uuids := make([]uuid.UUID, len(ids))
+		for i, id := range ids {
+			parsedUUID, err := uuid.Parse(id)
+			if err != nil {
+				return errors.WrapFail(err, "parse active subscription uuid")
+			}
+			uuids[i] = parsedUUID
+		}
+
+		sub.PaymentIDs = uuids
 
 		return nil
 	})

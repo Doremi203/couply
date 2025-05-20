@@ -11,7 +11,7 @@ func (f *StorageFacadeSubscription) CancelSubscriptionTx(ctx context.Context, su
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.storage.UpdateSubscription(ctxTx, subscriptionID, subscription.SubscriptionStatusCanceled)
+		err = f.subscriptionStorage.UpdateSubscription(ctxTx, subscriptionID, subscription.SubscriptionStatusCanceled)
 		if err != nil {
 			return errors.WrapFail(err, "update subscription")
 		}

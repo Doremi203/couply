@@ -8,7 +8,8 @@ import (
 )
 
 func (s *PgStoragePayment) GetPendingPayments(ctx context.Context) ([]*payment.Payment, error) {
-	query, args, err := sq.Select("id", "status", "updated_at", "user_id", "subscription_id", "amount", "currency", "gateway_id", "created_at").
+	query, args, err := sq.Select("id", "status", "updated_at", "user_id", "subscription_id", "amount",
+		"currency", "gateway_id", "created_at").
 		From("payments").
 		Where(sq.Eq{
 			"status": payment.PaymentStatusPending,

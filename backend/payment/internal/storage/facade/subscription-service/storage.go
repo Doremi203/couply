@@ -2,20 +2,24 @@ package subscription_service
 
 import (
 	"github.com/Doremi203/couply/backend/payment/internal/storage/postgres"
+	"github.com/Doremi203/couply/backend/payment/internal/storage/postgres/payment"
 	"github.com/Doremi203/couply/backend/payment/internal/storage/postgres/subscription"
 )
 
 type StorageFacadeSubscription struct {
-	txManager postgres.TransactionManager
-	storage   *subscription.PgStorageSubscription
+	txManager           postgres.TransactionManager
+	subscriptionStorage *subscription.PgStorageSubscription
+	paymentStorage      *payment.PgStoragePayment
 }
 
 func NewStorageFacadeSubscription(
 	txManager postgres.TransactionManager,
-	pgRepository *subscription.PgStorageSubscription,
+	pgSubscriptionRepository *subscription.PgStorageSubscription,
+	pgPaymentRepository *payment.PgStoragePayment,
 ) *StorageFacadeSubscription {
 	return &StorageFacadeSubscription{
-		txManager: txManager,
-		storage:   pgRepository,
+		txManager:           txManager,
+		subscriptionStorage: pgSubscriptionRepository,
+		paymentStorage:      pgPaymentRepository,
 	}
 }
