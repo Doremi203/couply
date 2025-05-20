@@ -1,7 +1,7 @@
 .button {
   width: 120px;
   background-color: var(--tag-background);
-  color: black;
+  color: var(--tag-color) !important;
   font-weight: 500;
   margin-right: 250px;
 }

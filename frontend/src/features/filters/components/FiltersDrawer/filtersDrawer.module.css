@@ -237,7 +237,7 @@ input:checked + .slider:before {
 .button {
   width: 120px;
   background-color: var(--tag-background);
-  color: black;
+  color: var(--tag-color);
   font-weight: 500;
   margin-right: 250px;
   margin-top: 10px;
