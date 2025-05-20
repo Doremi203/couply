@@ -15,10 +15,10 @@ services:
     ports:
       - "5432:5432"
 
-  payment:
+  payments:
     build:
       context: .
-      dockerfile: payment/prod.Dockerfile
+      dockerfile: payments/prod.Dockerfile
     environment:
       APP_ENV: tests
       CONFIGS_PATH: /app/configs

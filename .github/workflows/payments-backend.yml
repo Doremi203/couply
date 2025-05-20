@@ -1,0 +1,32 @@
+name: Payments Service CI/CD
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'payments/matcher/**'
+      - 'payments/auth/pkg/**'
+      - 'payments/common/**'
+      - '.github/workflows/payments-backend.yml'
+      - '.github/actions/codegen/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    uses: ./.github/workflows/backend-service-ci.yml
+    with:
+      service_name: payments
+      additional_paths: 'backend/auth/pkg/**'
+    secrets: inherit
+
+  success:
+    name: CI success
+    needs:
+      - ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "All required checks passed!"

@@ -1,0 +1,21 @@
+grpc:
+  port: 7006
+
+http:
+  port: 7005
+
+logging:
+  level: debug
+  format: console
+
+swagger-ui:
+  path: /app/swagger-ui
+  enabled: true
+
+database:
+  host: db
+  port: 5432
+  user: user
+  password: pass
+  database: payments
+  options: sslmode=disable

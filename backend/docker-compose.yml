@@ -25,12 +25,12 @@ services:
       MINIO_ROOT_PASSWORD: minio123
     command: server /data --console-address ":9001"
 
-  payment:
+  payments:
     build:
       context: .
       dockerfile: testing.Dockerfile
       args:
-        service: payment
+        service: payments
     environment:
       APP_ENV: dev
       CONFIGS_PATH: /app/configs
