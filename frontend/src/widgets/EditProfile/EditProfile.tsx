@@ -32,6 +32,8 @@ import { SaveButtonSection } from '../../shared/components/SaveButtonSection';
 import { EditSection } from './components/EditSection/EditSection';
 import { InterestSection } from './components/InterestsSection/InterestsSection';
 import styles from './editProfile.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectProfileData, setProfileData } from '../../entities/profile/model/profileSlice';
 
 export interface EditProfileProps {
   profileData: ProfileData;
@@ -52,6 +54,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   onPhotoAdd,
   onPhotoRemove,
 }) => {
+  const dispatch = useDispatch();
+  console.log(useSelector(selectProfileData));
+
   const [updateUser] = useUpdateUserMutation();
   const [uploadFile] = useUploadFileToS3Mutation();
   const [confirmPhoto] = useConfirmPhotoMutation();
@@ -196,10 +201,13 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         isVerified: profileData.isVerified,
         isPremium: profileData.isPremium,
         isBlocked: profileData.isBlocked,
+        photos: profileData.photos,
       };
 
       // @ts-ignore - The API seems to work differently in practice vs type definition
       const response: any = await updateUser(userData).unwrap();
+
+      dispatch(setProfileData(userData));
 
       if (photoFiles.length > 0 && response && response.photoUploadResponses) {
         await Promise.all(

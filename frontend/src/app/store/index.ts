@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { setupListeners } from '@reduxjs/toolkit/query';
 
 import matchesReducer from '../../entities/matches/model/matchesSlice';
+import profileReducer from '../../entities/profile/model/profileSlice';
 import userReducer from '../../entities/user/model/userSlice';
 import filtersReducer from '../../features/filters/model/filtersSlice';
 import { baseApi, matcherApi } from '../../shared/api/baseApi';
@@ -13,6 +14,7 @@ export const store = configureStore({
     matches: matchesReducer,
     filters: filtersReducer,
     user: userReducer,
+    profile: profileReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(baseApi.middleware, matcherApi.middleware),

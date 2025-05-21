@@ -1,6 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useGetUserMutation } from '../../../../entities/user';
+import {
+  selectProfileData,
+  selectProfileLoading,
+  setProfileData,
+  setLoading,
+  setError,
+} from '../../../../entities/profile/model/profileSlice';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
 import { ProfileView } from '../../../../widgets/ProfileView';
@@ -25,52 +33,34 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
   initialEditMode = false,
   initialVerified = false,
 }) => {
+  const dispatch = useDispatch();
   const [getUser] = useGetUserMutation();
-  // const [updateUser] = useUpdateUserMutation();
-  // const [uploadFile] = useUploadFileToS3Mutation();
-  // const [confirmPhoto] = useConfirmPhotoMutation();
+  const profileData = useSelector(selectProfileData);
+  const isLoading = useSelector(selectProfileLoading);
 
-  const [profileData, setProfileData] = useState<any>({
-    name: '',
-    age: 0,
-    phone: '',
-    dateOfBirth: '',
-    email: '',
-    gender: '',
-    interests: [],
-    about: '',
-    music: [],
-    movies: [],
-    books: [],
-    hobbies: [],
-    isHidden: false,
-    photos: [],
-    bio: '',
-  });
-
-  const [newPhotoFiles, setNewPhotoFiles] = useState<PhotoItem[]>([]);
-
-  const [isLoading, setIsLoading] = useState(true);
+  const [newPhotoFiles, setNewPhotoFiles] = React.useState<PhotoItem[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        dispatch(setLoading(true));
         const data = await getUser({}).unwrap();
-        setProfileData(data.user);
+        dispatch(setProfileData(data.user));
       } catch (error) {
         console.error('Failed to fetch user:', error);
+        dispatch(setError('Failed to fetch user data'));
       } finally {
-        setIsLoading(false);
+        dispatch(setLoading(false));
       }
     };
 
     fetchData();
-  }, [getUser]);
+  }, [getUser, dispatch]);
 
-  const [isEditMode, setIsEditMode] = useState(initialEditMode);
-  const [activeTab, setActiveTab] = useState(initialTab);
-  const [isProfileHidden, setIsProfileHidden] = useState(false);
-  const [isVerified, setIsVerified] = useState(initialVerified);
+  const [isEditMode, setIsEditMode] = React.useState(initialEditMode);
+  const [activeTab, setActiveTab] = React.useState(initialTab);
+  const [isProfileHidden, setIsProfileHidden] = React.useState(false);
+  const [isVerified, setIsVerified] = React.useState(initialVerified);
 
   const MAX_PHOTOS = 6;
 
@@ -85,10 +75,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
   const handleProfileVisibilityToggle = () => {
     setIsProfileHidden(!isProfileHidden);
-    setProfileData({
-      ...profileData,
-      isHidden: !isProfileHidden,
-    });
+    dispatch(
+      setProfileData({
+        ...profileData,
+        isHidden: !isProfileHidden,
+      }),
+    );
   };
 
   const handleVerificationRequest = () => {
@@ -132,10 +124,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
       }
     }
 
-    setProfileData({
-      ...profileData,
-      photos: currentPhotos,
-    });
+    dispatch(
+      setProfileData({
+        ...profileData,
+        photos: currentPhotos,
+      }),
+    );
   };
 
   const handlePhotoRemove = (index: number) => {
@@ -153,10 +147,12 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 
       // Remove from UI
       updatedPhotos.splice(index, 1);
-      setProfileData({
-        ...profileData,
-        photos: updatedPhotos,
-      });
+      dispatch(
+        setProfileData({
+          ...profileData,
+          photos: updatedPhotos,
+        }),
+      );
     }
   };
 
@@ -167,10 +163,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           <EditProfile
             profileData={profileData}
             onBack={() => {
-              // Upload any pending photos before going back
-              // if (newPhotoFiles.length > 0) {
-              //   uploadPhotosToBackend();
-              // }
               setActiveTab('profile');
             }}
             onPhotoAdd={handlePhotoAdd}
@@ -178,7 +170,6 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
           />
         );
       case 'preview':
-        //@ts-ignore
         return (
           <ProfileView profile={profileData} onClose={() => setActiveTab('profile')} isProfile />
         );
