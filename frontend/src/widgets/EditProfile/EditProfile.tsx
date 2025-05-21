@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
+import { selectProfileData, setProfileData } from '../../entities/profile/model/profileSlice';
 import { useUpdateUserMutation } from '../../entities/user';
 import { useConfirmPhotoMutation } from '../../entities/user/api/userApi';
 import {
@@ -20,6 +22,7 @@ import {
   smokingOptions,
   smokingToApi,
 } from '../../features/filters/components/constants';
+import { mapInterestsFromBackendFormat } from '../../features/filters/helpers/mapInterestsFromApiFormat';
 import { mapInterestsToBackendFormat } from '../../features/filters/helpers/mapInterestsToApiFormat';
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
 import { ProfileData } from '../../features/profileEdit';
@@ -32,8 +35,6 @@ import { SaveButtonSection } from '../../shared/components/SaveButtonSection';
 import { EditSection } from './components/EditSection/EditSection';
 import { InterestSection } from './components/InterestsSection/InterestsSection';
 import styles from './editProfile.module.css';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectProfileData, setProfileData } from '../../entities/profile/model/profileSlice';
 
 export interface EditProfileProps {
   profileData: ProfileData;
@@ -55,7 +56,6 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   onPhotoRemove,
 }) => {
   const dispatch = useDispatch();
-  console.log(useSelector(selectProfileData));
 
   const [updateUser] = useUpdateUserMutation();
   const [uploadFile] = useUploadFileToS3Mutation();
@@ -82,7 +82,9 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   ]);
   //@ts-ignore
   const [selectedGoal, setSelectedGoal] = useState<string[]>([goalFromApi[profileData.goal]]);
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
+  const interest = mapInterestsFromBackendFormat(profileData.interest);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(interest);
   const [bio, setBio] = useState(profileData.bio || '');
   const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
 
