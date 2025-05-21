@@ -1,6 +1,8 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useDeleteMatchMutation } from '../../../../entities/matches';
+import { removeMatch } from '../../../../entities/matches/model/matchesSlice';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
 import { TelegramIcon } from '../../../../shared/components/TelegramIcon';
 
@@ -21,23 +23,21 @@ interface MatchCardProps {
   onClick: (match: MatchProfile) => void;
   onSocialClick: (matchId: number, type: 'telegram' | 'instagram') => void;
   showChatMessage: number | null;
-  onRemove: (id: number) => void;
 }
-
-//TODO вернуть profile.user
 
 export const MatchCard: React.FC<MatchCardProps> = ({
   match,
   onClick,
   // onSocialClick,
   showChatMessage,
-  onRemove,
 }) => {
+  const dispatch = useDispatch();
+
   const [deleteMatch] = useDeleteMatchMutation();
   const handleDeleteMatch = async () => {
     try {
       await deleteMatch({ targetUserId: String(match.id) });
-      onRemove(match.id);
+      dispatch(removeMatch(match.id));
     } catch (error) {
       console.error('Error deleting match:', error);
     }

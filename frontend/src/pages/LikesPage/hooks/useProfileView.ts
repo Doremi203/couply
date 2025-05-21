@@ -21,13 +21,6 @@ export const useProfileView = () => {
       hasLikedYou: true,
       bio: 'This is a match! You can contact them via social media.',
       location: 'Matched User',
-      interests: ['Match'],
-      lifestyle: {
-        contact: `Telegram: ${match.telegram}`,
-        //@ts-ignore
-        social: `Instagram: ${match.instagram}`,
-      },
-      // Add photos property to ensure the ProfileView component can display photos
       photos: [match.imageUrl, match.imageUrl],
       // Add passion property to ensure the ProfileView component can display interests
       passion: ['Match', 'Connection'],

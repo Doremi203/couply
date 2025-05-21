@@ -44,6 +44,8 @@ export const LikesPage = () => {
     };
   }, [handleCloseProfile, selectedProfile]);
 
+  console.log(selectedProfile);
+
   return (
     <div className={styles.container} id="likes-page-container">
       <div className={styles.header}>Лайки и мэтчи</div>

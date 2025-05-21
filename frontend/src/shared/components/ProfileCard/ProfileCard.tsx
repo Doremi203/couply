@@ -1,7 +1,9 @@
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useLikeUserMutation } from '../../../entities/matches';
+import { addMatch, removeLike } from '../../../entities/matches/model/matchesSlice';
 import { Like } from '../../../entities/matches/types';
 import { useGetUserMutation } from '../../../entities/user';
 import { UserData } from '../../../entities/user/types';
@@ -26,10 +28,11 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onLike,
   className,
 }) => {
+  const dispatch = useDispatch();
+
   const [messageModalOpen, setMessageModalOpen] = useState(false);
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [likeUser] = useLikeUserMutation();
 
   const [getUser] = useGetUserMutation();
 
@@ -61,13 +64,10 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 
     if (userId) {
       try {
-        await likeUser({
-          targetUserId: userId,
-          message: '',
-        }).unwrap();
-
         setShowMatchModal(true);
         document.body.style.overflow = 'hidden';
+        dispatch(removeLike(userId));
+        dispatch(addMatch(profile));
 
         if (onLike) {
           onLike(userId);
@@ -106,7 +106,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
       <>
         {showMatchModal && (
           <MatchModal
-            userImage="/photo1.png"
+            userImage={myData.photos?.[0].url}
             matchImage={profile.photos?.[0]?.url}
             matchName={profile.name}
             onKeepSwiping={handleKeepSwiping}

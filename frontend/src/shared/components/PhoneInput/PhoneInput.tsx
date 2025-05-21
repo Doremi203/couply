@@ -68,19 +68,11 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
     }, 0);
   };
 
-  const inputClassName = [
-    styles.input,
-    isValid === true ? styles.valid : '',
-    isValid === false ? styles.invalid : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
   return (
     <input
       type="tel"
       inputMode="tel"
-      className={inputClassName}
+      className={styles.input}
       value={value}
       onChange={handleChange}
       onKeyDown={handleKeyDown}
