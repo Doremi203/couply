@@ -2,7 +2,6 @@ package blocker_service
 
 import (
 	"context"
-	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
@@ -16,12 +15,12 @@ type userClient interface {
 }
 
 type botClient interface {
-	SendReportMessage(user *userservicegrpc.User, reasons []blocker.ReportReason, message string) error
+	SendReportMessage(user *userservicegrpc.User, reasons []blocker.ReportReason, message string, blockID uuid.UUID) error
 	StartCallbackHandler()
 }
 
 type blockerStorageFacade interface {
-	ReportUserTx(ctx context.Context, blockID, blockedUserID uuid.UUID, message string, createdAt time.Time, reasons []blocker.ReportReason) error
+	ReportUserTx(ctx context.Context, block *blocker.UserBlock) error
 	DeleteUserBlockTx(ctx context.Context, blockID uuid.UUID) error
 	GetBlockInfoTx(ctx context.Context, userID uuid.UUID) (*blocker.UserBlock, error)
 }

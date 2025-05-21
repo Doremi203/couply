@@ -9,7 +9,7 @@ services:
       - /etc/ssl/.postgresql:/root/.postgresql:ro
     ports:
       - "80:80"
-      - "50051:50051"
+      - "5051:5051"
     depends_on:
       - fluentbit
     logging:

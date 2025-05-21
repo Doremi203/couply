@@ -17,6 +17,7 @@ type GetBlockInfoV1Response struct {
 	BlockedUserID uuid.UUID
 	Message       string
 	ReportReasons []blocker.ReportReason
+	BlockStatus   blocker.BlockStatus
 	CreatedAt     time.Time
 }
 
@@ -48,6 +49,13 @@ func (x *GetBlockInfoV1Response) GetReportReasons() []blocker.ReportReason {
 	return nil
 }
 
+func (x *GetBlockInfoV1Response) GetBlockStatus() blocker.BlockStatus {
+	if x != nil {
+		return x.BlockStatus
+	}
+	return blocker.BlockStatus(0)
+}
+
 func (x *GetBlockInfoV1Response) GetCreatedAt() time.Time {
 	if x != nil {
 		return x.CreatedAt
@@ -69,6 +77,7 @@ func GetBlockInfoResponseToPB(resp *GetBlockInfoV1Response) *desc.GetBlockInfoV1
 		BlockedUserId: resp.GetBlockedUserID().String(),
 		Message:       resp.GetMessage(),
 		Reasons:       pbReasons,
+		Status:        blocker.BlockStatusToPB(resp.GetBlockStatus()),
 		CreatedAt:     timestamppb.New(resp.GetCreatedAt()),
 	}
 }

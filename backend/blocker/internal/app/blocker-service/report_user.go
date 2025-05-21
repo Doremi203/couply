@@ -16,6 +16,7 @@ func (i *Implementation) ReportUserV1(ctx context.Context, in *desc.ReportUserV1
 
 	response, err := i.usecase.ReportUser(ctx, dto.PBToReportUserRequest(in))
 	if err != nil {
+		i.logger.Error(err)
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 

@@ -27,7 +27,7 @@ func (b *BotClient) StartCallbackHandler() {
 		}
 
 		prefix := parts[0]
-		userID := parts[1]
+		blockID := parts[1]
 
 		handler, exists := b.handlers[prefix]
 		if !exists {
@@ -35,7 +35,7 @@ func (b *BotClient) StartCallbackHandler() {
 			continue
 		}
 
-		result := handler(userID)
+		result := handler(blockID)
 		b.handleCallbackResult(update, msg, result)
 	}
 }

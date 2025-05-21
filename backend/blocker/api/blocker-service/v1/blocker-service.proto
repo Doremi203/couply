@@ -110,7 +110,8 @@ message GetBlockInfoV1Response {
   string blocked_user_id = 2;
   string message = 3;
   repeated ReportReason reasons = 4;
-  google.protobuf.Timestamp created_at = 5;
+  BlockStatus status = 5;
+  google.protobuf.Timestamp created_at = 6;
 }
 
 enum ReportReason {
@@ -121,4 +122,11 @@ enum ReportReason {
   REASON_INAPPROPRIATE_CONTENT = 4;
   REASON_AGE = 5;
   REASON_OTHER = 6;
+}
+
+enum BlockStatus {
+  BLOCK_STATUS_UNSPECIFIED = 0;
+  BLOCK_STATUS_PENDING = 1;
+  BLOCK_STATUS_ACCEPTED = 2;
+  BLOCK_STATUS_DECLINED = 3;
 }

@@ -11,6 +11,7 @@ type UserBlock struct {
 	BlockedID uuid.UUID `db:"blocked_id"`
 	Message   string    `db:"message"`
 	Reasons   []ReportReason
+	Status    BlockStatus
 	CreatedAt time.Time `db:"created_at"`
 }
 
@@ -40,6 +41,13 @@ func (x *UserBlock) GetReasons() []ReportReason {
 		return x.Reasons
 	}
 	return nil
+}
+
+func (x *UserBlock) GetStatus() BlockStatus {
+	if x != nil {
+		return x.Status
+	}
+	return BlockStatus(0)
 }
 
 func (x *UserBlock) GetCreatedAt() time.Time {
