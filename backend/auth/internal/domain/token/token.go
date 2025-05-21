@@ -2,6 +2,11 @@ package token
 
 import "time"
 
+type Pair struct {
+	AccessToken  Token
+	RefreshToken Refresh
+}
+
 type Token struct {
 	signedString string
 	expiresIn    time.Duration

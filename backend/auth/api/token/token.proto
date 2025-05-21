@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package token;
+
+option go_package = "github.com/Doremi203/couply/backend/auth/gen/api/token";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service TokenProvider {
+  rpc Refresh(RefreshRequest) returns (RefreshResponse) {
+    option (google.api.http) = {
+      post: "/v1/token/refresh"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Обновление токена";
+      description: "Обновляет access и refresh токены";
+    };
+  }
+}
+
+message RefreshRequest {
+  string refresh_token = 1;
+}
+
+message RefreshResponse {
+  Token access_token = 1;
+  Token refresh_token = 2;
+}
+
+message Token {
+  string token = 1;
+  int32 expires_in = 2;
+}

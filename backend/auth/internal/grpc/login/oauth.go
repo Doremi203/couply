@@ -30,15 +30,23 @@ func (s *grpcService) OAuthLoginV1(
 	}
 
 	redirectURL := fmt.Sprintf(
-		"%s/%s#token=%s&expiresAt=%d",
+		"%s/%s",
 		s.config.OAuthRedirectFrontendDomain,
 		path,
-		oauthResp.Token.SignedString(),
-		int(oauthResp.Token.ExpiresIn().Seconds()),
 	)
+
+	accessTokenCookie := fmt.Sprintf("access_token=%s; Path=/; HttpOnly; SameSite=Strict; Max-Age=%d",
+		oauthResp.TokenPair.AccessToken.SignedString(),
+		int(oauthResp.TokenPair.AccessToken.ExpiresIn().Seconds()))
+
+	refreshTokenCookie := fmt.Sprintf("refresh_token=%s; Path=/; HttpOnly; SameSite=Strict; Max-Age=%d",
+		string(oauthResp.TokenPair.RefreshToken.Token),
+		int(oauthResp.TokenPair.RefreshToken.ExpiresIn.Seconds()))
 
 	md := metadata.Pairs(
 		"Location", redirectURL,
+		"Set-Cookie", accessTokenCookie,
+		"Set-Cookie", refreshTokenCookie,
 	)
 	err = grpc.SendHeader(ctx, md)
 	if err != nil {

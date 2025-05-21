@@ -11,7 +11,7 @@ import (
 )
 
 type OAuthV1Response struct {
-	Token        token.Token
+	TokenPair    token.Pair
 	IsFirstLogin bool
 }
 
@@ -115,16 +115,15 @@ func (u UseCase) OAuthV1(
 		)
 	}
 
-	err = u.txProvider.CommitTx(ctx)
-	if err != nil {
-		return OAuthV1Response{}, errors.WrapFail(err, "commit create user transaction")
-	}
-
-	t, err := u.tokenIssuer.Issue(usr)
+	ret.TokenPair, err = u.tokenIssuer.IssuePair(ctx, usr.ID)
 	if err != nil {
 		return OAuthV1Response{}, errors.WrapFailf(err, "issue token")
 	}
-	ret.Token = t
+
+	err = u.txProvider.CommitTx(ctx)
+	if err != nil {
+		return OAuthV1Response{}, errors.WrapFail(err, "commit oauth transaction")
+	}
 
 	return ret, nil
 }

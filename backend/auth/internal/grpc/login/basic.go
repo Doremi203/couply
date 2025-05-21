@@ -4,6 +4,7 @@ import (
 	"context"
 
 	logingprc "github.com/Doremi203/couply/backend/auth/gen/api/login"
+	tokenPb "github.com/Doremi203/couply/backend/auth/gen/api/token"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/pswrd"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase/login"
@@ -16,7 +17,7 @@ func (s *grpcService) BasicLoginV1(
 	ctx context.Context,
 	req *logingprc.BasicLoginRequestV1,
 ) (*logingprc.BasicLoginResponseV1, error) {
-	t, err := s.loginUseCase.BasicV1(ctx, user.Email(req.GetEmail()), pswrd.Password(req.GetPassword()))
+	pair, err := s.loginUseCase.BasicV1(ctx, user.Email(req.GetEmail()), pswrd.Password(req.GetPassword()))
 	switch {
 	case errors.Is(err, login.ErrUserNotRegistered):
 		return nil, status.Errorf(codes.NotFound, "user with %s not registered", req.GetEmail())
@@ -27,7 +28,11 @@ func (s *grpcService) BasicLoginV1(
 	}
 
 	return &logingprc.BasicLoginResponseV1{
-		Token:     t.SignedString(),
-		ExpiresIn: int32(t.ExpiresIn().Seconds()),
+		Token:     pair.AccessToken.SignedString(),
+		ExpiresIn: int32(pair.AccessToken.ExpiresIn().Seconds()),
+		RefreshToken: &tokenPb.Token{
+			Token:     string(pair.RefreshToken.Token),
+			ExpiresIn: int32(pair.RefreshToken.ExpiresIn.Seconds()),
+		},
 	}, nil
 }

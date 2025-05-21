@@ -19,8 +19,7 @@ type jwtProvider struct {
 }
 
 type сustomClaims struct {
-	UserID    uuid.UUID `json:"user_id"`
-	UserEmail string    `json:"user_email"`
+	UserID uuid.UUID `json:"user_id"`
 	jwt.RegisteredClaims
 }
 
@@ -46,8 +45,7 @@ func (p *jwtProvider) Parse(tokenString string) (Token, error) {
 	}
 
 	return Token{
-		userID:    claims.UserID,
-		userEmail: claims.UserEmail,
+		userID: claims.UserID,
 	}, nil
 }
 
@@ -65,11 +63,6 @@ func getJWTClaims(t *jwt.Token) (сustomClaims, error) {
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		return сustomClaims{}, errors.Wrap(err, "user id is not uuid")
-	}
-
-	email, ok := claims["user_email"].(string)
-	if !ok {
-		return сustomClaims{}, errors.Error("email claim not found or invalid format")
 	}
 
 	var registeredClaims jwt.RegisteredClaims
@@ -100,7 +93,6 @@ func getJWTClaims(t *jwt.Token) (сustomClaims, error) {
 
 	return сustomClaims{
 		UserID:           userID,
-		UserEmail:        email,
 		RegisteredClaims: registeredClaims,
 	}, nil
 }
