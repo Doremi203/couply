@@ -21,4 +21,4 @@ secrets:
     telegram: e6qgotvn596k4k5331cq
 
 user_service:
-  address: "matcher.testing.couply.ru:50051"
+  address: "matcher.testing.couply.ru:5051"

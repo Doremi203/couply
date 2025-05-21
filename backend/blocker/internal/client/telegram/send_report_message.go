@@ -18,7 +18,9 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 	var reasonsText strings.Builder
 	if len(reasons) > 0 {
 		for i, reason := range reasons {
-			reasonsText.WriteString(fmt.Sprintf("%d. %s\n", i+1, reason.String()))
+			reasonStr := reason.String()
+			reasonStr = strings.TrimPrefix(reasonStr, "REASON_")
+			reasonsText.WriteString(fmt.Sprintf("%d. %s\n", i+1, reasonStr))
 		}
 	} else {
 		reasonsText.WriteString("не указаны")
@@ -45,7 +47,7 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 			"Заблокирован: %t\n"+
 			"Фото: %v\n"+
 			"Аккаунт создан: %s\n\n"+
-			"Причины жалобы: %v"+
+			"Причины жалобы: %v\n"+
 			"Сообщение жалобы: %s",
 		user.GetId(),
 		user.GetName(),
@@ -68,7 +70,7 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 		),
 	)
 
-	msg := tgbotapi.NewMessage(b.adminChatID, escapeMarkdown(text))
+	msg := tgbotapi.NewMessage(b.adminChatID, text)
 	msg.ReplyMarkup = keyboard
 	msg.ParseMode = "Markdown"
 
@@ -91,28 +93,4 @@ func getGenderStr(gender user_service.Gender) string {
 	default:
 		return "Нет гендера"
 	}
-}
-
-func escapeMarkdown(text string) string {
-	replacer := strings.NewReplacer(
-		"_", "\\_",
-		"*", "\\*",
-		"[", "\\[",
-		"]", "\\]",
-		"(", "\\(",
-		")", "\\)",
-		"~", "\\~",
-		"`", "\\`",
-		">", "\\>",
-		"#", "\\#",
-		"+", "\\+",
-		"-", "\\-",
-		"=", "\\=",
-		"|", "\\|",
-		"{", "\\{",
-		"}", "\\}",
-		".", "\\.",
-		"!", "\\!",
-	)
-	return replacer.Replace(text)
 }
