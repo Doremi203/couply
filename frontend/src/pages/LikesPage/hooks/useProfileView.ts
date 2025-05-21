@@ -7,23 +7,41 @@ export const useProfileView = () => {
   const [selectedProfile, setSelectedProfile] = useState<LikeProfile | null>(null);
 
   const handleProfileClick = useCallback((profile: LikeProfile) => {
-    // When clicking on a profile, open the ProfileView
-    setSelectedProfile(profile);
+    // Format the profile data to match what ProfileView expects
+    const formattedProfile: LikeProfile = {
+      user: {
+        id: profile.id,
+        name: profile.name,
+        age: profile.age,
+        photos: [{ url: profile.imageUrl }],
+        bio: profile.bio || '',
+        location: profile.location || '',
+        interests: profile.interests || [],
+        lifestyle: profile.lifestyle || {},
+        passion: profile.passion || [],
+        verified: profile.verified || false,
+      },
+    };
+    setSelectedProfile(formattedProfile);
   }, []);
 
   const handleMatchClick = useCallback((match: MatchProfile) => {
-    // Convert match to a profile format that ProfileView can use
-    const matchAsProfile = {
-      id: match.id,
-      name: match.name,
-      age: match.age,
-      imageUrl: match.imageUrl,
-      hasLikedYou: true,
-      bio: 'This is a match! You can contact them via social media.',
-      location: 'Matched User',
-      photos: [match.imageUrl, match.imageUrl],
-      // Add passion property to ensure the ProfileView component can display interests
-      passion: ['Match', 'Connection'],
+    const matchAsProfile: LikeProfile = {
+      user: {
+        id: match.id,
+        name: match.name,
+        age: match.age,
+        photos: match.photos,
+        hasLikedYou: true,
+        bio: 'This is a match! You can contact them via social media.',
+        location: 'Matched User',
+        interests: [],
+        lifestyle: {
+          contact: `Telegram: ${match.telegram}`,
+        },
+        passion: ['Match', 'Connection'],
+        verified: false,
+      },
     };
     setSelectedProfile(matchAsProfile);
   }, []);

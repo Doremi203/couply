@@ -179,7 +179,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         );
       case 'preview':
         //@ts-ignore
-        return <ProfileView profile={profileData} onClose={() => setActiveTab('profile')} />;
+        return (
+          <ProfileView profile={profileData} onClose={() => setActiveTab('profile')} isProfile />
+        );
       default:
         return (
           <Profile

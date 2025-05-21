@@ -36,6 +36,7 @@ interface ProfileViewProps {
   onLike?: (id: number) => void;
   onDislike?: (id: number) => void;
   isMatchView?: boolean;
+  isProfile?: boolean;
 }
 
 export const ProfileView: React.FC<ProfileViewProps> = ({
@@ -44,6 +45,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   onLike,
   onDislike,
   isMatchView = false,
+  isProfile = false,
 }) => {
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -53,25 +55,25 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
   // Get the profile photo safely
   const getProfilePhoto = () => {
-    if (!profileData.photos || !profileData.photos.length) {
-      return '/photo1.png';
-    }
+    // if (!profileData.photos || !profileData.photos.length) {
+    //   return '/photo1.png';
+    // }
 
     const firstPhoto = profileData.photos[0];
     if (typeof firstPhoto === 'string') {
       return firstPhoto;
     } else if (firstPhoto && typeof firstPhoto === 'object') {
-      return firstPhoto.url || '/photo1.png';
+      return firstPhoto.url;
     }
 
-    return '/photo1.png';
+    // return '/photo1.png';
   };
 
-  const commonInterests = ['Music', 'Travel', 'Photography'];
+  // const commonInterests = ['Music', 'Travel', 'Photography'];
 
-  const isCommonInterest = (interest: string) => {
-    return commonInterests.includes(interest);
-  };
+  // const isCommonInterest = (interest: string) => {
+  //   return commonInterests.includes(interest);
+  // };
 
   const handleLike = () => {
     const userId = profileData.id;
@@ -145,7 +147,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
               )}
             </h2>
 
-            {!isMatchView && (
+            {!isMatchView && !isProfile && (
               <div className={styles.buttons}>
                 <div onClick={e => e.stopPropagation()}>
                   <DislikeButton onClick={handleDislike} className={styles.dislikeButton} />
@@ -168,11 +170,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
       </div>
 
-      <ProfileInfo
-        profile={profileData}
-        profileDetails={profileDetails}
-        isCommonInterest={isCommonInterest}
-      />
+      <ProfileInfo profile={profileData} profileDetails={profileDetails} isCommonInterest={[]} />
     </div>
   );
 };
