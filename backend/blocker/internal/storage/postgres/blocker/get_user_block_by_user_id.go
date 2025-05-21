@@ -15,12 +15,15 @@ var (
 	ErrUserBlockNotFound = errors.Error("user block not found")
 )
 
-func (s *PgStorageBlocker) GetUserBlock(ctx context.Context, userID uuid.UUID) (*blocker.UserBlock, error) {
+func (s *PgStorageBlocker) GetUserBlockByUserID(ctx context.Context, userID uuid.UUID) (*blocker.UserBlock, error) {
 	query, args, err := sq.Select(
-		"id", "blocked_id", "message", "created_at",
+		"id", "blocked_id", "message", "created_at", "status",
 	).
 		From("user_blocks").
-		Where(sq.Eq{"blocked_id": userID}).
+		Where(sq.Eq{
+			"blocked_id": userID,
+			"status":     blocker.BlockStatusAccepted,
+		}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
@@ -33,6 +36,7 @@ func (s *PgStorageBlocker) GetUserBlock(ctx context.Context, userID uuid.UUID) (
 		&b.BlockedID,
 		&b.Message,
 		&b.CreatedAt,
+		&b.Status,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {

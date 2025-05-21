@@ -3,19 +3,18 @@ package blocker
 import (
 	"context"
 	"fmt"
-	"time"
 
+	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
 	sq "github.com/Masterminds/squirrel"
-	"github.com/google/uuid"
 )
 
-func (s *PgStorageBlocker) AddUserBlock(ctx context.Context, blockID, blockedUserID uuid.UUID, message string, createdAt time.Time) error {
+func (s *PgStorageBlocker) AddUserBlock(ctx context.Context, block *blocker.UserBlock) error {
 	query, args, err := sq.Insert("user_blocks").
 		Columns(
-			"id", "blocked_id", "message", "created_at",
+			"id", "blocked_id", "message", "created_at", "status",
 		).
 		Values(
-			blockID, blockedUserID, message, createdAt,
+			block.GetID(), block.GetBlockedID(), block.GetMessage(), block.GetCreatedAt(), block.GetStatus(),
 		).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

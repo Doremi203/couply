@@ -24,8 +24,8 @@ type botClient interface {
 }
 
 type blockerStorageFacade interface {
-	DeleteUserBlockTx(ctx context.Context, blockID uuid.UUID) error
-	GetBlockInfoTx(ctx context.Context, userID uuid.UUID) (*blocker.UserBlock, error)
+	UpdateUserBlockStatusTx(ctx context.Context, blockID uuid.UUID, status blocker.BlockStatus) error
+	GetUserBlockByIDTx(ctx context.Context, blockID uuid.UUID) (*blocker.UserBlock, error)
 }
 
 type BotHandler struct {
@@ -55,29 +55,34 @@ func (h *BotHandler) SetupRoutes() {
 }
 
 func (h *BotHandler) handleBlockAction(callbackData string) CallbackResult {
-	userID := strings.TrimPrefix(callbackData, "block_")
-	return h.processBlockRequest(userID)
+	blockID := strings.TrimPrefix(callbackData, "block_")
+	return h.processBlockRequest(blockID)
 }
 
 func (h *BotHandler) handleDismissAction(callbackData string) CallbackResult {
-	userID := strings.TrimPrefix(callbackData, "dismiss_")
-	return h.processDismissRequest(userID)
+	blockID := strings.TrimPrefix(callbackData, "dismiss_")
+	return h.processDismissRequest(blockID)
 }
 
-func (h *BotHandler) processBlockRequest(userID string) (retErr CallbackResult) {
+func (h *BotHandler) processBlockRequest(blockID string) (retErr CallbackResult) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	userUUID, err := uuid.Parse(userID)
+	blockUUID, err := uuid.Parse(blockID)
 	if err != nil {
 		return CallbackResult{
-			Error: fmt.Errorf("invalid user ID format: %w", err),
+			Error: fmt.Errorf("invalid block ID format: %w", err),
 		}
 	}
 
-	defer h.cleanupOnError(ctx, userUUID, err)
+	defer h.cleanupOnError(ctx, blockUUID, err)
 
-	userData, err := h.userClient.GetUserByIDV1(ctx, userID)
+	blockInfo, err := h.blockerFacade.GetUserBlockByIDTx(ctx, blockUUID)
+	if err != nil {
+		return
+	}
+
+	userData, err := h.userClient.GetUserByIDV1(ctx, blockInfo.GetBlockedID().String())
 	if err != nil {
 		return h.errorResult(
 			err,
@@ -95,21 +100,29 @@ func (h *BotHandler) processBlockRequest(userID string) (retErr CallbackResult) 
 		)
 	}
 
+	if err := h.blockerFacade.UpdateUserBlockStatusTx(context.Background(), blockUUID, blocker.BlockStatusAccepted); err != nil {
+		return h.errorResult(
+			err,
+			"❌ Ошибка блокировки",
+			"❌ Не удалось обновить статус блокировки",
+		)
+	}
+
 	return CallbackResult{
 		ActionText:   "✅ Заблокирован",
 		ResponseText: "Пользователь успешно заблокирован",
 	}
 }
 
-func (h *BotHandler) processDismissRequest(userID string) CallbackResult {
-	userUUID, err := uuid.Parse(userID)
+func (h *BotHandler) processDismissRequest(blockID string) CallbackResult {
+	blockUUID, err := uuid.Parse(blockID)
 	if err != nil {
 		return CallbackResult{
 			Error: fmt.Errorf("invalid user ID format: %w", err),
 		}
 	}
 
-	if err := h.blockerFacade.DeleteUserBlockTx(context.Background(), userUUID); err != nil {
+	if err := h.blockerFacade.UpdateUserBlockStatusTx(context.Background(), blockUUID, blocker.BlockStatusDeclined); err != nil {
 		return h.errorResult(
 			err,
 			"❌ Ошибка",
@@ -132,9 +145,9 @@ func (h *BotHandler) errorResult(err error, actionText, responseText string) Cal
 	}
 }
 
-func (h *BotHandler) cleanupOnError(ctx context.Context, userUUID uuid.UUID, err error) {
+func (h *BotHandler) cleanupOnError(ctx context.Context, blockUUID uuid.UUID, err error) {
 	if err != nil {
-		if cleanupErr := h.blockerFacade.DeleteUserBlockTx(ctx, userUUID); cleanupErr != nil {
+		if cleanupErr := h.blockerFacade.UpdateUserBlockStatusTx(ctx, blockUUID, blocker.BlockStatusDeclined); cleanupErr != nil {
 			h.logger.Error(errors.Errorf("error cleaning user block data: original_error: %s, cleanup_error: %s", err.Error(), cleanupErr.Error()))
 		}
 	}

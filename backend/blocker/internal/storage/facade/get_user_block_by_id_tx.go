@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func (f *StorageFacadeBlocker) GetBlockInfoTx(ctx context.Context, userID uuid.UUID) (*blocker.UserBlock, error) {
+func (f *StorageFacadeBlocker) GetUserBlockByIDTx(ctx context.Context, blockID uuid.UUID) (*blocker.UserBlock, error) {
 	var (
 		userBlock *blocker.UserBlock
 		reasons   []blocker.ReportReason
@@ -16,7 +16,7 @@ func (f *StorageFacadeBlocker) GetBlockInfoTx(ctx context.Context, userID uuid.U
 	)
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		userBlock, err = f.storage.GetUserBlockByUserID(ctxTx, userID)
+		userBlock, err = f.storage.GetUserBlockByID(ctxTx, blockID)
 		if err != nil {
 			return fmt.Errorf("failed to get user block: %w", err)
 		}

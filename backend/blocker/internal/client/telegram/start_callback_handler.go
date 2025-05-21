@@ -27,7 +27,7 @@ func (b *BotClient) StartCallbackHandler() {
 		}
 
 		prefix := parts[0]
-		userID := parts[1]
+		blockID := parts[1]
 
 		handler, exists := b.handlers[prefix]
 		if !exists {
@@ -35,7 +35,7 @@ func (b *BotClient) StartCallbackHandler() {
 			continue
 		}
 
-		result := handler(userID)
+		result := handler(blockID)
 		b.handleCallbackResult(update, msg, result)
 	}
 }
@@ -53,14 +53,14 @@ func (b *BotClient) handleCallbackResult(update tgbotapi.Update, msg *tgbotapi.M
 
 func (b *BotClient) prepareResponseTexts(result CallbackResult) (string, string) {
 	if result.Error != nil {
-		return "❌ Ошибка: " + result.Error.Error(), "❌ Ошибка"
+		return escapeMarkdown("❌ Ошибка: " + result.Error.Error()), "❌ Ошибка"
 	}
-	return result.ResponseText, result.ActionText
+	return escapeMarkdown(result.ResponseText), escapeMarkdown(result.ActionText)
 }
 
 func (b *BotClient) updateOriginalMessage(msg *tgbotapi.Message, actionText string) {
 	editedText := msg.Text + "\n\n" + actionText
-	editMsg := tgbotapi.NewEditMessageText(msg.Chat.ID, msg.MessageID, editedText)
+	editMsg := tgbotapi.NewEditMessageText(msg.Chat.ID, msg.MessageID, escapeMarkdown(editedText))
 	editMsg.ParseMode = "Markdown"
 
 	editMarkup := tgbotapi.NewEditMessageReplyMarkup(
@@ -78,7 +78,7 @@ func (b *BotClient) updateOriginalMessage(msg *tgbotapi.Message, actionText stri
 }
 
 func (b *BotClient) sendResponseMessage(msg *tgbotapi.Message, text string) {
-	replyMsg := tgbotapi.NewMessage(msg.Chat.ID, text)
+	replyMsg := tgbotapi.NewMessage(msg.Chat.ID, escapeMarkdown(text))
 	if _, err := b.api.Send(replyMsg); err != nil {
 		log.Println(err)
 	}

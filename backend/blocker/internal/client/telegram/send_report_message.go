@@ -4,13 +4,15 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/google/uuid"
+
 	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
 
 	user_service "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker.ReportReason, message string) error {
+func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker.ReportReason, message string, blockID uuid.UUID) error {
 	createdAt := user.GetCreatedAt().AsTime().Format("02.01.2006 15:04")
 
 	var reasonsText strings.Builder
@@ -43,7 +45,7 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 			"Заблокирован: %t\n"+
 			"Фото: %v\n"+
 			"Аккаунт создан: %s\n\n"+
-			"Причины жалобы:\n %v"+
+			"Причины жалобы: %v"+
 			"Сообщение жалобы: %s",
 		user.GetId(),
 		user.GetName(),
@@ -61,12 +63,12 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 
 	keyboard := tgbotapi.NewInlineKeyboardMarkup(
 		tgbotapi.NewInlineKeyboardRow(
-			tgbotapi.NewInlineKeyboardButtonData("⛔ Блокировать", "block_"+user.GetId()),
-			tgbotapi.NewInlineKeyboardButtonData("✅ Отклонить", "dismiss_"+user.GetId()),
+			tgbotapi.NewInlineKeyboardButtonData("⛔ Блокировать", "block_"+blockID.String()),
+			tgbotapi.NewInlineKeyboardButtonData("✅ Отклонить", "dismiss_"+blockID.String()),
 		),
 	)
 
-	msg := tgbotapi.NewMessage(b.adminChatID, text)
+	msg := tgbotapi.NewMessage(b.adminChatID, escapeMarkdown(text))
 	msg.ReplyMarkup = keyboard
 	msg.ParseMode = "Markdown"
 
@@ -89,4 +91,28 @@ func getGenderStr(gender user_service.Gender) string {
 	default:
 		return "Нет гендера"
 	}
+}
+
+func escapeMarkdown(text string) string {
+	replacer := strings.NewReplacer(
+		"_", "\\_",
+		"*", "\\*",
+		"[", "\\[",
+		"]", "\\]",
+		"(", "\\(",
+		")", "\\)",
+		"~", "\\~",
+		"`", "\\`",
+		">", "\\>",
+		"#", "\\#",
+		"+", "\\+",
+		"-", "\\-",
+		"=", "\\=",
+		"|", "\\|",
+		"{", "\\{",
+		"}", "\\}",
+		".", "\\.",
+		"!", "\\!",
+	)
+	return replacer.Replace(text)
 }

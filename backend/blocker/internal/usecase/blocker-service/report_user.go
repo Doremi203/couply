@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
+
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/blocker/internal/dto"
@@ -15,12 +17,12 @@ func (c *UseCase) ReportUser(ctx context.Context, in *dto.ReportUserV1Request) (
 		return nil, err
 	}
 
-	err = c.bot.SendReportMessage(reportedUser, in.GetReportReasons(), in.GetMessage())
+	blockID, err := uuid.NewV7()
 	if err != nil {
 		return nil, err
 	}
 
-	blockID, err := uuid.NewV7()
+	err = c.bot.SendReportMessage(reportedUser, in.GetReportReasons(), in.GetMessage(), blockID)
 	if err != nil {
 		return nil, err
 	}
@@ -30,7 +32,16 @@ func (c *UseCase) ReportUser(ctx context.Context, in *dto.ReportUserV1Request) (
 		return nil, err
 	}
 
-	err = c.blockerStorageFacade.ReportUserTx(ctx, blockID, targetUserID, in.GetMessage(), time.Now(), in.GetReportReasons())
+	block := &blocker.UserBlock{
+		ID:        blockID,
+		BlockedID: targetUserID,
+		Message:   in.GetMessage(),
+		Reasons:   in.GetReportReasons(),
+		Status:    blocker.BlockStatusPending,
+		CreatedAt: time.Now(),
+	}
+
+	err = c.blockerStorageFacade.ReportUserTx(ctx, block)
 	if err != nil {
 		return nil, err
 	}
