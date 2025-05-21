@@ -7,7 +7,7 @@ export const useProfileView = () => {
   const [selectedProfile, setSelectedProfile] = useState(null);
 
   //@ts-ignore
-  const handleProfileClick = (profile) => {
+  const handleProfileClick = profile => {
     // When clicking on a profile, open the ProfileView
     setSelectedProfile(profile);
   };

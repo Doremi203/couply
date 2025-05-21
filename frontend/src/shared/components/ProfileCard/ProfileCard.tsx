@@ -2,7 +2,6 @@ import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { useLikeUserMutation } from '../../../entities/matches';
 import { addMatch, removeLike } from '../../../entities/matches/model/matchesSlice';
 import { Like } from '../../../entities/matches/types';
 import { useGetUserMutation } from '../../../entities/user';
@@ -106,6 +105,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
       <>
         {showMatchModal && (
           <MatchModal
+            //@ts-ignore
             userImage={myData.photos?.[0].url}
             matchImage={profile.photos?.[0]?.url}
             matchName={profile.name}

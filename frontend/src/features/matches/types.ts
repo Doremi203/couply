@@ -1,5 +1,3 @@
-
-
 export interface LikeProfile {
   liked?: boolean;
   hasLikedYou?: boolean;

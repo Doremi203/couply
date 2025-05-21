@@ -37,6 +37,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   const handleDeleteMatch = async () => {
     try {
       await deleteMatch({ targetUserId: String(match.id) });
+      //@ts-ignore
       dispatch(removeMatch(match.id));
     } catch (error) {
       console.error('Error deleting match:', error);

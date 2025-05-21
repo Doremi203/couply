@@ -1,6 +1,20 @@
-
 import { GenderPriority } from '../../../entities/search';
-import { Goal, Zodiac, Education, Alcohol, Smoking, Sport, Selfdevelopment, Hobby, Music, MoviesTV, FoodDrink, PersonalityTraits, Pets, Children } from '../../../entities/user';
+import {
+  Goal,
+  Zodiac,
+  Education,
+  Alcohol,
+  Smoking,
+  Sport,
+  Selfdevelopment,
+  Hobby,
+  Music,
+  MoviesTV,
+  FoodDrink,
+  PersonalityTraits,
+  Pets,
+  Children,
+} from '../../../entities/user';
 
 export const getDefaultFilter = () => {
   return {

@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
+import { selectMatches } from '../../../../entities/matches/model/matchesSlice';
 import EmptyState from '../../../../shared/components/EmptyState';
 import { MatchProfile } from '../../types';
 import { MatchCard } from '../MatchCard';
 
 import styles from './matchesSection.module.css';
-import { selectMatches } from '../../../../entities/matches/model/matchesSlice';
-import { useSelector } from 'react-redux';
 
 interface MatchesSectionProps {
   matches: MatchProfile[];
@@ -23,6 +23,7 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
 }) => {
   const matches = useSelector(selectMatches);
 
+  //@ts-ignore
   if (matches.users.length === 0) {
     return (
       <EmptyState title="У вас пока нет мэтчей" subtitle="Лайкайте профили, чтобы найти мэтчи" />

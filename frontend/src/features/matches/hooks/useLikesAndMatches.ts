@@ -36,13 +36,12 @@ import {
   setShowMatchModal,
 } from '../../../entities/matches/model/matchesSlice';
 import { useGetUsersMutation } from '../../../entities/user';
-import { RootState } from '../../../shared/store';
 
 const ITEMS_PER_PAGE = 10;
 
 export const useLikesAndMatches = () => {
   const dispatch = useDispatch();
-  
+
   const likes = useSelector(selectLikes);
   const likesUsers = useSelector(selectLikesUsers);
   const matches = useSelector(selectMatches);
@@ -63,68 +62,71 @@ export const useLikesAndMatches = () => {
 
   const isInitialized = useRef(false);
 
-  const loadMatches = useCallback(async (offset: number) => {
-    try {
-      const matchesIds = await fetchMatchesUserIds({
-        limit: ITEMS_PER_PAGE,
-        offset,
-      }).unwrap();
+  const loadMatches = useCallback(
+    async (offset: number) => {
+      try {
+        const matchesIds = await fetchMatchesUserIds({
+          limit: ITEMS_PER_PAGE,
+          offset,
+        }).unwrap();
 
-      if (matchesIds.userIds.length === 0) {
-        dispatch(setHasMoreMatches(false));
-        return;
-      }
+        if (matchesIds.userIds.length === 0) {
+          dispatch(setHasMoreMatches(false));
+          return;
+        }
 
-      //@ts-ignore
-      const matchesUsersResponse = await getUsers(matchesIds.userIds).unwrap();
-      
-      if (offset === 0) {
         //@ts-ignore
-        dispatch(setMatches(matchesUsersResponse));
-      } else {
-        //@ts-ignore
-        dispatch(appendMatches(matchesUsersResponse));
+        const matchesUsersResponse = await getUsers(matchesIds.userIds).unwrap();
+
+        if (offset === 0) {
+          //@ts-ignore
+          dispatch(setMatches(matchesUsersResponse));
+        } else {
+          //@ts-ignore
+          dispatch(appendMatches(matchesUsersResponse));
+        }
+      } catch (error) {
+        console.error('Error loading matches data:', error);
       }
-    } catch (error) {
-      console.error('Error loading matches data:', error);
-    }
-  }, [dispatch, fetchMatchesUserIds, getUsers]);
+    },
+    [dispatch, fetchMatchesUserIds, getUsers],
+  );
 
-  const loadLikes = useCallback(async (offset: number) => {
-    try {
-      const incomingResult = await fetchIncomingLikes({
-        limit: ITEMS_PER_PAGE,
-        offset,
-      }).unwrap();
+  const loadLikes = useCallback(
+    async (offset: number) => {
+      try {
+        const incomingResult = await fetchIncomingLikes({
+          limit: ITEMS_PER_PAGE,
+          offset,
+        }).unwrap();
 
-      if (incomingResult.likes.length === 0) {
-        dispatch(setHasMoreLikes(false));
-        return;
-      }
+        if (incomingResult.likes.length === 0) {
+          dispatch(setHasMoreLikes(false));
+          return;
+        }
 
-      const likesIds = incomingResult.likes.map(el => el.senderId);
-      //@ts-ignore
-      const likesUsersResponse = await getUsers(likesIds).unwrap();
-
-      if (offset === 0) {
+        const likesIds = incomingResult.likes.map(el => el.senderId);
         //@ts-ignore
-        dispatch(setLikesUsers(likesUsersResponse));
-        dispatch(setLikes(incomingResult.likes));
-      } else {
-        //@ts-ignore
-        dispatch(appendLikes({ likes: incomingResult.likes, users: likesUsersResponse }));
+        const likesUsersResponse = await getUsers(likesIds).unwrap();
+
+        if (offset === 0) {
+          //@ts-ignore
+          dispatch(setLikesUsers(likesUsersResponse));
+          dispatch(setLikes(incomingResult.likes));
+        } else {
+          //@ts-ignore
+          dispatch(appendLikes({ likes: incomingResult.likes, users: likesUsersResponse }));
+        }
+      } catch (error) {
+        console.error('Error loading likes data:', error);
       }
-    } catch (error) {
-      console.error('Error loading likes data:', error);
-    }
-  }, [dispatch, fetchIncomingLikes, getUsers]);
+    },
+    [dispatch, fetchIncomingLikes, getUsers],
+  );
 
   useEffect(() => {
     const loadData = async () => {
-      await Promise.all([
-        loadMatches(0),
-        loadLikes(0),
-      ]);
+      await Promise.all([loadMatches(0), loadLikes(0)]);
     };
 
     if (!isInitialized.current) {
@@ -135,7 +137,7 @@ export const useLikesAndMatches = () => {
 
   const loadMoreMatches = useCallback(async () => {
     if (!hasMoreMatches || isLoadingIncoming) return;
-    
+
     const newOffset = matchesOffset + ITEMS_PER_PAGE;
     dispatch(setMatchesOffset(newOffset));
     await loadMatches(newOffset);
@@ -143,7 +145,7 @@ export const useLikesAndMatches = () => {
 
   const loadMoreLikes = useCallback(async () => {
     if (!hasMoreLikes || isLoadingIncoming) return;
-    
+
     const newOffset = likesOffset + ITEMS_PER_PAGE;
     dispatch(setLikesOffset(newOffset));
     await loadLikes(newOffset);
@@ -183,7 +185,7 @@ export const useLikesAndMatches = () => {
 
             const userResponse = await getUsers({ userIds: [likedProfile.senderId] }).unwrap();
             const userData = userResponse.users[0].user;
-            
+
             const likeProfile = {
               name: userData.name,
               age: userData.age,
@@ -196,7 +198,7 @@ export const useLikesAndMatches = () => {
               passion: [],
               photos: userData.photos,
             } as any;
-            
+
             dispatch(setMatchedProfile(likeProfile));
             dispatch(addMatch(userData));
             dispatch(removeLike(id));
@@ -217,13 +219,16 @@ export const useLikesAndMatches = () => {
     dispatch(setShowMatchModal(false));
   }, [dispatch]);
 
-  const handleSocialClick = useCallback((matchId: number) => {
-    dispatch(setShowChatMessage(matchId));
+  const handleSocialClick = useCallback(
+    (matchId: number) => {
+      dispatch(setShowChatMessage(matchId));
 
-    setTimeout(() => {
-      dispatch(setShowChatMessage(null));
-    }, 2000);
-  }, [dispatch]);
+      setTimeout(() => {
+        dispatch(setShowChatMessage(null));
+      }, 2000);
+    },
+    [dispatch],
+  );
 
   const handleRemoveMatch = useCallback(
     async (id: string) => {

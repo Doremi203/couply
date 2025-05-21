@@ -76,8 +76,8 @@ export interface UserResponse {
     isVerified: boolean;
     isHidden: boolean;
     photos: Array<{
-        orderNumber: number;
-        url: string;
+      orderNumber: number;
+      url: string;
     }>;
   };
 }

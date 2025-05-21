@@ -1,18 +1,15 @@
 import { UserData } from '../user/types';
 
-
 export interface Like {
-    senderId: string,
-    receiverId: string,
-    message: string,
+  senderId: string;
+  receiverId: string;
+  message: string;
 }
 
-
 export interface LikesData {
-    likes: Array<Like>;
-  }
+  likes: Array<Like>;
+}
 
 export interface LikesUsersData {
-    users: Array<UserData>;
-  }
-
+  users: Array<UserData>;
+}

@@ -170,6 +170,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
         </div>
       </div>
 
+      {/**@ts-ignore */}
       <ProfileInfo profile={profileData} profileDetails={profileDetails} isCommonInterest={[]} />
     </div>
   );

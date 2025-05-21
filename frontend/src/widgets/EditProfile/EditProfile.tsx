@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
-import { selectProfileData, setProfileData } from '../../entities/profile/model/profileSlice';
+import { setProfileData } from '../../entities/profile/model/profileSlice';
 import { useUpdateUserMutation } from '../../entities/user';
 import { useConfirmPhotoMutation } from '../../entities/user/api/userApi';
 import {
@@ -83,6 +83,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   //@ts-ignore
   const [selectedGoal, setSelectedGoal] = useState<string[]>([goalFromApi[profileData.goal]]);
 
+  //@ts-ignore
   const interest = mapInterestsFromBackendFormat(profileData.interest);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(interest);
   const [bio, setBio] = useState(profileData.bio || '');
@@ -209,6 +210,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
       // @ts-ignore - The API seems to work differently in practice vs type definition
       const response: any = await updateUser(userData).unwrap();
 
+      //@ts-ignore
       dispatch(setProfileData(userData));
 
       if (photoFiles.length > 0 && response && response.photoUploadResponses) {

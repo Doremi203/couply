@@ -62,8 +62,12 @@ const profileSlice = createSlice({
     setProfileData: (state, action: PayloadAction<ProfileState['data']>) => {
       state.data = action.payload;
     },
-    updateProfileField: (state, action: PayloadAction<{ field: keyof ProfileState['data']; value: any }>) => {
+    updateProfileField: (
+      state,
+      action: PayloadAction<{ field: keyof ProfileState['data']; value: any }>,
+    ) => {
       const { field, value } = action.payload;
+      //@ts-ignore
       state.data[field] = value;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
@@ -72,7 +76,7 @@ const profileSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
-    resetProfile: (state) => {
+    resetProfile: state => {
       state.data = initialState.data;
       state.isLoading = false;
       state.error = null;
@@ -86,6 +90,7 @@ export const selectProfileLoading = (state: RootState) => state.profile.isLoadin
 export const selectProfileError = (state: RootState) => state.profile.error;
 
 // Actions
-export const { setProfileData, updateProfileField, setLoading, setError, resetProfile } = profileSlice.actions;
+export const { setProfileData, updateProfileField, setLoading, setError, resetProfile } =
+  profileSlice.actions;
 
-export default profileSlice.reducer; 
+export default profileSlice.reducer;

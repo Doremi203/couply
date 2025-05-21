@@ -5,29 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSwipeable } from 'react-swipeable';
 
 import { useLikeUserMutation } from '../../../../entities/matches';
-import { GenderPriority } from '../../../../entities/search';
 import {
   useCreateFilterMutation,
   useSearchUsersMutation,
 } from '../../../../entities/search/api/searchApi';
-import {
-  Alcohol,
-  Education,
-  Goal,
-  Hobby,
-  Selfdevelopment,
-  Smoking,
-  Sport,
-  Zodiac,
-  Children,
-  getIsPremium,
-  setUserVerified,
-  Music,
-  FoodDrink,
-  MoviesTV,
-  PersonalityTraits,
-  Pets,
-} from '../../../../entities/user';
+import { getIsPremium, setUserVerified } from '../../../../entities/user';
 import { MessageModal } from '../../../../pages/HomePage/components/MessageModal/MessageModal';
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';

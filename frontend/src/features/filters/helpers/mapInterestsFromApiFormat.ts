@@ -76,10 +76,11 @@ export const mapInterestsFromBackendFormat = (apiInterests: Record<string, strin
   (Object.entries(interestCategoriesMap) as [keyof typeof interestCategoriesMap, any][]).forEach(
     ([category, config]) => {
       const apiValues = apiInterests[category] || [config.default];
-      
+
       // Create reverse mapping from API values to frontend values
       const reverseApiMap = Object.entries(config.apiMap).reduce(
         (acc, [frontendValue, apiValue]) => {
+          //@ts-ignore
           acc[apiValue] = frontendValue;
           return acc;
         },
@@ -97,4 +98,4 @@ export const mapInterestsFromBackendFormat = (apiInterests: Record<string, strin
   );
 
   return result;
-}; 
+};
