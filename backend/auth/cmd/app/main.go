@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"time"
 
 	phoneconfirmgrpc "github.com/Doremi203/couply/backend/auth/gen/api/phone-confirm"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
@@ -10,16 +11,20 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/token"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc/login"
+	tokengrpc "github.com/Doremi203/couply/backend/auth/internal/grpc/token"
 	phoneconfirmpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/phoneconfirm/postgres"
+	tokenpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/token/postgres"
 	userpostgres "github.com/Doremi203/couply/backend/auth/internal/repo/user/postgres"
 	"github.com/Doremi203/couply/backend/auth/internal/usecase"
 	loginUC "github.com/Doremi203/couply/backend/auth/internal/usecase/login"
+	tokenUC "github.com/Doremi203/couply/backend/auth/internal/usecase/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/argon"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	idempotencypostgres "github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
 	"github.com/Doremi203/couply/backend/auth/pkg/sms/smsru"
+	"github.com/Doremi203/couply/backend/auth/pkg/timeprovider"
 	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
@@ -77,6 +82,7 @@ func main() {
 
 		userRepo := userpostgres.NewRepo(dbClient)
 		oauthAccountRepo := userpostgres.NewOAuthAccountRepo(dbClient)
+		tokenRepo := tokenpostgres.NewRepo(dbClient)
 
 		hashProvider := hash.NewDefaultProvider(
 			salt.DefaultProvider{},
@@ -84,8 +90,9 @@ func main() {
 		)
 
 		providerFactory := oauth.NewProviderFactory(yandexOAuthConfig)
+		timeProvider := timeprovider.ProviderFunc(time.Now)
 
-		tokenIssuer, err := token.NewJWTIssuer(jwtTokenConfig)
+		tokenIssuer, err := token.NewJWTIssuer(jwtTokenConfig, tokenRepo, timeProvider)
 		if err != nil {
 			return err
 		}
@@ -140,6 +147,9 @@ func main() {
 
 		tokenProvider := tokenpkg.NewJWTProvider(pkgTokenConfig)
 
+		tokenUseCase := tokenUC.NewUseCase(tokenRepo, tokenIssuer, timeProvider)
+		tokenService := tokengrpc.NewGRPCService(app.Log, tokenUseCase)
+
 		app.AddGRPCUnaryInterceptor(
 			tokenpkg.NewUnaryTokenInterceptor(
 				tokenProvider,
@@ -152,11 +162,13 @@ func main() {
 			registrationService,
 			loginService,
 			phoneConfirmationService,
+			tokenService,
 		)
 		app.AddGatewayHandlers(
 			registrationService,
 			loginService,
 			phoneConfirmationService,
+			tokenService,
 		)
 
 		return nil

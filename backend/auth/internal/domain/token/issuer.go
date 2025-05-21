@@ -1,7 +1,13 @@
 package token
 
-import "github.com/Doremi203/couply/backend/auth/internal/domain/user"
+import (
+	"context"
+
+	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
+)
 
 type Issuer interface {
-	Issue(user user.User) (Token, error)
+	Issue(user.ID) (Token, error)
+	IssueRefresh(context.Context, user.ID) (Refresh, error)
+	IssuePair(context.Context, user.ID) (Pair, error)
 }

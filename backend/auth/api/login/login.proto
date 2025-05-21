@@ -2,10 +2,11 @@ syntax = "proto3";
 
 package login;
 
-option go_package = "github.com/Doremi203/couply/backend/auth/api/login";
+option go_package = "github.com/Doremi203/couply/backend/auth/gen/api/login";
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "api/token/token.proto";
 
 service Login {
   rpc BasicLoginV1(BasicLoginRequestV1) returns (BasicLoginResponseV1) {
@@ -38,6 +39,7 @@ message BasicLoginRequestV1 {
 message BasicLoginResponseV1 {
   string token = 1;
   int32 expires_in = 2;
+  token.Token refresh_token = 3;
 }
 
 message OAuthLoginV1Request {
@@ -54,7 +56,4 @@ message OAuthLoginV1Request {
   string error_uri = 10;
 }
 
-message OAuthLoginV1Response {
-  string token = 1;
-  int32 expires_in = 2;
-}
+message OAuthLoginV1Response {}

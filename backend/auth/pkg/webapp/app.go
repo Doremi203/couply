@@ -139,6 +139,7 @@ func initApp() *App {
 					return runtime.DefaultHeaderMatcher(s)
 				}
 			}),
+			runtime.WithForwardResponseOption(setCookieHeaderMatcher),
 			runtime.WithForwardResponseOption(redirectHeaderMatcher),
 		},
 	}
