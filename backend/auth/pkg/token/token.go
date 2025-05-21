@@ -7,16 +7,11 @@ import (
 )
 
 type Token struct {
-	userID    uuid.UUID
-	userEmail string
+	userID uuid.UUID
 }
 
 func (t Token) GetUserID() uuid.UUID {
 	return t.userID
-}
-
-func (t Token) GetEmail() string {
-	return t.userEmail
 }
 
 type tokenKey struct{}

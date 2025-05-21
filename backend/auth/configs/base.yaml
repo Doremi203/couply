@@ -26,6 +26,7 @@ phone-confirmation:
 
 jwt:
   tokenLifetime: 30m
+  refreshTokenLifetime: 24h
 
 oauth:
   oAuthRedirectFrontendDomain: https://testing.couply.ru
