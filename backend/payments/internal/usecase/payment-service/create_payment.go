@@ -2,54 +2,38 @@ package payment_service
 
 import (
 	"context"
-	"time"
-
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/payment-service"
-	"github.com/Doremi203/couply/backend/payments/utils"
-	"github.com/google/uuid"
 )
 
 func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Request) (*dto.CreatePaymentV1Response, error) {
-	userID, err := utils.GetUserIDFromContext(ctx)
+	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
-		return nil, err
-	}
-
-	paymentID, err := uuid.NewV7()
-	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "CreatePayment")
 	}
 
 	gatewayID, err := c.paymentGateway.CreatePayment(ctx, in.GetAmount(), in.GetCurrency())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "CreatePayment")
 	}
 
-	now := time.Now()
-
-	newPayment := &payment.Payment{
-		ID:             paymentID,
-		UserID:         userID,
-		SubscriptionID: in.GetSubscriptionID(),
-		Amount:         in.GetAmount(),
-		Currency:       in.GetCurrency(),
-		Status:         payment.PaymentStatusPending,
-		GatewayID:      gatewayID,
-		CreatedAt:      now,
-		UpdatedAt:      now,
+	newPayment, err := dto.CreatePaymentRequestToPayment(in, userID, gatewayID)
+	if err != nil {
+		return nil, errors.Wrap(err, "CreatePayment")
 	}
 
 	createdPayment, err := c.paymentStorageFacade.CreatePaymentTx(ctx, newPayment)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "CreatePayment")
 	}
 
-	go c.updater.CheckAndUpdatePaymentStatusWithRetry(context.Background(), createdPayment.GetID(), createdPayment.GetGatewayID())
+	c.startPaymentStatusUpdate(createdPayment)
 
-	return &dto.CreatePaymentV1Response{
-		PaymentID: createdPayment.GetID().String(),
-		Status:    createdPayment.GetStatus(),
-		UpdatedAt: createdPayment.GetUpdatedAt(),
-	}, nil
+	return dto.PaymentToCreatePaymentResponse(createdPayment), nil
+}
+
+func (c *UseCase) startPaymentStatusUpdate(payment *payment.Payment) {
+	go c.updater.CheckAndUpdatePaymentStatusWithRetry(context.Background(), payment.GetID(), payment.GetGatewayID())
 }

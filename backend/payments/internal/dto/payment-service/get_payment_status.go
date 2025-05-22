@@ -64,3 +64,11 @@ func GetPaymentStatusResponseToPB(resp *GetPaymentStatusV1Response) *desc.GetPay
 		UpdatedAt: timestamppb.New(resp.GetUpdatedAt()),
 	}
 }
+
+func PaymentToGetPaymentStatusResponse(pay *payment.Payment) *GetPaymentStatusV1Response {
+	return &GetPaymentStatusV1Response{
+		PaymentID:     pay.GetID(),
+		PaymentStatus: pay.GetStatus(),
+		UpdatedAt:     pay.GetUpdatedAt(),
+	}
+}

@@ -1,6 +1,7 @@
 package subscription_service
 
 import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"time"
 
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/subscription-service/v1"
@@ -33,6 +34,25 @@ func PBToCreateSubscriptionRequest(req *desc.CreateSubscriptionV1Request) *Creat
 		SubscriptionPlan: subscription.PBToSubscriptionPlan(req.GetPlan()),
 		AutoRenew:        req.GetAutoRenew(),
 	}
+}
+
+func CreateSubscriptionRequestToSubscription(req *CreateSubscriptionV1Request, userID uuid.UUID) (*subscription.Subscription, error) {
+	subID, err := uuid.NewV7()
+	if err != nil {
+		return nil, errors.Wrap(err, "CreateSubscriptionRequestToSubscription")
+	}
+
+	now := time.Now()
+	plan := req.GetSubscriptionPlan()
+	return &subscription.Subscription{
+		ID:        subID,
+		UserID:    userID,
+		Plan:      plan,
+		Status:    subscription.SubscriptionStatusPendingPayment,
+		AutoRenew: req.GetAutoRenew(),
+		StartDate: now,
+		EndDate:   subscription.CalculateEndDate(now, plan),
+	}, nil
 }
 
 type CreateSubscriptionV1Response struct {
@@ -107,5 +127,17 @@ func CreateSubscriptionResponseToPB(resp *CreateSubscriptionV1Response) *desc.Cr
 		StartDate:      timestamppb.New(resp.GetStartDate()),
 		EndDate:        timestamppb.New(resp.GetEndDate()),
 		PaymentIds:     paymentIds,
+	}
+}
+
+func SubscriptionToCreateSubscriptionResponse(sub *subscription.Subscription) *CreateSubscriptionV1Response {
+	return &CreateSubscriptionV1Response{
+		SubscriptionID:     sub.GetID(),
+		SubscriptionPlan:   sub.GetPlan(),
+		SubscriptionStatus: sub.GetStatus(),
+		AutoRenew:          sub.GetAutoRenew(),
+		StartDate:          sub.GetStartDate(),
+		EndDate:            sub.GetEndDate(),
+		PaymentIDs:         sub.GetPaymentIDs(),
 	}
 }

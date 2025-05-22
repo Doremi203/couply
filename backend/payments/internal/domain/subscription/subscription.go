@@ -6,6 +6,16 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	monthDays    = 30
+	halfYearDays = 180
+	yearDays     = 365
+
+	monthPrice      = 199
+	semiAnnualPrice = 999
+	annualPrice     = 1799
+)
+
 type Subscription struct {
 	ID         uuid.UUID          `db:"id"`
 	UserID     uuid.UUID          `db:"user_id"`
@@ -71,4 +81,22 @@ func (x *Subscription) GetPaymentIDs() []uuid.UUID {
 		return x.PaymentIDs
 	}
 	return nil
+}
+
+func CalculateEndDate(now time.Time, plan SubscriptionPlan) time.Time {
+	durationMap := map[SubscriptionPlan]time.Duration{
+		SubscriptionPlanMonthly:    monthDays * 24 * time.Hour,
+		SubscriptionPlanSemiAnnual: halfYearDays * 24 * time.Hour,
+		SubscriptionPlanAnnual:     yearDays * 24 * time.Hour,
+	}
+	return now.Add(durationMap[plan])
+}
+
+func GetPlanPrice(plan SubscriptionPlan) int64 {
+	planPrices := map[SubscriptionPlan]int64{
+		SubscriptionPlanMonthly:    monthPrice,
+		SubscriptionPlanSemiAnnual: semiAnnualPrice,
+		SubscriptionPlanAnnual:     annualPrice,
+	}
+	return planPrices[plan]
 }
