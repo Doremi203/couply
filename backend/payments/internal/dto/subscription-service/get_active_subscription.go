@@ -89,3 +89,15 @@ func GetActiveSubscriptionResponseToPB(resp *GetActiveSubscriptionV1Response) *d
 		PaymentIds:     paymentIds,
 	}
 }
+
+func SubscriptionToGetActiveSubscriptionResponse(sub *subscription.Subscription) *GetActiveSubscriptionV1Response {
+	return &GetActiveSubscriptionV1Response{
+		SubscriptionID:     sub.GetID(),
+		SubscriptionPlan:   sub.GetPlan(),
+		SubscriptionStatus: sub.GetStatus(),
+		AutoRenew:          sub.GetAutoRenew(),
+		StartDate:          sub.GetStartDate(),
+		EndDate:            sub.GetEndDate(),
+		PaymentIDs:         sub.GetPaymentIDs(),
+	}
+}

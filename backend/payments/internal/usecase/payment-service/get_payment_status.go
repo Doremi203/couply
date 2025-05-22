@@ -2,6 +2,7 @@ package payment_service
 
 import (
 	"context"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/payment-service"
 )
@@ -9,12 +10,8 @@ import (
 func (c *UseCase) GetPaymentStatus(ctx context.Context, in *dto.GetPaymentStatusV1Request) (*dto.GetPaymentStatusV1Response, error) {
 	payment, err := c.paymentStorageFacade.GetPaymentStatusTx(ctx, in.GetPaymentID())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "GetPaymentStatus")
 	}
 
-	return &dto.GetPaymentStatusV1Response{
-		PaymentID:     payment.GetID(),
-		PaymentStatus: payment.GetStatus(),
-		UpdatedAt:     payment.GetUpdatedAt(),
-	}, nil
+	return dto.PaymentToGetPaymentStatusResponse(payment), nil
 }

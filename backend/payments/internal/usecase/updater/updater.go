@@ -2,10 +2,9 @@ package updater
 
 import (
 	"context"
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	userservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"time"
-
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
 
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"
@@ -14,16 +13,16 @@ import (
 
 type paymentStorageFacade interface {
 	CreatePaymentTx(ctx context.Context, newPayment *payment.Payment) (*payment.Payment, error)
+	UpdatePaymentStatusTx(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error
 	GetPaymentStatusTx(ctx context.Context, paymentID uuid.UUID) (*payment.Payment, error)
 	GetPendingPaymentsTx(ctx context.Context) ([]*payment.Payment, error)
-	UpdatePaymentStatusTx(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error
 }
 
 type subscriptionStorageFacade interface {
+	UpdateSubscriptionStatusTx(ctx context.Context, subID uuid.UUID, status subscription.SubscriptionStatus) error
+	UpdateSubscriptionDatesTx(ctx context.Context, subID uuid.UUID, startDate, endDate time.Time) error
 	GetSubscriptionsByStatusTx(ctx context.Context, status subscription.SubscriptionStatus) ([]*subscription.Subscription, error)
-	UpdateSubscriptionStatusTx(ctx context.Context, subscriptionID uuid.UUID, status subscription.SubscriptionStatus) error
 	GetSubscriptionTx(ctx context.Context, subID uuid.UUID) (*subscription.Subscription, error)
-	UpdateSubscriptionDatesTx(ctx context.Context, subscriptionID uuid.UUID, startDate, endDate time.Time) error
 }
 
 type paymentGateway interface {
@@ -51,5 +50,33 @@ func NewUpdater(ps paymentStorageFacade, subs subscriptionStorageFacade, gateway
 		paymentGateway:            gateway,
 		userClient:                userClient,
 		logger:                    logger,
+	}
+}
+
+func (u *Updater) StartPaymentStatusUpdater(ctx context.Context, interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			u.updatePendingPayments(ctx)
+		}
+	}
+}
+
+func (u *Updater) StartSubscriptionStatusUpdater(ctx context.Context, interval time.Duration) {
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-ticker.C:
+			u.processSubscriptionUpdates(ctx)
+		}
 	}
 }

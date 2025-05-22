@@ -10,10 +10,18 @@ import (
 )
 
 type paymentStorageFacade interface {
+	paymentStorageSetterFacade
+	paymentStorageGetterFacade
+}
+
+type paymentStorageSetterFacade interface {
 	CreatePaymentTx(ctx context.Context, newPayment *payment.Payment) (*payment.Payment, error)
+	UpdatePaymentStatusTx(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error
+}
+
+type paymentStorageGetterFacade interface {
 	GetPaymentStatusTx(ctx context.Context, paymentID uuid.UUID) (*payment.Payment, error)
 	GetPendingPaymentsTx(ctx context.Context) ([]*payment.Payment, error)
-	UpdatePaymentStatusTx(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error
 }
 
 type paymentGateway interface {

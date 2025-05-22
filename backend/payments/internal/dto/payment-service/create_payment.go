@@ -1,6 +1,7 @@
 package payment_service
 
 import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"time"
 
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/payment-service/v1"
@@ -48,6 +49,26 @@ func PBToCreatePaymentRequest(req *desc.CreatePaymentV1Request) (*CreatePaymentV
 	}, nil
 }
 
+func CreatePaymentRequestToPayment(req *CreatePaymentV1Request, userID uuid.UUID, gatewayID string) (*payment.Payment, error) {
+	paymentID, err := uuid.NewV7()
+	if err != nil {
+		return nil, errors.Wrap(err, "CreatePaymentRequestToPayment")
+	}
+
+	now := time.Now()
+	return &payment.Payment{
+		ID:             paymentID,
+		UserID:         userID,
+		SubscriptionID: req.GetSubscriptionID(),
+		Amount:         req.GetAmount(),
+		Currency:       req.GetCurrency(),
+		Status:         payment.PaymentStatusPending,
+		GatewayID:      gatewayID,
+		CreatedAt:      now,
+		UpdatedAt:      now,
+	}, nil
+}
+
 type CreatePaymentV1Response struct {
 	PaymentID string
 	Status    payment.PaymentStatus
@@ -80,5 +101,13 @@ func CreatePaymentResponseToPB(resp *CreatePaymentV1Response) *desc.CreatePaymen
 		PaymentId: resp.GetPaymentID(),
 		Status:    payment.PaymentStatusToPB(resp.GetStatus()),
 		UpdatedAt: timestamppb.New(resp.GetUpdatedAt()),
+	}
+}
+
+func PaymentToCreatePaymentResponse(pay *payment.Payment) *CreatePaymentV1Response {
+	return &CreatePaymentV1Response{
+		PaymentID: pay.GetID().String(),
+		Status:    pay.GetStatus(),
+		UpdatedAt: pay.GetUpdatedAt(),
 	}
 }

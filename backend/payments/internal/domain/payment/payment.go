@@ -6,6 +6,11 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	// MainCurrency for payments
+	MainCurrency = "RUB"
+)
+
 type Payment struct {
 	ID             uuid.UUID     `db:"id"`
 	UserID         uuid.UUID     `db:"user_id"`
