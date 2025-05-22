@@ -1,12 +1,10 @@
-
-
 import { GenderPriority } from '../../../entities/search';
 import { Education, Children, Alcohol, Smoking, Zodiac, Goal } from '../../../entities/user';
 
 export const genderOptions = {
-   male: 'Парни',
-   female: 'Девушки',
-   any: 'Оба',
+  male: 'Парни',
+  female: 'Девушки',
+  any: 'Оба',
 };
 
 export const educationOptions = {

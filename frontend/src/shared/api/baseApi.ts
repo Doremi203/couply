@@ -210,7 +210,6 @@ export const blockerApi = createApi({
   // tagTypes: ['filter', 'search', 'User'],
 });
 
-
 export const paymentsApi = createApi({
   reducerPath: 'paymentsApi',
   baseQuery: fetchBaseQuery({

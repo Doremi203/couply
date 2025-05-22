@@ -1,13 +1,15 @@
-
-
 import { paymentsApi } from '../../../shared/api/baseApi';
 import { blockerApiExtended } from '../../blocker';
 
-import { CreatePaymentResponse, CreatePaymentRequest, GetPaymentResponse, GetPaymentRequest } from './types';
+import {
+  CreatePaymentResponse,
+  CreatePaymentRequest,
+  GetPaymentResponse,
+  GetPaymentRequest,
+} from './types';
 
 export const paymentsApiExtended = paymentsApi.injectEndpoints({
   endpoints: builder => ({
-
     createPayment: builder.mutation<CreatePaymentResponse, CreatePaymentRequest>({
       query: userData => ({
         url: '/v1/payments/create',

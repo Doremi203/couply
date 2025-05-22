@@ -243,7 +243,6 @@ input:checked + .slider:before {
   margin-top: 10px;
 }
 
-
 .chipBig {
   background-color: var(--tag-background);
   border-radius: 20px;
