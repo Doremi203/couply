@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/Doremi203/couply/backend/payments/internal/client/user"
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -35,6 +36,19 @@ func main() {
 			return err
 		}
 
+		var userServiceConfig struct {
+			Address string `yaml:"address"`
+		}
+		if err := app.Config.ReadSection("user_service", &userServiceConfig); err != nil {
+			return errors.WrapFail(err, "read user service config")
+		}
+
+		userServiceClient, conn, err := user.NewClient(userServiceConfig.Address)
+		if err != nil {
+			return errors.WrapFail(err, "create user service client")
+		}
+		app.AddCloser(conn.Close)
+
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")
@@ -51,7 +65,7 @@ func main() {
 
 		gateway := mock_gateway.NewMockGateway()
 
-		updater := updater2.NewUpdater(payFacade, subFacade, gateway, app.Log)
+		updater := updater2.NewUpdater(payFacade, subFacade, gateway, userServiceClient, app.Log)
 
 		updaterCtx, updaterCancel := context.WithCancel(ctx)
 		app.AddCloser(func() error {

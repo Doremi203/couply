@@ -2,6 +2,7 @@ package updater
 
 import (
 	"context"
+	userservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
@@ -30,18 +31,25 @@ type paymentGateway interface {
 	GetPaymentStatus(ctx context.Context, gatewayID string) (payment.PaymentStatus, error)
 }
 
+type userClient interface {
+	GetUserByIDV1(ctx context.Context, userID string) (*userservicegrpc.User, error)
+	UpdateUserByIDV1(ctx context.Context, user *userservicegrpc.User) error
+}
+
 type Updater struct {
 	paymentStorageFacade      paymentStorageFacade
 	subscriptionStorageFacade subscriptionStorageFacade
 	paymentGateway            paymentGateway
+	userClient                userClient
 	logger                    log.Logger
 }
 
-func NewUpdater(ps paymentStorageFacade, subs subscriptionStorageFacade, gateway paymentGateway, logger log.Logger) *Updater {
+func NewUpdater(ps paymentStorageFacade, subs subscriptionStorageFacade, gateway paymentGateway, userClient userClient, logger log.Logger) *Updater {
 	return &Updater{
 		paymentStorageFacade:      ps,
 		subscriptionStorageFacade: subs,
 		paymentGateway:            gateway,
+		userClient:                userClient,
 		logger:                    logger,
 	}
 }
