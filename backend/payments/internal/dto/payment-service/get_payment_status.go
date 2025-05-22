@@ -13,38 +13,10 @@ type GetPaymentStatusV1Request struct {
 	PaymentID uuid.UUID
 }
 
-func (x *GetPaymentStatusV1Request) GetPaymentID() uuid.UUID {
-	if x != nil {
-		return x.PaymentID
-	}
-	return uuid.Nil
-}
-
 type GetPaymentStatusV1Response struct {
 	PaymentID     uuid.UUID
 	PaymentStatus payment.PaymentStatus
 	UpdatedAt     time.Time
-}
-
-func (x *GetPaymentStatusV1Response) GetPaymentID() uuid.UUID {
-	if x != nil {
-		return x.PaymentID
-	}
-	return uuid.Nil
-}
-
-func (x *GetPaymentStatusV1Response) GetPaymentStatus() payment.PaymentStatus {
-	if x != nil {
-		return x.PaymentStatus
-	}
-	return payment.PaymentStatus(0)
-}
-
-func (x *GetPaymentStatusV1Response) GetUpdatedAt() time.Time {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return time.Time{}
 }
 
 func PBToGetPaymentStatusRequest(req *desc.GetPaymentStatusV1Request) (*GetPaymentStatusV1Request, error) {
@@ -59,9 +31,9 @@ func PBToGetPaymentStatusRequest(req *desc.GetPaymentStatusV1Request) (*GetPayme
 
 func GetPaymentStatusResponseToPB(resp *GetPaymentStatusV1Response) *desc.GetPaymentStatusV1Response {
 	return &desc.GetPaymentStatusV1Response{
-		PaymentId: resp.GetPaymentID().String(),
-		Status:    payment.PaymentStatusToPB(resp.GetPaymentStatus()),
-		UpdatedAt: timestamppb.New(resp.GetUpdatedAt()),
+		PaymentId: resp.PaymentID.String(),
+		Status:    payment.PaymentStatusToPB(resp.PaymentStatus),
+		UpdatedAt: timestamppb.New(resp.UpdatedAt),
 	}
 }
 

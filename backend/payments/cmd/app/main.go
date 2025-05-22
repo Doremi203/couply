@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	"github.com/Doremi203/couply/backend/payments/internal/client/user"
 	"time"
+
+	"github.com/Doremi203/couply/backend/payments/internal/client/user"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"

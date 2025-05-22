@@ -2,6 +2,7 @@ package subscription
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"
 	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres"

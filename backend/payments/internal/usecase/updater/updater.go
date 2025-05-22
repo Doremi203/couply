@@ -2,9 +2,10 @@ package updater
 
 import (
 	"context"
+	"time"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	userservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
-	"time"
 
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"

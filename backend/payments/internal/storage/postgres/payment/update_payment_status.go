@@ -2,10 +2,11 @@ package payment
 
 import (
 	"context"
+	"time"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres"
 	"github.com/jackc/pgx/v5/pgconn"
-	"time"
 
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	sq "github.com/Masterminds/squirrel"
@@ -52,9 +53,8 @@ func executeStatusUpdate(ctx context.Context, queryEngine postgres.QueryEngine, 
 }
 
 func verifyUpdateResult(result pgconn.CommandTag) error {
-	rowsAffected := result.RowsAffected()
-	switch {
-	case rowsAffected == 0:
+	switch rowsAffected := result.RowsAffected(); rowsAffected {
+	case 0:
 		return errors.Wrap(errPaymentNotFound, "verifyUpdateResult")
 	default:
 		return nil

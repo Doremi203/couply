@@ -4,8 +4,9 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/binary"
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	"github.com/google/uuid"
