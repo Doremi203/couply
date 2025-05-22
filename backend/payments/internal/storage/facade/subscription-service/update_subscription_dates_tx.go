@@ -12,7 +12,7 @@ func (f *StorageFacadeSubscription) UpdateSubscriptionDatesTx(ctx context.Contex
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.subscriptionStorage.UpdateSubscriptionDates(ctxTx, subscriptionID, startDate, endDate)
+		err = f.subscriptionStorage.UpdateSubscriptionDatesByID(ctxTx, subscriptionID, startDate, endDate)
 		if err != nil {
 			return errors.WrapFail(err, "update subscription dates")
 		}

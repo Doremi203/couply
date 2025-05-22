@@ -13,7 +13,7 @@ func (f *StorageFacadeSubscription) GetSubscriptionTx(ctx context.Context, subID
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		sub, err = f.subscriptionStorage.GetSubscription(ctxTx, subID)
+		sub, err = f.subscriptionStorage.GetSubscriptionByID(ctxTx, subID)
 		if err != nil {
 			return errors.WrapFail(err, "get subscription")
 		}

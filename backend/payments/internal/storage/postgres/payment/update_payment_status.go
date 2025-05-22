@@ -23,7 +23,7 @@ func (s *PgStoragePayment) UpdatePaymentStatus(ctx context.Context, paymentID uu
 		return errors.Wrapf(err, "UpdatePaymentStatus with %v", errors.Token("payment_id", paymentID))
 	}
 
-	if err := verifyUpdateResult(result); err != nil {
+	if err = verifyUpdateResult(result); err != nil {
 		return errors.Wrapf(err, "UpdatePaymentStatus with %v", errors.Token("payment_id", paymentID))
 	}
 

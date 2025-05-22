@@ -13,7 +13,7 @@ func (f *StorageFacadeSubscription) GetActiveSubscriptionTx(ctx context.Context,
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		sub, err = f.subscriptionStorage.GetActiveSubscription(ctxTx, userID)
+		sub, err = f.subscriptionStorage.GetActiveSubscriptionByUserID(ctxTx, userID)
 		if err != nil {
 			return errors.WrapFail(err, "get active subscription")
 		}
