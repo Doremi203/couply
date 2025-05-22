@@ -22,9 +22,10 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
   showChatMessage,
 }) => {
   const matches = useSelector(selectMatches);
+  console.log(matches);
 
   //@ts-ignore
-  if (matches.users.length === 0) {
+  if (matches.length === 0) {
     return (
       <EmptyState title="У вас пока нет мэтчей" subtitle="Лайкайте профили, чтобы найти мэтчи" />
     );

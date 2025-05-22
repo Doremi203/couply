@@ -22,8 +22,8 @@ import {
   smokingOptions,
   smokingToApi,
 } from '../../features/filters/components/constants';
-import { mapInterestsFromBackendFormat } from '../../features/filters/helpers/mapInterestsFromApiFormat';
-import { mapInterestsToBackendFormat } from '../../features/filters/helpers/mapInterestsToApiFormat';
+import { mapInterestsFromApiFormat } from '../../features/filters/helpers/mapInterestsFromApiFormat';
+import { mapInterestsToApiFormat } from '../../features/filters/helpers/mapInterestsToApiFormat';
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
 import { ProfileData } from '../../features/profileEdit';
 import { ProfilePhotoEdit } from '../../features/profileEdit/components/ProfilePhotoEdit';
@@ -84,7 +84,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const [selectedGoal, setSelectedGoal] = useState<string[]>([goalFromApi[profileData.goal]]);
 
   //@ts-ignore
-  const interest = mapInterestsFromBackendFormat(profileData.interest);
+  const interest = mapInterestsFromApiFormat(profileData.interest);
   const [selectedInterests, setSelectedInterests] = useState<string[]>(interest);
   const [bio, setBio] = useState(profileData.bio || '');
   const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
@@ -193,7 +193,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         smoking: smokingToApi[selectedSmoking],
         //@ts-ignore
         goal: goalToApi[selectedGoal],
-        interest: mapInterestsToBackendFormat(selectedInterests),
+        interest: mapInterestsToApiFormat(selectedInterests),
         height: profileData.height,
         photoUploadRequests,
         zodiac: profileData.zodiac,

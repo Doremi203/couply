@@ -242,3 +242,23 @@ input:checked + .slider:before {
   margin-right: 250px;
   margin-top: 10px;
 }
+
+
+.chipBig {
+  background-color: var(--tag-background);
+  border-radius: 20px;
+  padding: 10px 30px;
+  font-size: 14px;
+  color: var(--tag-color);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.chipBigSelected {
+  background-color: var(--primary-color);
+  color: var(--header-text-color);
+}
+
+.chipBigSelected:hover {
+  background-color: var(--primary-color);
+}

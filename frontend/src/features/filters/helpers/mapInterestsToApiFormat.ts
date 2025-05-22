@@ -70,7 +70,7 @@ const interestCategoriesMap = {
   },
 };
 
-export const mapInterestsToBackendFormat = (selectedInterests: string[]) => {
+export const mapInterestsToApiFormat = (selectedInterests: string[]) => {
   const result: Record<string, string[]> = {};
 
   const reverseCategoryMap: Record<string, keyof typeof interestCategoriesMap> = {};

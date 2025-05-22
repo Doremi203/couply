@@ -18,11 +18,11 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 3.6rem;
+  height: 2.5rem;
   padding: 0 1rem;
   max-width: 768px;
   margin: 0 auto;
-  padding-bottom: 10px;
+  /* padding-bottom: 5px; */
 }
 
 .navItem {

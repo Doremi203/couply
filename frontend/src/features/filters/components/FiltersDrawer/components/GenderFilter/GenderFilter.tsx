@@ -1,24 +1,29 @@
 import React from 'react';
 
-import ToggleButtons from '../../../../../../shared/components/ToggleButtons/ToggleButtons';
 import styles from '../../filtersDrawer.module.css';
 
-type GenderOption = {
-  label: string;
-  value: string;
+type ChipFilterProps = {
+  title: string;
+  options: string[];
+  selectedOptions: string[];
+  onToggle: (option: string) => void;
 };
 
-type GenderFilterProps = {
-  value: string;
-  options: GenderOption[];
-  onChange: (value: string) => void;
-};
-
-const GenderFilter: React.FC<GenderFilterProps> = ({ value, options, onChange }) => {
+const GenderFilter: React.FC<ChipFilterProps> = ({ title, options, selectedOptions, onToggle }) => {
   return (
     <div className={styles.section}>
-      <h3 className={styles.sectionTitle}>Заинтересован в</h3>
-      <ToggleButtons options={options} onSelect={onChange} value={value} />
+      <h3 className={styles.sectionTitle}>{title}</h3>
+      <div className={styles.chipContainer}>
+        {options.map((option, index) => (
+          <div
+            key={index}
+            className={`${styles.chipBig} ${selectedOptions.includes(option) ? styles.chipBigSelected : ''}`}
+            onClick={() => onToggle(option)}
+          >
+            {option}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

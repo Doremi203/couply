@@ -1,25 +1,39 @@
 import { Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
-import { useUpdateFilterMutation } from '../../../../entities/search';
-import { Alcohol, Education, Smoking, Zodiac, Children } from '../../../../entities/user';
-import { createToggleHandler } from '../../helpers/createToggleHandler';
-import { mapFiltersToApi } from '../../helpers/mapFiltersToApiFormat';
-import { mapInterestsToBackendFormat } from '../../helpers/mapInterestsToApiFormat';
 import {
+  useGetFilterQuery,
+  useUpdateFilterMutation,
+  useSearchUsersMutation,
+} from '../../../../entities/search';
+import { GenderPriority } from '../../../../entities/search/api/constants';
+import { FilterResponse } from '../../../../entities/search/api/types';
+import { Alcohol, Education, Smoking, Zodiac, Children, Goal } from '../../../../entities/user';
+import { mapFiltersToApi } from '../../helpers/mapFiltersToApiFormat';
+import { mapInterestsFromApiFormat } from '../../helpers/mapInterestsFromApiFormat';
+import { mapInterestsToApiFormat } from '../../helpers/mapInterestsToApiFormat';
+import {
+  alcoholFromApi,
   alcoholOptions,
   alcoholToApi,
+  childrenFromApi,
   childrenOptions,
   childrenToApi,
+  educationFromApi,
   educationOptions,
   educationToApi,
+  genderFromApi,
   genderOptions,
   genderToApi,
+  goalFromApi,
   goalOptions,
   goalToApi,
+  smokingFromApi,
   smokingOptions,
   smokingToApi,
+  zodiacFromApi,
   zodiacOptions,
+  zodiacToApi,
 } from '../constants';
 
 import ChipFilter from './components/ChipFilter';
@@ -34,9 +48,10 @@ import styles from './filtersDrawer.module.css';
 type Props = {
   open: boolean;
   onClose: () => void;
+  initialFilterData?: FilterResponse;
 };
 
-export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
+export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterData }) => {
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -48,9 +63,18 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
     };
   }, [open]);
 
-  const [updateFilter] = useUpdateFilterMutation();
+  const { refetch } = useGetFilterQuery({}, { skip: !open });
 
-  const [interestedIn, setInterestedIn] = useState<string>('Girls');
+  useEffect(() => {
+    if (open) {
+      refetch();
+    }
+  }, [open, refetch]);
+
+  const [updateFilter] = useUpdateFilterMutation();
+  const [searchUsers] = useSearchUsersMutation();
+
+  const [selectedGender, setSelectedGender] = useState<string[]>([]);
   const [distance, setDistance] = useState<number>(40);
   const [ageRange, setAgeRange] = useState<number[]>([18, 28]);
   const [heightRange, setHeightRange] = useState<number[]>([170, 190]);
@@ -60,6 +84,41 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [selectedGoal, setSelectedGoal] = useState<string[]>([]);
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
   const [premiumStatus, setPremiumStatus] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (initialFilterData?.filter) {
+      const filter = initialFilterData.filter;
+      setSelectedGender([genderFromApi[filter.genderPriority]]);
+      //@ts-ignore
+      setDistance(filter.distanceKmRange.max);
+      setAgeRange([filter.ageRange.min, filter.ageRange.max]);
+      setHeightRange([filter.heightRange.min, filter.heightRange.max]);
+      setVerificationStatus(filter.onlyVerified);
+      setPremiumStatus(filter.onlyPremium);
+
+      setSelectedInterests(mapInterestsFromApiFormat(filter.interest));
+
+      if (filter.goal && goalFromApi[filter.goal]) {
+        setSelectedGoal([goalFromApi[filter.goal]]);
+      }
+
+      if (filter.zodiac && zodiacFromApi[filter.zodiac]) {
+        setSelectedZodiac([zodiacFromApi[filter.zodiac]]);
+      }
+      if (filter.education && educationFromApi[filter.education]) {
+        setSelectedEducation([educationFromApi[filter.education]]);
+      }
+      if (filter.children && childrenFromApi[filter.children]) {
+        setSelectedChildren([childrenFromApi[filter.children]]);
+      }
+      if (filter.alcohol && alcoholFromApi[filter.alcohol]) {
+        setSelectedAlcohol([alcoholFromApi[filter.alcohol]]);
+      }
+      if (filter.smoking && smokingFromApi[filter.smoking]) {
+        setSelectedSmoking([smokingFromApi[filter.smoking]]);
+      }
+    }
+  }, [initialFilterData]);
 
   const handleDistanceChange = (_event: Event, newValue: number | number[]) => {
     setDistance(newValue as number);
@@ -71,10 +130,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
 
   const handleHeightRangeChange = (_event: Event, newValue: number | number[]) => {
     setHeightRange(newValue as number[]);
-  };
-
-  const handleGenderSelect = (value: string) => {
-    setInterestedIn(value);
   };
 
   const handleVerificationToggle = () => {
@@ -90,63 +145,85 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
   const [selectedAlcohol, setSelectedAlcohol] = useState<string[]>([]);
   const [selectedSmoking, setSelectedSmoking] = useState<string[]>([]);
 
-  const handleZodiacToggle = createToggleHandler(setSelectedZodiac, selectedZodiac);
-  const handleEducationToggle = createToggleHandler(setSelectedEducation, selectedEducation);
-  const handleChildrenToggle = createToggleHandler(setSelectedChildren, selectedChildren);
-  const handleAlcoholToggle = createToggleHandler(setSelectedAlcohol, selectedAlcohol);
-  const handleSmokingToggle = createToggleHandler(setSelectedSmoking, selectedSmoking);
+  const handleGenderToggle = (value: string) => {
+    setSelectedGender([value]);
+  };
 
-  const handleGoalSelect = (value: string) => {
-    //@ts-ignore
-    setSelectedGoal(value);
+  const handleZodiacToggle = (value: string) => {
+    setSelectedZodiac([value]);
+  };
+
+  const handleEducationToggle = (value: string) => {
+    setSelectedEducation([value]);
+  };
+
+  const handleChildrenToggle = (value: string) => {
+    setSelectedChildren([value]);
+  };
+
+  const handleAlcoholToggle = (value: string) => {
+    setSelectedAlcohol([value]);
+  };
+
+  const handleSmokingToggle = (value: string) => {
+    setSelectedSmoking([value]);
+  };
+
+  const handleGoalToggle = (value: string) => {
+    setSelectedGoal([value]);
   };
 
   const handleClearFilters = () => {
-    setInterestedIn('Both');
-    setDistance(40);
-    setAgeRange([18, 28]);
+    setSelectedGender(['Any']);
+    setDistance(100);
+    setAgeRange([18, 100]);
+    setHeightRange([100, 250]);
     setSelectedInterests([]);
     setVerificationStatus(false);
+    setSelectedEducation([]);
+    setSelectedAlcohol([]);
+    setSelectedChildren([]);
+    setSelectedSmoking([]);
+    setSelectedZodiac([]);
+    setPremiumStatus(false);
+    setVerificationStatus(false);
+    setSelectedGoal([]);
   };
 
   if (!open) return null;
 
-  // console.log(selectedGoal);
-  // console.log(Goal[selectedGoal]);
-  // console.log(mapFiltersToApi(selectedZodiac, zodiacToApi, Zodiac.unspecified));
-  // // console.log(goalToApi.selectedGoal);
-
-  // console.log(goalToApi[selectedGoal]);
-
-  // console.log(selectedZodiac);
-  // console.log(mapInterestsToBackendFormat(selectedInterests));
-
-  const handleApplyFilters = () => {
-    updateFilter({
-      //@ts-ignore
-      genderPriority: genderToApi[interestedIn],
+  const handleApplyFilters = async () => {
+    const filterData = {
+      genderPriority: mapFiltersToApi(selectedGender, genderToApi, GenderPriority.any)[0],
       minAge: ageRange[0],
       maxAge: ageRange[1],
       minHeight: heightRange[0],
       maxHeight: heightRange[1],
-      distance: distance,
-      //@ts-ignore
-      goal: goalToApi[selectedGoal],
-      // zodiac: mapFiltersToApi(selectedZodiac, zodiacToApi, Zodiac.unspecified),
-      zodiac: Zodiac.unspecified, //TODO
+      minDistanceKm: 0,
+      maxDistanceKm: distance,
+      goal: mapFiltersToApi(selectedGoal, goalToApi, Goal.unspecified)[0],
+      zodiac: mapFiltersToApi(selectedZodiac, zodiacToApi, Zodiac.unspecified)[0],
       education: mapFiltersToApi(selectedEducation, educationToApi, Education.unspecified)[0],
       children: mapFiltersToApi(selectedChildren, childrenToApi, Children.unspecified)[0],
       alcohol: mapFiltersToApi(selectedAlcohol, alcoholToApi, Alcohol.unspecified)[0],
       smoking: mapFiltersToApi(selectedSmoking, smokingToApi, Smoking.unspecified)[0],
-
-      // Группа интересов с множественным выбором
-      //@ts-ignore
-      interest: mapInterestsToBackendFormat(selectedInterests),
-      // interest: null,
+      interest: mapInterestsToApiFormat(selectedInterests),
       onlyVerified: verificationStatus,
       onlyPremium: premiumStatus,
-    });
-    onClose();
+    };
+
+    try {
+      //@ts-ignore
+      await updateFilter(filterData).unwrap();
+      await searchUsers({
+        ...filterData,
+        offset: 0,
+        limit: 20,
+      }).unwrap();
+      onClose();
+    } catch (error) {
+      console.error('Error updating filters:', error);
+    }
   };
 
   return (
@@ -156,9 +233,10 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
           <FilterHeader onBack={onClose} onClear={handleClearFilters} />
 
           <GenderFilter
-            value={interestedIn}
-            options={genderOptions}
-            onChange={handleGenderSelect}
+            title="Пол"
+            options={Object.values(genderOptions)}
+            selectedOptions={selectedGender}
+            onToggle={handleGenderToggle}
           />
 
           <SliderFilter
@@ -192,7 +270,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose }) => {
             title="Цель"
             options={Object.values(goalOptions)}
             selectedOptions={selectedGoal}
-            onToggle={handleGoalSelect}
+            onToggle={handleGoalToggle}
           />
 
           <InterestFilter

@@ -70,7 +70,7 @@ const interestCategoriesMap = {
   },
 };
 
-export const mapInterestsFromBackendFormat = (apiInterests: Record<string, string[]>) => {
+export const mapInterestsFromApiFormat = (apiInterests: Record<string, string[]>) => {
   const result: string[] = [];
 
   (Object.entries(interestCategoriesMap) as [keyof typeof interestCategoriesMap, any][]).forEach(

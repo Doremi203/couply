@@ -1,8 +1,13 @@
-export const genderOptions = [
-  { label: 'Женщины', value: 'Girls' },
-  { label: 'Мужчины', value: 'Boys' },
-  { label: 'Оба', value: 'Both' },
-];
+
+
+import { GenderPriority } from '../../../entities/search';
+import { Education, Children, Alcohol, Smoking, Zodiac, Goal } from '../../../entities/user';
+
+export const genderOptions = {
+   male: 'Парни',
+   female: 'Девушки',
+   any: 'Оба',
+};
 
 export const educationOptions = {
   secondary: 'Среднее',
@@ -163,34 +168,34 @@ export const petsOptions = {
   none: 'Без питомцев',
 };
 
-export const genderToApi = {
-  Женщины: 'GENDER_FEMALE',
-  Мужчины: 'GENDER_MALE',
-  Оба: 'GENDER_UNSPECIFIED',
+export const genderToApi: Record<string, GenderPriority> = {
+  Девушки: GenderPriority.female,
+  Парни: GenderPriority.male,
+  Оба: GenderPriority.any,
 };
 
-export const educationToApi = {
-  Среднее: 'EDUCATION_SECONDARY',
-  Высшее: 'EDUCATION_HIGHER',
-  Phd: 'EDUCATION_PHD',
+export const educationToApi: Record<string, Education> = {
+  Среднее: Education.secondary,
+  Высшее: Education.higher,
+  Phd: Education.phd,
 };
 
-export const childrenToApi = {
-  'Нет детей': 'CHILDREN_NO',
-  'Нет, но хочу': 'CHILDREN_NOT_YET',
-  'Есть дети': 'CHILDREN_YES',
+export const childrenToApi: Record<string, Children> = {
+  'Нет детей': Children.no,
+  'Нет, но хочу': Children.notYet,
+  'Есть дети': Children.yes,
 };
 
-export const alcoholToApi = {
-  Негативно: 'ALCOHOL_NEGATIVELY',
-  Нейтрально: 'ALCOHOL_NEUTRALLY',
-  Положительно: 'ALCOHOL_POSITIVELY',
+export const alcoholToApi: Record<string, Alcohol> = {
+  Негативно: Alcohol.negatively,
+  Нейтрально: Alcohol.neutrally,
+  Положительно: Alcohol.positively,
 };
 
-export const smokingToApi = {
-  Негативно: 'SMOKING_NEGATIVELY',
-  Нейтрально: 'SMOKING_NEUTRALLY',
-  Положительно: 'SMOKING_POSITIVELY',
+export const smokingToApi: Record<string, Smoking> = {
+  Негативно: Smoking.negatively,
+  Нейтрально: Smoking.neutrally,
+  Положительно: Smoking.positively,
 };
 
 export const sportToApi = {
@@ -236,19 +241,19 @@ export const hobbyToApi = {
   Астрология: 'HOBBY_ASTROLOGY',
 };
 
-export const zodiacToApi = {
-  Овен: 'ZODIAC_ARIES',
-  Телец: 'ZODIAC_TAURUS',
-  Близнецы: 'ZODIAC_GEMINI',
-  Рак: 'ZODIAC_CANCER',
-  Лев: 'ZODIAC_LEO',
-  Дева: 'ZODIAC_VIRGO',
-  Весы: 'ZODIAC_LIBRA',
-  Скорпион: 'ZODIAC_SCORPIO',
-  Стрелец: 'ZODIAC_SAGITTARIUS',
-  Козерог: 'ZODIAC_CAPRICORN',
-  Водолей: 'ZODIAC_AQUARIUS',
-  Рыбы: 'ZODIAC_PISCES',
+export const zodiacToApi: Record<string, Zodiac> = {
+  Овен: Zodiac.aries,
+  Телец: Zodiac.taurus,
+  Близнецы: Zodiac.gemini,
+  Рак: Zodiac.cancer,
+  Лев: Zodiac.leo,
+  Дева: Zodiac.virgo,
+  Весы: Zodiac.libra,
+  Скорпион: Zodiac.scorpio,
+  Стрелец: Zodiac.sagittarius,
+  Козерог: Zodiac.capricorn,
+  Водолей: Zodiac.aquarius,
+  Рыбы: Zodiac.pisces,
 };
 
 export const moviesTVToApi = {
@@ -315,40 +320,46 @@ export const petsToApi = {
 };
 
 export const goalFromApi = {
-  GOAL_DATING: 'Знакомства',
-  GOAL_RELATIONSHIP: 'Отношения',
-  GOAL_FRIENDSHIP: 'Дружба',
-  GOAL_JUST_CHATTING: 'Общение',
+  [Goal.dating]: 'Знакомства',
+  [Goal.relationship]: 'Отношения',
+  [Goal.friendship]: 'Дружба',
+  [Goal.justChatting]: 'Общение',
+  [Goal.unspecified]: '',
 };
 
-export const genderFromApi = {
-  GENDER_FEMALE: 'Женщины',
-  GENDER_MALE: 'Мужчины',
-  GENDER_UNSPECIFIED: 'Оба',
+export const genderFromApi: Record<GenderPriority, string> = {
+  [GenderPriority.female]: 'Девушки',
+  [GenderPriority.male]: 'Парни',
+  [GenderPriority.any]: 'Оба',
+  [GenderPriority.unspecified]: 'Оба',
 };
 
-export const educationFromApi = {
-  EDUCATION_SECONDARY: 'Среднее',
-  EDUCATION_HIGHER: 'Высшее',
-  EDUCATION_PHD: 'Phd',
+export const educationFromApi: Record<Education, string> = {
+  [Education.secondary]: 'Среднее',
+  [Education.higher]: 'Высшее',
+  [Education.phd]: 'Phd',
+  [Education.unspecified]: '',
 };
 
-export const childrenFromApi = {
-  CHILDREN_NO: 'Нет детей',
-  CHILDREN_NOT_YET: 'Нет, но хочу',
-  CHILDREN_YES: 'Есть дети',
+export const childrenFromApi: Record<Children, string> = {
+  [Children.no]: 'Нет детей',
+  [Children.notYet]: 'Нет, но хочу',
+  [Children.yes]: 'Есть дети',
+  [Children.unspecified]: '',
 };
 
-export const alcoholFromApi = {
-  ALCOHOL_NEGATIVELY: 'Негативно',
-  ALCOHOL_NEUTRALLY: 'Нейтрально',
-  ALCOHOL_POSITIVELY: 'Положительно',
+export const alcoholFromApi: Record<Alcohol, string> = {
+  [Alcohol.negatively]: 'Негативно',
+  [Alcohol.neutrally]: 'Нейтрально',
+  [Alcohol.positively]: 'Положительно',
+  [Alcohol.unspecified]: '',
 };
 
-export const smokingFromApi = {
-  SMOKING_NEGATIVELY: 'Негативно',
-  SMOKING_NEUTRALLY: 'Нейтрально',
-  SMOKING_POSITIVELY: 'Положительно',
+export const smokingFromApi: Record<Smoking, string> = {
+  [Smoking.negatively]: 'Негативно',
+  [Smoking.neutrally]: 'Нейтрально',
+  [Smoking.positively]: 'Положительно',
+  [Smoking.unspecified]: '',
 };
 
 export const sportFromApi = {
@@ -394,19 +405,20 @@ export const hobbyFromApi = {
   HOBBY_ASTROLOGY: 'Астрология',
 };
 
-export const zodiacFromApi = {
-  ZODIAC_ARIES: 'Овен',
-  ZODIAC_TAURUS: 'Телец',
-  ZODIAC_GEMINI: 'Близнецы',
-  ZODIAC_CANCER: 'Рак',
-  ZODIAC_LEO: 'Лев',
-  ZODIAC_VIRGO: 'Дева',
-  ZODIAC_LIBRA: 'Весы',
-  ZODIAC_SCORPIO: 'Скорпион',
-  ZODIAC_SAGITTARIUS: 'Стрелец',
-  ZODIAC_CAPRICORN: 'Козерог',
-  ZODIAC_AQUARIUS: 'Водолей',
-  ZODIAC_PISCES: 'Рыбы',
+export const zodiacFromApi: Record<Zodiac, string> = {
+  [Zodiac.aries]: 'Овен',
+  [Zodiac.taurus]: 'Телец',
+  [Zodiac.gemini]: 'Близнецы',
+  [Zodiac.cancer]: 'Рак',
+  [Zodiac.leo]: 'Лев',
+  [Zodiac.virgo]: 'Дева',
+  [Zodiac.libra]: 'Весы',
+  [Zodiac.scorpio]: 'Скорпион',
+  [Zodiac.sagittarius]: 'Стрелец',
+  [Zodiac.capricorn]: 'Козерог',
+  [Zodiac.aquarius]: 'Водолей',
+  [Zodiac.pisces]: 'Рыбы',
+  [Zodiac.unspecified]: '',
 };
 
 export const moviesTVFromApi = {
