@@ -18,7 +18,7 @@ func (f *StorageFacadeSubscription) GetActiveSubscriptionTx(ctx context.Context,
 			return errors.WrapFail(err, "get active subscription")
 		}
 
-		ids, err := f.paymentStorage.GetPaymentIDsBySubscriptionID(ctxTx, sub.GetID())
+		ids, err := f.paymentStorage.GetSubscriptionPayments(ctxTx, sub.GetID())
 		if err != nil {
 			return errors.WrapFail(err, "get active subscription ids")
 		}

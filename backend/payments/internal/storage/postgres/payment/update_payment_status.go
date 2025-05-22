@@ -2,7 +2,9 @@ package payment
 
 import (
 	"context"
-	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres"
+	"github.com/jackc/pgx/v5/pgconn"
 	"time"
 
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
@@ -10,31 +12,51 @@ import (
 	"github.com/google/uuid"
 )
 
-func (s *PgStoragePayment) UpdatePaymentStatus(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error {
-	query, args, err := sq.Update("payments").
-		Set("status", newStatus).
-		Set("updated_at", time.Now()).
-		Where(sq.Eq{
-			"id": paymentID,
-		}).
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
+func (s *PgStoragePayment) UpdatePaymentStatus(ctx context.Context, paymentID uuid.UUID, status payment.PaymentStatus) error {
+	query, args, err := buildStatusUpdateQuery(paymentID, status)
 	if err != nil {
-		return fmt.Errorf("failed to build update query: %w", err)
+		return errors.Wrapf(err, "UpdatePaymentStatus with %v", errors.Token("payment_id", paymentID))
 	}
 
-	result, err := s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+	result, err := executeStatusUpdate(ctx, s.txManager.GetQueryEngine(ctx), query, args)
 	if err != nil {
-		return fmt.Errorf("failed to execute update: %w", err)
+		return errors.Wrapf(err, "UpdatePaymentStatus with %v", errors.Token("payment_id", paymentID))
 	}
 
-	rowsAffected := result.RowsAffected()
-	if rowsAffected == 0 {
-		return errPaymentNotFound
-	}
-	if rowsAffected > 1 {
-		return fmt.Errorf("unexpected number of rows affected: %d", rowsAffected)
+	if err := verifyUpdateResult(result); err != nil {
+		return errors.Wrapf(err, "UpdatePaymentStatus with %v", errors.Token("payment_id", paymentID))
 	}
 
 	return nil
+}
+
+func buildStatusUpdateQuery(paymentID uuid.UUID, status payment.PaymentStatus) (string, []any, error) {
+	query, args, err := sq.Update("payments").
+		Set("status", status).
+		Set("updated_at", time.Now()).
+		Where(sq.Eq{"id": paymentID}).
+		PlaceholderFormat(sq.Dollar).
+		ToSql()
+	if err != nil {
+		return "", nil, errors.Wrap(err, "buildStatusUpdateQuery")
+	}
+	return query, args, nil
+}
+
+func executeStatusUpdate(ctx context.Context, queryEngine postgres.QueryEngine, query string, args []any) (pgconn.CommandTag, error) {
+	result, err := queryEngine.Exec(ctx, query, args...)
+	if err != nil {
+		return pgconn.CommandTag{}, errors.Wrap(err, "executeStatusUpdate")
+	}
+	return result, nil
+}
+
+func verifyUpdateResult(result pgconn.CommandTag) error {
+	rowsAffected := result.RowsAffected()
+	switch {
+	case rowsAffected == 0:
+		return errors.Wrap(errPaymentNotFound, "verifyUpdateResult")
+	default:
+		return nil
+	}
 }
