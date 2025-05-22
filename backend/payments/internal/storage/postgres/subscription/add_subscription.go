@@ -2,44 +2,56 @@ package subscription
 
 import (
 	"context"
-	"fmt"
+	pgerrors "github.com/Doremi203/couply/backend/auth/pkg/postgres"
+	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"
 	sq "github.com/Masterminds/squirrel"
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 var (
-	errDuplicatedSubscription = errors.Error("subscription already exists for this user")
+	errDuplicateSubscription = errors.Error("subscription already exists")
 )
 
 func (s *PgStorageSubscription) AddSubscription(ctx context.Context, subscription *subscription.Subscription) error {
+	query, args, err := buildInsertSubscriptionQuery(subscription)
+	if err != nil {
+		return errors.Wrapf(err, "AddSubscription with %v", errors.Token("subscription", subscription))
+	}
+
+	if err = executeSubscriptionInsert(ctx, s.txManager.GetQueryEngine(ctx), query, args); err != nil {
+		return errors.Wrapf(err, "AddSubscription with %v", errors.Token("subscription", subscription))
+	}
+
+	return nil
+}
+
+func buildInsertSubscriptionQuery(sub *subscription.Subscription) (string, []any, error) {
 	query, args, err := sq.Insert("subscriptions").
-		Columns("id", "user_id", "plan", "status", "start_date", "end_date", "auto_renew").
+		Columns(
+			"id", "user_id", "plan", "status",
+			"start_date", "end_date", "auto_renew",
+		).
 		Values(
-			subscription.GetID(),
-			subscription.GetUserID(),
-			subscription.GetPlan(),
-			subscription.GetStatus(),
-			subscription.GetStartDate(),
-			subscription.GetEndDate(),
-			subscription.GetAutoRenew(),
+			sub.GetID(), sub.GetUserID(), sub.GetPlan(), sub.GetStatus(),
+			sub.GetStartDate(), sub.GetEndDate(), sub.GetAutoRenew(),
 		).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("failed to build query: %w", err)
+		return "", nil, errors.WrapFail(err, "buildInsertSubscriptionQuery")
 	}
+	return query, args, nil
+}
 
-	_, err = s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+func executeSubscriptionInsert(ctx context.Context, queryEngine postgres.QueryEngine, query string, args []any) error {
+	_, err := queryEngine.Exec(ctx, query, args...)
 	if err != nil {
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
-			return errDuplicatedSubscription
+		if pgerrors.IsUniqueViolationError(err) {
+			return errors.Wrap(errDuplicateSubscription, "executeSubscriptionInsert")
 		}
-		return fmt.Errorf("failed to execute query: %w", err)
+		return errors.Wrap(err, "executeSubscriptionInsert")
 	}
-
 	return nil
 }

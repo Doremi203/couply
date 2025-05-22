@@ -17,15 +17,11 @@ var (
 func (s *PgStoragePayment) AddPayment(ctx context.Context, payment *payment.Payment) error {
 	query, args, err := buildInsertPaymentQuery(payment)
 	if err != nil {
-		return errors.Wrap(err, "AddPayment")
+		return errors.Wrapf(err, "AddPayment with %v", errors.Token("payment", payment))
 	}
 
 	if err = executeInsertQuery(ctx, s.txManager.GetQueryEngine(ctx), query, args); err != nil {
-		return errors.Wrapf(
-			err,
-			"AddPayment with %v",
-			errors.Token("payment_id", payment.GetID()),
-		)
+		return errors.Wrapf(err, "AddPayment with %v", errors.Token("payment", payment))
 	}
 
 	return nil
