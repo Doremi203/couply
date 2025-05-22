@@ -35,8 +35,8 @@ func buildInsertPaymentQuery(payment *payment.Payment) (string, []any, error) {
 			"status", "gateway_id", "created_at", "updated_at",
 		).
 		Values(
-			payment.GetID(), payment.GetUserID(), payment.GetSubscriptionID(), payment.GetAmount(), payment.GetCurrency(),
-			payment.GetStatus(), payment.GetGatewayID(), payment.GetCreatedAt(), payment.GetUpdatedAt(),
+			payment.ID, payment.UserID, payment.SubscriptionID, payment.Amount, payment.Currency,
+			payment.Status, payment.GatewayID, payment.CreatedAt, payment.UpdatedAt,
 		).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

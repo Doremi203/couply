@@ -65,8 +65,8 @@ func CreatePaymentResponseToPB(resp *CreatePaymentV1Response) *desc.CreatePaymen
 
 func PaymentToCreatePaymentResponse(pay *payment.Payment) *CreatePaymentV1Response {
 	return &CreatePaymentV1Response{
-		PaymentID: pay.GetID().String(),
-		Status:    pay.GetStatus(),
-		UpdatedAt: pay.GetUpdatedAt(),
+		PaymentID: pay.ID.String(),
+		Status:    pay.Status,
+		UpdatedAt: pay.UpdatedAt,
 	}
 }

@@ -36,5 +36,5 @@ func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Requ
 }
 
 func (c *UseCase) startPaymentStatusUpdate(payment *payment.Payment) {
-	go c.updater.CheckAndUpdatePaymentStatusWithRetry(context.Background(), payment.GetID(), payment.GetGatewayID())
+	go c.updater.CheckAndUpdatePaymentStatusWithRetry(context.Background(), payment.ID, payment.GatewayID)
 }

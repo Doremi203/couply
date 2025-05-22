@@ -35,8 +35,8 @@ func buildInsertSubscriptionQuery(sub *subscription.Subscription) (string, []any
 			"start_date", "end_date", "auto_renew",
 		).
 		Values(
-			sub.GetID(), sub.GetUserID(), sub.GetPlan(), sub.GetStatus(),
-			sub.GetStartDate(), sub.GetEndDate(), sub.GetAutoRenew(),
+			sub.ID, sub.UserID, sub.Plan, sub.Status,
+			sub.StartDate, sub.EndDate, sub.AutoRenew,
 		).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

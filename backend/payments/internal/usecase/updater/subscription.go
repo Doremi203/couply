@@ -33,11 +33,11 @@ func (u *Updater) checkAndUpdateExpiredSubscriptions(ctx context.Context, subs [
 }
 
 func (u *Updater) isSubscriptionExpired(sub *subscription.Subscription, now time.Time) bool {
-	return sub.GetEndDate().Before(now)
+	return sub.EndDate.Before(now)
 }
 
 func (u *Updater) processExpiredSubscription(ctx context.Context, sub *subscription.Subscription) {
-	if sub.GetAutoRenew() {
+	if sub.AutoRenew {
 		u.handleAutoRenewal(ctx, sub)
 	} else {
 		u.expireSubscription(ctx, sub)
@@ -47,7 +47,7 @@ func (u *Updater) processExpiredSubscription(ctx context.Context, sub *subscript
 func (u *Updater) expireSubscription(ctx context.Context, sub *subscription.Subscription) {
 	err := u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(
 		ctx,
-		sub.GetID(),
+		sub.ID,
 		subscription.SubscriptionStatusExpired,
 	)
 	if err != nil {
@@ -55,7 +55,7 @@ func (u *Updater) expireSubscription(ctx context.Context, sub *subscription.Subs
 		return
 	}
 
-	if err = u.updateUserPremiumStatus(ctx, sub.GetUserID(), false); err != nil {
+	if err = u.updateUserPremiumStatus(ctx, sub.UserID, false); err != nil {
 		u.logger.Error(err)
 	}
 }
@@ -67,7 +67,7 @@ func (u *Updater) handleAutoRenewal(ctx context.Context, sub *subscription.Subsc
 		return
 	}
 
-	amount := subscription.GetPlanPrice(sub.GetPlan())
+	amount := subscription.GetPlanPrice(sub.Plan)
 	gatewayID, err := u.paymentGateway.CreatePayment(ctx, amount, payment.MainCurrency)
 	if err != nil {
 		u.logger.Error(err)
@@ -89,8 +89,8 @@ func (u *Updater) createPaymentObject(
 	now := time.Now()
 	return &payment.Payment{
 		ID:             paymentID,
-		UserID:         sub.GetUserID(),
-		SubscriptionID: sub.GetID(),
+		UserID:         sub.UserID,
+		SubscriptionID: sub.ID,
 		Amount:         amount,
 		Currency:       payment.MainCurrency,
 		Status:         payment.PaymentStatusPending,
@@ -111,7 +111,7 @@ func (u *Updater) savePaymentAndUpdateSubscription(
 
 	return u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(
 		ctx,
-		sub.GetID(),
+		sub.ID,
 		subscription.SubscriptionStatusPendingPayment,
 	)
 }

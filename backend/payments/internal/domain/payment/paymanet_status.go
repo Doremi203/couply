@@ -11,7 +11,7 @@ const (
 	PaymentStatusFailed
 )
 
-func PBToSPaymentStatus(paymentStatus desc.PaymentStatus) PaymentStatus {
+func PBToPaymentStatus(paymentStatus desc.PaymentStatus) PaymentStatus {
 	switch paymentStatus {
 	case desc.PaymentStatus_PAYMENT_STATUS_UNSPECIFIED:
 		return PaymentStatusUnspecified

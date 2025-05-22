@@ -39,8 +39,8 @@ func GetPaymentStatusResponseToPB(resp *GetPaymentStatusV1Response) *desc.GetPay
 
 func PaymentToGetPaymentStatusResponse(pay *payment.Payment) *GetPaymentStatusV1Response {
 	return &GetPaymentStatusV1Response{
-		PaymentID:     pay.GetID(),
-		PaymentStatus: pay.GetStatus(),
-		UpdatedAt:     pay.GetUpdatedAt(),
+		PaymentID:     pay.ID,
+		PaymentStatus: pay.Status,
+		UpdatedAt:     pay.UpdatedAt,
 	}
 }

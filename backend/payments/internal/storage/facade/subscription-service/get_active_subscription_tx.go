@@ -30,7 +30,7 @@ func (f *StorageFacadeSubscription) getSubscriptionWithPayments(ctx context.Cont
 		return nil, err
 	}
 
-	paymentIDs, err := f.getSubscriptionPaymentIDs(ctx, sub.GetID())
+	paymentIDs, err := f.getSubscriptionPaymentIDs(ctx, sub.ID)
 	if err != nil {
 		return nil, err
 	}
