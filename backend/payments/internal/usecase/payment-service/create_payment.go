@@ -2,6 +2,7 @@ package payment_service
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
@@ -14,7 +15,7 @@ func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Requ
 		return nil, errors.Wrap(err, "CreatePayment")
 	}
 
-	gatewayID, err := c.paymentGateway.CreatePayment(ctx, in.GetAmount(), in.GetCurrency())
+	gatewayID, err := c.paymentGateway.CreatePayment(ctx, in.Amount, in.Currency)
 	if err != nil {
 		return nil, errors.Wrap(err, "CreatePayment")
 	}

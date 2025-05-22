@@ -2,6 +2,7 @@ package payment
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres"
 	"github.com/jackc/pgx/v5"
