@@ -29,7 +29,7 @@ func (u *Updater) updatePendingPayments(ctx context.Context) {
 	}
 
 	for _, p := range pendingPayments {
-		go u.CheckAndUpdatePaymentStatusWithRetry(ctx, p.GetID(), p.GetGatewayID())
+		go u.CheckAndUpdatePaymentStatusWithRetry(ctx, p.ID, p.GatewayID)
 	}
 }
 
@@ -65,12 +65,12 @@ func (u *Updater) processPaymentStatusUpdate(ctx context.Context, paymentID uuid
 		return err
 	}
 
-	if status != currentPayment.GetStatus() {
+	if status != currentPayment.Status {
 		if err = u.paymentStorageFacade.UpdatePaymentStatusTx(ctx, paymentID, status); err != nil {
 			return err
 		}
 
-		u.updateRelatedSubscription(ctx, currentPayment.GetSubscriptionID(), status)
+		u.updateRelatedSubscription(ctx, currentPayment.SubscriptionID, status)
 	}
 	return nil
 }
@@ -88,14 +88,14 @@ func (u *Updater) updateRelatedSubscription(ctx context.Context, subID uuid.UUID
 		return
 	}
 
-	if paymentStatus == payment.PaymentStatusSuccess && sub.GetStatus() == subscription.SubscriptionStatusPendingPayment {
+	if paymentStatus == payment.PaymentStatusSuccess && sub.Status == subscription.SubscriptionStatusPendingPayment {
 		if err = u.activateSubscription(ctx, sub); err != nil {
 			u.logger.Error(err)
 			return
 		}
 	}
 
-	if err = u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.GetID(), newStatus); err != nil {
+	if err = u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.ID, newStatus); err != nil {
 		u.logger.Error(err)
 	}
 }
@@ -113,10 +113,10 @@ func determineSubscriptionStatus(paymentStatus payment.PaymentStatus) subscripti
 
 func (u *Updater) activateSubscription(ctx context.Context, sub *subscription.Subscription) error {
 	now := time.Now()
-	endDate := subscription.CalculateEndDate(now, sub.GetPlan())
-	if err := u.subscriptionStorageFacade.UpdateSubscriptionDatesTx(ctx, sub.GetID(), now, endDate); err != nil {
+	endDate := subscription.CalculateEndDate(now, sub.Plan)
+	if err := u.subscriptionStorageFacade.UpdateSubscriptionDatesTx(ctx, sub.ID, now, endDate); err != nil {
 		return err
 	}
 
-	return u.updateUserPremiumStatus(ctx, sub.GetUserID(), true)
+	return u.updateUserPremiumStatus(ctx, sub.UserID, true)
 }

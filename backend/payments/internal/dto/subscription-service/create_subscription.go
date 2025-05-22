@@ -70,12 +70,12 @@ func CreateSubscriptionResponseToPB(resp *CreateSubscriptionV1Response) *desc.Cr
 
 func SubscriptionToCreateSubscriptionResponse(sub *subscription.Subscription) *CreateSubscriptionV1Response {
 	return &CreateSubscriptionV1Response{
-		SubscriptionID:     sub.GetID(),
-		SubscriptionPlan:   sub.GetPlan(),
-		SubscriptionStatus: sub.GetStatus(),
-		AutoRenew:          sub.GetAutoRenew(),
-		StartDate:          sub.GetStartDate(),
-		EndDate:            sub.GetEndDate(),
-		PaymentIDs:         sub.GetPaymentIDs(),
+		SubscriptionID:     sub.ID,
+		SubscriptionPlan:   sub.Plan,
+		SubscriptionStatus: sub.Status,
+		AutoRenew:          sub.AutoRenew,
+		StartDate:          sub.StartDate,
+		EndDate:            sub.EndDate,
+		PaymentIDs:         sub.PaymentIDs,
 	}
 }
