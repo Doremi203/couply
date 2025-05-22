@@ -19,3 +19,6 @@ database:
   password: pass
   database: payments
   options: sslmode=disable
+
+user_service:
+  address:  "matcher:7002"

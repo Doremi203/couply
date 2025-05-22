@@ -44,6 +44,7 @@ func PBToCreatePaymentRequest(req *desc.CreatePaymentV1Request) (*CreatePaymentV
 	return &CreatePaymentV1Request{
 		SubscriptionID: subID,
 		Amount:         req.GetAmount(),
+		Currency:       req.GetCurrency(),
 	}, nil
 }
 

@@ -98,6 +98,17 @@ func (u *Updater) updateRelatedSubscriptions(ctx context.Context, subID uuid.UUI
 				return
 			}
 		}
+		user, err := u.userClient.GetUserByIDV1(ctx, sub.GetUserID().String())
+		if err != nil {
+			u.logger.Error(err)
+		}
+
+		user.IsPremium = true
+
+		err = u.userClient.UpdateUserByIDV1(ctx, user)
+		if err != nil {
+			u.logger.Error(err)
+		}
 	case payment.PaymentStatusFailed:
 		newStatus = subscription.SubscriptionStatusPendingPayment
 	default:
