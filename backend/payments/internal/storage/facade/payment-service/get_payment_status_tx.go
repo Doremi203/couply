@@ -13,7 +13,7 @@ func (f *StorageFacadePayment) GetPaymentStatusTx(ctx context.Context, paymentID
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		p, err = f.storage.GetPayment(ctxTx, paymentID)
+		p, err = f.storage.GetPaymentByID(ctxTx, paymentID)
 		if err != nil {
 			return errors.WrapFail(err, "get payment")
 		}
