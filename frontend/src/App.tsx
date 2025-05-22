@@ -15,7 +15,6 @@ import RegistrationPage from './pages/RegistrationPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { SplashPage } from './pages/SplashPage';
 import { ThemeProvider } from './shared/lib/context/ThemeContext';
-import { usePushNotifications } from './shared/lib/hooks/usePushNotifications';
 
 const router = createBrowserRouter([
   {
@@ -83,7 +82,6 @@ function App() {
 
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);
-  const { isSupported, permission, subscribe, isInitializing } = usePushNotifications();
 
   // Load userId from localStorage on initial load
   useEffect(() => {
@@ -150,15 +148,6 @@ function App() {
         });
     }
   }, []);
-
-  // Подписка на push-уведомления только если разрешение уже получено
-  useEffect(() => {
-    if (isSupported && permission === 'granted' && !isInitializing) {
-      subscribe().then(success => {
-        console.log('Push notifications subscription status:', success);
-      });
-    }
-  }, [isSupported, permission, isInitializing, subscribe]);
 
   return (
     <ThemeProvider>

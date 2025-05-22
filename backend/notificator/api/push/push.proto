@@ -55,6 +55,8 @@ message SubscribeV1Request {
 
 message SubscribeV1Response {}
 
-message UnsubscribeV1Request {}
+message UnsubscribeV1Request {
+  string endpoint = 1;
+}
 
 message UnsubscribeV1Response {}

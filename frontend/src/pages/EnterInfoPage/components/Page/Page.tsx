@@ -1,6 +1,6 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUploadFileToS3Mutation } from '../../../../entities/photo/api/photoApi';
@@ -12,11 +12,10 @@ import {
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 import { ToggleButtons } from '../../../../shared/components/ToggleButtons';
+import { usePushNotificationPermission } from '../../../../shared/lib/hooks/usePushNotificationPermission';
+import { usePushSubscription } from '../../../../shared/lib/hooks/usePushSubscription';
 import {
   isPushNotificationSupported,
-  askUserPermission,
-  registerServiceWorker,
-  createPushSubscription,
   sendSubscriptionToServer,
 } from '../../../../shared/lib/services/PushNotificationService';
 import getAge from '../../helpers/getAge';
@@ -57,6 +56,9 @@ export const EnterInfoPage = () => {
 
   // Update the userPhotos state with the proper type
   const [userPhotos, setUserPhotos] = useState<PhotoItem[]>([]);
+
+  const { permission, requestPermission } = usePushNotificationPermission();
+  const { subscription, subscribe } = usePushSubscription();
 
   const handleLocationReceived = (coordinates: { lat: number; lng: number }) => {
     setCoords(coordinates);
@@ -150,11 +152,13 @@ export const EnterInfoPage = () => {
           throw error;
         }
 
+        console.log('push notification supported', isPushNotificationSupported());
+        console.log('permission', permission);
+
         if (
           isPushNotificationSupported() &&
-          !notificationPermissionRequested
-          // Notification.permission !== 'granted' &&
-          // Notification.permission !== 'denied'
+          !notificationPermissionRequested &&
+          permission !== 'granted'
         ) {
           setShowNotificationPrompt(true);
         } else {
@@ -162,16 +166,7 @@ export const EnterInfoPage = () => {
         }
       } catch (error) {
         console.error('Error creating user:', error);
-        if (
-          isPushNotificationSupported() &&
-          !notificationPermissionRequested &&
-          Notification.permission !== 'granted' &&
-          Notification.permission !== 'denied'
-        ) {
-          setShowNotificationPrompt(true);
-        } else {
-          navigate('/home');
-        }
+        navigate('/home');
       }
     } else {
       setCurrentStep(prevStep => prevStep + 1);
@@ -226,25 +221,21 @@ export const EnterInfoPage = () => {
     setShowNotificationPrompt(false);
 
     try {
-      const permission = await askUserPermission();
-
-      if (permission === 'granted') {
-        const registration = await registerServiceWorker();
-
-        if (registration) {
-          const subscription = await createPushSubscription(registration);
-
-          if (subscription) {
-            const userIdFromStorage = localStorage.getItem('userId');
-            const userIdToUse = userIdFromStorage || 'user123';
-            await sendSubscriptionToServer(subscription, userIdToUse);
-          }
+      const result = await requestPermission();
+      if (result === 'granted') {
+        console.log('User granted permission, sending subscription to server');
+        if (subscription) {
+          console.log('Subscription already exists, sending to server');
+          await sendSubscriptionToServer(subscription);
+        } else {
+          console.log('No subscription found, creating a new one');
+          const sub = await subscribe();
+          await sendSubscriptionToServer(sub);
         }
       }
-
-      navigate('/home');
     } catch (error) {
       console.error('Error requesting notification permission:', error);
+    } finally {
       navigate('/home');
     }
   };
@@ -461,8 +452,6 @@ export const EnterInfoPage = () => {
       </div>
     </div>,
   ];
-
-  console.log(birthDate);
 
   return (
     <div className={styles.container}>

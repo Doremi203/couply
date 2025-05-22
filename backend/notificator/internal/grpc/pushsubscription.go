@@ -76,16 +76,23 @@ func (s *pushSubscriptionService) SubscribeV1(
 
 func (s *pushSubscriptionService) UnsubscribeV1(
 	ctx context.Context,
-	_ *pushgrpc.UnsubscribeV1Request,
+	req *pushgrpc.UnsubscribeV1Request,
 ) (*pushgrpc.UnsubscribeV1Response, error) {
 	t, ok := token.FromContext(ctx)
 	if !ok {
 		return nil, status.Error(codes.Unauthenticated, "missing token")
 	}
 
+	if req.GetEndpoint() == "" {
+		return nil, status.Error(codes.InvalidArgument, "missing endpoint")
+	}
+
 	recipientID := push.RecipientID(t.GetUserID())
 
-	err := s.pushSubscriptionUseCase.Subscribe(ctx, push.Subscription{RecipientID: recipientID})
+	err := s.pushSubscriptionUseCase.Unsubscribe(ctx, push.Subscription{
+		RecipientID: recipientID,
+		Endpoint:    push.Endpoint(req.GetEndpoint()),
+	})
 	if err != nil {
 		return nil, errors.WrapFailf(err, "unsubscribe %v to pushes", errors.Token("recipient_id", recipientID))
 	}
