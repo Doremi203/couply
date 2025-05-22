@@ -1,11 +1,16 @@
 import BedtimeIcon from '@mui/icons-material/Bedtime';
 import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Switch, CircularProgress } from '@mui/material';
-import React, { useState, useEffect, useCallback } from 'react';
+import { CircularProgress, Switch } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 
 import { useTheme } from '../../../../shared/lib/context/ThemeContext';
-import { usePushNotifications } from '../../../../shared/lib/hooks/usePushNotifications';
+import { usePushNotificationPermission } from '../../../../shared/lib/hooks/usePushNotificationPermission';
+import { usePushSubscription } from '../../../../shared/lib/hooks/usePushSubscription';
+import {
+  sendSubscriptionToServer,
+  unsubscribeFromPushNotifications,
+} from '../../../../shared/lib/services/PushNotificationService.ts';
 
 import styles from './notificationSettings.module.css';
 
@@ -22,10 +27,12 @@ interface NotificationSettingsProps {
 
 export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ className }) => {
   const { theme, toggleTheme } = useTheme();
-  const { isSupported, isSubscribed, subscribe, unsubscribe } = usePushNotifications();
   const [notifications, setNotifications] = useState<NotificationOption[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const { subscription, subscribe, unsubscribe } = usePushSubscription();
+  const { requestPermission } = usePushNotificationPermission();
+  const isPushEnabled = Boolean(subscription);
 
   useEffect(() => {
     setNotifications([
@@ -33,7 +40,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         id: 'push',
         label: 'Push-уведомления',
         icon: <NotificationsIcon />,
-        enabled: isSubscribed,
+        enabled: isPushEnabled,
       },
       {
         id: 'theme',
@@ -48,56 +55,45 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         enabled: false,
       },
     ]);
-  }, [theme, isSubscribed]);
+  }, [theme, isPushEnabled]);
 
-  const handleToggle = useCallback(
-    async (id: string) => {
-      if (isLoading) return;
+  const handleToggle = async (id: string) => {
+    if (isLoading) return;
 
-      setActiveId(id);
-      setIsLoading(true);
+    setActiveId(id);
+    setIsLoading(true);
 
-      try {
-        if (id === 'theme') {
-          toggleTheme();
-          // Для темы не нужен await, сразу заканчиваем обработку
-          setIsLoading(false);
-          setActiveId(null);
-          return;
-        } else if (id === 'push') {
-          // if (!isSupported) {
-          //   alert('Ваш браузер не поддерживает push-уведомления');
-          //   setIsLoading(false);
-          //   setActiveId(null);
-          //   return;
-          // }
-
-          if (isSubscribed) {
-            await unsubscribe();
-          } else {
-            await subscribe();
+    try {
+      if (id === 'theme') {
+        toggleTheme();
+      } else if (id === 'push') {
+        if (!isPushEnabled) {
+          const permissionResult = await requestPermission();
+          if (permissionResult === 'granted') {
+            const newSubscription = await subscribe();
+            await sendSubscriptionToServer(newSubscription);
           }
-          // await refreshState();
-        } else if (id === 'unsubscribe') {
-          // Простое переключение состояния без реальной логики
-          setNotifications(prev =>
-            prev.map(notification =>
-              notification.id === id
-                ? { ...notification, enabled: !notification.enabled }
-                : notification,
-            ),
-          );
+        } else if (subscription) {
+          await unsubscribeFromPushNotifications(subscription);
+          await unsubscribe();
         }
-      } catch (error) {
-        console.error('Error toggling:', error);
-        alert('Произошла ошибка при изменении настроек');
-      } finally {
-        setIsLoading(false);
-        setActiveId(null);
+      } else if (id === 'unsubscribe') {
+        setNotifications(prev =>
+          prev.map(notification =>
+            notification.id === id
+              ? { ...notification, enabled: !notification.enabled }
+              : notification,
+          ),
+        );
       }
-    },
-    [isSupported, isSubscribed, subscribe, unsubscribe, toggleTheme],
-  );
+    } catch (error) {
+      console.error('Error toggling:', error);
+      alert('Произошла ошибка при изменении настроек');
+    } finally {
+      setIsLoading(false);
+      setActiveId(null);
+    }
+  };
 
   return (
     <div className={`${styles.container} ${className || ''}`}>
@@ -116,7 +112,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
                 notification.id === 'theme'
                   ? theme === 'dark'
                   : notification.id === 'push'
-                    ? isSubscribed
+                    ? isPushEnabled
                     : notification.enabled
               }
               onChange={() => handleToggle(notification.id)}

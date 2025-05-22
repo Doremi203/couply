@@ -156,6 +156,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const AUTH_BASE_URL = 'https://auth.testing.couply.ru';
 const MATCHER_API_URL = 'https://matcher.testing.couply.ru';
 const BLOCKER_API_URL = 'https://blocker.testing.couply.ru';
+const NOTIFICATOR_API_URL = 'https://notificator.testing.couply.ru';
 
 export const baseApi = createApi({
   reducerPath: 'api',
@@ -206,4 +207,19 @@ export const blockerApi = createApi({
   }),
   endpoints: () => ({}),
   // tagTypes: ['filter', 'search', 'User'],
+});
+
+export const notificatorApi = createApi({
+  reducerPath: 'notificatorApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: NOTIFICATOR_API_URL,
+    prepareHeaders: headers => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        headers.set('user-token', token);
+      }
+      return headers;
+    },
+  }),
+  endpoints: () => ({}),
 });
