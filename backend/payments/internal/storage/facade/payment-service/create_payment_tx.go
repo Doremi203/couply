@@ -8,19 +8,8 @@ import (
 )
 
 func (f *StorageFacadePayment) CreatePaymentTx(ctx context.Context, newPayment *payment.Payment) (*payment.Payment, error) {
-	var err error
-
-	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.storage.AddPayment(ctxTx, newPayment)
-		if err != nil {
-			return errors.WrapFail(err, "add payment")
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return nil, errors.WrapFail(err, "create payment transaction")
+	if err := f.storage.AddPayment(ctx, newPayment); err != nil {
+		return nil, errors.Wrap(err, "CreatePaymentTx")
 	}
 
 	return newPayment, nil

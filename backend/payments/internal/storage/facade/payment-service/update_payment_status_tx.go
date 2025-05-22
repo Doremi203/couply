@@ -9,19 +9,9 @@ import (
 )
 
 func (f *StorageFacadePayment) UpdatePaymentStatusTx(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error {
-	var err error
-
-	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.storage.UpdatePaymentStatus(ctxTx, paymentID, newStatus)
-		if err != nil {
-			return errors.WrapFail(err, "update payment status")
-		}
-
-		return nil
-	})
-
+	err := f.storage.UpdatePaymentStatus(ctx, paymentID, newStatus)
 	if err != nil {
-		return errors.WrapFail(err, "update payment status transaction")
+		return errors.Wrap(err, "UpdatePaymentStatusTx")
 	}
 
 	return nil

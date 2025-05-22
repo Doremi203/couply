@@ -8,19 +8,9 @@ import (
 )
 
 func (f *StorageFacadeSubscription) CreateSubscriptionTx(ctx context.Context, newSubscription *subscription.Subscription) (*subscription.Subscription, error) {
-	var err error
-
-	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.subscriptionStorage.AddSubscription(ctxTx, newSubscription)
-		if err != nil {
-			return errors.WrapFail(err, "add subscription")
-		}
-
-		return nil
-	})
-
+	err := f.subscriptionStorage.AddSubscription(ctx, newSubscription)
 	if err != nil {
-		return nil, errors.WrapFail(err, "create subscription transaction")
+		return nil, errors.Wrap(err, "CreateSubscriptionTx")
 	}
 
 	return newSubscription, nil
