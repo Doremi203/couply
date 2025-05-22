@@ -13,33 +13,49 @@ func (f *StorageFacadeSubscription) GetActiveSubscriptionTx(ctx context.Context,
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		sub, err = f.subscriptionStorage.GetActiveSubscriptionByUserID(ctxTx, userID)
-		if err != nil {
-			return errors.WrapFail(err, "get active subscription")
-		}
-
-		ids, err := f.paymentStorage.GetSubscriptionPayments(ctxTx, sub.GetID())
-		if err != nil {
-			return errors.WrapFail(err, "get active subscription ids")
-		}
-
-		uuids := make([]uuid.UUID, len(ids))
-		for i, id := range ids {
-			parsedUUID, err := uuid.Parse(id)
-			if err != nil {
-				return errors.WrapFail(err, "parse active subscription uuid")
-			}
-			uuids[i] = parsedUUID
-		}
-
-		sub.PaymentIDs = uuids
-
-		return nil
+		sub, err = f.getSubscriptionWithPayments(ctxTx, userID)
+		return err
 	})
 
 	if err != nil {
-		return nil, errors.WrapFail(err, "get active subscription transaction")
+		return nil, errors.Wrap(err, "GetActiveSubscriptionTx")
 	}
 
 	return sub, nil
+}
+
+func (f *StorageFacadeSubscription) getSubscriptionWithPayments(ctx context.Context, userID uuid.UUID) (*subscription.Subscription, error) {
+	sub, err := f.subscriptionStorage.GetActiveSubscriptionByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	paymentIDs, err := f.getSubscriptionPaymentIDs(ctx, sub.GetID())
+	if err != nil {
+		return nil, err
+	}
+
+	sub.PaymentIDs = paymentIDs
+	return sub, nil
+}
+
+func (f *StorageFacadeSubscription) getSubscriptionPaymentIDs(ctx context.Context, subscriptionID uuid.UUID) ([]uuid.UUID, error) {
+	ids, err := f.paymentStorage.GetSubscriptionPayments(ctx, subscriptionID)
+	if err != nil {
+		return nil, err
+	}
+
+	return convertStringsToUUIDs(ids)
+}
+
+func convertStringsToUUIDs(ids []string) ([]uuid.UUID, error) {
+	uuids := make([]uuid.UUID, len(ids))
+	for i, id := range ids {
+		parsedUUID, err := uuid.Parse(id)
+		if err != nil {
+			return nil, err
+		}
+		uuids[i] = parsedUUID
+	}
+	return uuids, nil
 }

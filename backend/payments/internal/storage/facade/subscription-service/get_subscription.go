@@ -9,20 +9,9 @@ import (
 )
 
 func (f *StorageFacadeSubscription) GetSubscriptionTx(ctx context.Context, subID uuid.UUID) (*subscription.Subscription, error) {
-	var sub *subscription.Subscription
-	var err error
-
-	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		sub, err = f.subscriptionStorage.GetSubscriptionByID(ctxTx, subID)
-		if err != nil {
-			return errors.WrapFail(err, "get subscription")
-		}
-
-		return nil
-	})
-
+	sub, err := f.subscriptionStorage.GetSubscriptionByID(ctx, subID)
 	if err != nil {
-		return nil, errors.WrapFail(err, "get subscription transaction")
+		return nil, errors.Wrap(err, "GetSubscriptionTx")
 	}
 
 	return sub, nil

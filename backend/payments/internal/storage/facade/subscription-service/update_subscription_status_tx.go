@@ -9,19 +9,9 @@ import (
 )
 
 func (f *StorageFacadeSubscription) UpdateSubscriptionStatusTx(ctx context.Context, subscriptionID uuid.UUID, status subscription.SubscriptionStatus) error {
-	var err error
-
-	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.subscriptionStorage.UpdateSubscriptionStatus(ctxTx, subscriptionID, status)
-		if err != nil {
-			return errors.WrapFail(err, "update subscription")
-		}
-
-		return nil
-	})
-
+	err := f.subscriptionStorage.UpdateSubscriptionStatus(ctx, subscriptionID, status)
 	if err != nil {
-		return errors.WrapFail(err, "update subscription transaction")
+		return errors.Wrap(err, "UpdateSubscriptionStatusTx")
 	}
 
 	return nil

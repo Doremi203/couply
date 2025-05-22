@@ -8,21 +8,10 @@ import (
 )
 
 func (f *StorageFacadePayment) GetPendingPaymentsTx(ctx context.Context) ([]*payment.Payment, error) {
-	var p []*payment.Payment
-	var err error
-
-	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		p, err = f.storage.GetPendingPayments(ctxTx)
-		if err != nil {
-			return errors.WrapFail(err, "get pending payments")
-		}
-
-		return nil
-	})
-
+	pays, err := f.storage.GetPendingPayments(ctx)
 	if err != nil {
-		return nil, errors.WrapFail(err, "get pending payments transaction")
+		return nil, errors.Wrap(err, "GetPendingPaymentsTx")
 	}
 
-	return p, nil
+	return pays, nil
 }

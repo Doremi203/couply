@@ -8,20 +8,9 @@ import (
 )
 
 func (f *StorageFacadeSubscription) GetSubscriptionsByStatusTx(ctx context.Context, status subscription.SubscriptionStatus) ([]*subscription.Subscription, error) {
-	var subs []*subscription.Subscription
-	var err error
-
-	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		subs, err = f.subscriptionStorage.GetSubscriptionsByStatus(ctxTx, status)
-		if err != nil {
-			return errors.WrapFail(err, "get subscriptions by status")
-		}
-
-		return nil
-	})
-
+	subs, err := f.subscriptionStorage.GetSubscriptionsByStatus(ctx, status)
 	if err != nil {
-		return nil, errors.WrapFail(err, "get subscriptions by status transaction")
+		return nil, errors.WrapFail(err, "GetSubscriptionsByStatusTx")
 	}
 
 	return subs, nil
