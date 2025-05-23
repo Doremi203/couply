@@ -11,39 +11,18 @@ type ReportUserV1Request struct {
 	Message       string
 }
 
-func (x *ReportUserV1Request) GetTargetUserID() string {
-	if x != nil {
-		return x.TargetUserID
-	}
-	return ""
-}
-
-func (x *ReportUserV1Request) GetReportReasons() []blocker.ReportReason {
-	if x != nil {
-		return x.ReportReasons
-	}
-	return nil
-}
-
-func (x *ReportUserV1Request) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
 type ReportUserV1Response struct{}
 
 func PBToReportUserRequest(req *desc.ReportUserV1Request) *ReportUserV1Request {
-	reportReasons := make([]blocker.ReportReason, len(req.GetReasons()))
-	for i, reason := range req.GetReasons() {
+	reportReasons := make([]blocker.ReportReason, len(req.Reasons))
+	for i, reason := range req.Reasons {
 		reportReasons[i] = blocker.ReportReason(reason)
 	}
 
 	return &ReportUserV1Request{
-		TargetUserID:  req.GetTargetUserId(),
+		TargetUserID:  req.TargetUserId,
 		ReportReasons: reportReasons,
-		Message:       req.GetMessage(),
+		Message:       req.Message,
 	}
 }
 

@@ -21,7 +21,7 @@ func (f *StorageFacadeBlocker) GetBlockInfoTx(ctx context.Context, userID uuid.U
 			return fmt.Errorf("failed to get user block: %w", err)
 		}
 
-		reasons, err = f.storage.GetUserBlockReasons(ctxTx, userBlock.GetID())
+		reasons, err = f.storage.GetUserBlockReasons(ctxTx, userBlock.ID)
 		if err != nil {
 			return fmt.Errorf("failed to get block reasons: %w", err)
 		}

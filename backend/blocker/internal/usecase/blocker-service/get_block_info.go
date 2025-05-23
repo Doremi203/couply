@@ -19,11 +19,11 @@ func (c *UseCase) GetBlockInfo(ctx context.Context, _ *dto.GetBlockInfoV1Request
 	}
 
 	return &dto.GetBlockInfoV1Response{
-		BlockID:       userBlock.GetID(),
-		BlockedUserID: userBlock.GetBlockedID(),
-		Message:       userBlock.GetMessage(),
-		ReportReasons: userBlock.GetReasons(),
-		BlockStatus:   userBlock.GetStatus(),
-		CreatedAt:     userBlock.GetCreatedAt(),
+		BlockID:       userBlock.ID,
+		BlockedUserID: userBlock.BlockedID,
+		Message:       userBlock.Message,
+		ReportReasons: userBlock.Reasons,
+		BlockStatus:   userBlock.Status,
+		CreatedAt:     userBlock.CreatedAt,
 	}, nil
 }

@@ -14,7 +14,7 @@ func (s *PgStorageBlocker) AddUserBlock(ctx context.Context, block *blocker.User
 			"id", "blocked_id", "message", "created_at", "status",
 		).
 		Values(
-			block.GetID(), block.GetBlockedID(), block.GetMessage(), block.GetCreatedAt(), block.GetStatus(),
+			block.ID, block.BlockedID, block.Message, block.CreatedAt, block.Status,
 		).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

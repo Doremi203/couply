@@ -12,7 +12,7 @@ import (
 )
 
 func (c *UseCase) ReportUser(ctx context.Context, in *dto.ReportUserV1Request) (*dto.ReportUserV1Response, error) {
-	reportedUser, err := c.userServiceClient.GetUserByIDV1(ctx, in.GetTargetUserID())
+	reportedUser, err := c.userServiceClient.GetUserByIDV1(ctx, in.TargetUserID)
 	if err != nil {
 		return nil, err
 	}
@@ -22,12 +22,12 @@ func (c *UseCase) ReportUser(ctx context.Context, in *dto.ReportUserV1Request) (
 		return nil, err
 	}
 
-	err = c.bot.SendReportMessage(reportedUser, in.GetReportReasons(), in.GetMessage(), blockID)
+	err = c.bot.SendReportMessage(reportedUser, in.ReportReasons, in.Message, blockID)
 	if err != nil {
 		return nil, err
 	}
 
-	targetUserID, err := uuid.Parse(in.GetTargetUserID())
+	targetUserID, err := uuid.Parse(in.TargetUserID)
 	if err != nil {
 		return nil, err
 	}
@@ -35,8 +35,8 @@ func (c *UseCase) ReportUser(ctx context.Context, in *dto.ReportUserV1Request) (
 	block := &blocker.UserBlock{
 		ID:        blockID,
 		BlockedID: targetUserID,
-		Message:   in.GetMessage(),
-		Reasons:   in.GetReportReasons(),
+		Message:   in.Message,
+		Reasons:   in.ReportReasons,
 		Status:    blocker.BlockStatusPending,
 		CreatedAt: time.Now(),
 	}
