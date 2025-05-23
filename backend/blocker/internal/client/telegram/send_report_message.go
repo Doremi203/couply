@@ -36,7 +36,7 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 	}
 
 	text := fmt.Sprintf(
-		"🚨 *НОВАЯ ЖАЛОБА НА ПОЛЬЗОВАТЕЛЯ*\n\n"+
+		"🚨 НОВАЯ ЖАЛОБА НА ПОЛЬЗОВАТЕЛЯ\n\n"+
 			"ID: %s\n"+
 			"Имя: %s\n"+
 			"Возраст: %d\n"+
@@ -70,9 +70,8 @@ func (b *BotClient) SendReportMessage(user *user_service.User, reasons []blocker
 		),
 	)
 
-	msg := tgbotapi.NewMessage(b.adminChatID, escapeMarkdown(text))
+	msg := tgbotapi.NewMessage(b.adminChatID, text)
 	msg.ReplyMarkup = keyboard
-	msg.ParseMode = "Markdown"
 
 	_, err := b.api.Send(msg)
 	if err != nil {
@@ -93,28 +92,4 @@ func getGenderStr(gender user_service.Gender) string {
 	default:
 		return "Нет гендера"
 	}
-}
-
-func escapeMarkdown(text string) string {
-	replacer := strings.NewReplacer(
-		"_", "\\_",
-		"*", "\\*",
-		"[", "\\[",
-		"]", "\\]",
-		"(", "\\(",
-		")", "\\)",
-		"~", "\\~",
-		"`", "\\`",
-		">", "\\>",
-		"#", "\\#",
-		"+", "\\+",
-		"-", "\\-",
-		"=", "\\=",
-		"|", "\\|",
-		"{", "\\{",
-		"}", "\\}",
-		".", "\\.",
-		"!", "\\!",
-	)
-	return replacer.Replace(text)
 }
