@@ -19,10 +19,10 @@ func (c *UseCase) CreateSubscription(ctx context.Context, in *dto.CreateSubscrip
 		return nil, errors.Wrap(err, "CreateSubscription")
 	}
 
-	createdSubscription, err := c.subscriptionStorageFacade.CreateSubscriptionTx(ctx, newSubscription)
+	err = c.subscriptionStorageFacade.CreateSubscriptionTx(ctx, newSubscription)
 	if err != nil {
 		return nil, errors.Wrap(err, "CreateSubscription")
 	}
 
-	return dto.SubscriptionToCreateSubscriptionResponse(createdSubscription), nil
+	return dto.SubscriptionToCreateSubscriptionResponse(newSubscription), nil
 }

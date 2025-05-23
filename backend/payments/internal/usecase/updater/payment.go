@@ -60,7 +60,7 @@ func (u *Updater) CheckAndUpdatePaymentStatusWithRetry(ctx context.Context, paym
 }
 
 func (u *Updater) processPaymentStatusUpdate(ctx context.Context, paymentID uuid.UUID, status payment.PaymentStatus) error {
-	currentPayment, err := u.paymentStorageFacade.GetPaymentStatusTx(ctx, paymentID)
+	currentPayment, err := u.paymentStorageFacade.GetPaymentByIDTx(ctx, paymentID)
 	if err != nil {
 		return err
 	}

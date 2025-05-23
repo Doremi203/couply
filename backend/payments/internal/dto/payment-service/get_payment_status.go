@@ -3,6 +3,8 @@ package payment_service
 import (
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/payment-service/v1"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	"github.com/google/uuid"
@@ -22,7 +24,7 @@ type GetPaymentStatusV1Response struct {
 func PBToGetPaymentStatusRequest(req *desc.GetPaymentStatusV1Request) (*GetPaymentStatusV1Request, error) {
 	paymentID, err := uuid.Parse(req.GetPaymentId())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "PBToCreatePaymentRequest")
 	}
 	return &GetPaymentStatusV1Request{
 		PaymentID: paymentID,

@@ -25,14 +25,14 @@ func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Requ
 		return nil, errors.Wrap(err, "CreatePayment")
 	}
 
-	createdPayment, err := c.paymentStorageFacade.CreatePaymentTx(ctx, newPayment)
+	err = c.paymentStorageFacade.CreatePaymentTx(ctx, newPayment)
 	if err != nil {
 		return nil, errors.Wrap(err, "CreatePayment")
 	}
 
-	c.startPaymentStatusUpdate(createdPayment)
+	c.startPaymentStatusUpdate(newPayment)
 
-	return dto.PaymentToCreatePaymentResponse(createdPayment), nil
+	return dto.PaymentToCreatePaymentResponse(newPayment), nil
 }
 
 func (c *UseCase) startPaymentStatusUpdate(payment *payment.Payment) {

@@ -4,7 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/Doremi203/couply/backend/payments/internal/client/user"
+	"github.com/Doremi203/couply/backend/payments/internal/client/matcher"
+	postgrestx "github.com/Doremi203/couply/backend/payments/internal/storage"
+	payment_facade "github.com/Doremi203/couply/backend/payments/internal/storage/payment/facade"
+	postgres3 "github.com/Doremi203/couply/backend/payments/internal/storage/payment/postgres"
+	subscription_facade "github.com/Doremi203/couply/backend/payments/internal/storage/subscription/facade"
+	postgres2 "github.com/Doremi203/couply/backend/payments/internal/storage/subscription/postgres"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
@@ -12,11 +17,6 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
 	payment_service "github.com/Doremi203/couply/backend/payments/internal/app/payment-service"
 	subscription_service "github.com/Doremi203/couply/backend/payments/internal/app/subscription-service"
-	payment_facade "github.com/Doremi203/couply/backend/payments/internal/storage/facade/payment-service"
-	subscription_facade "github.com/Doremi203/couply/backend/payments/internal/storage/facade/subscription-service"
-	postgrestx "github.com/Doremi203/couply/backend/payments/internal/storage/postgres"
-	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres/payment"
-	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres/subscription"
 	payment_usecase "github.com/Doremi203/couply/backend/payments/internal/usecase/payment-service"
 	"github.com/Doremi203/couply/backend/payments/internal/usecase/payment-service/mock_gateway"
 	subscription_usecase "github.com/Doremi203/couply/backend/payments/internal/usecase/subscription-service"
@@ -44,7 +44,7 @@ func main() {
 			return errors.WrapFail(err, "read user service config")
 		}
 
-		userServiceClient, conn, err := user.NewClient(userServiceConfig.Address)
+		userServiceClient, conn, err := matcher.NewClient(userServiceConfig.Address)
 		if err != nil {
 			return errors.WrapFail(err, "create user service client")
 		}
@@ -58,8 +58,8 @@ func main() {
 
 		txManager := postgrestx.NewTxManager(dbClient)
 
-		subRepo := subscription.NewPgStorageSubscription(txManager)
-		payRepo := payment.NewPgStoragePayment(txManager)
+		subRepo := postgres2.NewPgStorageSubscription(txManager)
+		payRepo := postgres3.NewPgStoragePayment(txManager)
 
 		subFacade := subscription_facade.NewStorageFacadeSubscription(txManager, subRepo, payRepo)
 		payFacade := payment_facade.NewStorageFacadePayment(txManager, payRepo)
