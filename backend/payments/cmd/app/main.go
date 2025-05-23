@@ -37,14 +37,14 @@ func main() {
 			return err
 		}
 
-		var userServiceConfig struct {
+		var matcherConfig struct {
 			Address string `yaml:"address"`
 		}
-		if err := app.Config.ReadSection("user_service", &userServiceConfig); err != nil {
+		if err = app.Config.ReadSection("matcher", &matcherConfig); err != nil {
 			return errors.WrapFail(err, "read user service config")
 		}
 
-		userServiceClient, conn, err := matcher.NewClient(userServiceConfig.Address)
+		userServiceClient, conn, err := matcher.NewClient(matcherConfig.Address)
 		if err != nil {
 			return errors.WrapFail(err, "create user service client")
 		}
@@ -80,8 +80,8 @@ func main() {
 		subUseCase := subscription_usecase.NewUseCase(subFacade)
 		payUseCase := payment_usecase.NewUseCase(payFacade, gateway, asyncUpdater)
 
-		subService := subscription_service.NewImplementation(app.Log, subUseCase)
-		payService := payment_service.NewImplementation(app.Log, payUseCase)
+		subService := subscription_service.NewImplementation(subUseCase)
+		payService := payment_service.NewImplementation(payUseCase)
 
 		tokenProvider := tokenpkg.NewJWTProvider(pkgTokenConfig)
 

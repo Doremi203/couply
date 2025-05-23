@@ -55,7 +55,7 @@ func executeUpdateSubscriptionQuery(ctx context.Context, queryEngine storage.Que
 func verifyUpdateResult(result pgconn.CommandTag) error {
 	switch rowsAffected := result.RowsAffected(); rowsAffected {
 	case 0:
-		return errSubscriptionNotFound
+		return subscription.ErrSubscriptionNotFound
 	default:
 		return nil
 	}

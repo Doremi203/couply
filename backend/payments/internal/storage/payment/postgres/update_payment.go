@@ -52,7 +52,7 @@ func executeUpdatePayment(ctx context.Context, queryEngine storage.QueryEngine, 
 func verifyUpdateResult(result pgconn.CommandTag) error {
 	switch rowsAffected := result.RowsAffected(); rowsAffected {
 	case 0:
-		return errPaymentNotFound
+		return payment.ErrPaymentNotFound
 	default:
 		return nil
 	}

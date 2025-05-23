@@ -21,8 +21,7 @@ func (i *Implementation) CancelSubscription(ctx context.Context, in *desc.Cancel
 
 	response, err := i.usecase.CancelSubscription(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.CancelSubscriptionResponseToPB(response), nil

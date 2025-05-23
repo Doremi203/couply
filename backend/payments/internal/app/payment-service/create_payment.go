@@ -21,8 +21,7 @@ func (i *Implementation) CreatePaymentV1(ctx context.Context, in *desc.CreatePay
 
 	response, err := i.usecase.CreatePayment(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.CreatePaymentResponseToPB(response), nil

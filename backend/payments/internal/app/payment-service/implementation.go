@@ -3,7 +3,6 @@ package payment_service
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/payment-service/v1"
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/payment-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -18,15 +17,12 @@ type paymentServiceUseCase interface {
 type Implementation struct {
 	desc.UnimplementedPaymentServiceServer
 	usecase paymentServiceUseCase
-	logger  log.Logger
 }
 
 func NewImplementation(
-	logger log.Logger,
 	usecase paymentServiceUseCase,
 ) *Implementation {
 	return &Implementation{
-		logger:  logger,
 		usecase: usecase,
 	}
 }

@@ -3,7 +3,6 @@ package subscription_service
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/subscription-service/v1"
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/subscription-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -19,15 +18,12 @@ type subscriptionServiceUseCase interface {
 type Implementation struct {
 	desc.UnimplementedSubscriptionServiceServer
 	usecase subscriptionServiceUseCase
-	logger  log.Logger
 }
 
 func NewImplementation(
-	logger log.Logger,
 	usecase subscriptionServiceUseCase,
 ) *Implementation {
 	return &Implementation{
-		logger:  logger,
 		usecase: usecase,
 	}
 }

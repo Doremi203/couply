@@ -11,10 +11,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-var (
-	errDuplicateSubscription = errors.Error("subscription already exists")
-)
-
 func (s *PgStorageSubscription) CreateSubscription(ctx context.Context, subscription *subscription.Subscription) error {
 	query, args, err := buildCreateSubscriptionQuery(subscription)
 	if err != nil {
@@ -41,7 +37,7 @@ func executeCreateSubscription(ctx context.Context, queryEngine storage.QueryEng
 	_, err := queryEngine.Exec(ctx, query, args...)
 	if err != nil {
 		if pgerrors.IsUniqueViolationError(err) {
-			return errors.Wrap(errDuplicateSubscription, "exec")
+			return errors.Wrap(subscription.ErrDuplicateSubscription, "exec")
 		}
 		return errors.Wrap(err, "exec")
 	}

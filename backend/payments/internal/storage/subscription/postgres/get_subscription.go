@@ -12,10 +12,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var (
-	errSubscriptionNotFound = errors.Error("subscription not found")
-)
-
 type GetSubscriptionOptions struct {
 	SubscriptionID     uuid.UUID
 	UserID             uuid.UUID
@@ -56,7 +52,7 @@ func executeGetSubscriptionQuery(ctx context.Context, queryEngine storage.QueryE
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(errSubscriptionNotFound, "query")
+			return nil, errors.Wrap(subscription.ErrSubscriptionNotFound, "query")
 		}
 		return nil, errors.Wrap(err, "query")
 	}

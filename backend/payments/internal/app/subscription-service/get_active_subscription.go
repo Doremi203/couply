@@ -16,8 +16,7 @@ func (i *Implementation) GetActiveSubscriptionV1(ctx context.Context, in *desc.G
 
 	response, err := i.usecase.GetActiveSubscription(ctx, dto.PBToGetActiveSubscriptionRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.GetActiveSubscriptionResponseToPB(response), nil

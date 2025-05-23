@@ -12,22 +12,22 @@ import (
 func (c *UseCase) CreatePayment(ctx context.Context, in *dto.CreatePaymentV1Request) (*dto.CreatePaymentV1Response, error) {
 	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
-		return nil, errors.Wrap(err, "CreatePayment")
+		return nil, errors.Wrap(err, "token.GetUserIDFromContext")
 	}
 
 	gatewayID, err := c.paymentGateway.CreatePayment(ctx, in.Amount, in.Currency)
 	if err != nil {
-		return nil, errors.Wrap(err, "CreatePayment")
+		return nil, errors.Wrap(err, "paymentGateway.CreatePayment")
 	}
 
 	newPayment, err := dto.CreatePaymentRequestToPayment(in, userID, gatewayID)
 	if err != nil {
-		return nil, errors.Wrap(err, "CreatePayment")
+		return nil, errors.Wrap(err, "dto.CreatePaymentRequestToPayment")
 	}
 
 	err = c.paymentStorageFacade.CreatePaymentTx(ctx, newPayment)
 	if err != nil {
-		return nil, errors.Wrap(err, "CreatePayment")
+		return nil, errors.Wrap(err, "paymentStorageFacade.CreatePaymentTx")
 	}
 
 	c.startPaymentStatusUpdate(newPayment)

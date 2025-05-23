@@ -21,8 +21,7 @@ func (i *Implementation) GetPaymentStatusV1(ctx context.Context, in *desc.GetPay
 
 	response, err := i.usecase.GetPaymentStatus(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.GetPaymentStatusResponseToPB(response), nil

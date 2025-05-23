@@ -24,7 +24,7 @@ type GetPaymentStatusV1Response struct {
 func PBToGetPaymentStatusRequest(req *desc.GetPaymentStatusV1Request) (*GetPaymentStatusV1Request, error) {
 	paymentID, err := uuid.Parse(req.GetPaymentId())
 	if err != nil {
-		return nil, errors.Wrap(err, "PBToCreatePaymentRequest")
+		return nil, errors.Wrap(err, "uuid.Parse")
 	}
 	return &GetPaymentStatusV1Request{
 		PaymentID: paymentID,

@@ -13,7 +13,7 @@ type CancelSubscriptionV1Request struct {
 func PBToCancelSubscriptionRequest(req *desc.CancelSubscriptionV1Request) (*CancelSubscriptionV1Request, error) {
 	subID, err := uuid.Parse(req.GetSubscriptionId())
 	if err != nil {
-		return nil, errors.Wrap(err, "PBToCancelSubscriptionRequest")
+		return nil, errors.Wrap(err, "uuid.Parse")
 	}
 	return &CancelSubscriptionV1Request{
 		SubscriptionID: subID,
