@@ -60,7 +60,7 @@ func main() {
 		}
 		app.AddCloser(conn.Close)
 
-		bot, err := telegram_client.NewBotClient(telegramConfig.Token, telegramConfig.AdminChatID)
+		bot, err := telegram_client.NewBotClient(telegramConfig.Token, telegramConfig.AdminChatID, app.Log)
 		if err != nil {
 			return errors.WrapFail(err, "create telegram bot")
 		}
