@@ -27,7 +27,7 @@ func (s *PgStorageSubscription) CreateSubscription(ctx context.Context, subscrip
 func buildCreateSubscriptionQuery(sub *subscription.Subscription) (string, []any, error) {
 	query, args, err := sq.Insert(subscriptionsTableName).
 		Columns(subscriptionsColumns...).
-		Values(sub.ID, sub.UserID, sub.Plan, sub.Status, sub.StartDate, sub.EndDate, sub.AutoRenew).
+		Values(sub.ID, sub.UserID, sub.Plan, sub.Status, sub.AutoRenew, sub.StartDate, sub.EndDate).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	return query, args, err

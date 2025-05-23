@@ -10,7 +10,7 @@ import (
 )
 
 func (f *StorageFacadePayment) GetPaymentByIDTx(ctx context.Context, paymentID uuid.UUID) (*payment.Payment, error) {
-	pay, err := f.storage.GetPayment(ctx, paymentpostgres.GetPaymentOptions{
+	pay, err := f.paymentStorage.GetPayment(ctx, paymentpostgres.GetPaymentOptions{
 		PaymentID: paymentID,
 	})
 	if err != nil {

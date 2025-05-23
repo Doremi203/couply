@@ -44,14 +44,14 @@ func buildGetSubscriptionsQuery(opts GetSubscriptionsOptions) (string, []any, er
 func executeGetSubscriptionsQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]*subscription.Subscription, error) {
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(subscription.ErrSubscriptionsNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "query")
 	}
 
 	subs, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[subscription.Subscription])
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errors.Wrap(subscription.ErrSubscriptionsNotFound, "query")
+		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
 	}
 

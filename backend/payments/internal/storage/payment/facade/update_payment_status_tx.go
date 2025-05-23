@@ -11,7 +11,7 @@ import (
 
 func (f *StorageFacadePayment) UpdatePaymentStatusTx(ctx context.Context, paymentID uuid.UUID, newStatus payment.PaymentStatus) error {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		pay, err := f.storage.GetPayment(ctxTx, payment2.GetPaymentOptions{
+		pay, err := f.paymentStorage.GetPayment(ctxTx, payment2.GetPaymentOptions{
 			PaymentID: paymentID,
 			ForUpdate: true,
 		})
@@ -21,7 +21,7 @@ func (f *StorageFacadePayment) UpdatePaymentStatusTx(ctx context.Context, paymen
 
 		pay.Status = newStatus
 
-		err = f.storage.UpdatePayment(ctx, pay)
+		err = f.paymentStorage.UpdatePayment(ctxTx, pay)
 		if err != nil {
 			return errors.Wrap(err, "storage.UpdatePayment")
 		}

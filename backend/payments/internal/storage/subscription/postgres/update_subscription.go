@@ -31,6 +31,7 @@ func (s *PgStorageSubscription) UpdateSubscription(ctx context.Context, sub *sub
 
 func buildUpdateSubscriptionQuery(sub *subscription.Subscription) (string, []any, error) {
 	query, args, err := sq.Update(subscriptionsTableName).
+		Set(statusColumn, sub.Status).
 		Set(startDateColumn, sub.StartDate).
 		Set(endDateColumn, sub.EndDate).
 		Where(sq.Eq{

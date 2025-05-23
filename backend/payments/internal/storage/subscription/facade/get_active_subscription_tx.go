@@ -2,7 +2,6 @@ package facade
 
 import (
 	"context"
-
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"
@@ -16,17 +15,20 @@ func (f *StorageFacadeSubscription) GetActiveSubscriptionTx(ctx context.Context,
 	var pays []*payment.Payment
 	var err error
 
-	// getting payment ids cuz result will be returned to user
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		sub, err = f.subscriptionStorage.GetSubscription(ctx, postgres2.GetSubscriptionOptions{
+		sub, err = f.subscriptionStorage.GetSubscription(ctxTx, postgres2.GetSubscriptionOptions{
 			UserID:             userID,
 			ActiveSubscription: true,
 		})
 		if err != nil {
+			if errors.Is(err, subscription.ErrSubscriptionNotFound) {
+				return subscription.ErrActiveSubscriptionDoesntExist
+			}
 			return errors.Wrap(err, "storage.GetSubscription")
 		}
 
-		pays, err = f.paymentStorage.GetPayments(ctx, postgres.GetPaymentsOptions{
+		// getting payment ids cuz result will be returned to user
+		pays, err = f.paymentStorage.GetPayments(ctxTx, postgres.GetPaymentsOptions{
 			SubscriptionID: sub.ID,
 		})
 		if err != nil {

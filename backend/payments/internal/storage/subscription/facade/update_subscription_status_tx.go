@@ -12,7 +12,7 @@ import (
 
 func (f *StorageFacadeSubscription) UpdateSubscriptionStatusTx(ctx context.Context, subscriptionID uuid.UUID, status subscription.SubscriptionStatus) error {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		sub, err := f.subscriptionStorage.GetSubscription(ctx, postgres.GetSubscriptionOptions{
+		sub, err := f.subscriptionStorage.GetSubscription(ctxTx, postgres.GetSubscriptionOptions{
 			SubscriptionID: subscriptionID,
 		})
 		if err != nil {
@@ -21,7 +21,7 @@ func (f *StorageFacadeSubscription) UpdateSubscriptionStatusTx(ctx context.Conte
 
 		sub.Status = status
 
-		err = f.subscriptionStorage.UpdateSubscription(ctx, sub)
+		err = f.subscriptionStorage.UpdateSubscription(ctxTx, sub)
 		if err != nil {
 			return errors.Wrap(err, "storage.UpdateSubscription")
 		}
