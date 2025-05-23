@@ -2,7 +2,8 @@ package facade
 
 import (
 	"context"
-	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/blocker/internal/storage/blocker/postgres"
 
 	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
 	"github.com/google/uuid"
@@ -16,23 +17,24 @@ func (f *StorageFacadeBlocker) GetUserBlockByIDTx(ctx context.Context, blockID u
 	)
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		userBlock, err = f.storage.GetUserBlockByID(ctxTx, blockID)
+		userBlock, err = f.storage.GetUserBlock(ctxTx, postgres.GetUserBlockOptions{
+			BlockID: blockID,
+		})
 		if err != nil {
-			return fmt.Errorf("failed to get user block: %w", err)
+			return errors.Wrap(err, "storage.GetUserBlock")
 		}
 
-		reasons, err = f.storage.GetUserBlockReasons(ctxTx, userBlock.ID)
+		reasons, err = f.storage.GetUserBlockReasons(ctxTx, postgres.GetUserBlockReasonsOptions{
+			BlockID: userBlock.ID,
+		})
 		if err != nil {
-			return fmt.Errorf("failed to get block reasons: %w", err)
+			return errors.Wrap(err, "storage.GetUserBlockReasons")
 		}
 
 		userBlock.Reasons = reasons
+
 		return nil
 	})
 
-	if err != nil {
-		return nil, fmt.Errorf("transaction failed: %w", err)
-	}
-
-	return userBlock, nil
+	return userBlock, err
 }

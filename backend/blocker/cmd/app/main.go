@@ -2,16 +2,15 @@ package main
 
 import (
 	"context"
-
-	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
-	"github.com/Doremi203/couply/backend/auth/pkg/token"
-	blockerservicegrpc "github.com/Doremi203/couply/backend/blocker/gen/api/blocker-service/v1"
-	"github.com/Doremi203/couply/backend/blocker/internal/storage/facade"
-	"github.com/Doremi203/couply/backend/blocker/internal/storage/postgres"
-	"github.com/Doremi203/couply/backend/blocker/internal/storage/postgres/blocker"
+	"github.com/Doremi203/couply/backend/blocker/internal/storage"
+	"github.com/Doremi203/couply/backend/blocker/internal/storage/blocker/facade"
+	postgres2 "github.com/Doremi203/couply/backend/blocker/internal/storage/blocker/postgres"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
+	blockerservicegrpc "github.com/Doremi203/couply/backend/blocker/gen/api/blocker-service/v1"
 	blocker_service "github.com/Doremi203/couply/backend/blocker/internal/app/blocker-service"
 	telegram_client "github.com/Doremi203/couply/backend/blocker/internal/client/telegram"
 	"github.com/Doremi203/couply/backend/blocker/internal/client/user"
@@ -65,8 +64,8 @@ func main() {
 			return errors.WrapFail(err, "create telegram bot")
 		}
 
-		txManager := postgres.NewTxManager(dbClient)
-		blockerStorage := blocker.NewPgStorageBlocker(txManager)
+		txManager := storage.NewTxManager(dbClient)
+		blockerStorage := postgres2.NewPgStorageBlocker(txManager)
 		blockerFacade := facade.NewStorageFacadeBlocker(txManager, blockerStorage)
 
 		blockUseCase := blocker_usecase.NewUseCase(
