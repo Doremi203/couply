@@ -16,8 +16,8 @@ func (f *StorageFacadeBlocker) ReportUserTx(ctx context.Context, block *blocker.
 			return errors.WrapFail(err, "add user block")
 		}
 
-		for _, reason := range block.GetReasons() {
-			if err = f.storage.AddUserBlockReason(ctxTx, block.GetID(), reason); err != nil {
+		for _, reason := range block.Reasons {
+			if err = f.storage.AddUserBlockReason(ctxTx, block.ID, reason); err != nil {
 				return errors.WrapFail(err, "add user block reason")
 			}
 		}

@@ -21,63 +21,21 @@ type GetBlockInfoV1Response struct {
 	CreatedAt     time.Time
 }
 
-func (x *GetBlockInfoV1Response) GetBlockID() uuid.UUID {
-	if x != nil {
-		return x.BlockID
-	}
-	return uuid.Nil
-}
-
-func (x *GetBlockInfoV1Response) GetBlockedUserID() uuid.UUID {
-	if x != nil {
-		return x.BlockedUserID
-	}
-	return uuid.Nil
-}
-
-func (x *GetBlockInfoV1Response) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
-func (x *GetBlockInfoV1Response) GetReportReasons() []blocker.ReportReason {
-	if x != nil {
-		return x.ReportReasons
-	}
-	return nil
-}
-
-func (x *GetBlockInfoV1Response) GetBlockStatus() blocker.BlockStatus {
-	if x != nil {
-		return x.BlockStatus
-	}
-	return blocker.BlockStatus(0)
-}
-
-func (x *GetBlockInfoV1Response) GetCreatedAt() time.Time {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return time.Time{}
-}
-
 func PBToGetBlockInfoRequest(_ *desc.GetBlockInfoV1Request) *GetBlockInfoV1Request {
 	return &GetBlockInfoV1Request{}
 }
 
 func GetBlockInfoResponseToPB(resp *GetBlockInfoV1Response) *desc.GetBlockInfoV1Response {
-	pbReasons := make([]desc.ReportReason, len(resp.GetReportReasons()))
-	for i, reason := range resp.GetReportReasons() {
+	pbReasons := make([]desc.ReportReason, len(resp.ReportReasons))
+	for i, reason := range resp.ReportReasons {
 		pbReasons[i] = blocker.ReportReasonToPB(reason)
 	}
 	return &desc.GetBlockInfoV1Response{
-		BlockId:       resp.GetBlockID().String(),
-		BlockedUserId: resp.GetBlockedUserID().String(),
-		Message:       resp.GetMessage(),
+		BlockId:       resp.BlockID.String(),
+		BlockedUserId: resp.BlockedUserID.String(),
+		Message:       resp.Message,
 		Reasons:       pbReasons,
-		Status:        blocker.BlockStatusToPB(resp.GetBlockStatus()),
-		CreatedAt:     timestamppb.New(resp.GetCreatedAt()),
+		Status:        blocker.BlockStatusToPB(resp.BlockStatus),
+		CreatedAt:     timestamppb.New(resp.CreatedAt),
 	}
 }

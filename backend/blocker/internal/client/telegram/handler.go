@@ -82,7 +82,7 @@ func (h *BotHandler) processBlockRequest(blockID string) (retErr CallbackResult)
 		return
 	}
 
-	userData, err := h.userClient.GetUserByIDV1(ctx, blockInfo.GetBlockedID().String())
+	userData, err := h.userClient.GetUserByIDV1(ctx, blockInfo.BlockedID.String())
 	if err != nil {
 		return h.errorResult(
 			err,
