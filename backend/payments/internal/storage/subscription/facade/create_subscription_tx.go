@@ -10,12 +10,11 @@ import (
 
 func (f *StorageFacadeSubscription) CreateSubscriptionTx(ctx context.Context, newSubscription *subscription.Subscription) error {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err := f.checkExistingSubscription(ctx, newSubscription)
-		if err != nil {
-			return errors.Wrap(err, "checkExistingSubscription")
+		if ok := f.subscriptionExists(ctxTx, newSubscription); ok {
+			return errors.Wrap(subscription.ErrAlreadyActiveSubscriptionExists, "checkExistingSubscription")
 		}
 
-		err = f.subscriptionStorage.CreateSubscription(ctx, newSubscription)
+		err := f.subscriptionStorage.CreateSubscription(ctxTx, newSubscription)
 		if err != nil {
 			return errors.Wrap(err, "storage.CreateSubscription")
 		}
@@ -26,17 +25,14 @@ func (f *StorageFacadeSubscription) CreateSubscriptionTx(ctx context.Context, ne
 	return err
 }
 
-func (f *StorageFacadeSubscription) checkExistingSubscription(ctx context.Context, newSubscription *subscription.Subscription) error {
+func (f *StorageFacadeSubscription) subscriptionExists(ctx context.Context, newSubscription *subscription.Subscription) bool {
 	_, err := f.subscriptionStorage.GetSubscription(ctx, postgres.GetSubscriptionOptions{
-		UserID:             newSubscription.UserID,
-		ActiveSubscription: true,
+		UserID:                      newSubscription.UserID,
+		ActiveOrPendingSubscription: true,
 	})
 	if err != nil {
-		if errors.Is(err, subscription.ErrSubscriptionNotFound) {
-			return errors.Wrap(err, "subscriptionStorage.GetSubscription")
-		}
-		return subscription.ErrAlreadyActiveSubscriptionExists
+		return false
 	}
 
-	return nil
+	return true
 }

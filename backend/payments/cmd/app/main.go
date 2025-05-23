@@ -62,7 +62,7 @@ func main() {
 		payRepo := postgres3.NewPgStoragePayment(txManager)
 
 		subFacade := subscription_facade.NewStorageFacadeSubscription(txManager, subRepo, payRepo)
-		payFacade := payment_facade.NewStorageFacadePayment(txManager, payRepo)
+		payFacade := payment_facade.NewStorageFacadePayment(txManager, payRepo, subRepo)
 
 		gateway := mock_gateway.NewMockGateway()
 

@@ -14,7 +14,7 @@ type subscriptionStorageFacade interface {
 
 type subscriptionStorageSetterFacade interface {
 	CreateSubscriptionTx(ctx context.Context, newSubscription *subscription.Subscription) error
-	UpdateSubscriptionStatusTx(ctx context.Context, subscriptionID uuid.UUID, status subscription.SubscriptionStatus) error
+	CancelSubscriptionTx(ctx context.Context, subscriptionID uuid.UUID) error
 }
 
 type subscriptionStorageGetterFacade interface {

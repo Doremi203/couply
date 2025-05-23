@@ -8,4 +8,7 @@ var (
 	ErrSubscriptionsNotFound = errors.Error("subscriptions not found")
 
 	ErrAlreadyActiveSubscriptionExists = errors.Error("already active subscription exists")
+	ErrSubscriptionIsNotActive         = errors.Error("subscription is not active")
+	ErrActiveSubscriptionDoesntExist   = errors.Error("active subscription does not exist")
+	ErrSubscriptionHasAlreadyBeenPaid  = errors.Error("subscription has already been paid")
 )

@@ -13,9 +13,10 @@ import (
 )
 
 type GetSubscriptionOptions struct {
-	SubscriptionID     uuid.UUID
-	UserID             uuid.UUID
-	ActiveSubscription bool
+	SubscriptionID              uuid.UUID
+	UserID                      uuid.UUID
+	ActiveSubscription          bool
+	ActiveOrPendingSubscription bool
 }
 
 func (s *PgStorageSubscription) GetSubscription(ctx context.Context, opts GetSubscriptionOptions) (*subscription.Subscription, error) {
@@ -41,6 +42,12 @@ func buildGetSubscriptionQuery(opts GetSubscriptionOptions) (string, []any, erro
 			userIDColumn: opts.UserID,
 			statusColumn: subscription.SubscriptionStatusActive,
 		})
+	} else if opts.ActiveOrPendingSubscription {
+		sb = sb.Where(sq.Eq{userIDColumn: opts.UserID}).
+			Where(sq.Or{
+				sq.Eq{statusColumn: subscription.SubscriptionStatusActive},
+				sq.Eq{statusColumn: subscription.SubscriptionStatusPendingPayment},
+			})
 	} else {
 		sb = sb.Where(sq.Eq{idColumn: opts.SubscriptionID})
 	}
@@ -51,14 +58,14 @@ func buildGetSubscriptionQuery(opts GetSubscriptionOptions) (string, []any, erro
 func executeGetSubscriptionQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) (*subscription.Subscription, error) {
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(subscription.ErrSubscriptionNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "query")
 	}
 
 	sub, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[subscription.Subscription])
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errors.Wrap(subscription.ErrSubscriptionNotFound, "query")
+		}
 		return nil, errors.Wrap(err, "pgx.CollectExactlyOneRow")
 	}
 

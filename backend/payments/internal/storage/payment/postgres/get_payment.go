@@ -46,14 +46,14 @@ func buildGetPaymentQuery(opts GetPaymentOptions) (string, []any, error) {
 func executeGetPaymentQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) (*payment.Payment, error) {
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(payment.ErrPaymentNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "query")
 	}
 
 	pay, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[payment.Payment])
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errors.Wrap(payment.ErrPaymentNotFound, "query")
+		}
 		return nil, errors.Wrap(err, "pgx.CollectExactlyOneRow")
 	}
 

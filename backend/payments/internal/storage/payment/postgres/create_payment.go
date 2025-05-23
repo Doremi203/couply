@@ -47,6 +47,12 @@ func executeCreatePaymentQuery(ctx context.Context, queryEngine storage.QueryEng
 				"exec",
 			)
 		}
+		if pgerrors.IsForeignKeyViolationError(err) {
+			return errors.Wrap(
+				payment.ErrSubscriptionDoesntExist,
+				"exec",
+			)
+		}
 		return errors.Wrap(err, "exec")
 	}
 	return nil

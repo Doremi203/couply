@@ -9,7 +9,7 @@ import (
 )
 
 func (f *StorageFacadePayment) GetPendingPaymentsTx(ctx context.Context) ([]*payment.Payment, error) {
-	pays, err := f.storage.GetPayments(ctx, payment2.GetPaymentsOptions{
+	pays, err := f.paymentStorage.GetPayments(ctx, payment2.GetPaymentsOptions{
 		PendingPayments: true,
 	})
 	if err != nil {
