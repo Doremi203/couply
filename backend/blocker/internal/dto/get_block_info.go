@@ -39,3 +39,14 @@ func GetBlockInfoResponseToPB(resp *GetBlockInfoV1Response) *desc.GetBlockInfoV1
 		CreatedAt:     timestamppb.New(resp.CreatedAt),
 	}
 }
+
+func UserBlockToGetBlockInfoResponse(block *blocker.UserBlock) *GetBlockInfoV1Response {
+	return &GetBlockInfoV1Response{
+		BlockID:       block.ID,
+		BlockedUserID: block.BlockedID,
+		Message:       block.Message,
+		ReportReasons: block.Reasons,
+		BlockStatus:   block.Status,
+		CreatedAt:     block.CreatedAt,
+	}
+}

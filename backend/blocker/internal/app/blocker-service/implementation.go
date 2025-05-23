@@ -3,7 +3,6 @@ package blocker_service
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	desc "github.com/Doremi203/couply/backend/blocker/gen/api/blocker-service/v1"
 	"github.com/Doremi203/couply/backend/blocker/internal/dto"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -18,16 +17,13 @@ type blockerServiceUseCase interface {
 type Implementation struct {
 	desc.UnimplementedBlockerServiceServer
 	usecase blockerServiceUseCase
-	logger  log.Logger
 }
 
 func NewImplementation(
 	usecase blockerServiceUseCase,
-	logger log.Logger,
 ) *Implementation {
 	return &Implementation{
 		usecase: usecase,
-		logger:  logger,
 	}
 }
 

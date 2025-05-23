@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	pgerrors "github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/blocker/internal/storage"
