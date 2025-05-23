@@ -1,6 +1,7 @@
 package subscription_service
 
 import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/subscription-service/v1"
 	"github.com/google/uuid"
 )
@@ -12,7 +13,7 @@ type CancelSubscriptionV1Request struct {
 func PBToCancelSubscriptionRequest(req *desc.CancelSubscriptionV1Request) (*CancelSubscriptionV1Request, error) {
 	subID, err := uuid.Parse(req.GetSubscriptionId())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "PBToCancelSubscriptionRequest")
 	}
 	return &CancelSubscriptionV1Request{
 		SubscriptionID: subID,

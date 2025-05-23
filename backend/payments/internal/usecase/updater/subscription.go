@@ -105,7 +105,7 @@ func (u *Updater) savePaymentAndUpdateSubscription(
 	payment *payment.Payment,
 	sub *subscription.Subscription,
 ) error {
-	if _, err := u.paymentStorageFacade.CreatePaymentTx(ctx, payment); err != nil {
+	if err := u.paymentStorageFacade.CreatePaymentTx(ctx, payment); err != nil {
 		return err
 	}
 

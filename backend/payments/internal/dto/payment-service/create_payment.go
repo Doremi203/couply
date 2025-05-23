@@ -20,7 +20,7 @@ type CreatePaymentV1Request struct {
 func PBToCreatePaymentRequest(req *desc.CreatePaymentV1Request) (*CreatePaymentV1Request, error) {
 	subID, err := uuid.Parse(req.GetSubscriptionId())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "PBToCreatePaymentRequest")
 	}
 	return &CreatePaymentV1Request{
 		SubscriptionID: subID,
