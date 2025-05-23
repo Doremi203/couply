@@ -1,8 +1,12 @@
 package dto
 
 import (
+	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	desc "github.com/Doremi203/couply/backend/blocker/gen/api/blocker-service/v1"
 	"github.com/Doremi203/couply/backend/blocker/internal/domain/blocker"
+	"github.com/google/uuid"
 )
 
 type ReportUserV1Request struct {
@@ -12,6 +16,26 @@ type ReportUserV1Request struct {
 }
 
 type ReportUserV1Response struct{}
+
+func ReportUserRequestToBlock(req *ReportUserV1Request) (*blocker.UserBlock, error) {
+	blockID, err := uuid.NewV7()
+	if err != nil {
+		return nil, errors.Wrap(err, "uuid.NewV7")
+	}
+
+	blockedID, err := uuid.Parse(req.TargetUserID)
+	if err != nil {
+		return nil, errors.Wrap(err, "uuid.Parse")
+	}
+	return &blocker.UserBlock{
+		ID:        blockID,
+		BlockedID: blockedID,
+		Message:   req.Message,
+		Reasons:   req.ReportReasons,
+		Status:    blocker.BlockStatusPending,
+		CreatedAt: time.Now(),
+	}, nil
+}
 
 func PBToReportUserRequest(req *desc.ReportUserV1Request) *ReportUserV1Request {
 	reportReasons := make([]blocker.ReportReason, len(req.Reasons))

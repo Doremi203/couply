@@ -4,6 +4,8 @@ import (
 	"context"
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+
 	userservicegrpc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 )
 
@@ -32,5 +34,9 @@ func (c *Client) UpdateUserByIDV1(ctx context.Context, user *userservicegrpc.Use
 		IsPremium:  user.GetIsPremium(),
 		IsBlocked:  user.GetIsBlocked(),
 	})
-	return err
+	if err != nil {
+		return errors.Wrap(err, "client.UpdateUserByIDV1")
+	}
+
+	return nil
 }

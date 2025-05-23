@@ -16,8 +16,7 @@ func (i *Implementation) GetBlockInfoV1(ctx context.Context, in *desc.GetBlockIn
 
 	response, err := i.usecase.GetBlockInfo(ctx, dto.PBToGetBlockInfoRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	return dto.GetBlockInfoResponseToPB(response), nil

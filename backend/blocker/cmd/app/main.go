@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/Doremi203/couply/backend/blocker/internal/storage"
 	"github.com/Doremi203/couply/backend/blocker/internal/storage/blocker/facade"
 	postgres2 "github.com/Doremi203/couply/backend/blocker/internal/storage/blocker/postgres"
@@ -46,14 +47,14 @@ func main() {
 			return err
 		}
 
-		var userServiceConfig struct {
+		var matcherConfig struct {
 			Address string `yaml:"address"`
 		}
-		if err := app.Config.ReadSection("user_service", &userServiceConfig); err != nil {
+		if err = app.Config.ReadSection("matcher", &matcherConfig); err != nil {
 			return errors.WrapFail(err, "read user service config")
 		}
 
-		userServiceClient, conn, err := user.NewClient(userServiceConfig.Address)
+		userServiceClient, conn, err := user.NewClient(matcherConfig.Address)
 		if err != nil {
 			return errors.WrapFail(err, "create user service client")
 		}
@@ -77,7 +78,6 @@ func main() {
 
 		blockService := blocker_service.NewImplementation(
 			blockUseCase,
-			app.Log,
 		)
 
 		app.AddGRPCUnaryInterceptor(
