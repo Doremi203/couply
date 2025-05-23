@@ -38,15 +38,15 @@ func ReportUserRequestToBlock(req *ReportUserV1Request) (*blocker.UserBlock, err
 }
 
 func PBToReportUserRequest(req *desc.ReportUserV1Request) *ReportUserV1Request {
-	reportReasons := make([]blocker.ReportReason, len(req.Reasons))
-	for i, reason := range req.Reasons {
+	reportReasons := make([]blocker.ReportReason, len(req.GetReasons()))
+	for i, reason := range req.GetReasons() {
 		reportReasons[i] = blocker.ReportReason(reason)
 	}
 
 	return &ReportUserV1Request{
-		TargetUserID:  req.TargetUserId,
+		TargetUserID:  req.GetTargetUserId(),
 		ReportReasons: reportReasons,
-		Message:       req.Message,
+		Message:       req.GetMessage(),
 	}
 }
 
