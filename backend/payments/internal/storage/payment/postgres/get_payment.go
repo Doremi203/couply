@@ -12,10 +12,6 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-var (
-	errPaymentNotFound = errors.Error("payment not found")
-)
-
 type GetPaymentOptions struct {
 	PaymentID uuid.UUID
 	ForUpdate bool
@@ -51,7 +47,7 @@ func executeGetPaymentQuery(ctx context.Context, queryEngine storage.QueryEngine
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(errPaymentNotFound, "query")
+			return nil, errors.Wrap(payment.ErrPaymentNotFound, "query")
 		}
 		return nil, errors.Wrap(err, "query")
 	}

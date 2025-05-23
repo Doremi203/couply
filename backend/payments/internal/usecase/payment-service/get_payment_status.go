@@ -11,7 +11,7 @@ import (
 func (c *UseCase) GetPaymentStatus(ctx context.Context, in *dto.GetPaymentStatusV1Request) (*dto.GetPaymentStatusV1Response, error) {
 	payment, err := c.paymentStorageFacade.GetPaymentByIDTx(ctx, in.PaymentID)
 	if err != nil {
-		return nil, errors.Wrap(err, "GetPaymentStatus")
+		return nil, errors.Wrap(err, "paymentStorageFacade.GetPaymentByIDTx")
 	}
 
 	return dto.PaymentToGetPaymentStatusResponse(payment), nil

@@ -12,10 +12,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-var (
-	errSubscriptionsNotFound = errors.Error("subscriptions not found")
-)
-
 type GetSubscriptionsOptions struct {
 	SubscriptionStatus subscription.SubscriptionStatus
 }
@@ -49,7 +45,7 @@ func executeGetSubscriptionsQuery(ctx context.Context, queryEngine storage.Query
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(errSubscriptionsNotFound, "query")
+			return nil, errors.Wrap(subscription.ErrSubscriptionsNotFound, "query")
 		}
 		return nil, errors.Wrap(err, "query")
 	}

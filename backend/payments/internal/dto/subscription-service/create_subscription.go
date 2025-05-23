@@ -26,7 +26,7 @@ func PBToCreateSubscriptionRequest(req *desc.CreateSubscriptionV1Request) *Creat
 func CreateSubscriptionRequestToSubscription(req *CreateSubscriptionV1Request, userID uuid.UUID) (*subscription.Subscription, error) {
 	subID, err := uuid.NewV7()
 	if err != nil {
-		return nil, errors.Wrap(err, "CreateSubscriptionRequestToSubscription")
+		return nil, errors.Wrap(err, "uuid.NewV7")
 	}
 
 	now := time.Now()

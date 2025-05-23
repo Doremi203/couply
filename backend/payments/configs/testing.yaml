@@ -19,5 +19,5 @@ secrets:
     db: e6qoug3fau0c6bhsj20i
     token: e6qo9u8d7n70ciqo8omk
 
-user_service:
+matcher:
   address: "matcher.testing.couply.ru:5051"

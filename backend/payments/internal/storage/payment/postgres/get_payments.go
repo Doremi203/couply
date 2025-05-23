@@ -13,10 +13,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-var (
-	errPaymentsNotFound = errors.Error("payments not found")
-)
-
 type GetPaymentsOptions struct {
 	PendingPayments bool
 	SubscriptionID  uuid.UUID
@@ -53,7 +49,7 @@ func executeGetPaymentsQuery(ctx context.Context, queryEngine storage.QueryEngin
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(errPaymentsNotFound, "query")
+			return nil, errors.Wrap(payment.ErrPaymentsNotFound, "query")
 		}
 		return nil, errors.Wrap(err, "query")
 	}

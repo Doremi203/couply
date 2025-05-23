@@ -11,10 +11,6 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-var (
-	errDuplicatePayment = errors.Error("payment already exists")
-)
-
 func (s *PgStoragePayment) CreatePayment(ctx context.Context, payment *payment.Payment) error {
 	query, args, err := buildCreatePaymentQuery(payment)
 	if err != nil {
@@ -47,7 +43,7 @@ func executeCreatePaymentQuery(ctx context.Context, queryEngine storage.QueryEng
 	if err != nil {
 		if pgerrors.IsUniqueViolationError(err) {
 			return errors.Wrap(
-				errDuplicatePayment,
+				payment.ErrDuplicatePayment,
 				"exec",
 			)
 		}

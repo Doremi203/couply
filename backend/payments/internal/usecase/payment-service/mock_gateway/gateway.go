@@ -22,7 +22,7 @@ func NewMockGateway() *MockGateway {
 func (g *MockGateway) CreatePayment(_ context.Context, _ int64, _ string) (string, error) {
 	id, err := uuid.NewV7()
 	if err != nil {
-		return "", errors.Wrap(err, "MockGateway.CreatePayment")
+		return "", errors.Wrap(err, "uuid.NewV7")
 	}
 	return id.String(), nil
 }
@@ -30,7 +30,7 @@ func (g *MockGateway) CreatePayment(_ context.Context, _ int64, _ string) (strin
 func (g *MockGateway) GetPaymentStatus(_ context.Context, gatewayID string) (payment.PaymentStatus, error) {
 	parsedGatewayID, err := uuid.Parse(gatewayID)
 	if err != nil {
-		return 0, errors.Wrap(err, "MockGateway.GetPaymentStatus")
+		return 0, errors.Wrap(err, "uuid.Parse")
 	}
 
 	createdAt := extractTimeFromUUIDv7(parsedGatewayID)
