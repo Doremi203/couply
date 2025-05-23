@@ -11,22 +11,19 @@ func (f *StorageFacadeBlocker) ReportUserTx(ctx context.Context, block *blocker.
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		err = f.storage.AddUserBlock(ctxTx, block)
+		err = f.storage.CreateUserBlock(ctxTx, block)
 		if err != nil {
-			return errors.WrapFail(err, "add user block")
+			return errors.Wrap(err, "storage.CreateUserBlock")
 		}
 
 		for _, reason := range block.Reasons {
-			if err = f.storage.AddUserBlockReason(ctxTx, block.ID, reason); err != nil {
-				return errors.WrapFail(err, "add user block reason")
+			if err = f.storage.CreateUserBlockReason(ctxTx, block.ID, reason); err != nil {
+				return errors.Wrap(err, "storage.CreateUserBlockReason")
 			}
 		}
+
 		return nil
 	})
 
-	if err != nil {
-		return errors.WrapFail(err, "report user transaction")
-	}
-
-	return nil
+	return err
 }
