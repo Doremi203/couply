@@ -46,7 +46,7 @@ const VkOneTapButton: React.FC<VkOneTapButtonProps> = ({
     if (!containerRef.current) return;
 
     const codeVerifier = generateCodeVerifier();
-    sessionStorage.getItem('vk_code_verifier');
+    sessionStorage.setItem('vk_code_verifier', codeVerifier);
 
     VKID.Config.update({ codeVerifier: codeVerifier });
 
