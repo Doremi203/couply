@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react';
-import {defineConfig} from 'vite';
-import {ManifestOptions, VitePWA} from 'vite-plugin-pwa';
+import { defineConfig } from 'vite';
+import { ManifestOptions, VitePWA } from 'vite-plugin-pwa';
 
 // manifest поменять pwa manifest generator
 const manifest: false | Partial<ManifestOptions> | undefined = {
