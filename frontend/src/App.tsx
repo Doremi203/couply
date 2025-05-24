@@ -1,3 +1,4 @@
+import { Config, ConfigResponseMode } from '@vkid/sdk';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { EnterPhonePage } from './pages/EnterPhonePage';
 import { HomePage } from './pages/HomePage';
 import { LikesPage } from './pages/LikesPage';
 import LoginPage from './pages/LoginPage';
+import OAuthCallback from './pages/OAuthCallback/OAuthCallback.tsx';
 import { PremiumPage } from './pages/PremiumPage';
 import { ProfilePage } from './pages/ProfilePage';
 import RegistrationPage from './pages/RegistrationPage';
@@ -60,6 +62,10 @@ const router = createBrowserRouter([
   {
     path: 'premium',
     element: <PremiumPage key="premium-page" />,
+  },
+  {
+    path: '/oauth-callback',
+    element: <OAuthCallback />,
   },
   {
     path: '*',
@@ -151,6 +157,15 @@ function App() {
           // in GeoLocationRequest component
         });
     }
+  }, []);
+
+  useEffect(() => {
+    Config.init({
+      app: 53582290,
+      redirectUrl: 'https://testing.couply.ru',
+      scope: 'email',
+      responseMode: ConfigResponseMode.Callback,
+    });
   }, []);
 
   return (

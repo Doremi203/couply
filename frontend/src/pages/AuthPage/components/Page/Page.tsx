@@ -1,6 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 
 import { ButtonWithIcon } from '../../../../shared/components/ButtonWithIcon';
+import VkOneTapButton, {
+  OAuthLoginV1Response,
+} from '../../../../shared/components/VKIDButton/VkOneTapButton.tsx';
+import {
+  generateCodeChallenge,
+  generateCodeVerifier,
+  generateDeviceId,
+  generateState,
+} from '../../../../shared/lib/services/OAuthService.ts';
 
 import styles from './authPage.module.css';
 
@@ -11,9 +20,57 @@ export const AuthPage = () => {
     navigate('/login');
   };
 
-  const onYandex = () => {
-    window.location.href =
-      'https://oauth.yandex.ru/authorize?response_type=code&client_id=1d2e86281ff2444fa0d11e63b09afae0&redirect_uri=https://auth.testing.couply.ru/v1/login/oauth/yandex&force_confirm=yes';
+  const onYandexClick = async () => {
+    try {
+      const codeVerifier = generateCodeVerifier();
+      sessionStorage.setItem('oauth_code_verifier', codeVerifier);
+      const state = generateState();
+      sessionStorage.setItem('oauth_state', state);
+      const deviceId = generateDeviceId();
+      sessionStorage.setItem('device_id', deviceId);
+      const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+      const params = new URLSearchParams({
+        response_type: 'code',
+        client_id: '1d2e86281ff2444fa0d11e63b09afae0',
+        redirect_uri: 'https://testing.couply.ru/oauth-callback',
+        device_id: deviceId,
+        state: state,
+        code_challenge: codeChallenge,
+        code_challenge_method: 'S256',
+        force_confirm: 'yes',
+      });
+
+      window.location.href = `https://oauth.yandex.ru/authorize?${params.toString()}`;
+    } catch (err) {
+      console.error('Yandex OAuth error:', err);
+    }
+  };
+
+  const handleVKIDError = (error: any) => {
+    console.error('VK ID login error:', error);
+    // Handle errors appropriately
+  };
+
+  const handleOAuthSuccess = (result: OAuthLoginV1Response) => {
+    console.log('OAuth login success:', result);
+
+    // Store the token in localStorage or sessionStorage
+    localStorage.setItem('token', result.accessToken.token);
+    localStorage.setItem('refreshToken', result.refreshToken.token);
+    if (result.firstLogin) {
+      navigate('/enterInfo');
+    } else {
+      navigate('/home');
+    }
+  };
+
+  const handleVKIDAuthError = (error: Error) => {
+    console.error('VK ID authentication error:', error);
+
+    // You can show an error notification to the user
+    // For example, if you have a notification system
+    // showNotification({ type: 'error', message: 'Failed to authenticate with VK ID. Please try again.' });
   };
 
   return (
@@ -22,13 +79,6 @@ export const AuthPage = () => {
       <span className={styles.text}>Найди того, кто будет похож на тебя, как капля воды.</span>
 
       <div className={styles.buttons}>
-        {/* <ButtonWithIcon
-          onClick={onLogin}
-          icon={<img src="vk.png" width="20px" height="20px" alt="VK" />}
-          text="Войти с VK ID"
-          iconClassName={styles.vkIcon}
-        /> */}
-
         <ButtonWithIcon
           onClick={onLogin}
           icon={<img src="email2.png" width="26px" height="26px" alt="email" />}
@@ -36,10 +86,16 @@ export const AuthPage = () => {
         />
 
         <ButtonWithIcon
-          onClick={onYandex}
+          onClick={onYandexClick}
           icon={<img src="yandex.png" width="26px" height="26px" alt="email" />}
           text="Войти c Яндекс ID"
           className={styles.yandex}
+        />
+
+        <VkOneTapButton
+          onError={handleVKIDError}
+          onSuccess={handleOAuthSuccess}
+          onAuthError={handleVKIDAuthError}
         />
       </div>
     </div>

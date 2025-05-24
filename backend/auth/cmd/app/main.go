@@ -74,6 +74,12 @@ func main() {
 			return err
 		}
 
+		vkOAuthConfig := oauth.VKConfig{}
+		err = app.Config.ReadSection("oauth-vk", &vkOAuthConfig)
+		if err != nil {
+			return err
+		}
+
 		dbClient, err := postgres.NewClient(ctx, dbConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create postgres client")
@@ -89,7 +95,7 @@ func main() {
 			argon.V2Provider{},
 		)
 
-		providerFactory := oauth.NewProviderFactory(yandexOAuthConfig)
+		providerFactory := oauth.NewProviderFactory(yandexOAuthConfig, vkOAuthConfig)
 		timeProvider := timeprovider.ProviderFunc(time.Now)
 
 		tokenIssuer, err := token.NewJWTIssuer(jwtTokenConfig, tokenRepo, timeProvider)
