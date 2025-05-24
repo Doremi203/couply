@@ -31,148 +31,8 @@ type CreateUserV1Request struct {
 	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
-func (x *CreateUserV1Request) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *CreateUserV1Request) GetAge() int32 {
-	if x != nil {
-		return x.Age
-	}
-	return 0
-}
-
-func (x *CreateUserV1Request) GetGender() user.Gender {
-	if x != nil {
-		return x.Gender
-	}
-	return user.Gender(0)
-}
-
-func (x *CreateUserV1Request) GetLatitude() float64 {
-	if x != nil {
-		return x.Latitude
-	}
-	return 0
-}
-
-func (x *CreateUserV1Request) GetLongitude() float64 {
-	if x != nil {
-		return x.Longitude
-	}
-	return 0
-}
-
-func (x *CreateUserV1Request) GetBio() string {
-	if x != nil {
-		return x.Bio
-	}
-	return ""
-}
-
-func (x *CreateUserV1Request) GetGoal() common.Goal {
-	if x != nil {
-		return x.Goal
-	}
-	return common.Goal(0)
-}
-
-func (x *CreateUserV1Request) GetInterest() *interest.Interest {
-	if x != nil {
-		return x.Interest
-	}
-	return nil
-}
-
-func (x *CreateUserV1Request) GetZodiac() common.Zodiac {
-	if x != nil {
-		return x.Zodiac
-	}
-	return common.Zodiac(0)
-}
-
-func (x *CreateUserV1Request) GetHeight() int32 {
-	if x != nil {
-		return x.Height
-	}
-	return 0
-}
-
-func (x *CreateUserV1Request) GetEducation() common.Education {
-	if x != nil {
-		return x.Education
-	}
-	return common.Education(0)
-}
-
-func (x *CreateUserV1Request) GetChildren() common.Children {
-	if x != nil {
-		return x.Children
-	}
-	return common.Children(0)
-}
-
-func (x *CreateUserV1Request) GetAlcohol() common.Alcohol {
-	if x != nil {
-		return x.Alcohol
-	}
-	return common.Alcohol(0)
-}
-
-func (x *CreateUserV1Request) GetSmoking() common.Smoking {
-	if x != nil {
-		return x.Smoking
-	}
-	return common.Smoking(0)
-}
-
-func (x *CreateUserV1Request) GetIsHidden() bool {
-	if x != nil {
-		return x.IsHidden
-	}
-	return false
-}
-
-func (x *CreateUserV1Request) GetIsVerified() bool {
-	if x != nil {
-		return x.IsVerified
-	}
-	return false
-}
-
-func (x *CreateUserV1Request) GetIsPremium() bool {
-	if x != nil {
-		return x.IsPremium
-	}
-	return false
-}
-
-func (x *CreateUserV1Request) GetIsBlocked() bool {
-	if x != nil {
-		return x.IsBlocked
-	}
-	return false
-}
-
-func (x *CreateUserV1Request) GetPhotoUploadRequests() []user.PhotoUploadRequest {
-	if x != nil {
-		return x.PhotoUploadRequests
-	}
-	return nil
-}
-
 type CreateUserV1Response struct {
 	User *user.User
-}
-
-func (x *CreateUserV1Response) GetUser() *user.User {
-	if x != nil {
-		return x.User
-	}
-	return nil
 }
 
 func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
@@ -206,14 +66,14 @@ func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 
 func CreateUserResponseToPB(resp *CreateUserV1Response) *desc.CreateUserV1Response {
 	return &desc.CreateUserV1Response{
-		User: user.UserToPB(resp.GetUser()),
-		PhotoUploadResponses: slices.Map(resp.GetUser().GetPhotos(), func(from user.Photo) *desc.PhotoUploadResponse {
+		User: user.UserToPB(resp.User),
+		PhotoUploadResponses: slices.Map(resp.User.Photos, func(from user.Photo) *desc.PhotoUploadResponse {
 			var uploadURL string
 			if from.UploadURL != nil {
 				uploadURL = *from.UploadURL
 			}
 			return &desc.PhotoUploadResponse{
-				OrderNumber: from.GetOrderNumber(),
+				OrderNumber: from.OrderNumber,
 				UploadUrl:   uploadURL,
 			}
 		}),

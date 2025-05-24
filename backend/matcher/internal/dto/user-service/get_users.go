@@ -12,22 +12,8 @@ type GetUsersV1Request struct {
 	UserIDs []uuid.UUID
 }
 
-func (x *GetUsersV1Request) GetUserIDs() []uuid.UUID {
-	if x != nil {
-		return x.UserIDs
-	}
-	return nil
-}
-
 type GetUsersV1Response struct {
 	Users []*user.User
-}
-
-func (x *GetUsersV1Response) GetUsers() []*user.User {
-	if x != nil {
-		return x.Users
-	}
-	return nil
 }
 
 func PBToGetUsersRequest(req *desc.GetUsersV1Request) (*GetUsersV1Request, error) {
@@ -46,8 +32,8 @@ func PBToGetUsersRequest(req *desc.GetUsersV1Request) (*GetUsersV1Request, error
 }
 
 func GetUsersResponseToPB(resp *GetUsersV1Response) *desc.GetUsersV1Response {
-	pbUsers := make([]*desc.User, 0, len(resp.GetUsers()))
-	for _, domainUser := range resp.GetUsers() {
+	pbUsers := make([]*desc.User, 0, len(resp.Users))
+	for _, domainUser := range resp.Users {
 		pbUsers = append(pbUsers, user.UserToPB(domainUser))
 	}
 

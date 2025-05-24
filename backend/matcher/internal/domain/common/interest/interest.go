@@ -2,6 +2,24 @@ package interest
 
 import desc "github.com/Doremi203/couply/backend/matcher/gen/api/common/v1"
 
+const (
+	GoalDBName      = "goal"
+	ZodiacDBName    = "zodiac"
+	EducationDBName = "education"
+	ChildrenDBName  = "children"
+	AlcoholDBName   = "alcohol"
+	SmokingDBName   = "smoking"
+
+	SportDBName             = "sport"
+	SelfDevelopmentDBName   = "self_development"
+	HobbyDBName             = "hobby"
+	MusicDBName             = "music"
+	MoviesTVDBName          = "movies_tv"
+	FoodDrinkDBName         = "food_drink"
+	PersonalityTraitsDBName = "personality_traits"
+	PetsDBName              = "pets"
+)
+
 type Interest struct {
 	Sport             []Sport
 	SelfDevelopment   []SelfDevelopment
@@ -12,17 +30,6 @@ type Interest struct {
 	PersonalityTraits []PersonalityTraits
 	Pets              []Pets
 }
-
-var (
-	SportDBName             = "sport"
-	SelfDevelopmentDBName   = "self_development"
-	HobbyDBName             = "hobby"
-	MusicDBName             = "music"
-	MoviesTVDBName          = "movies_tv"
-	FoodDrinkDBName         = "food_drink"
-	PersonalityTraitsDBName = "personality_traits"
-	PetsDBName              = "pets"
-)
 
 func NewInterest() *Interest {
 	return &Interest{
@@ -35,62 +42,6 @@ func NewInterest() *Interest {
 		PersonalityTraits: make([]PersonalityTraits, 0),
 		Pets:              make([]Pets, 0),
 	}
-}
-
-func (x *Interest) GetSport() []Sport {
-	if x != nil {
-		return x.Sport
-	}
-	return nil
-}
-
-func (x *Interest) GetSelfDevelopment() []SelfDevelopment {
-	if x != nil {
-		return x.SelfDevelopment
-	}
-	return nil
-}
-
-func (x *Interest) GetHobby() []Hobby {
-	if x != nil {
-		return x.Hobby
-	}
-	return nil
-}
-
-func (x *Interest) GetMusic() []Music {
-	if x != nil {
-		return x.Music
-	}
-	return nil
-}
-
-func (x *Interest) GetMoviesTV() []MoviesTV {
-	if x != nil {
-		return x.MoviesTV
-	}
-	return nil
-}
-
-func (x *Interest) GetFoodDrink() []FoodDrink {
-	if x != nil {
-		return x.FoodDrink
-	}
-	return nil
-}
-
-func (x *Interest) GetPersonalityTraits() []PersonalityTraits {
-	if x != nil {
-		return x.PersonalityTraits
-	}
-	return nil
-}
-
-func (x *Interest) GetPets() []Pets {
-	if x != nil {
-		return x.Pets
-	}
-	return nil
 }
 
 func InterestToPB(interest *Interest) *desc.Interest {

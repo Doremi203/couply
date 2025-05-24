@@ -4,8 +4,6 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
-
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -47,7 +45,7 @@ func scanUsers(rows pgx.Rows) ([]*user.User, map[uuid.UUID]float64, error) {
 			return nil, nil, errors.WrapFail(err, "scan rows")
 		}
 		users = append(users, user)
-		distances[user.GetID()] = dist / 1000
+		distances[user.ID] = dist / 1000
 	}
 
 	if err := rows.Err(); err != nil {
@@ -122,26 +120,26 @@ func baseConditions(filter *search.Filter) sq.Sqlizer {
 	return sq.And{
 		sq.Eq{"is_hidden": false},
 		sq.Eq{"is_blocked": false},
-		sq.NotEq{"id": filter.GetUserID()},
-		sq.Expr("NOT EXISTS (SELECT 1 FROM user_views WHERE viewer_id = ? AND viewed_id = u.id)", filter.GetUserID()),
+		sq.NotEq{"id": filter.UserID},
+		sq.Expr("NOT EXISTS (SELECT 1 FROM user_views WHERE viewer_id = ? AND viewed_id = u.id)", filter.UserID),
 	}
 }
 
 func applyMainFilters(qb sq.SelectBuilder, filter *search.Filter) sq.SelectBuilder {
-	qb = applyRangeFilter(qb, "age", filter.GetMinAge(), filter.GetMaxAge())
-	qb = applyRangeFilter(qb, "height", filter.GetMinHeight(), filter.GetMaxHeight())
+	qb = applyRangeFilter(qb, "age", filter.MinAge, filter.MaxAge)
+	qb = applyRangeFilter(qb, "height", filter.MinHeight, filter.MaxHeight)
 
-	if filter.GetGenderPriority() != 0 && filter.GetGenderPriority() != 3 { // 3 - ANY
-		qb = qb.Where(sq.Eq{"gender": int(filter.GetGenderPriority())})
+	if filter.GenderPriority != 0 && filter.GenderPriority != 3 { // 3 - ANY
+		qb = qb.Where(sq.Eq{"gender": int(filter.GenderPriority)})
 	}
 
 	filters := map[string]int{
-		common.GoalDBName:      int(filter.GetGoal()),
-		common.ZodiacDBName:    int(filter.GetZodiac()),
-		common.EducationDBName: int(filter.GetEducation()),
-		common.ChildrenDBName:  int(filter.GetChildren()),
-		common.AlcoholDBName:   int(filter.GetAlcohol()),
-		common.SmokingDBName:   int(filter.GetSmoking()),
+		interest.GoalDBName:      int(filter.Goal),
+		interest.ZodiacDBName:    int(filter.Zodiac),
+		interest.EducationDBName: int(filter.Education),
+		interest.ChildrenDBName:  int(filter.Children),
+		interest.AlcoholDBName:   int(filter.Alcohol),
+		interest.SmokingDBName:   int(filter.Smoking),
 	}
 
 	for field, value := range filters {
@@ -161,11 +159,11 @@ func applyDistanceFilter(
 	distanceExpr := "earth_distance(ll_to_earth(?, ?), ll_to_earth(u.latitude, u.longitude))"
 	qb = qb.Column(distanceExpr+" AS distance", curLatitude, curLongitude)
 
-	if filter.GetMinDistanceKM() > 0 {
-		qb = qb.Where(sq.Expr(distanceExpr+" >= ?", curLatitude, curLongitude, float64(filter.GetMinDistanceKM())*1000))
+	if filter.MinDistanceKM > 0 {
+		qb = qb.Where(sq.Expr(distanceExpr+" >= ?", curLatitude, curLongitude, float64(filter.MinDistanceKM)*1000))
 	}
-	if filter.GetMaxDistanceKM() > 0 {
-		qb = qb.Where(sq.Expr(distanceExpr+" <= ?", curLatitude, curLongitude, float64(filter.GetMaxDistanceKM())*1000))
+	if filter.MaxDistanceKM > 0 {
+		qb = qb.Where(sq.Expr(distanceExpr+" <= ?", curLatitude, curLongitude, float64(filter.MaxDistanceKM)*1000))
 	}
 
 	return qb.OrderBy("distance ASC")
@@ -207,14 +205,14 @@ func extractInterestPairs(interests *interest.Interest) []struct {
 	Value int
 } {
 	interestGroups := map[string][]int{
-		interest.SportDBName:             convertSlice(interests.GetSport()),
-		interest.SelfDevelopmentDBName:   convertSlice(interests.GetSelfDevelopment()),
-		interest.HobbyDBName:             convertSlice(interests.GetHobby()),
-		interest.MusicDBName:             convertSlice(interests.GetMusic()),
-		interest.MoviesTVDBName:          convertSlice(interests.GetMoviesTV()),
-		interest.FoodDrinkDBName:         convertSlice(interests.GetFoodDrink()),
-		interest.PersonalityTraitsDBName: convertSlice(interests.GetPersonalityTraits()),
-		interest.PetsDBName:              convertSlice(interests.GetPets()),
+		interest.SportDBName:             convertSlice(interests.Sport),
+		interest.SelfDevelopmentDBName:   convertSlice(interests.SelfDevelopment),
+		interest.HobbyDBName:             convertSlice(interests.Hobby),
+		interest.MusicDBName:             convertSlice(interests.Music),
+		interest.MoviesTVDBName:          convertSlice(interests.MoviesTV),
+		interest.FoodDrinkDBName:         convertSlice(interests.FoodDrink),
+		interest.PersonalityTraitsDBName: convertSlice(interests.PersonalityTraits),
+		interest.PetsDBName:              convertSlice(interests.Pets),
 	}
 
 	var pairs []struct {

@@ -13,14 +13,14 @@ import (
 
 func (s *PgStorageSearch) AddFilterInterests(ctx context.Context, userID uuid.UUID, filterInterests *interest.Interest) error {
 	interestGroups := map[string][]int{
-		interest.SportDBName:             convertSlice(filterInterests.GetSport()),
-		interest.SelfDevelopmentDBName:   convertSlice(filterInterests.GetSelfDevelopment()),
-		interest.HobbyDBName:             convertSlice(filterInterests.GetHobby()),
-		interest.MusicDBName:             convertSlice(filterInterests.GetMusic()),
-		interest.MoviesTVDBName:          convertSlice(filterInterests.GetMoviesTV()),
-		interest.FoodDrinkDBName:         convertSlice(filterInterests.GetFoodDrink()),
-		interest.PersonalityTraitsDBName: convertSlice(filterInterests.GetPersonalityTraits()),
-		interest.PetsDBName:              convertSlice(filterInterests.GetPets()),
+		interest.SportDBName:             convertSlice(filterInterests.Sport),
+		interest.SelfDevelopmentDBName:   convertSlice(filterInterests.SelfDevelopment),
+		interest.HobbyDBName:             convertSlice(filterInterests.Hobby),
+		interest.MusicDBName:             convertSlice(filterInterests.Music),
+		interest.MoviesTVDBName:          convertSlice(filterInterests.MoviesTV),
+		interest.FoodDrinkDBName:         convertSlice(filterInterests.FoodDrink),
+		interest.PersonalityTraitsDBName: convertSlice(filterInterests.PersonalityTraits),
+		interest.PetsDBName:              convertSlice(filterInterests.Pets),
 	}
 
 	for interestType, values := range interestGroups {

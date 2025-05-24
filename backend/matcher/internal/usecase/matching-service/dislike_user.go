@@ -15,7 +15,7 @@ func (c *UseCase) DislikeUser(ctx context.Context, in *dto.DislikeUserV1Request)
 	}
 
 	// не важно какое сообщение, оно не обновляется
-	updatedLike := matching.NewLike(in.GetTargetUserID(), userID, "", matching.StatusDeclined)
+	updatedLike := matching.NewLike(in.TargetUserID, userID, "", matching.StatusDeclined)
 
 	_, err = c.matchingStorageFacade.UpdateLikeTx(ctx, updatedLike)
 	if err != nil {

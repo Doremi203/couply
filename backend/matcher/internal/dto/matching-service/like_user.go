@@ -13,37 +13,9 @@ type LikeUserV1Request struct {
 	Message      string
 }
 
-func (x *LikeUserV1Request) GetTargetUserId() uuid.UUID {
-	if x != nil {
-		return x.TargetUserId
-	}
-	return uuid.Nil
-}
-
-func (x *LikeUserV1Request) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
 type LikeUserV1Response struct {
 	IsMatch bool
 	Match   *matching.Match
-}
-
-func (x *LikeUserV1Response) GetIsMatch() bool {
-	if x != nil {
-		return x.IsMatch
-	}
-	return false
-}
-
-func (x *LikeUserV1Response) GetMatch() *matching.Match {
-	if x != nil {
-		return x.Match
-	}
-	return nil
 }
 
 func PBToLikeUserRequest(req *desc.LikeUserV1Request) (*LikeUserV1Request, error) {
@@ -60,7 +32,7 @@ func PBToLikeUserRequest(req *desc.LikeUserV1Request) (*LikeUserV1Request, error
 
 func LikeUserResponseToPB(resp *LikeUserV1Response) *desc.LikeUserV1Response {
 	return &desc.LikeUserV1Response{
-		IsMatch: resp.GetIsMatch(),
-		Match:   matching.MatchToPB(resp.GetMatch()),
+		IsMatch: resp.IsMatch,
+		Match:   matching.MatchToPB(resp.Match),
 	}
 }

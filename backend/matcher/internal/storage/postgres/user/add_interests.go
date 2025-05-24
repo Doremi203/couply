@@ -15,14 +15,14 @@ import (
 
 func (s *PgStorageUser) AddInterests(ctx context.Context, userID uuid.UUID, interests *interest.Interest) error {
 	interestGroups := map[string][]int{
-		interest.SportDBName:             convertSlice(interests.GetSport()),
-		interest.SelfDevelopmentDBName:   convertSlice(interests.GetSelfDevelopment()),
-		interest.HobbyDBName:             convertSlice(interests.GetHobby()),
-		interest.MusicDBName:             convertSlice(interests.GetMusic()),
-		interest.MoviesTVDBName:          convertSlice(interests.GetMoviesTV()),
-		interest.FoodDrinkDBName:         convertSlice(interests.GetFoodDrink()),
-		interest.PersonalityTraitsDBName: convertSlice(interests.GetPersonalityTraits()),
-		interest.PetsDBName:              convertSlice(interests.GetPets()),
+		interest.SportDBName:             convertSlice(interests.Sport),
+		interest.SelfDevelopmentDBName:   convertSlice(interests.SelfDevelopment),
+		interest.HobbyDBName:             convertSlice(interests.Hobby),
+		interest.MusicDBName:             convertSlice(interests.Music),
+		interest.MoviesTVDBName:          convertSlice(interests.MoviesTV),
+		interest.FoodDrinkDBName:         convertSlice(interests.FoodDrink),
+		interest.PersonalityTraitsDBName: convertSlice(interests.PersonalityTraits),
+		interest.PetsDBName:              convertSlice(interests.Pets),
 	}
 
 	for interestType, values := range interestGroups {

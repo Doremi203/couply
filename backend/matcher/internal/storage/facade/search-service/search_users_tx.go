@@ -32,13 +32,13 @@ func (f *StorageFacadeSearch) SearchUsersTx(ctx context.Context, userID uuid.UUI
 			return fmt.Errorf("SearchUsersTx: get user failed: %w", err)
 		}
 
-		users, distances, err = f.searchStorage.SearchUsers(ctx, fil, filI, curUser.GetLatitude(), curUser.GetLongitude(), page, limit)
+		users, distances, err = f.searchStorage.SearchUsers(ctx, fil, filI, curUser.Latitude, curUser.Longitude, page, limit)
 		if err != nil {
 			return fmt.Errorf("SearchUsersTx: search failed: %w", err)
 		}
 
 		for _, u := range users {
-			userInterest, err := f.userStorage.GetInterests(ctx, u.GetID())
+			userInterest, err := f.userStorage.GetInterests(ctx, u.ID)
 			if err != nil {
 				return fmt.Errorf("SearchUsersTx: get interests failed: %w", err)
 			}
@@ -47,7 +47,7 @@ func (f *StorageFacadeSearch) SearchUsersTx(ctx context.Context, userID uuid.UUI
 		}
 
 		for _, u := range users {
-			userPhotos, err := f.userStorage.GetPhotos(ctx, u.GetID())
+			userPhotos, err := f.userStorage.GetPhotos(ctx, u.ID)
 			if err != nil {
 				return fmt.Errorf("SearchUsersTx: get photos failed: %w", err)
 			}
