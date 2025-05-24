@@ -13,7 +13,7 @@ func (c *UseCase) DeleteMatch(ctx context.Context, in *dto.DeleteMatchV1Request)
 		return nil, err
 	}
 
-	err = c.matchingStorageFacade.DeleteMatchTx(ctx, userID, in.GetTargetUserID())
+	err = c.matchingStorageFacade.DeleteMatchTx(ctx, userID, in.TargetUserID)
 	if err != nil {
 		return nil, err
 	}

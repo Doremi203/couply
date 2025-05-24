@@ -9,13 +9,6 @@ type DislikeUserV1Request struct {
 	TargetUserID uuid.UUID
 }
 
-func (x *DislikeUserV1Request) GetTargetUserID() uuid.UUID {
-	if x != nil {
-		return x.TargetUserID
-	}
-	return uuid.Nil
-}
-
 type DislikeUserV1Response struct{}
 
 func PBToDislikeUserRequest(req *desc.DislikeUserV1Request) (*DislikeUserV1Request, error) {

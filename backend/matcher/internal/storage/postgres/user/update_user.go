@@ -10,25 +10,25 @@ import (
 
 func (s *PgStorageUser) UpdateUser(ctx context.Context, user *user.User) (*user.User, error) {
 	query, args, err := sq.Update("users").
-		Set("name", user.GetName()).
-		Set("age", user.GetAge()).
-		Set("gender", user.GetGender()).
-		Set("latitude", user.GetLatitude()).
-		Set("longitude", user.GetLongitude()).
-		Set("bio", user.GetBIO()).
-		Set("goal", user.GetGoal()).
-		Set("zodiac", user.GetZodiac()).
-		Set("height", user.GetHeight()).
-		Set("education", user.GetEducation()).
-		Set("children", user.GetChildren()).
-		Set("alcohol", user.GetAlcohol()).
-		Set("smoking", user.GetSmoking()).
-		Set("is_hidden", user.GetIsHidden()).
-		Set("is_verified", user.GetIsVerified()).
-		Set("is_premium", user.GetIsPremium()).
-		Set("is_blocked", user.GetIsBlocked()).
-		Set("updated_at", user.GetUpdatedAt()).
-		Where(sq.Eq{"id": user.GetID()}).
+		Set("name", user.Name).
+		Set("age", user.Age).
+		Set("gender", user.Gender).
+		Set("latitude", user.Latitude).
+		Set("longitude", user.Longitude).
+		Set("bio", user.BIO).
+		Set("goal", user.Goal).
+		Set("zodiac", user.Zodiac).
+		Set("height", user.Height).
+		Set("education", user.Education).
+		Set("children", user.Children).
+		Set("alcohol", user.Alcohol).
+		Set("smoking", user.Smoking).
+		Set("is_hidden", user.IsHidden).
+		Set("is_verified", user.IsVerified).
+		Set("is_premium", user.IsPremium).
+		Set("is_blocked", user.IsBlocked).
+		Set("updated_at", user.UpdatedAt).
+		Where(sq.Eq{"id": user.ID}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {

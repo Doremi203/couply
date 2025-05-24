@@ -18,10 +18,10 @@ func (s *PgStorageUser) AddPhoto(ctx context.Context, photo user.Photo, userID u
 		Columns("user_id", "order_number", "object_key", "mime_type", "uploaded_at").
 		Values(
 			userID,
-			photo.GetOrderNumber(),
-			photo.GetObjectKey(),
-			photo.GetMimeType(),
-			photo.GetUploadedAt(),
+			photo.OrderNumber,
+			photo.ObjectKey,
+			photo.MimeType,
+			photo.UploadedAt,
 		).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

@@ -10,29 +10,8 @@ type FetchOutgoingLikesV1Request struct {
 	Offset uint64
 }
 
-func (x *FetchOutgoingLikesV1Request) GetLimit() uint64 {
-	if x != nil {
-		return x.Limit
-	}
-	return 0
-}
-
-func (x *FetchOutgoingLikesV1Request) GetOffset() uint64 {
-	if x != nil {
-		return x.Offset
-	}
-	return 0
-}
-
 type FetchOutgoingLikesV1Response struct {
 	Likes []*matching.Like
-}
-
-func (x *FetchOutgoingLikesV1Response) GetLikes() []*matching.Like {
-	if x != nil {
-		return x.Likes
-	}
-	return nil
 }
 
 func PBToFetchOutgoingLikesRequest(req *desc.FetchOutgoingLikesV1Request) *FetchOutgoingLikesV1Request {
@@ -43,8 +22,8 @@ func PBToFetchOutgoingLikesRequest(req *desc.FetchOutgoingLikesV1Request) *Fetch
 }
 
 func FetchOutgoingLikesResponseToPB(resp *FetchOutgoingLikesV1Response) *desc.FetchOutgoingLikesV1Response {
-	pbLikes := make([]*desc.Like, len(resp.GetLikes()))
-	for i, like := range resp.GetLikes() {
+	pbLikes := make([]*desc.Like, len(resp.Likes))
+	for i, like := range resp.Likes {
 		pbLikes[i] = matching.LikeToPB(like)
 	}
 

@@ -10,22 +10,8 @@ type GetUserByIDV1Request struct {
 	UserID uuid.UUID
 }
 
-func (x *GetUserByIDV1Request) GetUserID() uuid.UUID {
-	if x != nil {
-		return x.UserID
-	}
-	return uuid.Nil
-}
-
 type GetUserByIDV1Response struct {
 	User *user.User
-}
-
-func (x *GetUserByIDV1Response) GetUser() *user.User {
-	if x != nil {
-		return x.User
-	}
-	return nil
 }
 
 func PBToGetUserByIDRequest(req *desc.GetUserByIDV1Request) (*GetUserByIDV1Request, error) {
@@ -41,6 +27,6 @@ func PBToGetUserByIDRequest(req *desc.GetUserByIDV1Request) (*GetUserByIDV1Reque
 
 func GetUserByIDResponseToPB(resp *GetUserByIDV1Response) *desc.GetUserByIDV1Response {
 	return &desc.GetUserByIDV1Response{
-		User: user.UserToPB(resp.GetUser()),
+		User: user.UserToPB(resp.User),
 	}
 }

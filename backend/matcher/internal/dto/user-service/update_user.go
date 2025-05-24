@@ -30,148 +30,8 @@ type UpdateUserV1Request struct {
 	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
-func (x *UpdateUserV1Request) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *UpdateUserV1Request) GetAge() int32 {
-	if x != nil {
-		return x.Age
-	}
-	return 0
-}
-
-func (x *UpdateUserV1Request) GetGender() user.Gender {
-	if x != nil {
-		return x.Gender
-	}
-	return user.Gender(0)
-}
-
-func (x *UpdateUserV1Request) GetLatitude() float64 {
-	if x != nil {
-		return x.Latitude
-	}
-	return 0
-}
-
-func (x *UpdateUserV1Request) GetLongitude() float64 {
-	if x != nil {
-		return x.Longitude
-	}
-	return 0
-}
-
-func (x *UpdateUserV1Request) GetBio() string {
-	if x != nil {
-		return x.Bio
-	}
-	return ""
-}
-
-func (x *UpdateUserV1Request) GetGoal() common.Goal {
-	if x != nil {
-		return x.Goal
-	}
-	return common.Goal(0)
-}
-
-func (x *UpdateUserV1Request) GetInterest() *interest.Interest {
-	if x != nil {
-		return x.Interest
-	}
-	return nil
-}
-
-func (x *UpdateUserV1Request) GetZodiac() common.Zodiac {
-	if x != nil {
-		return x.Zodiac
-	}
-	return common.Zodiac(0)
-}
-
-func (x *UpdateUserV1Request) GetHeight() int32 {
-	if x != nil {
-		return x.Height
-	}
-	return 0
-}
-
-func (x *UpdateUserV1Request) GetEducation() common.Education {
-	if x != nil {
-		return x.Education
-	}
-	return common.Education(0)
-}
-
-func (x *UpdateUserV1Request) GetChildren() common.Children {
-	if x != nil {
-		return x.Children
-	}
-	return common.Children(0)
-}
-
-func (x *UpdateUserV1Request) GetAlcohol() common.Alcohol {
-	if x != nil {
-		return x.Alcohol
-	}
-	return common.Alcohol(0)
-}
-
-func (x *UpdateUserV1Request) GetSmoking() common.Smoking {
-	if x != nil {
-		return x.Smoking
-	}
-	return common.Smoking(0)
-}
-
-func (x *UpdateUserV1Request) GetIsHidden() bool {
-	if x != nil {
-		return x.IsHidden
-	}
-	return false
-}
-
-func (x *UpdateUserV1Request) GetIsVerified() bool {
-	if x != nil {
-		return x.IsVerified
-	}
-	return false
-}
-
-func (x *UpdateUserV1Request) GetIsPremium() bool {
-	if x != nil {
-		return x.IsPremium
-	}
-	return false
-}
-
-func (x *UpdateUserV1Request) GetIsBlocked() bool {
-	if x != nil {
-		return x.IsBlocked
-	}
-	return false
-}
-
-func (x *UpdateUserV1Request) GetPhotoUploadRequests() []user.PhotoUploadRequest {
-	if x != nil {
-		return x.PhotoUploadRequests
-	}
-	return nil
-}
-
 type UpdateUserV1Response struct {
 	User *user.User
-}
-
-func (x *UpdateUserV1Response) GetUser() *user.User {
-	if x != nil {
-		return x.User
-	}
-	return nil
 }
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
@@ -205,14 +65,14 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 
 func UpdateUserResponseToPB(resp *UpdateUserV1Response) *desc.UpdateUserV1Response {
 	return &desc.UpdateUserV1Response{
-		User: user.UserToPB(resp.GetUser()),
-		PhotoUploadResponses: slices.Map(resp.GetUser().GetPhotos(), func(from user.Photo) *desc.PhotoUploadResponse {
+		User: user.UserToPB(resp.User),
+		PhotoUploadResponses: slices.Map(resp.User.Photos, func(from user.Photo) *desc.PhotoUploadResponse {
 			var uploadURL string
 			if from.UploadURL != nil {
 				uploadURL = *from.UploadURL
 			}
 			return &desc.PhotoUploadResponse{
-				OrderNumber: from.GetOrderNumber(),
+				OrderNumber: from.OrderNumber,
 				UploadUrl:   uploadURL,
 			}
 		}),

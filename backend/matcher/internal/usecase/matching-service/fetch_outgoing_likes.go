@@ -13,7 +13,7 @@ func (c *UseCase) FetchOutgoingLikes(ctx context.Context, in *dto.FetchOutgoingL
 		return nil, err
 	}
 
-	likes, err := c.matchingStorageFacade.FetchOutgoingLikesTx(ctx, userID, in.GetLimit(), in.GetOffset())
+	likes, err := c.matchingStorageFacade.FetchOutgoingLikesTx(ctx, userID, in.Limit, in.Offset)
 	if err != nil {
 		return nil, err
 	}

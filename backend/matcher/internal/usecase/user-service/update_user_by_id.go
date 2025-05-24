@@ -10,31 +10,31 @@ import (
 )
 
 func (c *UseCase) UpdateUserByID(ctx context.Context, in *dto.UpdateUserByIDV1Request) (*dto.UpdateUserByIDV1Response, error) {
-	photos, err := c.createPhotos(ctx, in.GetID(), in.GetPhotoUploadRequests())
+	photos, err := c.createPhotos(ctx, in.ID, in.PhotoUploadRequests)
 	if err != nil {
 		return nil, errors.WrapFail(err, "create photos")
 	}
 
 	user := user.NewUserBuilder().
-		SetID(in.GetID()).
-		SetName(in.GetName()).
-		SetAge(in.GetAge()).
-		SetGender(in.GetGender()).
-		SetLatitude(in.GetLatitude()).
-		SetLongitude(in.GetLongitude()).
-		SetBIO(in.GetBio()).
-		SetGoal(in.GetGoal()).
-		SetInterest(in.GetInterest()).
-		SetZodiac(in.GetZodiac()).
-		SetHeight(in.GetHeight()).
-		SetEducation(in.GetEducation()).
-		SetChildren(in.GetChildren()).
-		SetAlcohol(in.GetAlcohol()).
-		SetSmoking(in.GetSmoking()).
-		SetIsHidden(in.GetIsHidden()).
-		SetIsVerified(in.GetIsVerified()).
-		SetIsPremium(in.GetIsPremium()).
-		SetIsBlocked(in.GetIsBlocked()).
+		SetID(in.ID).
+		SetName(in.Name).
+		SetAge(in.Age).
+		SetGender(in.Gender).
+		SetLatitude(in.Latitude).
+		SetLongitude(in.Longitude).
+		SetBIO(in.Bio).
+		SetGoal(in.Goal).
+		SetInterest(in.Interest).
+		SetZodiac(in.Zodiac).
+		SetHeight(in.Height).
+		SetEducation(in.Education).
+		SetChildren(in.Children).
+		SetAlcohol(in.Alcohol).
+		SetSmoking(in.Smoking).
+		SetIsHidden(in.IsHidden).
+		SetIsVerified(in.IsVerified).
+		SetIsPremium(in.IsPremium).
+		SetIsBlocked(in.IsBlocked).
 		SetPhotos(photos).
 		SetUpdatedAt(time.Now()).
 		Build()

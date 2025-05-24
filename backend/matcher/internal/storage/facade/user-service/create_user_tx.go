@@ -17,13 +17,13 @@ func (f *StorageFacadeUser) CreateUserTx(ctx context.Context, newUser *user.User
 			return errors.WrapFail(err, "add user")
 		}
 
-		for _, photo := range createdUser.GetPhotos() {
-			if err = f.storage.AddPhoto(ctxTx, photo, createdUser.GetID()); err != nil {
+		for _, photo := range createdUser.Photos {
+			if err = f.storage.AddPhoto(ctxTx, photo, createdUser.ID); err != nil {
 				return errors.WrapFail(err, "add photo")
 			}
 		}
 
-		if err = f.storage.AddInterests(ctxTx, createdUser.GetID(), createdUser.GetInterest()); err != nil {
+		if err = f.storage.AddInterests(ctxTx, createdUser.ID, createdUser.Interest); err != nil {
 			return errors.WrapFail(err, "add interests")
 		}
 

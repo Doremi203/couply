@@ -10,23 +10,23 @@ import (
 
 func (s *PgStorageSearch) UpdateFilter(ctx context.Context, filter *search.Filter) error {
 	query, args, err := sq.Update("filters").
-		Set("gender_priority", filter.GetGenderPriority()).
-		Set("min_age", filter.GetMinAge()).
-		Set("max_age", filter.GetMaxAge()).
-		Set("min_height", filter.GetMinHeight()).
-		Set("max_height", filter.GetMaxHeight()).
-		Set("min_distance_km", filter.GetMinDistanceKM()).
-		Set("max_distance_km", filter.GetMaxDistanceKM()).
-		Set("goal", filter.GetGoal()).
-		Set("zodiac", filter.GetZodiac()).
-		Set("education", filter.GetEducation()).
-		Set("children", filter.GetChildren()).
-		Set("alcohol", filter.GetAlcohol()).
-		Set("smoking", filter.GetSmoking()).
-		Set("only_verified", filter.GetOnlyVerified()).
-		Set("only_premium", filter.GetOnlyPremium()).
-		Set("updated_at", filter.GetUpdatedAt()).
-		Where(sq.Eq{"user_id": filter.GetUserID()}).
+		Set("gender_priority", filter.GenderPriority).
+		Set("min_age", filter.MinAge).
+		Set("max_age", filter.MaxAge).
+		Set("min_height", filter.MinHeight).
+		Set("max_height", filter.MaxHeight).
+		Set("min_distance_km", filter.MinDistanceKM).
+		Set("max_distance_km", filter.MaxDistanceKM).
+		Set("goal", filter.Goal).
+		Set("zodiac", filter.Zodiac).
+		Set("education", filter.Education).
+		Set("children", filter.Children).
+		Set("alcohol", filter.Alcohol).
+		Set("smoking", filter.Smoking).
+		Set("only_verified", filter.OnlyVerified).
+		Set("only_premium", filter.OnlyPremium).
+		Set("updated_at", filter.UpdatedAt).
+		Where(sq.Eq{"user_id": filter.UserID}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {

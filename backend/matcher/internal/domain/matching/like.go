@@ -25,46 +25,11 @@ func NewLike(senderID uuid.UUID, receiverID uuid.UUID, message string, status St
 	}
 }
 
-func (x *Like) GetSenderID() uuid.UUID {
-	if x != nil {
-		return x.SenderID
-	}
-	return uuid.Nil
-}
-
-func (x *Like) GetReceiverID() uuid.UUID {
-	if x != nil {
-		return x.ReceiverID
-	}
-	return uuid.Nil
-}
-
-func (x *Like) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
-func (x *Like) GetStatus() Status {
-	if x != nil {
-		return x.Status
-	}
-	return Status(0)
-}
-
-func (x *Like) GetCreatedAt() time.Time {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return time.Time{}
-}
-
 func LikeToPB(like *Like) *desc.Like {
 	return &desc.Like{
 		SenderId:   like.SenderID.String(),
 		ReceiverId: like.ReceiverID.String(),
 		Message:    like.Message,
-		Status:     StatusToPB(like.GetStatus()),
+		Status:     StatusToPB(like.Status),
 	}
 }

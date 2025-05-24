@@ -32,7 +32,7 @@ func (c *UseCase) LikeUser(ctx context.Context, in *dto.LikeUserV1Request) (*dto
 	}
 
 	processor := NewLikeProcessor(c.matchingStorageFacade)
-	return processor.ProcessLike(ctx, userID, in.GetTargetUserId(), in.GetMessage())
+	return processor.ProcessLike(ctx, userID, in.TargetUserId, in.Message)
 }
 
 func (p *likeProcessor) ProcessLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {
@@ -44,14 +44,14 @@ func (p *likeProcessor) ProcessLike(ctx context.Context, userID, targetUserID uu
 	}
 
 	if isMutualLike(revertedLike) {
-		return p.handleMutualLike(ctx, userID, targetUserID, revertedLike.GetMessage())
+		return p.handleMutualLike(ctx, userID, targetUserID, revertedLike.Message)
 	}
 
 	return p.handleNewLike(ctx, userID, targetUserID, message)
 }
 
 func isMutualLike(revertedLike *matching.Like) bool {
-	return revertedLike != nil && revertedLike.GetStatus() == matching.StatusWaiting
+	return revertedLike != nil && revertedLike.Status == matching.StatusWaiting
 }
 
 func (p *likeProcessor) handleNewLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {

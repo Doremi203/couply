@@ -30,11 +30,11 @@ func (f *StorageFacadeUser) GetUsersTx(ctx context.Context, userIDs []uuid.UUID)
 		}
 
 		for _, u := range users {
-			if photos, exists := photosMap[u.GetID()]; exists {
+			if photos, exists := photosMap[u.ID]; exists {
 				u.Photos = photos
 			}
 
-			if interest, exists := interestsMap[u.GetID()]; exists {
+			if interest, exists := interestsMap[u.ID]; exists {
 				u.Interest = interest
 			}
 		}
