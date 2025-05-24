@@ -9,13 +9,6 @@ type AddViewV1Request struct {
 	ViewedID uuid.UUID
 }
 
-func (x *AddViewV1Request) GetViewedID() uuid.UUID {
-	if x != nil {
-		return x.ViewedID
-	}
-	return uuid.Nil
-}
-
 type AddViewV1Response struct{}
 
 func PBToAddViewRequest(req *desc.AddViewV1Request) (*AddViewV1Request, error) {

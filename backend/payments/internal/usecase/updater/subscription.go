@@ -9,40 +9,54 @@ import (
 	"github.com/google/uuid"
 )
 
-func (u *Updater) StartSubscriptionStatusUpdater(ctx context.Context, interval time.Duration) {
-	ticker := time.NewTicker(interval)
-	defer ticker.Stop()
-
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case <-ticker.C:
-			u.updateExpiredSubscriptions(ctx)
-		}
-	}
-}
-
-func (u *Updater) updateExpiredSubscriptions(ctx context.Context) {
-	activeSubs, err := u.subscriptionStorageFacade.GetSubscriptionsByStatusTx(ctx, subscription.SubscriptionStatusActive)
+func (u *Updater) processSubscriptionUpdates(ctx context.Context) {
+	activeSubs, err := u.getActiveSubscriptions(ctx)
 	if err != nil {
 		u.logger.Error(err)
 		return
 	}
 
+	u.checkAndUpdateExpiredSubscriptions(ctx, activeSubs)
+}
+
+func (u *Updater) getActiveSubscriptions(ctx context.Context) ([]*subscription.Subscription, error) {
+	return u.subscriptionStorageFacade.GetSubscriptionsByStatusTx(ctx, subscription.SubscriptionStatusActive)
+}
+
+func (u *Updater) checkAndUpdateExpiredSubscriptions(ctx context.Context, subs []*subscription.Subscription) {
 	now := time.Now()
-	for _, sub := range activeSubs {
-		if sub.GetEndDate().Before(now) {
-			if sub.GetAutoRenew() {
-				u.handleAutoRenewal(ctx, sub)
-			} else {
-				err := u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.GetID(), subscription.SubscriptionStatusExpired)
-				if err != nil {
-					u.logger.Error(err)
-					continue
-				}
-			}
+	for _, sub := range subs {
+		if u.isSubscriptionExpired(sub, now) {
+			u.processExpiredSubscription(ctx, sub)
 		}
+	}
+}
+
+func (u *Updater) isSubscriptionExpired(sub *subscription.Subscription, now time.Time) bool {
+	return sub.EndDate.Before(now)
+}
+
+func (u *Updater) processExpiredSubscription(ctx context.Context, sub *subscription.Subscription) {
+	if sub.AutoRenew {
+		u.handleAutoRenewal(ctx, sub)
+	} else {
+		u.expireSubscription(ctx, sub)
+	}
+}
+
+func (u *Updater) expireSubscription(ctx context.Context, sub *subscription.Subscription) {
+	err := u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(
+		ctx,
+		sub.ID,
+		subscription.SubscriptionStatusExpired,
+	)
+	if err != nil {
+		u.logger.Error(err)
+		return
+	}
+
+	if err = u.updateUserPremiumStatus(ctx, sub.UserID, false); err != nil {
+		u.logger.Error(err)
 	}
 }
 
@@ -53,45 +67,51 @@ func (u *Updater) handleAutoRenewal(ctx context.Context, sub *subscription.Subsc
 		return
 	}
 
-	amount := u.getPlanAmount(sub.GetPlan())
-
-	gatewayID, err := u.paymentGateway.CreatePayment(ctx, amount, "RUB")
+	amount := subscription.GetPlanPrice(sub.Plan)
+	gatewayID, err := u.paymentGateway.CreatePayment(ctx, amount, payment.MainCurrency)
 	if err != nil {
 		u.logger.Error(err)
 		return
 	}
 
+	newPayment := u.createPaymentObject(paymentID, sub, amount, gatewayID)
+	if err = u.savePaymentAndUpdateSubscription(ctx, newPayment, sub); err != nil {
+		u.logger.Error(err)
+	}
+}
+
+func (u *Updater) createPaymentObject(
+	paymentID uuid.UUID,
+	sub *subscription.Subscription,
+	amount int64,
+	gatewayID string,
+) *payment.Payment {
 	now := time.Now()
-	newPayment := &payment.Payment{
+	return &payment.Payment{
 		ID:             paymentID,
-		UserID:         sub.GetUserID(),
-		SubscriptionID: sub.GetID(),
+		UserID:         sub.UserID,
+		SubscriptionID: sub.ID,
 		Amount:         amount,
-		Currency:       "RUB",
+		Currency:       payment.MainCurrency,
 		Status:         payment.PaymentStatusPending,
 		GatewayID:      gatewayID,
 		CreatedAt:      now,
 		UpdatedAt:      now,
 	}
-
-	_, err = u.paymentStorageFacade.CreatePaymentTx(ctx, newPayment)
-	if err != nil {
-		u.logger.Error(err)
-		return
-	}
-
-	err = u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.GetID(), subscription.SubscriptionStatusPendingPayment)
-	if err != nil {
-		u.logger.Error(err)
-		return
-	}
 }
 
-func (u *Updater) getPlanAmount(plan subscription.SubscriptionPlan) int64 {
-	planPrices := map[subscription.SubscriptionPlan]int64{
-		subscription.SubscriptionPlanMonthly:    199,
-		subscription.SubscriptionPlanSemiAnnual: 799,
-		subscription.SubscriptionPlanAnnual:     1999,
+func (u *Updater) savePaymentAndUpdateSubscription(
+	ctx context.Context,
+	payment *payment.Payment,
+	sub *subscription.Subscription,
+) error {
+	if err := u.paymentStorageFacade.CreatePaymentTx(ctx, payment); err != nil {
+		return err
 	}
-	return planPrices[plan]
+
+	return u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(
+		ctx,
+		sub.ID,
+		subscription.SubscriptionStatusPendingPayment,
+	)
 }

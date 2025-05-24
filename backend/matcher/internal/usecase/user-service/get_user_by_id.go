@@ -8,7 +8,7 @@ import (
 )
 
 func (c *UseCase) GetUserByID(ctx context.Context, req *dto.GetUserByIDV1Request) (*dto.GetUserByIDV1Response, error) {
-	user, err := c.userStorageFacade.GetUserTx(ctx, req.GetUserID())
+	user, err := c.userStorageFacade.GetUserTx(ctx, req.UserID)
 	if err != nil {
 		return nil, err
 	}

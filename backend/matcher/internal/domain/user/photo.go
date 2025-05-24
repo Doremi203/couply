@@ -27,7 +27,7 @@ type objectStoragePhotoURLGenerator struct {
 func (g *objectStoragePhotoURLGenerator) GenerateUpload(
 	ctx context.Context,
 	key string,
-	contentType string,
+	_ string,
 ) (string, error) {
 	expires := time.Minute * 15
 	uploadURL, err := g.client.PresignedPutObject(ctx, g.bucket, key, expires)
@@ -86,34 +86,6 @@ type Photo struct {
 
 	UploadURL   *string
 	DownloadURL *string
-}
-
-func (x *Photo) GetOrderNumber() int32 {
-	if x != nil {
-		return x.OrderNumber
-	}
-	return 0
-}
-
-func (x *Photo) GetObjectKey() string {
-	if x != nil {
-		return x.ObjectKey
-	}
-	return ""
-}
-
-func (x *Photo) GetMimeType() string {
-	if x != nil {
-		return x.MimeType
-	}
-	return ""
-}
-
-func (x *Photo) GetUploadedAt() *time.Time {
-	if x != nil {
-		return x.UploadedAt
-	}
-	return nil
 }
 
 func (x *Photo) GetDownloadURL(ctx context.Context, gen PhotoURLGenerator) error {

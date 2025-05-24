@@ -10,10 +10,10 @@ import (
 
 func (s *PgStorageMatching) UpdateLike(ctx context.Context, like *matching.Like) error {
 	query, args, err := sq.Update("likes").
-		Set("status", like.GetStatus()).
+		Set("status", like.Status).
 		Where(sq.Eq{
-			"sender_id":   like.GetSenderID(),
-			"receiver_id": like.GetReceiverID(),
+			"sender_id":   like.SenderID,
+			"receiver_id": like.ReceiverID,
 		}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

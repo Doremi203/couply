@@ -8,7 +8,7 @@ import (
 )
 
 func (c *UseCase) GetUsers(ctx context.Context, in *dto.GetUsersV1Request) (*dto.GetUsersV1Response, error) {
-	users, err := c.userStorageFacade.GetUsersTx(ctx, in.GetUserIDs())
+	users, err := c.userStorageFacade.GetUsersTx(ctx, in.UserIDs)
 	if err != nil {
 		return nil, err
 	}

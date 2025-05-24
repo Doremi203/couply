@@ -14,11 +14,11 @@ func (s *PgStorageMatching) AddLike(ctx context.Context, like *matching.Like) er
 	query, args, err := sq.Insert("likes").
 		Columns("sender_id", "receiver_id", "message", "status", "created_at").
 		Values(
-			like.GetSenderID(),
-			like.GetReceiverID(),
-			like.GetMessage(),
-			like.GetStatus(),
-			like.GetCreatedAt(),
+			like.SenderID,
+			like.ReceiverID,
+			like.Message,
+			like.Status,
+			like.CreatedAt,
 		).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()

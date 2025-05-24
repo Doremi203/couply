@@ -20,5 +20,5 @@ secrets:
     token: e6qo9u8d7n70ciqo8omk
     telegram: e6qgotvn596k4k5331cq
 
-user_service:
+matcher:
   address: "matcher.testing.couply.ru:5051"

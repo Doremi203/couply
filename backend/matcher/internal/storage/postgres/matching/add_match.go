@@ -15,11 +15,11 @@ import (
 )
 
 func (s *PgStorageMatching) AddMatch(ctx context.Context, match *matching.Match) error {
-	user1, user2 := orderUserIDs(match.GetFirstUserID(), match.GetSecondUserID())
+	user1, user2 := orderUserIDs(match.FirstUserID, match.SecondUserID)
 
 	query, args, err := sq.Insert("matches").
 		Columns("first_user_id", "second_user_id", "created_at").
-		Values(user1, user2, match.GetCreatedAt()).
+		Values(user1, user2, match.CreatedAt).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
 	if err != nil {

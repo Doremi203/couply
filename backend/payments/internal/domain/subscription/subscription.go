@@ -6,6 +6,16 @@ import (
 	"github.com/google/uuid"
 )
 
+const (
+	monthDays    = 30
+	halfYearDays = 180
+	yearDays     = 365
+
+	monthPrice      = 199
+	semiAnnualPrice = 999
+	annualPrice     = 1799
+)
+
 type Subscription struct {
 	ID         uuid.UUID          `db:"id"`
 	UserID     uuid.UUID          `db:"user_id"`
@@ -17,58 +27,20 @@ type Subscription struct {
 	PaymentIDs []uuid.UUID
 }
 
-func (x *Subscription) GetID() uuid.UUID {
-	if x != nil {
-		return x.ID
+func CalculateEndDate(now time.Time, plan SubscriptionPlan) time.Time {
+	durationMap := map[SubscriptionPlan]time.Duration{
+		SubscriptionPlanMonthly:    monthDays * 24 * time.Hour,
+		SubscriptionPlanSemiAnnual: halfYearDays * 24 * time.Hour,
+		SubscriptionPlanAnnual:     yearDays * 24 * time.Hour,
 	}
-	return uuid.Nil
+	return now.Add(durationMap[plan])
 }
 
-func (x *Subscription) GetUserID() uuid.UUID {
-	if x != nil {
-		return x.UserID
+func GetPlanPrice(plan SubscriptionPlan) int64 {
+	planPrices := map[SubscriptionPlan]int64{
+		SubscriptionPlanMonthly:    monthPrice,
+		SubscriptionPlanSemiAnnual: semiAnnualPrice,
+		SubscriptionPlanAnnual:     annualPrice,
 	}
-	return uuid.Nil
-}
-
-func (x *Subscription) GetPlan() SubscriptionPlan {
-	if x != nil {
-		return x.Plan
-	}
-	return SubscriptionPlan(0)
-}
-
-func (x *Subscription) GetStatus() SubscriptionStatus {
-	if x != nil {
-		return x.Status
-	}
-	return SubscriptionStatus(0)
-}
-
-func (x *Subscription) GetAutoRenew() bool {
-	if x != nil {
-		return x.AutoRenew
-	}
-	return false
-}
-
-func (x *Subscription) GetStartDate() time.Time {
-	if x != nil {
-		return x.StartDate
-	}
-	return time.Time{}
-}
-
-func (x *Subscription) GetEndDate() time.Time {
-	if x != nil {
-		return x.EndDate
-	}
-	return time.Time{}
-}
-
-func (x *Subscription) GetPaymentIDs() []uuid.UUID {
-	if x != nil {
-		return x.PaymentIDs
-	}
-	return nil
+	return planPrices[plan]
 }

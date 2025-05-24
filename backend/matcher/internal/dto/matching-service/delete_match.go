@@ -9,13 +9,6 @@ type DeleteMatchV1Request struct {
 	TargetUserID uuid.UUID
 }
 
-func (x *DeleteMatchV1Request) GetTargetUserID() uuid.UUID {
-	if x != nil {
-		return x.TargetUserID
-	}
-	return uuid.Nil
-}
-
 type DeleteMatchV1Response struct{}
 
 func PBToDeleteMatchRequest(req *desc.DeleteMatchV1Request) (*DeleteMatchV1Request, error) {

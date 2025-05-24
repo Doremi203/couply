@@ -14,16 +14,16 @@ func (c *UseCase) FetchMatchesUserIDs(ctx context.Context, in *dto.FetchMatchesU
 		return nil, err
 	}
 
-	matches, err := c.matchingStorageFacade.FetchMatchesTx(ctx, userID, in.GetLimit(), in.GetOffset())
+	matches, err := c.matchingStorageFacade.FetchMatchesTx(ctx, userID, in.Limit, in.Offset)
 	if err != nil {
 		return nil, err
 	}
 
 	otherUserIDS := make([]*uuid.UUID, 0)
 	for _, match := range matches {
-		otherUserID := match.GetFirstUserID()
+		otherUserID := match.FirstUserID
 		if userID == otherUserID {
-			otherUserID = match.GetSecondUserID()
+			otherUserID = match.SecondUserID
 		}
 
 		otherUserIDS = append(otherUserIDS, &otherUserID)

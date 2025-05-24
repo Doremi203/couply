@@ -3,6 +3,8 @@ package subscription_service
 import (
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/subscription-service/v1"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"
 	"github.com/google/uuid"
@@ -14,25 +16,30 @@ type CreateSubscriptionV1Request struct {
 	AutoRenew        bool
 }
 
-func (x *CreateSubscriptionV1Request) GetSubscriptionPlan() subscription.SubscriptionPlan {
-	if x != nil {
-		return x.SubscriptionPlan
-	}
-	return subscription.SubscriptionPlan(0)
-}
-
-func (x *CreateSubscriptionV1Request) GetAutoRenew() bool {
-	if x != nil {
-		return x.AutoRenew
-	}
-	return false
-}
-
 func PBToCreateSubscriptionRequest(req *desc.CreateSubscriptionV1Request) *CreateSubscriptionV1Request {
 	return &CreateSubscriptionV1Request{
 		SubscriptionPlan: subscription.PBToSubscriptionPlan(req.GetPlan()),
 		AutoRenew:        req.GetAutoRenew(),
 	}
+}
+
+func CreateSubscriptionRequestToSubscription(req *CreateSubscriptionV1Request, userID uuid.UUID) (*subscription.Subscription, error) {
+	subID, err := uuid.NewV7()
+	if err != nil {
+		return nil, errors.Wrap(err, "uuid.NewV7")
+	}
+
+	now := time.Now()
+	plan := req.SubscriptionPlan
+	return &subscription.Subscription{
+		ID:        subID,
+		UserID:    userID,
+		Plan:      plan,
+		Status:    subscription.SubscriptionStatusPendingPayment,
+		AutoRenew: req.AutoRenew,
+		StartDate: now,
+		EndDate:   subscription.CalculateEndDate(now, plan),
+	}, nil
 }
 
 type CreateSubscriptionV1Response struct {
@@ -45,67 +52,30 @@ type CreateSubscriptionV1Response struct {
 	PaymentIDs         []uuid.UUID
 }
 
-func (x *CreateSubscriptionV1Response) GetSubscriptionID() uuid.UUID {
-	if x != nil {
-		return x.SubscriptionID
-	}
-	return uuid.Nil
-}
-
-func (x *CreateSubscriptionV1Response) GetSubscriptionPlan() subscription.SubscriptionPlan {
-	if x != nil {
-		return x.SubscriptionPlan
-	}
-	return subscription.SubscriptionPlan(0)
-}
-
-func (x *CreateSubscriptionV1Response) GetSubscriptionStatus() subscription.SubscriptionStatus {
-	if x != nil {
-		return x.SubscriptionStatus
-	}
-	return subscription.SubscriptionStatus(0)
-}
-
-func (x *CreateSubscriptionV1Response) GetAutoRenew() bool {
-	if x != nil {
-		return x.AutoRenew
-	}
-	return false
-}
-
-func (x *CreateSubscriptionV1Response) GetStartDate() time.Time {
-	if x != nil {
-		return x.StartDate
-	}
-	return time.Time{}
-}
-
-func (x *CreateSubscriptionV1Response) GetEndDate() time.Time {
-	if x != nil {
-		return x.EndDate
-	}
-	return time.Time{}
-}
-
-func (x *CreateSubscriptionV1Response) GetPaymentIDs() []uuid.UUID {
-	if x != nil {
-		return x.PaymentIDs
-	}
-	return nil
-}
-
 func CreateSubscriptionResponseToPB(resp *CreateSubscriptionV1Response) *desc.CreateSubscriptionV1Response {
-	paymentIds := make([]string, 0, len(resp.GetPaymentIDs()))
-	for _, id := range resp.GetPaymentIDs() {
+	paymentIds := make([]string, 0, len(resp.PaymentIDs))
+	for _, id := range resp.PaymentIDs {
 		paymentIds = append(paymentIds, id.String())
 	}
 	return &desc.CreateSubscriptionV1Response{
-		SubscriptionId: resp.GetSubscriptionID().String(),
-		Plan:           subscription.SubscriptionPlanToPB(resp.GetSubscriptionPlan()),
-		Status:         subscription.SubscriptionStatusToPB(resp.GetSubscriptionStatus()),
-		AutoRenew:      resp.GetAutoRenew(),
-		StartDate:      timestamppb.New(resp.GetStartDate()),
-		EndDate:        timestamppb.New(resp.GetEndDate()),
+		SubscriptionId: resp.SubscriptionID.String(),
+		Plan:           subscription.SubscriptionPlanToPB(resp.SubscriptionPlan),
+		Status:         subscription.SubscriptionStatusToPB(resp.SubscriptionStatus),
+		AutoRenew:      resp.AutoRenew,
+		StartDate:      timestamppb.New(resp.StartDate),
+		EndDate:        timestamppb.New(resp.EndDate),
 		PaymentIds:     paymentIds,
+	}
+}
+
+func SubscriptionToCreateSubscriptionResponse(sub *subscription.Subscription) *CreateSubscriptionV1Response {
+	return &CreateSubscriptionV1Response{
+		SubscriptionID:     sub.ID,
+		SubscriptionPlan:   sub.Plan,
+		SubscriptionStatus: sub.Status,
+		AutoRenew:          sub.AutoRenew,
+		StartDate:          sub.StartDate,
+		EndDate:            sub.EndDate,
+		PaymentIDs:         sub.PaymentIDs,
 	}
 }

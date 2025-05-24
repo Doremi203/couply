@@ -2,24 +2,25 @@ package main
 
 import (
 	"context"
-	"github.com/Doremi203/couply/backend/payments/internal/client/user"
 	"time"
+
+	"github.com/Doremi203/couply/backend/payments/internal/client/matcher"
+	postgrestx "github.com/Doremi203/couply/backend/payments/internal/storage"
+	payment_facade "github.com/Doremi203/couply/backend/payments/internal/storage/payment/facade"
+	postgres3 "github.com/Doremi203/couply/backend/payments/internal/storage/payment/postgres"
+	subscription_facade "github.com/Doremi203/couply/backend/payments/internal/storage/subscription/facade"
+	postgres2 "github.com/Doremi203/couply/backend/payments/internal/storage/subscription/postgres"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
-	payment_service3 "github.com/Doremi203/couply/backend/payments/internal/app/payment-service"
-	subscription_service3 "github.com/Doremi203/couply/backend/payments/internal/app/subscription-service"
-	payment_service "github.com/Doremi203/couply/backend/payments/internal/storage/facade/payment-service"
-	subscription_service "github.com/Doremi203/couply/backend/payments/internal/storage/facade/subscription-service"
-	postgres2 "github.com/Doremi203/couply/backend/payments/internal/storage/postgres"
-	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres/payment"
-	"github.com/Doremi203/couply/backend/payments/internal/storage/postgres/subscription"
-	payment_service2 "github.com/Doremi203/couply/backend/payments/internal/usecase/payment-service"
+	payment_service "github.com/Doremi203/couply/backend/payments/internal/app/payment-service"
+	subscription_service "github.com/Doremi203/couply/backend/payments/internal/app/subscription-service"
+	payment_usecase "github.com/Doremi203/couply/backend/payments/internal/usecase/payment-service"
 	"github.com/Doremi203/couply/backend/payments/internal/usecase/payment-service/mock_gateway"
-	subscription_service2 "github.com/Doremi203/couply/backend/payments/internal/usecase/subscription-service"
-	updater2 "github.com/Doremi203/couply/backend/payments/internal/usecase/updater"
+	subscription_usecase "github.com/Doremi203/couply/backend/payments/internal/usecase/subscription-service"
+	"github.com/Doremi203/couply/backend/payments/internal/usecase/updater"
 )
 
 func main() {
@@ -36,14 +37,14 @@ func main() {
 			return err
 		}
 
-		var userServiceConfig struct {
+		var matcherConfig struct {
 			Address string `yaml:"address"`
 		}
-		if err := app.Config.ReadSection("user_service", &userServiceConfig); err != nil {
+		if err = app.Config.ReadSection("matcher", &matcherConfig); err != nil {
 			return errors.WrapFail(err, "read user service config")
 		}
 
-		userServiceClient, conn, err := user.NewClient(userServiceConfig.Address)
+		userServiceClient, conn, err := matcher.NewClient(matcherConfig.Address)
 		if err != nil {
 			return errors.WrapFail(err, "create user service client")
 		}
@@ -55,17 +56,17 @@ func main() {
 		}
 		app.AddCloser(dbClient.Close)
 
-		txManager := postgres2.NewTxManager(dbClient)
+		txManager := postgrestx.NewTxManager(dbClient)
 
-		subRepo := subscription.NewPgStorageSubscription(txManager)
-		payRepo := payment.NewPgStoragePayment(txManager)
+		subRepo := postgres2.NewPgStorageSubscription(txManager)
+		payRepo := postgres3.NewPgStoragePayment(txManager)
 
-		subFacade := subscription_service.NewStorageFacadeSubscription(txManager, subRepo, payRepo)
-		payFacade := payment_service.NewStorageFacadePayment(txManager, payRepo)
+		subFacade := subscription_facade.NewStorageFacadeSubscription(txManager, subRepo, payRepo)
+		payFacade := payment_facade.NewStorageFacadePayment(txManager, payRepo, subRepo)
 
 		gateway := mock_gateway.NewMockGateway()
 
-		updater := updater2.NewUpdater(payFacade, subFacade, gateway, userServiceClient, app.Log)
+		asyncUpdater := updater.NewUpdater(payFacade, subFacade, gateway, userServiceClient, app.Log)
 
 		updaterCtx, updaterCancel := context.WithCancel(ctx)
 		app.AddCloser(func() error {
@@ -73,14 +74,14 @@ func main() {
 			return nil
 		})
 
-		go updater.StartPaymentStatusUpdater(updaterCtx, 30*time.Second)
-		go updater.StartSubscriptionStatusUpdater(updaterCtx, 1*time.Hour)
+		go asyncUpdater.StartPaymentStatusUpdater(updaterCtx, 30*time.Second)
+		go asyncUpdater.StartSubscriptionStatusUpdater(updaterCtx, 1*time.Hour)
 
-		subUseCase := subscription_service2.NewUseCase(subFacade)
-		payUseCase := payment_service2.NewUseCase(payFacade, gateway, updater)
+		subUseCase := subscription_usecase.NewUseCase(subFacade)
+		payUseCase := payment_usecase.NewUseCase(payFacade, gateway, asyncUpdater)
 
-		subService := subscription_service3.NewImplementation(app.Log, subUseCase)
-		payService := payment_service3.NewImplementation(app.Log, payUseCase)
+		subService := subscription_service.NewImplementation(subUseCase)
+		payService := payment_service.NewImplementation(payUseCase)
 
 		tokenProvider := tokenpkg.NewJWTProvider(pkgTokenConfig)
 

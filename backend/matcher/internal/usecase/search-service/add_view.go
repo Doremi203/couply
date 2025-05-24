@@ -13,7 +13,7 @@ func (c *UseCase) AddView(ctx context.Context, in *dto.AddViewV1Request) (*dto.A
 		return nil, err
 	}
 
-	err = c.searchStorageFacade.AddViewTx(ctx, userID, in.GetViewedID())
+	err = c.searchStorageFacade.AddViewTx(ctx, userID, in.ViewedID)
 	if err != nil {
 		return nil, err
 	}

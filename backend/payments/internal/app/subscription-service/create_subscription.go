@@ -17,8 +17,7 @@ func (i *Implementation) CreateSubscriptionV1(ctx context.Context, in *desc.Crea
 
 	response, err := i.usecase.CreateSubscription(ctx, dto.PBToCreateSubscriptionRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.CreateSubscriptionResponseToPB(response), nil
