@@ -22,7 +22,8 @@ service Login {
 
   rpc OAuthLoginV1(OAuthLoginV1Request) returns (OAuthLoginV1Response) {
     option (google.api.http) = {
-      get: "/v1/login/oauth/{provider}"
+      post: "/v1/login/oauth"
+      body: "*"
     };
     option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       summary: "Redirect endpoint для OAuth провайдеров";
@@ -44,16 +45,14 @@ message BasicLoginResponseV1 {
 
 message OAuthLoginV1Request {
   string provider = 1;
-  string access_token = 2;
-  string code = 3;
-  string token_type = 4;
-  string expires_in = 5;
-  string scope = 6;
-  string state = 7;
-
-  string error = 8;
-  string error_description = 9;
-  string error_uri = 10;
+  string code = 2;
+  string state = 3;
+  string code_verifier = 4;
+  string device_id = 5;
 }
 
-message OAuthLoginV1Response {}
+message OAuthLoginV1Response {
+  token.Token access_token = 1;
+  token.Token refresh_token = 2;
+  bool first_login = 3;
+}

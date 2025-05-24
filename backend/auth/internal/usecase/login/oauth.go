@@ -28,16 +28,19 @@ func (u UseCase) OAuthV1(
 		)
 	}
 
-	accessToken := req.AccessToken
-	if accessToken == "" {
-		accessToken, err = oauthProvider.ExchangeCodeForToken(ctx, req.Code, req.State)
-		if err != nil {
-			return OAuthV1Response{}, errors.WrapFailf(
-				err,
-				"exchange code for token from %v",
-				errors.Token("provider", req.Provider),
-			)
-		}
+	accessToken, err := oauthProvider.ExchangeCodeForToken(
+		ctx,
+		req.Code,
+		req.State,
+		req.CodeVerifier,
+		req.DeviceID,
+	)
+	if err != nil {
+		return OAuthV1Response{}, errors.WrapFailf(
+			err,
+			"exchange code for token from %v",
+			errors.Token("provider", req.Provider),
+		)
 	}
 
 	oauthInfo, err := oauthProvider.FetchUserInfo(ctx, accessToken)
