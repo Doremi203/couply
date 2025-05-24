@@ -41,7 +41,11 @@ func (f *StorageFacadeSubscription) GetActiveSubscriptionTx(ctx context.Context,
 		return nil
 	})
 
-	return sub, err
+	if err != nil {
+		return nil, errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return sub, nil
 }
 
 func getIDs(pays []*payment.Payment) []uuid.UUID {

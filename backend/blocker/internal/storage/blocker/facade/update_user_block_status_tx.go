@@ -30,5 +30,9 @@ func (f *StorageFacadeBlocker) UpdateUserBlockStatusTx(ctx context.Context, bloc
 		return nil
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return nil
 }

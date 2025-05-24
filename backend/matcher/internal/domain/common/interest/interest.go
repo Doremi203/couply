@@ -1,6 +1,9 @@
 package interest
 
-import desc "github.com/Doremi203/couply/backend/matcher/gen/api/common/v1"
+import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/common/v1"
+)
 
 const (
 	GoalDBName      = "goal"
@@ -10,14 +13,19 @@ const (
 	AlcoholDBName   = "alcohol"
 	SmokingDBName   = "smoking"
 
-	SportDBName             = "sport"
-	SelfDevelopmentDBName   = "self_development"
-	HobbyDBName             = "hobby"
-	MusicDBName             = "music"
-	MoviesTVDBName          = "movies_tv"
-	FoodDrinkDBName         = "food_drink"
-	PersonalityTraitsDBName = "personality_traits"
-	PetsDBName              = "pets"
+	SportName             = "sport"
+	SelfDevelopmentName   = "self_development"
+	HobbyName             = "hobby"
+	MusicName             = "music"
+	MoviesTVName          = "movies_tv"
+	FoodDrinkName         = "food_drink"
+	PersonalityTraitsName = "personality_traits"
+	PetsName              = "pets"
+)
+
+var (
+	ErrInterestsNotFound   = errors.Error("interest not found")
+	ErrUnknownInterestType = errors.Error("unknown interest type")
 )
 
 type Interest struct {
@@ -76,4 +84,25 @@ func PBToInterest(pb *desc.Interest) *Interest {
 		PersonalityTraits: PBToPersonalityTraitsSlice(pb.GetPersonalityTraits()),
 		Pets:              PBToPetsSlice(pb.GetPets()),
 	}
+}
+
+func MapInterestsToGroups(interests *Interest) map[string][]int {
+	return map[string][]int{
+		SportName:             convertSlice(interests.Sport),
+		SelfDevelopmentName:   convertSlice(interests.SelfDevelopment),
+		HobbyName:             convertSlice(interests.Hobby),
+		MusicName:             convertSlice(interests.Music),
+		MoviesTVName:          convertSlice(interests.MoviesTV),
+		FoodDrinkName:         convertSlice(interests.FoodDrink),
+		PersonalityTraitsName: convertSlice(interests.PersonalityTraits),
+		PetsName:              convertSlice(interests.Pets),
+	}
+}
+
+func convertSlice[T ~int](slice []T) []int {
+	result := make([]int, 0, len(slice))
+	for _, v := range slice {
+		result = append(result, int(v))
+	}
+	return result
 }

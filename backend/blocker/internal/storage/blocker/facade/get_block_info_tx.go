@@ -38,5 +38,9 @@ func (f *StorageFacadeBlocker) GetBlockInfoTx(ctx context.Context, userID uuid.U
 		return nil
 	})
 
-	return userBlock, err
+	if err != nil {
+		return nil, errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return userBlock, nil
 }

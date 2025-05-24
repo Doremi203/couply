@@ -29,5 +29,9 @@ func (f *StorageFacadePayment) UpdatePaymentStatusTx(ctx context.Context, paymen
 		return nil
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return nil
 }

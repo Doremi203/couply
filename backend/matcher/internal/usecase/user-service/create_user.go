@@ -46,10 +46,9 @@ func (c *UseCase) CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (
 		SetUpdatedAt(time.Now()).
 		Build()
 
-	createdUser, err := c.userStorageFacade.CreateUserTx(ctx, userToCreate)
-	if err != nil {
+	if err = c.userStorageFacade.CreateUserTx(ctx, userToCreate); err != nil {
 		return nil, err
 	}
 
-	return &dto.CreateUserV1Response{User: createdUser}, nil
+	return &dto.CreateUserV1Response{User: userToCreate}, nil
 }

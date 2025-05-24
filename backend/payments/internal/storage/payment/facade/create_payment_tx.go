@@ -29,5 +29,9 @@ func (f *StorageFacadePayment) CreatePaymentTx(ctx context.Context, newPayment *
 		return nil
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return nil
 }

@@ -37,5 +37,9 @@ func (f *StorageFacadeBlocker) GetUserBlockByIDTx(ctx context.Context, blockID u
 		return nil
 	})
 
-	return userBlock, err
+	if err != nil {
+		return nil, errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return userBlock, nil
 }

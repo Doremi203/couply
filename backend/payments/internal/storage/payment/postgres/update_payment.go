@@ -19,13 +19,13 @@ func (s *PgStoragePayment) UpdatePayment(ctx context.Context, pay *payment.Payme
 		return errors.Wrapf(err, "buildUpdatePaymentQuery with %v", errors.Token("payment_id", pay.ID))
 	}
 
-	result, err := executeUpdatePayment(ctx, s.txManager.GetQueryEngine(ctx), query, args)
+	result, err := executeUpdatePaymentQuery(ctx, s.txManager.GetQueryEngine(ctx), query, args)
 	if err != nil {
 		return errors.Wrapf(err, "executeUpdatePayment with %v", errors.Token("payment_id", pay.ID))
 	}
 
-	if err = verifyUpdateResult(result); err != nil {
-		return errors.Wrapf(err, "verifyUpdateResult with %v", errors.Token("payment_id", pay.ID))
+	if result.RowsAffected() == 0 {
+		return payment.ErrPaymentNotFound
 	}
 
 	return nil
@@ -41,19 +41,10 @@ func buildUpdatePaymentQuery(pay *payment.Payment) (string, []any, error) {
 	return query, args, err
 }
 
-func executeUpdatePayment(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) (pgconn.CommandTag, error) {
+func executeUpdatePaymentQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) (pgconn.CommandTag, error) {
 	result, err := queryEngine.Exec(ctx, query, args...)
 	if err != nil {
 		return pgconn.CommandTag{}, errors.Wrap(err, "exec")
 	}
 	return result, nil
-}
-
-func verifyUpdateResult(result pgconn.CommandTag) error {
-	switch rowsAffected := result.RowsAffected(); rowsAffected {
-	case 0:
-		return payment.ErrPaymentNotFound
-	default:
-		return nil
-	}
 }

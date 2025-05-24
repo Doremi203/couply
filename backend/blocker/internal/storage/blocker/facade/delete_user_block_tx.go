@@ -10,16 +10,11 @@ import (
 )
 
 func (f *StorageFacadeBlocker) DeleteUserBlockTx(ctx context.Context, userID uuid.UUID) error {
-	err := f.txManager.RunRepeatableRead(ctx, func(ctx context.Context) error {
-		err := f.storage.DeleteUserBlock(ctx, postgres.DeleteUserBlockOptions{
-			UserID: userID,
-		})
-		if err != nil {
-			return errors.Wrap(err, "storage.DeleteUserBlock")
-		}
+	if err := f.storage.DeleteUserBlock(ctx, postgres.DeleteUserBlockOptions{
+		UserID: userID,
+	}); err != nil {
+		return errors.Wrap(err, "storage.DeleteUserBlock")
+	}
 
-		return nil
-	})
-
-	return err
+	return nil
 }

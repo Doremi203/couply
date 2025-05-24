@@ -22,8 +22,8 @@ func (s *PgStorageSubscription) UpdateSubscription(ctx context.Context, sub *sub
 		return errors.Wrapf(err, "executeUpdateSubscriptionQuery with %v", errors.Token("subscription", sub))
 	}
 
-	if err = verifyUpdateResult(result); err != nil {
-		return errors.Wrapf(err, "verifyUpdateResult with %v", errors.Token("subscription", sub))
+	if result.RowsAffected() == 0 {
+		return subscription.ErrSubscriptionNotFound
 	}
 
 	return nil
@@ -51,13 +51,4 @@ func executeUpdateSubscriptionQuery(ctx context.Context, queryEngine storage.Que
 		return pgconn.CommandTag{}, errors.Wrap(err, "exec")
 	}
 	return result, nil
-}
-
-func verifyUpdateResult(result pgconn.CommandTag) error {
-	switch rowsAffected := result.RowsAffected(); rowsAffected {
-	case 0:
-		return subscription.ErrSubscriptionNotFound
-	default:
-		return nil
-	}
 }

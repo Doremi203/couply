@@ -3,6 +3,14 @@ package main
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/matcher/internal/storage"
+	matching_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/matching/facade"
+	postgres2 "github.com/Doremi203/couply/backend/matcher/internal/storage/matching/postgres"
+	search_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/search/facade"
+	postgres4 "github.com/Doremi203/couply/backend/matcher/internal/storage/search/postgres"
+	user_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/user/facade"
+	postgres3 "github.com/Doremi203/couply/backend/matcher/internal/storage/user/postgres"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	postgrespkg "github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
@@ -14,13 +22,6 @@ import (
 	search_service "github.com/Doremi203/couply/backend/matcher/internal/app/search-service"
 	user_service "github.com/Doremi203/couply/backend/matcher/internal/app/user-service"
 	user_domain "github.com/Doremi203/couply/backend/matcher/internal/domain/user"
-	matching_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/matching-service"
-	search_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/search-service"
-	user_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/facade/user-service"
-	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres"
-	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/matching"
-	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/search"
-	"github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/user"
 	matching_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/matching-service"
 	search_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/search-service"
 	user_service_usecase "github.com/Doremi203/couply/backend/matcher/internal/usecase/user-service"
@@ -71,18 +72,18 @@ func main() {
 
 		photoURLGenerator := user_domain.NewObjectStoragePhotoURLGenerator(s3Client, s3Config.Bucket)
 
-		txManager := postgres.NewTxManager(dbClient)
-		pgStorageUser := user.NewPgStorageUser(txManager)
+		txManager := storage.NewTxManager(dbClient)
+		pgStorageUser := postgres3.NewPgStorageUser(txManager)
 		storageFacadeUser := user_service_facade.NewStorageFacadeUser(txManager, pgStorageUser)
 		useCaseUserService := user_service_usecase.NewUseCase(photoURLGenerator, storageFacadeUser)
 		implUserService := user_service.NewImplementation(app.Log, useCaseUserService)
 
-		pgStorageMatching := matching.NewPgStorageMatching(txManager)
+		pgStorageMatching := postgres2.NewPgStorageMatching(txManager)
 		storageFacadeMatching := matching_service_facade.NewStorageFacadeMatching(txManager, pgStorageMatching)
 		useCaseMatchingService := matching_service_usecase.NewUseCase(storageFacadeMatching)
 		implMatchingService := matching_service.NewImplementation(app.Log, useCaseMatchingService)
 
-		pgStorageSearch := search.NewPgStorageSearch(txManager)
+		pgStorageSearch := postgres4.NewPgStorageSearch(txManager)
 		storageFacadeSearch := search_service_facade.NewStorageFacadeSearch(txManager, pgStorageSearch, pgStorageUser)
 		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch, photoURLGenerator, app.Log)
 		implSearchService := search_service.NewImplementation(app.Log, useCaseSearchService, photoURLGenerator)

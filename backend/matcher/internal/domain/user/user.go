@@ -2,8 +2,9 @@ package user
 
 import (
 	"context"
-	"errors"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 
@@ -14,6 +15,12 @@ import (
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"google.golang.org/protobuf/types/known/timestamppb"
+)
+
+var (
+	ErrDuplicateUser   = errors.Error("user already exists")
+	ErrUserDoesntExist = errors.Error("user does not exist")
+	ErrUserNotFound    = errors.Error("user not found")
 )
 
 type User struct {

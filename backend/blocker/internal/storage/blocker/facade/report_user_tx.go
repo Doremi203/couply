@@ -25,5 +25,9 @@ func (f *StorageFacadeBlocker) ReportUserTx(ctx context.Context, block *blocker.
 		return nil
 	})
 
-	return err
+	if err != nil {
+		return errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return nil
 }

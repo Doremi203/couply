@@ -9,6 +9,11 @@ import (
 	"github.com/minio/minio-go/v7"
 )
 
+var (
+	ErrPhotoNotFound  = errors.Error("photo not found")
+	ErrPhotosNotFound = errors.Error("photos not found")
+)
+
 func NewObjectStoragePhotoURLGenerator(
 	client *minio.Client,
 	bucket string,

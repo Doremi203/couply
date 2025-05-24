@@ -3,12 +3,18 @@ package search
 import (
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+
 	"github.com/google/uuid"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"google.golang.org/protobuf/types/known/timestamppb"
+)
+
+var (
+	ErrFilterNotFound = errors.Error("filter not found")
 )
 
 type Filter struct {

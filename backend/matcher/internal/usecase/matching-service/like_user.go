@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
-	matching_storage "github.com/Doremi203/couply/backend/matcher/internal/storage/postgres/matching"
+	matching_storage "github.com/Doremi203/couply/backend/matcher/internal/storage/matching/postgres"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
 	"github.com/Doremi203/couply/backend/matcher/utils"

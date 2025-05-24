@@ -22,8 +22,8 @@ func (s *PgStorageBlocker) UpdateUserBlock(ctx context.Context, block *blocker.U
 		return errors.Wrapf(err, "executeUpdateUserBlockQuery with %v", errors.Token("block", block))
 	}
 
-	if err = verifyUpdateResult(result); err != nil {
-		return errors.Wrapf(err, "verifyUpdateResult with %v", errors.Token("block", block))
+	if result.RowsAffected() == 0 {
+		return blocker.ErrUserBlockNotFound
 	}
 
 	return nil
@@ -44,13 +44,4 @@ func executeUpdateUserBlockQuery(ctx context.Context, queryEngine storage.QueryE
 		return pgconn.CommandTag{}, errors.Wrap(err, "exec")
 	}
 	return result, nil
-}
-
-func verifyUpdateResult(result pgconn.CommandTag) error {
-	switch rowsAffected := result.RowsAffected(); rowsAffected {
-	case 0:
-		return blocker.ErrUserBlockNotFound
-	default:
-		return nil
-	}
 }

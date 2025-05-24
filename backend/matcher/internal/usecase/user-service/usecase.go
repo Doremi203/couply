@@ -9,7 +9,7 @@ import (
 )
 
 type userStorageFacade interface {
-	CreateUserTx(ctx context.Context, user *user.User) (*user.User, error)
+	CreateUserTx(ctx context.Context, user *user.User) error
 	UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error)
 	DeleteUserTx(ctx context.Context, userID uuid.UUID) error
 	GetUserTx(ctx context.Context, userID uuid.UUID) (*user.User, error)
