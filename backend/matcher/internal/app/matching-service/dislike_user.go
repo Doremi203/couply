@@ -21,8 +21,7 @@ func (i *Implementation) DislikeUserV1(ctx context.Context, in *desc.DislikeUser
 
 	response, err := i.usecase.DislikeUser(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.DislikeUserResponseToPB(response), nil

@@ -21,8 +21,7 @@ func (i *Implementation) UpdateUserByIDV1(ctx context.Context, in *desc.UpdateUs
 
 	response, err := i.usecase.UpdateUserByID(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.UpdateUserByIDResponseToPB(response), nil

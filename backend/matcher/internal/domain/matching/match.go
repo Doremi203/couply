@@ -1,8 +1,9 @@
 package matching
 
 import (
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
 	"github.com/google/uuid"

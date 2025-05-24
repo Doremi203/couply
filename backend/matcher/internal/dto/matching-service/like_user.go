@@ -1,7 +1,7 @@
 package matching_service
 
 import (
-	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
@@ -21,7 +21,7 @@ type LikeUserV1Response struct {
 func PBToLikeUserRequest(req *desc.LikeUserV1Request) (*LikeUserV1Request, error) {
 	targetUserID, err := uuid.Parse(req.GetTargetUserId())
 	if err != nil {
-		return nil, fmt.Errorf("invalid target user id: %s", req.GetTargetUserId())
+		return nil, errors.Wrap(err, "uuid.Parse")
 	}
 
 	return &LikeUserV1Request{

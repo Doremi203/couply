@@ -2,7 +2,8 @@ package facade
 
 import (
 	"context"
-	"github.com/go-faster/errors"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )

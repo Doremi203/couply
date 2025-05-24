@@ -7,7 +7,7 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 )
 
-func (f *StorageFacadeSearch) UpdateFilterTx(ctx context.Context, filter *search.Filter) (*search.Filter, error) {
+func (f *StorageFacadeSearch) UpdateFilterTx(ctx context.Context, filter *search.Filter) error {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
 		if err := f.searchStorage.UpdateFilter(ctxTx, filter); err != nil {
 			return errors.Wrap(err, "searchStorage.UpdateFilter")
@@ -25,8 +25,8 @@ func (f *StorageFacadeSearch) UpdateFilterTx(ctx context.Context, filter *search
 	})
 
 	if err != nil {
-		return nil, errors.Wrap(err, "txManager.RunRepeatableRead")
+		return errors.Wrap(err, "txManager.RunRepeatableRead")
 	}
 
-	return filter, nil
+	return nil
 }

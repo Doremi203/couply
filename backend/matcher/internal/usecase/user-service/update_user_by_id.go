@@ -12,7 +12,7 @@ import (
 func (c *UseCase) UpdateUserByID(ctx context.Context, in *dto.UpdateUserByIDV1Request) (*dto.UpdateUserByIDV1Response, error) {
 	photos, err := c.createPhotos(ctx, in.ID, in.PhotoUploadRequests)
 	if err != nil {
-		return nil, errors.WrapFail(err, "create photos")
+		return nil, errors.Wrap(err, "createPhotos")
 	}
 
 	user := user.NewUserBuilder().
@@ -41,7 +41,7 @@ func (c *UseCase) UpdateUserByID(ctx context.Context, in *dto.UpdateUserByIDV1Re
 
 	updatedUser, err := c.userStorageFacade.UpdateUserTx(ctx, user)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "userStorageFacade.UpdateUserByID")
 	}
 
 	return &dto.UpdateUserByIDV1Response{User: updatedUser}, nil

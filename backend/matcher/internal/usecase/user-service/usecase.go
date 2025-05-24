@@ -9,12 +9,20 @@ import (
 )
 
 type userStorageFacade interface {
+	userStorageSetterFacade
+	userStorageGetterFacade
+}
+
+type userStorageSetterFacade interface {
 	CreateUserTx(ctx context.Context, user *user.User) error
 	UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error)
 	DeleteUserTx(ctx context.Context, userID uuid.UUID) error
+	UpdatePhotosUploadedAtTx(ctx context.Context, orderNumbers []int32, userID uuid.UUID) error
+}
+
+type userStorageGetterFacade interface {
 	GetUserTx(ctx context.Context, userID uuid.UUID) (*user.User, error)
 	GetUsersTx(ctx context.Context, userIDs []uuid.UUID) ([]*user.User, error)
-	UpdatePhotosUploadedAtTx(ctx context.Context, orderNumbers []int32, userID uuid.UUID) error
 }
 
 type UseCase struct {

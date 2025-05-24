@@ -21,8 +21,7 @@ func (i *Implementation) AddViewV1(ctx context.Context, in *desc.AddViewV1Reques
 
 	response, err := i.usecase.AddView(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.AddViewResponseToPB(response), nil

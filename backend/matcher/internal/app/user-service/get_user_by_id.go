@@ -18,10 +18,10 @@ func (i *Implementation) GetUserByIDV1(ctx context.Context, in *desc.GetUserByID
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
+
 	response, err := i.usecase.GetUserByID(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.GetUserByIDResponseToPB(response), nil

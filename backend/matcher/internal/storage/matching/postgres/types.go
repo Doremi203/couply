@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"bytes"
+
 	"github.com/google/uuid"
 )
 

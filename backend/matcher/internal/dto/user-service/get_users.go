@@ -1,7 +1,7 @@
 package user_service
 
 import (
-	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -21,7 +21,7 @@ func PBToGetUsersRequest(req *desc.GetUsersV1Request) (*GetUsersV1Request, error
 	for _, id := range req.GetUserIds() {
 		parsedUserID, err := uuid.Parse(id)
 		if err != nil {
-			return nil, fmt.Errorf("parse user id %s error: %v", id, err)
+			return nil, errors.Wrap(err, "uuid.Parse")
 		}
 		userIDs = append(userIDs, parsedUserID)
 	}

@@ -1,6 +1,7 @@
 package user_service
 
 import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	"github.com/google/uuid"
@@ -17,7 +18,7 @@ type GetUserByIDV1Response struct {
 func PBToGetUserByIDRequest(req *desc.GetUserByIDV1Request) (*GetUserByIDV1Request, error) {
 	userID, err := uuid.Parse(req.GetId())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "uuid.Parse")
 	}
 
 	return &GetUserByIDV1Request{

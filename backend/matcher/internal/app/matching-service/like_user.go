@@ -21,8 +21,7 @@ func (i *Implementation) LikeUserV1(ctx context.Context, in *desc.LikeUserV1Requ
 
 	response, err := i.usecase.LikeUser(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.LikeUserResponseToPB(response), nil

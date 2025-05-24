@@ -21,9 +21,9 @@ func (c *UseCase) createPhotos(ctx context.Context, userID uuid.UUID, requests [
 
 		uploadURL, err := c.photoURLGenerator.GenerateUpload(ctx, photo.ObjectKey, photo.MimeType)
 		if err != nil {
-			return nil, errors.WrapFailf(
+			return nil, errors.Wrapf(
 				err,
-				"generate upload url for photo with %v and user with %v",
+				"photoURLGenerator.GenerateUpload with %v and user with %v",
 				errors.Token("order_number", photo.OrderNumber),
 				errors.Token("user_id", photo.UserID),
 			)

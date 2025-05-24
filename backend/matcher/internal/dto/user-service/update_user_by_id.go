@@ -1,7 +1,7 @@
 package user_service
 
 import (
-	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
@@ -41,7 +41,7 @@ type UpdateUserByIDV1Response struct {
 func PBToUpdateUserByIDRequest(req *desc.UpdateUserByIDV1Request) (*UpdateUserByIDV1Request, error) {
 	id, err := uuid.Parse(req.GetId())
 	if err != nil {
-		return nil, fmt.Errorf("invalid user id: %s", req.GetId())
+		return nil, errors.Wrap(err, "uuid.Parse")
 	}
 	return &UpdateUserByIDV1Request{
 		ID:         id,

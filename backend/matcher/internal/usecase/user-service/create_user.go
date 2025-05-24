@@ -4,21 +4,22 @@ import (
 	"context"
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
-	"github.com/Doremi203/couply/backend/matcher/utils"
 )
 
 func (c *UseCase) CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (*dto.CreateUserV1Response, error) {
-	userID, err := utils.GetUserIDFromContext(ctx)
+	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "token.GetUserIDFromContext")
 	}
 
 	photos, err := c.createPhotos(ctx, userID, in.PhotoUploadRequests)
 	if err != nil {
-		return nil, errors.WrapFail(err, "create photos")
+		return nil, errors.Wrap(err, "createPhotos")
 	}
 
 	userToCreate := user.NewUserBuilder().
@@ -47,7 +48,7 @@ func (c *UseCase) CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (
 		Build()
 
 	if err = c.userStorageFacade.CreateUserTx(ctx, userToCreate); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "userStorageFacade.CreateUserTx")
 	}
 
 	return &dto.CreateUserV1Response{User: userToCreate}, nil

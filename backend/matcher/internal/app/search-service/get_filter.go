@@ -16,8 +16,7 @@ func (i *Implementation) GetFilterV1(ctx context.Context, in *desc.GetFilterV1Re
 
 	response, err := i.usecase.GetFilter(ctx, dto.PBToGetFilterRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.GetFilterResponseToPB(response), nil
