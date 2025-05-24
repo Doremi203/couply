@@ -14,11 +14,11 @@ func (c *UseCase) DislikeUser(ctx context.Context, in *dto.DislikeUserV1Request)
 		return nil, err
 	}
 
-	// не важно какое сообщение, оно не обновляется
+	// message value doesnt matter
 	updatedLike := matching.NewLike(in.TargetUserID, userID, "", matching.StatusDeclined)
 
-	_, err = c.matchingStorageFacade.UpdateLikeTx(ctx, updatedLike)
-	if err != nil {
+	err = c.matchingStorageFacade.UpdateLikeTx(ctx, updatedLike)
+	if err = c.matchingStorageFacade.UpdateLikeTx(ctx, updatedLike); err != nil {
 		return nil, err
 	}
 

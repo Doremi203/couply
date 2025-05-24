@@ -2,7 +2,7 @@ package postgres
 
 import (
 	"context"
-	"fmt"
+	"github.com/Doremi203/couply/backend/matcher/internal/storage"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
@@ -11,34 +11,49 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
-func (s *PgStorageMatching) GetLike(ctx context.Context, senderID, receiverID uuid.UUID) (*matching.Like, error) {
-	query, args, err := sq.Select("sender_id", "receiver_id", "message", "status", "created_at").
-		From("likes").
+type GetLikeOptions struct {
+	SenderID   uuid.UUID
+	ReceiverID uuid.UUID
+}
+
+func (s *PgStorageMatching) GetLike(ctx context.Context, opts GetLikeOptions) (*matching.Like, error) {
+	query, args, err := buildGetLikeQuery(opts)
+	if err != nil {
+		return nil, errors.Wrapf(err, "buildGetLikeQuery with %v", errors.Token("options", opts))
+	}
+
+	like, err := executeGetLikeQuery(ctx, s.txManager.GetQueryEngine(ctx), query, args)
+	if err != nil {
+		return nil, errors.Wrapf(err, "executeGetLikeQuery with %v", errors.Token("options", opts))
+	}
+
+	return like, nil
+}
+
+func buildGetLikeQuery(opts GetLikeOptions) (string, []any, error) {
+	query, args, err := sq.Select(likesColumns...).
+		From(likesTableName).
 		Where(sq.Eq{
-			"sender_id":   senderID,
-			"receiver_id": receiverID,
+			senderIDColumnName:   opts.SenderID,
+			receiverIDColumnName: opts.ReceiverID,
 		}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
+	return query, args, err
+}
+
+func executeGetLikeQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) (*matching.Like, error) {
+	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
-		return nil, fmt.Errorf("failed to build query: %w", err)
+		return nil, errors.Wrap(err, "query")
 	}
 
-	row := s.txManager.GetQueryEngine(ctx).QueryRow(ctx, query, args...)
-
-	like := &matching.Like{}
-	err = row.Scan(
-		&like.SenderID,
-		&like.ReceiverID,
-		&like.Message,
-		&like.Status,
-		&like.CreatedAt,
-	)
+	like, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[matching.Like])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, ErrLikeNotFound
+			return nil, errors.Wrap(matching.ErrLikeNotFound, "query")
 		}
-		return nil, fmt.Errorf("failed to scan row: %w", err)
+		return nil, errors.Wrap(err, "pgx.CollectExactlyOneRow")
 	}
 
 	return like, nil

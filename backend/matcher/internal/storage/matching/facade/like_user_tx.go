@@ -2,15 +2,15 @@ package facade
 
 import (
 	"context"
+	"github.com/go-faster/errors"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 )
 
-func (f *StorageFacadeMatching) LikeUserTx(ctx context.Context, like *matching.Like) (*matching.Like, error) {
-	err := f.txManager.RunRepeatableRead(ctx, func(ctx context.Context) error {
-		err := f.storage.AddLike(ctx, like)
-		return err
-	})
+func (f *StorageFacadeMatching) LikeUserTx(ctx context.Context, like *matching.Like) error {
+	if err := f.storage.CreateLike(ctx, like); err != nil {
+		return errors.Wrap(err, "storage.CreateLike")
+	}
 
-	return like, err
+	return nil
 }

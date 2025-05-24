@@ -2,28 +2,47 @@ package postgres
 
 import (
 	"context"
-	"fmt"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/matcher/internal/storage"
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 )
 
 func (s *PgStorageMatching) DeleteMatch(ctx context.Context, userID, targetUserID uuid.UUID) error {
-	user1, user2 := orderUserIDs(userID, targetUserID)
+	user1ID, user2ID := orderUserIDs(userID, targetUserID)
 
-	query, args, err := sq.Delete("matches").
-		Where(sq.Eq{"first_user_id": user1}).
-		Where(sq.Eq{"second_user_id": user2}).
+	query, args, err := buildDeleteMatchQuery(user1ID, user2ID)
+	if err != nil {
+		return errors.Wrapf(err, "buildDeleteMatchQuery with %v & %v",
+			errors.Token("first_user_id", user1ID),
+			errors.Token("second_user_id", user2ID),
+		)
+	}
+
+	if err = executeDeleteMatchQuery(ctx, s.txManager.GetQueryEngine(ctx), query, args); err != nil {
+		return errors.Wrapf(err, "executeDeleteMatchQuery with %v & %v",
+			errors.Token("first_user_id", user1ID),
+			errors.Token("second_user_id", user2ID),
+		)
+	}
+
+	return nil
+}
+
+func buildDeleteMatchQuery(user1ID, user2ID uuid.UUID) (string, []any, error) {
+	query, args, err := sq.Delete(matchesTableName).
+		Where(sq.Eq{firstUserIDColumnName: user1ID}).
+		Where(sq.Eq{secondUserIDColumnName: user2ID}).
 		PlaceholderFormat(sq.Dollar).
 		ToSql()
-	if err != nil {
-		return fmt.Errorf("failed to build query: %w", err)
-	}
+	return query, args, err
+}
 
-	_, err = s.txManager.GetQueryEngine(ctx).Exec(ctx, query, args...)
+func executeDeleteMatchQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) error {
+	_, err := queryEngine.Exec(ctx, query, args...)
 	if err != nil {
-		return fmt.Errorf("failed to delete match: %w", err)
+		return errors.Wrap(err, "exec")
 	}
-
 	return nil
 }

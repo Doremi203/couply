@@ -1,6 +1,7 @@
 package matching
 
 import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"time"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
@@ -8,10 +9,15 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+var (
+	ErrMatchAlreadyExists = errors.Error("match already exists")
+	ErrMatchesNotFound    = errors.Error("matches not found")
+)
+
 type Match struct {
-	FirstUserID  uuid.UUID
-	SecondUserID uuid.UUID
-	CreatedAt    time.Time
+	FirstUserID  uuid.UUID `db:"first_user_id"`
+	SecondUserID uuid.UUID `db:"second_user_id"`
+	CreatedAt    time.Time `db:"created_at"`
 }
 
 func NewMatch(firstUserID, secondUserID uuid.UUID) *Match {

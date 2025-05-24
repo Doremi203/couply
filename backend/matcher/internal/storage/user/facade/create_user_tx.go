@@ -8,22 +8,21 @@ import (
 )
 
 func (f *StorageFacadeUser) CreateUserTx(ctx context.Context, newUser *user.User) error {
-	var createdUser *user.User
 	var err error
 
 	err = f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		createdUser, err = f.storage.CreateUser(ctxTx, newUser)
+		err = f.storage.CreateUser(ctxTx, newUser)
 		if err != nil {
 			return errors.Wrap(err, "storage.CreateUser")
 		}
 
-		for _, photo := range createdUser.Photos {
-			if err = f.storage.CreatePhoto(ctxTx, createdUser.ID, photo); err != nil {
+		for _, photo := range newUser.Photos {
+			if err = f.storage.CreatePhoto(ctxTx, newUser.ID, photo); err != nil {
 				return errors.Wrap(err, "storage.CreatePhoto")
 			}
 		}
 
-		if err = f.storage.CreateInterests(ctxTx, createdUser.ID, createdUser.Interest); err != nil {
+		if err = f.storage.CreateInterests(ctxTx, newUser.ID, newUser.Interest); err != nil {
 			return errors.Wrap(err, "storage.CreateInterests")
 		}
 

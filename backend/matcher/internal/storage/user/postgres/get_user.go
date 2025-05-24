@@ -46,7 +46,7 @@ func executeGetUserQuery(ctx context.Context, queryEngine storage.QueryEngine, q
 		return nil, errors.Wrap(err, "query")
 	}
 
-	pay, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[user.User])
+	userDB, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[user.User])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, errors.Wrap(user.ErrUserNotFound, "query")
@@ -54,5 +54,5 @@ func executeGetUserQuery(ctx context.Context, queryEngine storage.QueryEngine, q
 		return nil, errors.Wrap(err, "pgx.CollectExactlyOneRow")
 	}
 
-	return pay, nil
+	return userDB, nil
 }

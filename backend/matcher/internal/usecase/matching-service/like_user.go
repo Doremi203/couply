@@ -57,7 +57,7 @@ func isMutualLike(revertedLike *matching.Like) bool {
 func (p *likeProcessor) handleNewLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {
 	like := matching.NewLike(userID, targetUserID, message, matching.StatusWaiting)
 
-	if _, err := p.storage.LikeUserTx(ctx, like); err != nil {
+	if err := p.storage.LikeUserTx(ctx, like); err != nil {
 		return nil, fmt.Errorf("failed to save like: %w", err)
 	}
 

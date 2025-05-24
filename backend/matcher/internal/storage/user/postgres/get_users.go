@@ -49,7 +49,7 @@ func executeGetUsersQuery(ctx context.Context, queryEngine storage.QueryEngine, 
 		return nil, errors.Wrap(err, "query")
 	}
 
-	pays, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[user.User])
+	users, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[user.User])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, errors.Wrap(user.ErrUserNotFound, "query")
@@ -57,5 +57,5 @@ func executeGetUsersQuery(ctx context.Context, queryEngine storage.QueryEngine, 
 		return nil, errors.Wrap(err, "pgx.CollectRows")
 	}
 
-	return pays, nil
+	return users, nil
 }

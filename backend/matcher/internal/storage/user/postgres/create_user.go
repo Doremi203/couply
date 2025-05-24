@@ -11,17 +11,17 @@ import (
 	sq "github.com/Masterminds/squirrel"
 )
 
-func (s *PgStorageUser) CreateUser(ctx context.Context, user *user.User) (*user.User, error) {
+func (s *PgStorageUser) CreateUser(ctx context.Context, user *user.User) error {
 	query, args, err := buildCreateUserQuery(user)
 	if err != nil {
-		return nil, errors.Wrapf(err, "buildCreateUserQuery with %v", errors.Token("user", user))
+		return errors.Wrapf(err, "buildCreateUserQuery with %v", errors.Token("user", user))
 	}
 
 	if err = executeCreateUserQuery(ctx, s.txManager.GetQueryEngine(ctx), query, args); err != nil {
-		return nil, errors.Wrapf(err, "executeCreateUserQuery with %v", errors.Token("user", user))
+		return errors.Wrapf(err, "executeCreateUserQuery with %v", errors.Token("user", user))
 	}
 
-	return user, nil
+	return nil
 }
 
 func buildCreateUserQuery(user *user.User) (string, []any, error) {

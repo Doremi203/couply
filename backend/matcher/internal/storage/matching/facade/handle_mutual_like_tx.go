@@ -2,6 +2,7 @@ package facade
 
 import (
 	"context"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 	"github.com/google/uuid"
@@ -15,23 +16,27 @@ func (f *StorageFacadeMatching) HandleMutualLikeTx(ctx context.Context, userID, 
 		updatedLike := matching.NewLike(targetUserID, userID, message, matching.StatusAccepted)
 		err = f.storage.UpdateLike(ctx, updatedLike)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "storage.UpdateLike")
 		}
 
 		newLike := matching.NewLike(userID, targetUserID, message, matching.StatusAccepted)
-		err = f.storage.AddLike(ctx, newLike)
+		err = f.storage.CreateLike(ctx, newLike)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "storage.CreateLike")
 		}
 
 		newMatch = matching.NewMatch(userID, targetUserID)
-		err = f.storage.AddMatch(ctx, newMatch)
+		err = f.storage.CreateMatch(ctx, newMatch)
 		if err != nil {
-			return err
+			return errors.Wrap(err, "storage.CreateMatch")
 		}
 
-		return err
+		return nil
 	})
 
-	return newMatch, err
+	if err != nil {
+		return nil, errors.Wrap(err, "txManager.RunRepeatableRead")
+	}
+
+	return newMatch, nil
 }

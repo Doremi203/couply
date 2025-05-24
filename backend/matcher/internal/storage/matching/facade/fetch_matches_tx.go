@@ -2,6 +2,8 @@ package facade
 
 import (
 	"context"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/matcher/internal/storage/matching/postgres"
 
 	"github.com/google/uuid"
 
@@ -9,13 +11,14 @@ import (
 )
 
 func (f *StorageFacadeMatching) FetchMatchesTx(ctx context.Context, userID uuid.UUID, limit, offset uint64) ([]*matching.Match, error) {
-	var matches []*matching.Match
-	var err error
-
-	err = f.txManager.RunReadCommitted(ctx, func(ctx context.Context) error {
-		matches, err = f.storage.FetchMatches(ctx, userID, limit, offset)
-		return err
+	matches, err := f.storage.FetchMatches(ctx, postgres.FetchMatchesOptions{
+		UserID: userID,
+		Limit:  limit,
+		Offset: offset,
 	})
+	if err != nil {
+		return nil, errors.Wrap(err, "storage.FetchMatches")
+	}
 
-	return matches, err
+	return matches, nil
 }
