@@ -2,6 +2,7 @@ package user_service
 
 import (
 	"context"
+	"github.com/Doremi203/couply/backend/matcher/utils"
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
@@ -22,13 +23,15 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		return nil, errors.Wrap(err, "createPhotos")
 	}
 
+	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(in.Latitude, in.Longitude)
+
 	user := user.NewUserBuilder().
 		SetID(userID).
 		SetName(in.Name).
 		SetAge(in.Age).
 		SetGender(in.Gender).
-		SetLatitude(in.Latitude).
-		SetLongitude(in.Longitude).
+		SetLatitude(latitudeWithNoise).
+		SetLongitude(longitudeWithNoise).
 		SetBIO(in.Bio).
 		SetGoal(in.Goal).
 		SetInterest(in.Interest).
