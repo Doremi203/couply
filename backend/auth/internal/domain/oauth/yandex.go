@@ -20,9 +20,13 @@ func newYandexProvider(config YandexConfig) *yandexProvider {
 		SetRetryWaitTime(1 * time.Second).
 		SetRetryMaxWaitTime(5 * time.Second)
 	return &yandexProvider{
-		config:        config,
-		client:        client,
-		codeExchanger: newCodeExchanger(config.ClientID, "https://oauth.yandex.ru/token"),
+		config: config,
+		client: client,
+		codeExchanger: newCodeExchanger(
+			config.ClientID,
+			"https://oauth.yandex.ru/token",
+			"https://testing.couply.ru/oauth-callback",
+		),
 	}
 }
 

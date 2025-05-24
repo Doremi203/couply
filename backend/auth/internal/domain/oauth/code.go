@@ -11,22 +11,25 @@ import (
 func newCodeExchanger(
 	clientID string,
 	authURL string,
+	redirectURL string,
 ) codeExchanger {
 	client := resty.New().
 		SetRetryCount(3).
 		SetRetryWaitTime(1 * time.Second).
 		SetRetryMaxWaitTime(5 * time.Second)
 	return codeExchanger{
-		clientID: clientID,
-		client:   client,
-		authURL:  authURL,
+		clientID:    clientID,
+		client:      client,
+		authURL:     authURL,
+		redirectURL: redirectURL,
 	}
 }
 
 type codeExchanger struct {
-	clientID string
-	authURL  string
-	client   *resty.Client
+	clientID    string
+	authURL     string
+	redirectURL string
+	client      *resty.Client
 }
 
 func (p codeExchanger) ExchangeCodeForToken(
@@ -44,7 +47,7 @@ func (p codeExchanger) ExchangeCodeForToken(
 		"code":          string(code),
 		"code_verifier": string(codeVerifier),
 		"client_id":     p.clientID,
-		"redirect_uri":  "http://localhost",
+		"redirect_uri":  p.redirectURL,
 		"state":         string(state),
 		"device_id":     string(deviceID),
 	}

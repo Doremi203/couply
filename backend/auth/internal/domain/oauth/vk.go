@@ -18,8 +18,12 @@ func newVkProvider(cfg VKConfig) *vkProvider {
 		SetRetryWaitTime(1 * time.Second).
 		SetRetryMaxWaitTime(5 * time.Second)
 	return &vkProvider{
-		client:        client,
-		codeExchanger: newCodeExchanger(cfg.ClientID, "https://id.vk.com/oauth2/auth"),
+		client: client,
+		codeExchanger: newCodeExchanger(
+			cfg.ClientID,
+			"https://id.vk.com/oauth2/auth",
+			"https://testing.couply.ru",
+		),
 	}
 }
 
