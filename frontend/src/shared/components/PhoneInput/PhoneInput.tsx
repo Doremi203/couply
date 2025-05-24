@@ -1,4 +1,4 @@
-import { useRef, KeyboardEvent, useState, useEffect } from 'react';
+import { useRef, KeyboardEvent } from 'react';
 
 import styles from './phoneInput.module.css';
 
@@ -9,17 +9,6 @@ interface PhoneInputProps {
 
 export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [isValid, setIsValid] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    // Only validate when user has entered something
-    if (value.length > 3) {
-      const cleanPhone = value.replace(/\D/g, '');
-      setIsValid(cleanPhone.length >= 11);
-    } else {
-      setIsValid(null);
-    }
-  }, [value]);
 
   const formatPhone = (input: string): string => {
     // Сохраняем только цифры и плюс
@@ -68,19 +57,11 @@ export const PhoneInput = ({ value, onChange }: PhoneInputProps) => {
     }, 0);
   };
 
-  const inputClassName = [
-    styles.input,
-    isValid === true ? styles.valid : '',
-    isValid === false ? styles.invalid : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
-
   return (
     <input
       type="tel"
       inputMode="tel"
-      className={inputClassName}
+      className={styles.input}
       value={value}
       onChange={handleChange}
       onKeyDown={handleKeyDown}

@@ -71,9 +71,14 @@ export interface UserResponse {
     children: Children;
     alcohol: Alcohol;
     smoking: Smoking;
-    hidden: boolean;
-    verified: boolean;
-    photos: null;
+    isPremium: boolean;
+    isBlocked: boolean;
+    isVerified: boolean;
+    isHidden: boolean;
+    photos: Array<{
+      orderNumber: number;
+      url: string;
+    }>;
   };
 }
 

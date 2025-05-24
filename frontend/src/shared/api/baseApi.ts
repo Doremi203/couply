@@ -156,6 +156,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const AUTH_BASE_URL = 'https://auth.testing.couply.ru';
 const MATCHER_API_URL = 'https://matcher.testing.couply.ru';
 const BLOCKER_API_URL = 'https://blocker.testing.couply.ru';
+const PAYMENTS_API_URL = 'https://payments.testing.couply.ru';
 const NOTIFICATOR_API_URL = 'https://notificator.testing.couply.ru';
 
 export const baseApi = createApi({
@@ -193,9 +194,26 @@ export const matcherApi = createApi({
 });
 
 export const blockerApi = createApi({
-  reducerPath: 'matherApi',
+  reducerPath: 'blockerApi',
   baseQuery: fetchBaseQuery({
     baseUrl: BLOCKER_API_URL,
+    prepareHeaders: headers => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+        headers.set('user-token', token);
+      }
+      return headers;
+    },
+  }),
+  endpoints: () => ({}),
+  // tagTypes: ['filter', 'search', 'User'],
+});
+
+export const paymentsApi = createApi({
+  reducerPath: 'paymentsApi',
+  baseQuery: fetchBaseQuery({
+    baseUrl: PAYMENTS_API_URL,
     prepareHeaders: headers => {
       const token = localStorage.getItem('token');
       if (token) {

@@ -1,6 +1,4 @@
-import { ProfileData } from '../../shared/components/ProfileCard';
-
-export interface LikeProfile extends ProfileData {
+export interface LikeProfile {
   liked?: boolean;
   hasLikedYou?: boolean;
 }

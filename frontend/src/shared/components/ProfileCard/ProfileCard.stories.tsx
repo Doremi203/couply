@@ -56,6 +56,7 @@ const sampleProfile = {
 
 export const Default: Story = {
   args: {
+    //@ts-ignore
     profile: sampleProfile,
     onClick: () => console.log('Profile card clicked'),
   },
@@ -63,6 +64,7 @@ export const Default: Story = {
 
 export const WithLikeButton: Story = {
   args: {
+    //@ts-ignore
     profile: sampleProfile,
     onClick: () => console.log('Profile card clicked'),
     onLike: id => console.log(`Liked profile with id: ${id}`),
@@ -71,6 +73,7 @@ export const WithLikeButton: Story = {
 
 export const HasLikedYou: Story = {
   args: {
+    //@ts-ignore
     profile: {
       ...sampleProfile,
       //hasLikedYou: true,
@@ -82,6 +85,7 @@ export const HasLikedYou: Story = {
 
 export const WithCustomClass: Story = {
   args: {
+    //@ts-ignore
     profile: sampleProfile,
     onClick: () => console.log('Profile card clicked'),
     className: 'custom-profile-card',
@@ -91,6 +95,7 @@ export const WithCustomClass: Story = {
 export const MinimalProfile: Story = {
   args: {
     profile: {
+      //@ts-ignore
       user: {
         id: 2,
         name: 'John',

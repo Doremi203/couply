@@ -1,169 +1,271 @@
-import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
+  useDislikeUserMutation,
   useFetchIncomingLikesMutation,
   useFetchMatchesUserIdsMutation,
   useLikeUserMutation,
-  // useLikeUserMutation,
+  useDeleteMatchMutation,
 } from '../../../entities/matches/api/matchesApi';
+import {
+  addMatch,
+  appendLikes,
+  appendMatches,
+  removeLike,
+  removeMatch,
+  selectHasMoreLikes,
+  selectHasMoreMatches,
+  selectLikes,
+  selectLikesOffset,
+  selectLikesUsers,
+  selectMatches,
+  selectMatchesOffset,
+  selectMatchedProfile,
+  selectShowChatMessage,
+  selectShowMatchModal,
+  setHasMoreLikes,
+  setHasMoreMatches,
+  setLikes,
+  setLikesOffset,
+  setLikesUsers,
+  setMatches,
+  setMatchesOffset,
+  setMatchedProfile,
+  setShowChatMessage,
+  setShowMatchModal,
+} from '../../../entities/matches/model/matchesSlice';
 import { useGetUsersMutation } from '../../../entities/user';
-import { LikeProfile, MatchProfile } from '../types';
+
+const ITEMS_PER_PAGE = 10;
 
 export const useLikesAndMatches = () => {
+  const dispatch = useDispatch();
+
+  const likes = useSelector(selectLikes);
+  const likesUsers = useSelector(selectLikesUsers);
+  const matches = useSelector(selectMatches);
+  const matchesOffset = useSelector(selectMatchesOffset);
+  const likesOffset = useSelector(selectLikesOffset);
+  const hasMoreMatches = useSelector(selectHasMoreMatches);
+  const hasMoreLikes = useSelector(selectHasMoreLikes);
+  const showMatchModal = useSelector(selectShowMatchModal);
+  const matchedProfile = useSelector(selectMatchedProfile);
+  const showChatMessage = useSelector(selectShowChatMessage);
+
   const [fetchMatchesUserIds] = useFetchMatchesUserIdsMutation();
   const [fetchIncomingLikes, { isLoading: isLoadingIncoming }] = useFetchIncomingLikesMutation();
-
   const [getUsers] = useGetUsersMutation();
-  //const [getUser] = useGetUserMutation();
   const [likeUser] = useLikeUserMutation();
-
-  const [matchesUsers, setMatchesUsers] = useState([]);
-  const [likesUsers, setLikesUsers] = useState([]);
+  const [dislike] = useDislikeUserMutation();
+  const [deleteMatch] = useDeleteMatchMutation();
 
   const isInitialized = useRef(false);
 
-  const [likes, setIncomingMatches] = useState<LikeProfile[]>([]);
-
-  useEffect(() => {
-    const loadData = async () => {
+  const loadMatches = useCallback(
+    async (offset: number) => {
       try {
         const matchesIds = await fetchMatchesUserIds({
-          limit: 10,
-          offset: 0,
+          limit: ITEMS_PER_PAGE,
+          offset,
         }).unwrap();
 
-        //@ts-ignore
-        const matchesUsers = await getUsers(matchesIds.userIds).unwrap();
+        if (matchesIds.userIds.length === 0) {
+          dispatch(setHasMoreMatches(false));
+          return;
+        }
 
         //@ts-ignore
-        setMatchesUsers(matchesUsers);
+        const matchesUsersResponse = await getUsers(matchesIds.userIds).unwrap();
 
-        // @ts-ignore
-        // setMatches(matchesResult.match.map(el => el.mainUserId));
-
-        const incomingResult = await fetchIncomingLikes({
-          limit: 10,
-          offset: 0,
-        }).unwrap();
-
-        const likesIds = incomingResult.likes.map(el => el.senderId);
-
-        //@ts-ignore
-        const likesUsers = await getUsers(likesIds).unwrap();
-
-        //@ts-ignore
-        setLikesUsers(likesUsers);
-
-        // @ts-ignore
-        // const likes = incomingResult.match.map(el => el.mainUserId);
-
-        // setIncomingMatches(likes);
+        if (offset === 0) {
+          //@ts-ignore
+          dispatch(setMatches(matchesUsersResponse));
+        } else {
+          //@ts-ignore
+          dispatch(appendMatches(matchesUsersResponse));
+        }
       } catch (error) {
         console.error('Error loading matches data:', error);
       }
+    },
+    [dispatch, fetchMatchesUserIds, getUsers],
+  );
+
+  const loadLikes = useCallback(
+    async (offset: number) => {
+      try {
+        const incomingResult = await fetchIncomingLikes({
+          limit: ITEMS_PER_PAGE,
+          offset,
+        }).unwrap();
+
+        if (incomingResult.likes.length === 0) {
+          dispatch(setHasMoreLikes(false));
+          return;
+        }
+
+        const likesIds = incomingResult.likes.map(el => el.senderId);
+        //@ts-ignore
+        const likesUsersResponse = await getUsers(likesIds).unwrap();
+
+        if (offset === 0) {
+          //@ts-ignore
+          dispatch(setLikesUsers(likesUsersResponse));
+          dispatch(setLikes(incomingResult.likes));
+        } else {
+          //@ts-ignore
+          dispatch(appendLikes({ likes: incomingResult.likes, users: likesUsersResponse }));
+        }
+      } catch (error) {
+        console.error('Error loading likes data:', error);
+      }
+    },
+    [dispatch, fetchIncomingLikes, getUsers],
+  );
+
+  useEffect(() => {
+    const loadData = async () => {
+      await Promise.all([loadMatches(0), loadLikes(0)]);
     };
 
     if (!isInitialized.current) {
       loadData();
       isInitialized.current = true;
     }
-  }, [fetchIncomingLikes, fetchMatchesUserIds, getUsers]);
+  }, [loadMatches, loadLikes]);
 
-  const [matches, setMatches] = useState<MatchProfile[]>([]);
-  const [showMatchModal, setShowMatchModal] = useState(false);
-  const [matchedProfile, setMatchedProfile] = useState<LikeProfile | null>(null);
-  const [showChatMessage, setShowChatMessage] = useState<number | null>(null);
+  const loadMoreMatches = useCallback(async () => {
+    if (!hasMoreMatches || isLoadingIncoming) return;
+
+    const newOffset = matchesOffset + ITEMS_PER_PAGE;
+    dispatch(setMatchesOffset(newOffset));
+    await loadMatches(newOffset);
+  }, [dispatch, hasMoreMatches, isLoadingIncoming, matchesOffset, loadMatches]);
+
+  const loadMoreLikes = useCallback(async () => {
+    if (!hasMoreLikes || isLoadingIncoming) return;
+
+    const newOffset = likesOffset + ITEMS_PER_PAGE;
+    dispatch(setLikesOffset(newOffset));
+    await loadLikes(newOffset);
+  }, [dispatch, hasMoreLikes, isLoadingIncoming, likesOffset, loadLikes]);
+
+  const handleDislike = useCallback(
+    async (id: string) => {
+      if (!id) {
+        console.error('Invalid like ID provided');
+        return;
+      }
+      try {
+        await dislike({
+          targetUserId: id,
+        });
+        dispatch(removeLike(id));
+      } catch (error) {
+        console.error('Error creating match:', error);
+      }
+    },
+    [dispatch, dislike],
+  );
 
   const handleLike = useCallback(
-    async (id: number) => {
-      // @ts-ignore
-      const likedProfile = likes.find(like => like === id);
+    async (id: string) => {
+      const likedProfile = likes.find(like => like.senderId === id);
 
       if (likedProfile) {
         try {
-          await likeUser({
-            targetUserId: likedProfile,
+          const response = await likeUser({
+            targetUserId: likedProfile.senderId,
             message: '',
-          });
+          }).unwrap();
 
-          setShowMatchModal(true);
+          if (response.isMatch) {
+            dispatch(setShowMatchModal(true));
 
-          // @ts-ignore
-          setMatchedProfile(await getUser({ id: likedProfile }).unwrap());
+            const userResponse = await getUsers({ userIds: [likedProfile.senderId] }).unwrap();
+            const userData = userResponse.users[0].user;
 
-          // TODO NOTIFICATION
-          // if (likedProfile.hasLikedYou) {
-          //   setMatchedProfile(likedProfile);
-          //   setShowMatchModal(true);
-          //   sendMatchNotification({
-          //     userId: userId,
-          //     matchId: likedProfile.id,
-          //     matchName: likedProfile.name,
-          //     matchImage: likedProfile.imageUrl,
-          //   });
-          // }
+            const likeProfile = {
+              name: userData.name,
+              age: userData.age,
+              imageUrl: userData.photos?.[0]?.url || '',
+              hasLikedYou: true,
+              bio: userData.bio,
+              location: userData.location,
+              interests: [],
+              lifestyle: {},
+              passion: [],
+              photos: userData.photos,
+            } as any;
 
-          setMatches(matches.concat(likedProfile));
-
-          // @ts-ignore
-          setIncomingMatches(incomingMatches.filter(like => like !== id));
+            dispatch(setMatchedProfile(likeProfile));
+            dispatch(addMatch(userData));
+            dispatch(removeLike(id));
+          }
         } catch (error) {
           console.error('Error creating match:', error);
         }
       }
     },
-    [likes, matches],
+    [dispatch, likeUser, likes, getUsers],
   );
 
   const handleSendMessage = useCallback(() => {
-    setShowMatchModal(false);
-  }, []);
+    dispatch(setShowMatchModal(false));
+  }, [dispatch]);
 
   const handleKeepSwiping = useCallback(() => {
-    setShowMatchModal(false);
-  }, []);
+    dispatch(setShowMatchModal(false));
+  }, [dispatch]);
 
-  const handleSocialClick = useCallback((matchId: number, type: 'telegram' | 'instagram') => {
-    // Показываем сообщение при клике на кнопки социальных сетей
-    setShowChatMessage(matchId);
+  const handleSocialClick = useCallback(
+    (matchId: number) => {
+      dispatch(setShowChatMessage(matchId));
 
-    // Логируем, какая социальная сеть была нажата
-    console.log(`Opening ${type} for match ID ${matchId}`);
-
-    // Скрываем сообщение через 2 секунды
-    setTimeout(() => {
-      setShowChatMessage(null);
-    }, 2000);
-  }, []);
-
-  return useMemo(
-    () => ({
-      matches,
-      showMatchModal,
-      matchedProfile,
-      showChatMessage,
-      handleLike,
-      handleSendMessage,
-      handleKeepSwiping,
-      handleSocialClick,
-      isLoading: isLoadingIncoming || false,
-      likes,
-      matchesUsers,
-      likesUsers,
-    }),
-    [
-      matches,
-      showMatchModal,
-      matchedProfile,
-      showChatMessage,
-      handleLike,
-      handleSendMessage,
-      handleKeepSwiping,
-      handleSocialClick,
-      isLoadingIncoming,
-      likes,
-      matchesUsers,
-      likesUsers,
-    ],
+      setTimeout(() => {
+        dispatch(setShowChatMessage(null));
+      }, 2000);
+    },
+    [dispatch],
   );
+
+  const handleRemoveMatch = useCallback(
+    async (id: string) => {
+      if (!id) {
+        console.error('Invalid match ID provided');
+        return;
+      }
+      try {
+        await deleteMatch({
+          targetUserId: id,
+        });
+        dispatch(removeMatch(id));
+      } catch (error) {
+        console.error('Error removing match:', error);
+      }
+    },
+    [dispatch, deleteMatch],
+  );
+
+  return {
+    matches,
+    showMatchModal,
+    matchedProfile,
+    showChatMessage,
+    handleLike,
+    handleSendMessage,
+    handleKeepSwiping,
+    handleSocialClick,
+    isLoading: isLoadingIncoming || false,
+    likes,
+    matchesUsers: matches,
+    likesUsers,
+    handleDislike,
+    handleRemoveMatch,
+    loadMoreMatches,
+    loadMoreLikes,
+    hasMoreMatches,
+    hasMoreLikes,
+  };
 };

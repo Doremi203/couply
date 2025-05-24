@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
+import { selectMatches } from '../../../../entities/matches/model/matchesSlice';
 import EmptyState from '../../../../shared/components/EmptyState';
 import { MatchProfile } from '../../types';
 import { MatchCard } from '../MatchCard';
@@ -14,19 +16,16 @@ interface MatchesSectionProps {
 }
 
 export const MatchesSection: React.FC<MatchesSectionProps> = ({
-  matches,
+  // matches,
   onMatchClick,
   onSocialClick,
   showChatMessage,
 }) => {
+  const matches = useSelector(selectMatches);
+  console.log(matches);
+
   //@ts-ignore
-  const [displayedUsers, setDisplayedUsers] = useState<any[]>(matches.users || []);
-
-  const handleRemoveMatch = (id: number) => {
-    setDisplayedUsers((prevUsers: any[]) => prevUsers.filter((user: any) => user.id !== id));
-  };
-
-  if (displayedUsers.length === 0) {
+  if (matches.length === 0) {
     return (
       <EmptyState title="У вас пока нет мэтчей" subtitle="Лайкайте профили, чтобы найти мэтчи" />
     );
@@ -36,7 +35,7 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
     <div className={styles.section}>
       <div className={styles.matchesContainer}>
         {/**@ts-ignore */}
-        {displayedUsers.map(match => (
+        {matches.users.map(match => (
           <MatchCard
             key={match.id}
             // @ts-ignore
@@ -45,7 +44,6 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
             onClick={onMatchClick}
             onSocialClick={onSocialClick}
             showChatMessage={showChatMessage}
-            onRemove={handleRemoveMatch}
           />
         ))}
       </div>

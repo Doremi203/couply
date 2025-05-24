@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
+import { setProfileData } from '../../entities/profile/model/profileSlice';
 import { useUpdateUserMutation } from '../../entities/user';
 import { useConfirmPhotoMutation } from '../../entities/user/api/userApi';
 import {
@@ -20,7 +22,8 @@ import {
   smokingOptions,
   smokingToApi,
 } from '../../features/filters/components/constants';
-import { mapInterestsToBackendFormat } from '../../features/filters/helpers/mapInterestsToApiFormat';
+import { mapInterestsFromApiFormat } from '../../features/filters/helpers/mapInterestsFromApiFormat';
+import { mapInterestsToApiFormat } from '../../features/filters/helpers/mapInterestsToApiFormat';
 import { PhotoGalleryEdit } from '../../features/photoGallery/components/PhotoGalleryEdit';
 import { ProfileData } from '../../features/profileEdit';
 import { ProfilePhotoEdit } from '../../features/profileEdit/components/ProfilePhotoEdit';
@@ -52,6 +55,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   onPhotoAdd,
   onPhotoRemove,
 }) => {
+  const dispatch = useDispatch();
+
   const [updateUser] = useUpdateUserMutation();
   const [uploadFile] = useUploadFileToS3Mutation();
   const [confirmPhoto] = useConfirmPhotoMutation();
@@ -77,7 +82,10 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   ]);
   //@ts-ignore
   const [selectedGoal, setSelectedGoal] = useState<string[]>([goalFromApi[profileData.goal]]);
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+
+  //@ts-ignore
+  const interest = mapInterestsFromApiFormat(profileData.interest);
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(interest);
   const [bio, setBio] = useState(profileData.bio || '');
   const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
 
@@ -185,7 +193,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         smoking: smokingToApi[selectedSmoking],
         //@ts-ignore
         goal: goalToApi[selectedGoal],
-        interests: mapInterestsToBackendFormat(selectedInterests),
+        interest: mapInterestsToApiFormat(selectedInterests),
         height: profileData.height,
         photoUploadRequests,
         zodiac: profileData.zodiac,
@@ -196,10 +204,14 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         isVerified: profileData.isVerified,
         isPremium: profileData.isPremium,
         isBlocked: profileData.isBlocked,
+        photos: profileData.photos,
       };
 
       // @ts-ignore - The API seems to work differently in practice vs type definition
       const response: any = await updateUser(userData).unwrap();
+
+      //@ts-ignore
+      dispatch(setProfileData(userData));
 
       if (photoFiles.length > 0 && response && response.photoUploadResponses) {
         await Promise.all(
@@ -305,6 +317,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         <ProfileVisibilitySection isHidden={isHidden} onInputChange={handleVisibilityChange} />
 
         <SaveButtonSection onSave={handleSave} />
+
+        <div className={styles.bottom} />
       </div>
     </div>
   );

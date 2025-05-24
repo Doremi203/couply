@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useUploadFileToS3Mutation } from '../../../../entities/photo/api/photoApi';
+import { useCreateFilterMutation } from '../../../../entities/search';
 import { Gender, Goal } from '../../../../entities/user/api/constants';
 import {
   useConfirmPhotoMutation,
@@ -19,6 +20,7 @@ import {
   sendSubscriptionToServer,
 } from '../../../../shared/lib/services/PushNotificationService';
 import getAge from '../../helpers/getAge';
+import { getDefaultFilter } from '../../helpers/getDefautlFilter';
 import { GeoLocationRequest } from '../GeoLocationRequest';
 import LocationSelector from '../LocationSelector/LocationSelector';
 import { FixedPhotoGallery } from '../PhotoGallery/PhotoGallery';
@@ -31,6 +33,7 @@ export const EnterInfoPage = () => {
 
   const [createUser, { isLoading }] = useCreateUserMutation();
   const [confirmPhoto] = useConfirmPhotoMutation();
+  const [createFilter] = useCreateFilterMutation();
 
   const [name, setName] = useState('');
   const [telegram, setTelegram] = useState('');
@@ -152,8 +155,9 @@ export const EnterInfoPage = () => {
           throw error;
         }
 
-        console.log('push notification supported', isPushNotificationSupported());
-        console.log('permission', permission);
+        const defaultFilter = getDefaultFilter();
+        //@ts-ignore
+        await createFilter(defaultFilter).unwrap();
 
         if (
           isPushNotificationSupported() &&

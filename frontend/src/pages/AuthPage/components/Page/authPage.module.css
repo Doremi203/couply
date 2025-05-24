@@ -91,3 +91,9 @@
   min-width: 280px !important; */
   box-sizing: border-box !important;
 }
+
+.yandex {
+  background-color: black;
+  color: white;
+  border: black;
+}

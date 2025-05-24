@@ -30,6 +30,7 @@ const genderOptions = [
 export const Girls: Story = {
   args: {
     value: 'Girls',
+    //@ts-ignore
     options: genderOptions,
     onChange: () => console.log('Gender changed'),
   },
@@ -38,6 +39,7 @@ export const Girls: Story = {
 export const Boys: Story = {
   args: {
     value: 'Boys',
+    //@ts-ignore
     options: genderOptions,
     onChange: () => console.log('Gender changed'),
   },
@@ -46,6 +48,7 @@ export const Boys: Story = {
 export const Both: Story = {
   args: {
     value: 'Both',
+    //@ts-ignore
     options: genderOptions,
     onChange: () => console.log('Gender changed'),
   },

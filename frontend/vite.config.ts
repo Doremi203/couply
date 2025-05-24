@@ -7,8 +7,8 @@ const manifest: false | Partial<ManifestOptions> | undefined = {
   theme_color: '#8936FF',
   background_color: '#2EC6FE',
   icons: [
-    { purpose: 'maskable', sizes: '512x512', src: 'logo1.png', type: 'image/png' },
-    { purpose: 'any', sizes: '512x512', src: 'logo1.png', type: 'image/png' },
+    { purpose: 'maskable', sizes: '512x512', src: 'LOGO.png', type: 'image/png' },
+    { purpose: 'any', sizes: '512x512', src: 'LOGO.png', type: 'image/png' },
   ],
   orientation: 'any',
   display: 'standalone',

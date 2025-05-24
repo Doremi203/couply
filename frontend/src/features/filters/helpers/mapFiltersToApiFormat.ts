@@ -1,10 +1,8 @@
-export const mapFiltersToApi = (
+export const mapFiltersToApi = <T extends string>(
   selectedFilters: string[],
-  //@ts-ignore
-  filterToApi,
-  //@ts-ignore
-  defaultUnspecified?,
-) => {
+  filterToApi: Record<string, T>,
+  defaultUnspecified?: T,
+): T[] => {
   // Маппим и фильтруем невалидные значения
   const mapped = selectedFilters.map(filter => filterToApi[filter]).filter(Boolean);
 

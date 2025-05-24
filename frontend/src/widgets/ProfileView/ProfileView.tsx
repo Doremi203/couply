@@ -34,9 +34,19 @@ interface ProfileViewProps {
   };
   onClose: () => void;
   onLike?: (id: number) => void;
+  onDislike?: (id: number) => void;
+  isMatchView?: boolean;
+  isProfile?: boolean;
 }
 
-export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLike }) => {
+export const ProfileView: React.FC<ProfileViewProps> = ({
+  profile,
+  onClose,
+  onLike,
+  onDislike,
+  isMatchView = false,
+  isProfile = false,
+}) => {
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -45,39 +55,45 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
 
   // Get the profile photo safely
   const getProfilePhoto = () => {
-    if (!profileData.photos || !profileData.photos.length) {
-      return '/photo1.png';
-    }
+    // if (!profileData.photos || !profileData.photos.length) {
+    //   return '/photo1.png';
+    // }
 
     const firstPhoto = profileData.photos[0];
     if (typeof firstPhoto === 'string') {
       return firstPhoto;
     } else if (firstPhoto && typeof firstPhoto === 'object') {
-      return firstPhoto.url || '/photo1.png';
+      return firstPhoto.url;
     }
 
-    return '/photo1.png';
+    // return '/photo1.png';
   };
 
-  const commonInterests = ['Music', 'Travel', 'Photography'];
+  // const commonInterests = ['Music', 'Travel', 'Photography'];
 
-  const isCommonInterest = (interest: string) => {
-    return commonInterests.includes(interest);
-  };
+  // const isCommonInterest = (interest: string) => {
+  //   return commonInterests.includes(interest);
+  // };
 
   const handleLike = () => {
     const userId = profileData.id;
     if (userId && onLike) {
       likeUser({
         targetUserId: userId,
-        message: '', // Add empty message to satisfy LikeRequest interface
+        message: '',
       });
       onLike(userId);
+      onClose();
     }
   };
 
+  const handleDislike = () => {
+    //@ts-ignore
+    onDislike(profile.id);
+    onClose();
+  };
+
   useEffect(() => {
-    // Fix for iOS momentum scrolling
     document.body.style.overflow = 'hidden';
 
     return () => {
@@ -85,7 +101,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
     };
   }, []);
 
-  // Prepare profile details for ProfileInfo component
   const profileDetails = {
     bio: profileData.bio || '',
     location: profileData.location || '',
@@ -103,7 +118,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
       <div className={styles.profileImageContainer}>
         <BackButton
           onClose={e => {
-            e?.stopPropagation?.(); // Stop event propagation if it's an event
+            e?.stopPropagation?.();
             onClose();
             setTimeout(() => {
               document.body.style.overflow = 'auto';
@@ -132,23 +147,20 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
               )}
             </h2>
 
-            <div className={styles.buttons}>
-              <div onClick={e => e.stopPropagation()}>
-                <DislikeButton
-                  onClick={() => {
-                    onClose();
-                  }}
-                  className={styles.dislikeButton}
-                />
+            {!isMatchView && !isProfile && (
+              <div className={styles.buttons}>
+                <div onClick={e => e.stopPropagation()}>
+                  <DislikeButton onClick={handleDislike} className={styles.dislikeButton} />
+                </div>
+                <div onClick={e => e.stopPropagation()}>
+                  <LikeButton
+                    onClick={handleLike}
+                    className={styles.likeButton}
+                    likeClassName={styles.like}
+                  />
+                </div>
               </div>
-              <div onClick={e => e.stopPropagation()}>
-                <LikeButton
-                  onClick={handleLike}
-                  className={styles.likeButton}
-                  likeClassName={styles.like}
-                />
-              </div>
-            </div>
+            )}
           </div>
 
           <p className={styles.photoInfo}>
@@ -158,11 +170,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({ profile, onClose, onLi
         </div>
       </div>
 
-      <ProfileInfo
-        profile={profileData}
-        profileDetails={profileDetails}
-        isCommonInterest={isCommonInterest}
-      />
+      {/**@ts-ignore */}
+      <ProfileInfo profile={profileData} profileDetails={profileDetails} isCommonInterest={[]} />
     </div>
   );
 };

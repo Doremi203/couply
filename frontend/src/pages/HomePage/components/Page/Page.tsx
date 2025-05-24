@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
+import { useGetFilterQuery } from '../../../../entities/search';
 import { getUserId } from '../../../../entities/user/model/userSlice';
 import FiltersDrawer from '../../../../features/filters/components/FiltersDrawer';
 import { ProfileSlider } from '../../../../features/ProfileSlider';
@@ -22,6 +23,7 @@ export const HomePage = () => {
   const userId = useSelector(getUserId);
   const { updateUserLocation } = useGeolocation();
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const { data: filterData } = useGetFilterQuery({});
 
   useEffect(() => {
     if (userId) {
@@ -73,7 +75,11 @@ export const HomePage = () => {
           <div onClick={handleFiltersOpen}>
             <FiltersIcon />
           </div>
-          <FiltersDrawer open={isFiltersOpen} onClose={handleFiltersClose} />
+          <FiltersDrawer
+            open={isFiltersOpen}
+            onClose={handleFiltersClose}
+            initialFilterData={filterData}
+          />
         </div>
       </div>
 

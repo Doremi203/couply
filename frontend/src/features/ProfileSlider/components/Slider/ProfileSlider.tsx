@@ -5,29 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useSwipeable } from 'react-swipeable';
 
 import { useLikeUserMutation } from '../../../../entities/matches';
-import { GenderPriority } from '../../../../entities/search';
 import {
   useCreateFilterMutation,
   useSearchUsersMutation,
 } from '../../../../entities/search/api/searchApi';
-import {
-  Alcohol,
-  Education,
-  Goal,
-  Hobby,
-  Selfdevelopment,
-  Smoking,
-  Sport,
-  Zodiac,
-  Children,
-  getIsPremium,
-  setUserVerified,
-  Music,
-  FoodDrink,
-  MoviesTV,
-  PersonalityTraits,
-  Pets,
-} from '../../../../entities/user';
+import { getIsPremium, setUserVerified } from '../../../../entities/user';
 import { MessageModal } from '../../../../pages/HomePage/components/MessageModal/MessageModal';
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
@@ -49,44 +31,7 @@ const adProfiles = [
     photos: ['cactus3.jpg'],
     name: 'Cactus Carnage',
   },
-  // {
-  //   id: 'ad2',
-  //   isAd: true,
-  //   adText: 'Получите премиум-подписку со скидкой 50%!',
-  //   adLink: 'https://example.com/premium',
-  //   photos: ['photo1.png'],
-  // },
 ];
-
-const getDefaultFilter = () => {
-  return {
-    genderPriority: GenderPriority.any,
-    minAge: 18,
-    maxAge: 100,
-    minHeight: 100,
-    maxHeight: 250,
-    minDistanceKm: 0,
-    maxDistanceKm: 100,
-    goal: Goal.unspecified,
-    zodiac: Zodiac.unspecified,
-    education: Education.unspecified,
-    children: Children.unspecified,
-    alcohol: Alcohol.unspecified,
-    smoking: Smoking.unspecified,
-    interest: {
-      sport: [Sport.unspecified],
-      selfDevelopment: [Selfdevelopment.unspecified],
-      hobby: [Hobby.unspecified],
-      music: [Music.unspecified],
-      moviesTv: [MoviesTV.unspecified],
-      foodDrink: [FoodDrink.unspecified],
-      personalityTraits: [PersonalityTraits.unspecified],
-      pets: [Pets.unspecified],
-    },
-    onlyVerified: false,
-    onlyPremium: false,
-  };
-};
 
 const MAX_UNDO_PER_DAY = 3;
 
@@ -132,9 +77,9 @@ export const ProfileSlider = () => {
       try {
         //@ts-ignore
         setLoading(true);
-        const defaultFilter = getDefaultFilter();
-        //@ts-ignore
-        await createFilter(defaultFilter).unwrap();
+        // const defaultFilter = getDefaultFilter();
+        // //@ts-ignore
+        // await createFilter(defaultFilter).unwrap();
         const response = await searchUsers({ limit: PAGE_SIZE, offset: 0 }).unwrap();
         // console.log(response);
         //@ts-ignore
@@ -663,6 +608,7 @@ export const ProfileSlider = () => {
           }}
           onClose={handleCloseProfile}
           onLike={handleLike}
+          onDislike={handleNextUser}
         />
       )}
 
