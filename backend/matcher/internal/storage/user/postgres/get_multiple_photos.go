@@ -55,13 +55,13 @@ func buildGetMultiplePhotosQuery(opts GetMultiplePhotosOptions) (string, []any, 
 	return query, args, err
 }
 
-func executeGetMultiplePhotosQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]dbPhoto, error) {
+func executeGetMultiplePhotosQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]DBPhoto, error) {
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		return nil, errors.Wrap(err, "query")
 	}
 
-	photos, err := pgx.CollectRows(rows, pgx.RowToStructByName[dbPhoto])
+	photos, err := pgx.CollectRows(rows, pgx.RowToStructByName[DBPhoto])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, errors.Wrap(user.ErrPhotosNotFound, "query")

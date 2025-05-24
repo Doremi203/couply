@@ -15,7 +15,7 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-type dbPhoto struct {
+type DBPhoto struct {
 	UserID      uuid.UUID  `db:"user_id"`
 	OrderNumber int32      `db:"order_number"`
 	ObjectKey   string     `db:"object_key"`
@@ -40,7 +40,7 @@ func (s *PgStorageUser) GetPhotos(ctx context.Context, opts GetPhotosOptions) ([
 		return nil, errors.Wrapf(err, "executeGetPhotosQuery with %v", errors.Token("options", opts))
 	}
 
-	return slices.Map(photos, func(from dbPhoto) user.Photo {
+	return slices.Map(photos, func(from DBPhoto) user.Photo {
 		return user.Photo{
 			UserID:      from.UserID,
 			OrderNumber: from.OrderNumber,
@@ -57,10 +57,7 @@ func buildGetPhotosQuery(opts GetPhotosOptions) (string, []any, error) {
 		Where(sq.Eq{userIDColumnName: opts.UserID})
 
 	if len(opts.OrderNumbers) != 0 {
-		sb = sb.Where(userIDColumnName, opts.UserID).
-			Where(orderNumberColumnName, opts.OrderNumbers)
-	} else {
-		sb = sb.Where(userIDColumnName, opts.UserID)
+		sb = sb.Where(sq.Eq{orderNumberColumnName: opts.OrderNumbers})
 	}
 
 	if opts.ForUpdate {
@@ -70,13 +67,13 @@ func buildGetPhotosQuery(opts GetPhotosOptions) (string, []any, error) {
 	return sb.PlaceholderFormat(sq.Dollar).ToSql()
 }
 
-func executeGetPhotosQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]dbPhoto, error) {
+func executeGetPhotosQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]DBPhoto, error) {
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		return nil, errors.Wrap(err, "query")
 	}
 
-	photos, err := pgx.CollectRows(rows, pgx.RowToStructByName[dbPhoto])
+	photos, err := pgx.CollectRows(rows, pgx.RowToStructByName[DBPhoto])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, errors.Wrap(user.ErrPhotosNotFound, "query")

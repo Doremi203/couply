@@ -31,8 +31,14 @@ func PBToLikeUserRequest(req *desc.LikeUserV1Request) (*LikeUserV1Request, error
 }
 
 func LikeUserResponseToPB(resp *LikeUserV1Response) *desc.LikeUserV1Response {
+	if resp.IsMatch {
+		return &desc.LikeUserV1Response{
+			IsMatch: resp.IsMatch,
+			Match:   matching.MatchToPB(resp.Match),
+		}
+	}
+
 	return &desc.LikeUserV1Response{
 		IsMatch: resp.IsMatch,
-		Match:   matching.MatchToPB(resp.Match),
 	}
 }

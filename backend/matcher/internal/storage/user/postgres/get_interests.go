@@ -12,10 +12,10 @@ import (
 	"github.com/google/uuid"
 )
 
-type dbInterest struct {
-	userID       uuid.UUID `db:"user_id"`
-	interestType string    `db:"type"`
-	value        int       `db:"value"`
+type DBInterest struct {
+	UserID       uuid.UUID `db:"user_id"`
+	InterestType string    `db:"type"`
+	Value        int       `db:"value"`
 }
 
 type GetInterestsOptions struct {
@@ -53,13 +53,13 @@ func buildGetInterestsQuery(opts GetInterestsOptions) (string, []any, error) {
 	return query, args, err
 }
 
-func executeGetInterestsQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]dbInterest, error) {
+func executeGetInterestsQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]DBInterest, error) {
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		return nil, errors.Wrap(err, "query")
 	}
 
-	interests, err := pgx.CollectRows(rows, pgx.RowToStructByName[dbInterest])
+	interests, err := pgx.CollectRows(rows, pgx.RowToStructByName[DBInterest])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, errors.Wrap(interest.ErrInterestsNotFound, "query")
@@ -70,26 +70,26 @@ func executeGetInterestsQuery(ctx context.Context, queryEngine storage.QueryEngi
 	return interests, nil
 }
 
-func mapInterestValue(i *interest.Interest, dbInterest dbInterest) error {
-	switch dbInterest.interestType {
+func mapInterestValue(i *interest.Interest, dbInterest DBInterest) error {
+	switch dbInterest.InterestType {
 	case interest.SportName:
-		i.Sport = append(i.Sport, interest.Sport(dbInterest.value))
+		i.Sport = append(i.Sport, interest.Sport(dbInterest.Value))
 	case interest.SelfDevelopmentName:
-		i.SelfDevelopment = append(i.SelfDevelopment, interest.SelfDevelopment(dbInterest.value))
+		i.SelfDevelopment = append(i.SelfDevelopment, interest.SelfDevelopment(dbInterest.Value))
 	case interest.HobbyName:
-		i.Hobby = append(i.Hobby, interest.Hobby(dbInterest.value))
+		i.Hobby = append(i.Hobby, interest.Hobby(dbInterest.Value))
 	case interest.MusicName:
-		i.Music = append(i.Music, interest.Music(dbInterest.value))
+		i.Music = append(i.Music, interest.Music(dbInterest.Value))
 	case interest.MoviesTVName:
-		i.MoviesTV = append(i.MoviesTV, interest.MoviesTV(dbInterest.value))
+		i.MoviesTV = append(i.MoviesTV, interest.MoviesTV(dbInterest.Value))
 	case interest.FoodDrinkName:
-		i.FoodDrink = append(i.FoodDrink, interest.FoodDrink(dbInterest.value))
+		i.FoodDrink = append(i.FoodDrink, interest.FoodDrink(dbInterest.Value))
 	case interest.PersonalityTraitsName:
-		i.PersonalityTraits = append(i.PersonalityTraits, interest.PersonalityTraits(dbInterest.value))
+		i.PersonalityTraits = append(i.PersonalityTraits, interest.PersonalityTraits(dbInterest.Value))
 	case interest.PetsName:
-		i.Pets = append(i.Pets, interest.Pets(dbInterest.value))
+		i.Pets = append(i.Pets, interest.Pets(dbInterest.Value))
 	default:
-		return errors.Wrapf(interest.ErrInterestsNotFound, " %v", dbInterest.interestType)
+		return errors.Wrapf(interest.ErrInterestsNotFound, " %v", dbInterest.InterestType)
 	}
 	return nil
 }

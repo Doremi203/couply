@@ -33,11 +33,11 @@ func (s *PgStorageUser) GetMultipleInterests(ctx context.Context, opts GetMultip
 
 	interestsMap := make(map[uuid.UUID]*interest.Interest)
 	for _, i := range interestsFromDB {
-		if _, exists := interestsMap[i.userID]; !exists {
-			interestsMap[i.userID] = interest.NewInterest()
+		if _, exists := interestsMap[i.UserID]; !exists {
+			interestsMap[i.UserID] = interest.NewInterest()
 		}
 
-		if err = mapInterestValue(interestsMap[i.userID], i); err != nil {
+		if err = mapInterestValue(interestsMap[i.UserID], i); err != nil {
 			return nil, errors.Wrap(err, "mapInterestValue")
 		}
 	}
@@ -55,13 +55,13 @@ func buildGetMultipleInterestsQuery(opts GetMultipleInterestsOptions) (string, [
 	return query, args, err
 }
 
-func executeGetMultipleInterestsQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]dbInterest, error) {
+func executeGetMultipleInterestsQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) ([]DBInterest, error) {
 	rows, err := queryEngine.Query(ctx, query, args...)
 	if err != nil {
 		return nil, errors.Wrap(err, "query")
 	}
 
-	interests, err := pgx.CollectRows(rows, pgx.RowToStructByName[dbInterest])
+	interests, err := pgx.CollectRows(rows, pgx.RowToStructByName[DBInterest])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, errors.Wrap(interest.ErrInterestsNotFound, "query")

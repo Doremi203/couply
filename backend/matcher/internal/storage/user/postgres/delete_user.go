@@ -13,7 +13,7 @@ import (
 func (s *PgStorageUser) DeleteUser(ctx context.Context, userID uuid.UUID) error {
 	query, args, err := buildDeleteUserQuery(userID)
 	if err != nil {
-		return errors.Wrapf(err, "buildDeleteUserQuery with %v", errors.Token("userID", userID))
+		return errors.Wrapf(err, "buildDeleteUserQuery with %v", errors.Token("user_id", userID))
 	}
 
 	if err = executeDeleteUserQuery(ctx, s.txManager.GetQueryEngine(ctx), query, args); err != nil {

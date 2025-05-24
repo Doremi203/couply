@@ -36,7 +36,7 @@ func (c *UseCase) LikeUser(ctx context.Context, in *dto.LikeUserV1Request) (*dto
 func (p *likeProcessor) ProcessLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {
 	revertedLike, err := p.storage.GetLikeTx(ctx, targetUserID, userID)
 	if err != nil {
-		if !errors.Is(matching.ErrLikeNotFound, err) {
+		if !errors.Is(err, matching.ErrLikeNotFound) {
 			return nil, errors.Wrap(err, "storage.GetLikeTx")
 		}
 	}

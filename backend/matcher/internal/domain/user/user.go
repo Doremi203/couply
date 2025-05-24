@@ -32,7 +32,7 @@ type User struct {
 	Longitude  float64            `db:"longitude"`
 	BIO        string             `db:"bio"`
 	Goal       common.Goal        `db:"goal"`
-	Interest   *interest.Interest `db:"interest"`
+	Interest   *interest.Interest `db:"-"`
 	Zodiac     common.Zodiac      `db:"zodiac"`
 	Height     int32              `db:"height"`
 	Education  common.Education   `db:"education"`
@@ -43,7 +43,7 @@ type User struct {
 	IsVerified bool               `db:"is_verified"`
 	IsPremium  bool               `db:"is_premium"`
 	IsBlocked  bool               `db:"is_blocked"`
-	Photos     []Photo            `db:"photos"`
+	Photos     []Photo            `db:"-"`
 	CreatedAt  time.Time          `db:"created_at"`
 	UpdatedAt  time.Time          `db:"updated_at"`
 }

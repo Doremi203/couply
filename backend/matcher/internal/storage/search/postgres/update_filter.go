@@ -44,7 +44,7 @@ func buildUpdateFilterQuery(filter *search.Filter) (string, []any, error) {
 		Set(childrenColumnName, filter.Children).
 		Set(alcoholColumnName, filter.Alcohol).
 		Set(smokingColumnName, filter.Smoking).
-		Set(onlyPremiumColumnName, filter.OnlyVerified).
+		Set(onlyVerifiedColumnName, filter.OnlyVerified).
 		Set(onlyPremiumColumnName, filter.OnlyPremium).
 		Set(updatedAtColumnName, filter.UpdatedAt).
 		Where(sq.Eq{userIdColumnName: filter.UserID}).
