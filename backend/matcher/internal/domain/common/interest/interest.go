@@ -24,8 +24,7 @@ const (
 )
 
 var (
-	ErrInterestsNotFound   = errors.Error("interest not found")
-	ErrUnknownInterestType = errors.Error("unknown interest type")
+	ErrInterestsNotFound = errors.Error("interest not found")
 )
 
 type Interest struct {
@@ -87,6 +86,10 @@ func PBToInterest(pb *desc.Interest) *Interest {
 }
 
 func MapInterestsToGroups(interests *Interest) map[string][]int {
+	if interests == nil {
+		return nil
+	}
+
 	return map[string][]int{
 		SportName:             convertSlice(interests.Sport),
 		SelfDevelopmentName:   convertSlice(interests.SelfDevelopment),
