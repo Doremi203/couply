@@ -1,13 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 import { RootState } from '../../app/store';
-import styles from './blockerPage.module.css';
 import { reasonsFromApi } from '../../entities/blocker/constants';
+
+import styles from './blockerPage.module.css';
 
 export const BlockerPage: React.FC = () => {
   const navigate = useNavigate();
-  const { reasons, message } = useSelector((state: RootState) => state.blocking);
+  const { reasons } = useSelector((state: RootState) => state.blocking);
 
   console.log(reasons);
 
@@ -28,6 +30,7 @@ export const BlockerPage: React.FC = () => {
             <ul className={styles.reasonsList}>
               {reasons.map((reason, index) => (
                 <li key={index} className={styles.reasonItem}>
+                  {/** @ts-ignore */}
                   {reasonsFromApi[reason]}
                 </li>
               ))}

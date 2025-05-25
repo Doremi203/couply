@@ -18,18 +18,21 @@ const blockingSlice = createSlice({
   name: 'blocking',
   initialState,
   reducers: {
-    setBlocking: (state, action: PayloadAction<{ 
-      isBlocked: boolean; 
-      reasons: string[];
-      message: string;
-      createdAt: string | null;
-    }>) => {
+    setBlocking: (
+      state,
+      action: PayloadAction<{
+        isBlocked: boolean;
+        reasons: string[];
+        message: string;
+        createdAt: string | null;
+      }>,
+    ) => {
       state.isBlocked = action.payload.isBlocked;
       state.reasons = action.payload.reasons;
       state.message = action.payload.message;
       state.createdAt = action.payload.createdAt;
     },
-    clearBlocking: (state) => {
+    clearBlocking: state => {
       state.isBlocked = false;
       state.reasons = [];
       state.message = '';
@@ -39,4 +42,4 @@ const blockingSlice = createSlice({
 });
 
 export const { setBlocking, clearBlocking } = blockingSlice.actions;
-export default blockingSlice.reducer; 
+export default blockingSlice.reducer;
