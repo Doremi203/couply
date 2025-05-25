@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	errTokenNotFound = errors.Error("token not found")
+	ErrTokenNotFound = errors.Error("token not found")
 )
 
 type Token struct {
@@ -33,7 +33,7 @@ func FromContext(ctx context.Context) (Token, bool) {
 func GetUserIDFromContext(ctx context.Context) (uuid.UUID, error) {
 	userToken, ok := FromContext(ctx)
 	if !ok {
-		return uuid.Nil, errors.Wrap(errTokenNotFound, "GetUserIDFromContext")
+		return uuid.Nil, errors.Wrap(ErrTokenNotFound, "GetUserIDFromContext")
 	}
 	return userToken.GetUserID(), nil
 }

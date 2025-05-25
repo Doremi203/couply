@@ -39,10 +39,9 @@ func (c *UseCase) UpdateUserByID(ctx context.Context, in *dto.UpdateUserByIDV1Re
 		SetUpdatedAt(time.Now()).
 		Build()
 
-	updatedUser, err := c.userStorageFacade.UpdateUserTx(ctx, user)
-	if err != nil {
+	if err = c.userStorageFacade.UpdateUserTx(ctx, user); err != nil {
 		return nil, errors.Wrap(err, "userStorageFacade.UpdateUserByID")
 	}
 
-	return &dto.UpdateUserByIDV1Response{User: updatedUser}, nil
+	return &dto.UpdateUserByIDV1Response{User: user}, nil
 }

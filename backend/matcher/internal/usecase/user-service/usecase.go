@@ -17,7 +17,7 @@ type userStorageFacade interface {
 
 type userStorageSetterFacade interface {
 	CreateUserTx(ctx context.Context, user *user.User) error
-	UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error)
+	UpdateUserTx(ctx context.Context, user *user.User) error
 	DeleteUserTx(ctx context.Context, userID uuid.UUID) error
 	UpdatePhotosUploadedAtTx(ctx context.Context, orderNumbers []int32, userID uuid.UUID) error
 }

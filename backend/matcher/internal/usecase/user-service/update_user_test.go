@@ -15,7 +15,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-func TestUseCase_CreateUser(t *testing.T) {
+func TestUseCase_UpdateUser(t *testing.T) {
 	now := time.Now()
 
 	type mocks struct {
@@ -24,14 +24,14 @@ func TestUseCase_CreateUser(t *testing.T) {
 	}
 	type args struct {
 		token token.Token
-		in    *dto.CreateUserV1Request
+		in    *dto.UpdateUserV1Request
 	}
 	tests := []struct {
 		name     string
 		setup    func(mocks)
 		args     args
 		tokenErr bool
-		want     *dto.CreateUserV1Response
+		want     *dto.UpdateUserV1Response
 		wantErr  assert.ErrorAssertionFunc
 	}{
 		{
@@ -50,7 +50,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 				token: token.Token{
 					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				},
-				in: &dto.CreateUserV1Request{
+				in: &dto.UpdateUserV1Request{
 					Name:       "user",
 					Age:        18,
 					Gender:     user.GenderMale,
@@ -75,7 +75,6 @@ func TestUseCase_CreateUser(t *testing.T) {
 							MimeType:    ".jpg",
 						},
 					},
-					CreatedAt: now,
 					UpdatedAt: now,
 				},
 			},
@@ -87,7 +86,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 		{
 			name: "tx error",
 			setup: func(m mocks) {
-				m.userStorageFacade.EXPECT().CreateUserTx(gomock.Any(), &user.User{
+				m.userStorageFacade.EXPECT().UpdateUserTx(gomock.Any(), &user.User{
 					ID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 					Name:       "user",
 					Age:        18,
@@ -108,15 +107,15 @@ func TestUseCase_CreateUser(t *testing.T) {
 					IsPremium:  false,
 					IsBlocked:  false,
 					Photos:     []user.Photo{},
-					CreatedAt:  now,
+					CreatedAt:  time.Time{},
 					UpdatedAt:  now,
-				}).Return(user.ErrDuplicateUser)
+				}).Return(user.ErrUserNotFound)
 			},
 			args: args{
 				token: token.Token{
 					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				},
-				in: &dto.CreateUserV1Request{
+				in: &dto.UpdateUserV1Request{
 					Name:                "user",
 					Age:                 18,
 					Gender:              user.GenderMale,
@@ -136,20 +135,19 @@ func TestUseCase_CreateUser(t *testing.T) {
 					IsPremium:           false,
 					IsBlocked:           false,
 					PhotoUploadRequests: nil,
-					CreatedAt:           now,
 					UpdatedAt:           now,
 				},
 			},
 			want: nil,
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				return assert.ErrorIs(t, err, user.ErrDuplicateUser)
+				return assert.ErrorIs(t, err, user.ErrUserNotFound)
 			},
 		},
 		{
 			name: "success",
 			setup: func(m mocks) {
 				m.photoURLGenerator.EXPECT().GenerateUpload(gomock.Any(), "users/11111111-1111-1111-1111-111111111111/slot/0.jpg", ".jpg").Return("uploadURL", nil)
-				m.userStorageFacade.EXPECT().CreateUserTx(gomock.Any(), &user.User{
+				m.userStorageFacade.EXPECT().UpdateUserTx(gomock.Any(), &user.User{
 					ID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 					Name:       "user",
 					Age:        18,
@@ -180,7 +178,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 							DownloadURL: nil,
 						},
 					},
-					CreatedAt: now,
+					CreatedAt: time.Time{},
 					UpdatedAt: now,
 				}).Return(nil)
 			},
@@ -188,7 +186,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 				token: token.Token{
 					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				},
-				in: &dto.CreateUserV1Request{
+				in: &dto.UpdateUserV1Request{
 					Name:       "user",
 					Age:        18,
 					Gender:     user.GenderMale,
@@ -213,11 +211,10 @@ func TestUseCase_CreateUser(t *testing.T) {
 							MimeType:    ".jpg",
 						},
 					},
-					CreatedAt: now,
 					UpdatedAt: now,
 				},
 			},
-			want: &dto.CreateUserV1Response{
+			want: &dto.UpdateUserV1Response{
 				User: &user.User{
 					ID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 					Name:       "user",
@@ -249,7 +246,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 							DownloadURL: nil,
 						},
 					},
-					CreatedAt: now,
+					CreatedAt: time.Time{},
 					UpdatedAt: now,
 				},
 			},
@@ -275,7 +272,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 			if tt.tokenErr {
 				ctx = context.Background()
 			}
-			got, err := usecase.CreateUser(ctx, tt.args.in)
+			got, err := usecase.UpdateUser(ctx, tt.args.in)
 
 			tt.wantErr(t, err)
 			assert.Equal(t, tt.want, got)

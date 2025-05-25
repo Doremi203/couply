@@ -7,6 +7,7 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	"github.com/Doremi203/couply/backend/matcher/utils"
+	"time"
 )
 
 type UpdateUserV1Request struct {
@@ -28,6 +29,7 @@ type UpdateUserV1Request struct {
 	IsVerified          bool
 	IsPremium           bool
 	IsBlocked           bool
+	UpdatedAt           time.Time
 	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
@@ -37,6 +39,7 @@ type UpdateUserV1Response struct {
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(req.Latitude, req.Longitude)
+	now := time.Now()
 
 	return &UpdateUserV1Request{
 		Name:       req.GetName(),
@@ -57,6 +60,7 @@ func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
 		IsVerified: req.GetIsVerified(),
 		IsPremium:  req.GetIsPremium(),
 		IsBlocked:  req.GetIsBlocked(),
+		UpdatedAt:  now,
 		PhotoUploadRequests: slices.Map(req.GetPhotoUploadRequests(), func(from *desc.PhotoUploadRequest) user.PhotoUploadRequest {
 			return user.PhotoUploadRequest{
 				OrderNumber: from.GetOrderNumber(),
