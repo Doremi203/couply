@@ -47,10 +47,11 @@ func executeGetUserBlockReasonsQuery(ctx context.Context, queryEngine storage.Qu
 
 	reasons, err := pgx.CollectRows(rows, pgx.RowTo[blocker.ReportReason])
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(blocker.ErrUserBlockReasonsNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
+	}
+
+	if len(reasons) == 0 {
+		return nil, errors.Wrap(blocker.ErrUserBlockReasonsNotFound, "pgx.CollectRows")
 	}
 
 	return reasons, nil

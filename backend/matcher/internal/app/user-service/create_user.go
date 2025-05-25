@@ -15,7 +15,9 @@ func (i *Implementation) CreateUserV1(ctx context.Context, in *desc.CreateUserV1
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	response, err := i.usecase.CreateUser(ctx, dto.PBToCreateUserRequest(in))
+	req := dto.PBToCreateUserRequest(in)
+
+	response, err := i.usecase.CreateUser(ctx, req)
 	if err != nil {
 		return nil, err
 	}

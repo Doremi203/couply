@@ -51,6 +51,19 @@ func NewInterest() *Interest {
 	}
 }
 
+func NewUnspecifiedInterest() *Interest {
+	return &Interest{
+		Sport:             []Sport{SportUnspecified},
+		SelfDevelopment:   []SelfDevelopment{SelfDevelopmentUnspecified},
+		Hobby:             []Hobby{HobbyUnspecified},
+		Music:             []Music{MusicUnspecified},
+		MoviesTV:          []MoviesTV{MoviesTVUnspecified},
+		FoodDrink:         []FoodDrink{FoodDrinkUnspecified},
+		PersonalityTraits: []PersonalityTraits{PersonalityTraitUnspecified},
+		Pets:              []Pets{PetsUnspecified},
+	}
+}
+
 func InterestToPB(interest *Interest) *desc.Interest {
 	if interest == nil {
 		return nil
@@ -70,7 +83,7 @@ func InterestToPB(interest *Interest) *desc.Interest {
 
 func PBToInterest(pb *desc.Interest) *Interest {
 	if pb == nil {
-		return nil
+		return NewUnspecifiedInterest()
 	}
 
 	return &Interest{

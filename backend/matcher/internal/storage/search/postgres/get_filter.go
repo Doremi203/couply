@@ -50,7 +50,7 @@ func executeGetFilterQuery(ctx context.Context, queryEngine storage.QueryEngine,
 	filter, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[search.Filter])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(search.ErrFilterNotFound, "query")
+			return nil, errors.Wrap(search.ErrFilterNotFound, "pgx.CollectExactlyOneRow")
 		}
 		return nil, errors.Wrap(err, "pgx.CollectExactlyOneRow")
 	}

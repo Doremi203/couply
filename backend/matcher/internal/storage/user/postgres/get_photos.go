@@ -75,11 +75,10 @@ func executeGetPhotosQuery(ctx context.Context, queryEngine storage.QueryEngine,
 
 	photos, err := pgx.CollectRows(rows, pgx.RowToStructByName[DBPhoto])
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(user.ErrPhotosNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
 	}
+
+	// TODO: if no photos, what to do?
 
 	return photos, nil
 }
