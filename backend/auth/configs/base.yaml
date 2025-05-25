@@ -25,7 +25,7 @@ phone-confirmation:
   expirationTime: 1m
 
 jwt:
-  tokenLifetime: 5m
+  tokenLifetime: 1m
   refreshTokenLifetime: 24h
 
 oauth:
