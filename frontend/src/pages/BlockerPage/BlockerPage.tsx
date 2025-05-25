@@ -11,8 +11,6 @@ export const BlockerPage: React.FC = () => {
   const navigate = useNavigate();
   const { reasons } = useSelector((state: RootState) => state.blocking);
 
-  console.log(reasons);
-
   const handleLogOut = () => {
     navigate('/auth');
     localStorage.removeItem('token');
