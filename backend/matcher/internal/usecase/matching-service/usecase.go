@@ -3,6 +3,10 @@ package matching_service
 import (
 	"context"
 
+	sqsclient "github.com/Doremi203/couply/backend/matcher/internal/client/sqs"
+
+	"github.com/aws/aws-sdk-go/service/sqs"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 	"github.com/google/uuid"
 )
@@ -26,10 +30,15 @@ type matchingStorageGetterFacade interface {
 	FetchIncomingLikesTx(ctx context.Context, userID uuid.UUID, limit, offset uint64) ([]*matching.Like, error)
 }
 
-type UseCase struct {
-	matchingStorageFacade matchingStorageFacade
+type sqsClient interface {
+	SendMessageToMatchingQueue(messageBody sqsclient.Messenger) (*sqs.SendMessageOutput, error)
 }
 
-func NewUseCase(matchingStorageFacade matchingStorageFacade) *UseCase {
-	return &UseCase{matchingStorageFacade: matchingStorageFacade}
+type UseCase struct {
+	matchingStorageFacade matchingStorageFacade
+	sqsClient             sqsClient
+}
+
+func NewUseCase(matchingStorageFacade matchingStorageFacade, client sqsClient) *UseCase {
+	return &UseCase{matchingStorageFacade: matchingStorageFacade, sqsClient: client}
 }
