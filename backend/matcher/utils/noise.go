@@ -1,13 +1,11 @@
 package utils
 
 import (
-	"math/rand"
-	"time"
+	"math/rand/v2"
 )
 
-func AddNoise(lat, lng float64) (float64, float64) {
-	rand.Seed(time.Now().UnixNano())
-	noiseLat := rand.Float64()*0.02 - 0.01 // [-0.01, 0.01]
-	noiseLng := rand.Float64()*0.02 - 0.01 // [-0.01, 0.01]
+func AddNoise(lat, lng float64) (float64, float64) { //nolint:gosec
+	noiseLat := rand.Float64()*0.02 - 0.01 //nolint:gosec
+	noiseLng := rand.Float64()*0.02 - 0.01 //nolint:gosec
 	return lat + noiseLat, lng + noiseLng
 }
