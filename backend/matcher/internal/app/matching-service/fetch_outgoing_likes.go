@@ -3,6 +3,9 @@ package matching_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
 	"google.golang.org/grpc/codes"
@@ -15,7 +18,10 @@ func (i *Implementation) FetchOutgoingLikesV1(ctx context.Context, in *desc.Fetc
 	}
 
 	response, err := i.usecase.FetchOutgoingLikes(ctx, dto.PBToFetchOutgoingLikesRequest(in))
-	if err != nil {
+	switch {
+	case errors.Is(err, matching.ErrLikesNotFound):
+		return nil, status.Error(codes.NotFound, matching.ErrLikesNotFound.Error())
+	case err != nil:
 		return nil, err
 	}
 

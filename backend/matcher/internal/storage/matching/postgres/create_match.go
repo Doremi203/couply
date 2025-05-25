@@ -41,7 +41,7 @@ func executeCreateMatchQuery(ctx context.Context, queryEngine storage.QueryEngin
 	_, err := queryEngine.Exec(ctx, query, args...)
 	if err != nil {
 		if postgres.IsForeignKeyViolationError(err) {
-			return user.ErrUserNotFound
+			return user.ErrUserDoesntExist
 		}
 		if postgres.IsUniqueViolationError(err) {
 			return matching.ErrMatchAlreadyExists

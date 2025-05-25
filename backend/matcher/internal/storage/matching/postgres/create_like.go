@@ -3,6 +3,9 @@ package postgres
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/storage"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -35,6 +38,9 @@ func buildCreateLikeQuery(like *matching.Like) (string, []any, error) {
 func executeCreateLikeQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) error {
 	_, err := queryEngine.Exec(ctx, query, args...)
 	if err != nil {
+		if postgres.IsForeignKeyViolationError(err) {
+			return user.ErrUserDoesntExist
+		}
 		return errors.Wrap(err, "exec")
 	}
 	return nil

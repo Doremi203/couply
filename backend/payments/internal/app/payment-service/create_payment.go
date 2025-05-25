@@ -3,6 +3,9 @@ package payment_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
+
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/payment-service/v1"
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/payment-service"
 	"google.golang.org/grpc/codes"
@@ -20,7 +23,12 @@ func (i *Implementation) CreatePaymentV1(ctx context.Context, in *desc.CreatePay
 	}
 
 	response, err := i.usecase.CreatePayment(ctx, req)
-	if err != nil {
+	switch {
+	case errors.Is(err, payment.ErrSubscriptionDoesntExist):
+		return nil, status.Error(codes.FailedPrecondition, payment.ErrSubscriptionDoesntExist.Error())
+	case errors.Is(err, payment.ErrDuplicatePayment):
+		return nil, status.Error(codes.FailedPrecondition, payment.ErrDuplicatePayment.Error())
+	case err != nil:
 		return nil, err
 	}
 

@@ -3,6 +3,10 @@ package search_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
 	"google.golang.org/grpc/codes"
@@ -15,7 +19,12 @@ func (i *Implementation) UpdateFilterV1(ctx context.Context, in *desc.UpdateFilt
 	}
 
 	response, err := i.usecase.UpdateFilter(ctx, dto.PBToUpdateFilterRequest(in))
-	if err != nil {
+	switch {
+	case errors.Is(err, search.ErrFilterNotFound):
+		return nil, status.Error(codes.NotFound, search.ErrFilterNotFound.Error())
+	case errors.Is(err, interest.ErrInterestsNotFound):
+		return nil, status.Error(codes.NotFound, interest.ErrInterestsNotFound.Error())
+	case err != nil:
 		return nil, err
 	}
 

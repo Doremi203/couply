@@ -13,6 +13,7 @@ import (
 var (
 	ErrMatchAlreadyExists = errors.Error("match already exists")
 	ErrMatchesNotFound    = errors.Error("matches not found")
+	ErrMatchNotFound      = errors.Error("match not found")
 )
 
 type Match struct {

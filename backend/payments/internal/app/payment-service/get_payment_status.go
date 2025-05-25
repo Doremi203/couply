@@ -3,6 +3,9 @@ package payment_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
+
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/payment-service/v1"
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/payment-service"
 	"google.golang.org/grpc/codes"
@@ -20,7 +23,10 @@ func (i *Implementation) GetPaymentStatusV1(ctx context.Context, in *desc.GetPay
 	}
 
 	response, err := i.usecase.GetPaymentStatus(ctx, req)
-	if err != nil {
+	switch {
+	case errors.Is(err, payment.ErrPaymentNotFound):
+		return nil, status.Error(codes.NotFound, payment.ErrPaymentNotFound.Error())
+	case err != nil:
 		return nil, err
 	}
 

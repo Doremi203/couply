@@ -3,6 +3,10 @@ package user_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
@@ -16,7 +20,14 @@ func (i *Implementation) GetUserV1(ctx context.Context, in *desc.GetUserV1Reques
 	}
 
 	response, err := i.usecase.GetUser(ctx, dto.PBToGetUserRequest(in))
-	if err != nil {
+	switch {
+	case errors.Is(err, user.ErrUserNotFound):
+		return nil, status.Error(codes.NotFound, user.ErrUserNotFound.Error())
+	case errors.Is(err, interest.ErrInterestsNotFound):
+		return nil, status.Error(codes.NotFound, interest.ErrInterestsNotFound.Error())
+	case errors.Is(err, user.ErrPhotosNotFound):
+		return nil, status.Error(codes.NotFound, user.ErrPhotosNotFound.Error())
+	case err != nil:
 		return nil, err
 	}
 
