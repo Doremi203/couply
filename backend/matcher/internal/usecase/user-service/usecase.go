@@ -1,4 +1,4 @@
-//go:generate mockgen -source=usecase.go -destination=../../mocks/user/facade_mock.go -typed
+//go:generate mockgen -source=usecase.go -destination=../../mocks/usecase/user/facade_mock.go -typed
 
 package user_service
 

@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	mock_user_service "github.com/Doremi203/couply/backend/matcher/internal/mocks/usecase/user"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -19,7 +21,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 	now := time.Now()
 
 	type mocks struct {
-		userStorageFacade *mock_user.MockuserStorageFacade
+		userStorageFacade *mock_user_service.MockuserStorageFacade
 		photoURLGenerator *mock_user.MockPhotoURLGenerator
 	}
 	type args struct {
@@ -261,7 +263,7 @@ func TestUseCase_CreateUser(t *testing.T) {
 			ctrl := gomock.NewController(t)
 
 			mocks := mocks{
-				userStorageFacade: mock_user.NewMockuserStorageFacade(ctrl),
+				userStorageFacade: mock_user_service.NewMockuserStorageFacade(ctrl),
 				photoURLGenerator: mock_user.NewMockPhotoURLGenerator(ctrl),
 			}
 
