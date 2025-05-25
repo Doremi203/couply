@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/matcher/internal/client/sqs"
+
 	"github.com/Doremi203/couply/backend/matcher/internal/storage"
 	matching_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/matching/facade"
 	postgres2 "github.com/Doremi203/couply/backend/matcher/internal/storage/matching/postgres"
@@ -72,6 +74,17 @@ func main() {
 
 		photoURLGenerator := user_domain.NewObjectStoragePhotoURLGenerator(s3Client, s3Config.Bucket)
 
+		sqsConfig := sqs.SQSConfig{}
+		err = app.Config.ReadSection("sqs", &sqsConfig)
+		if err != nil {
+			return err
+		}
+
+		sqsClient, err := sqs.New(sqsConfig)
+		if err != nil {
+			return errors.WrapFail(err, "create sqs client")
+		}
+
 		txManager := storage.NewTxManager(dbClient)
 		pgStorageUser := postgres3.NewPgStorageUser(txManager)
 		storageFacadeUser := user_service_facade.NewStorageFacadeUser(txManager, pgStorageUser)
@@ -80,7 +93,7 @@ func main() {
 
 		pgStorageMatching := postgres2.NewPgStorageMatching(txManager)
 		storageFacadeMatching := matching_service_facade.NewStorageFacadeMatching(txManager, pgStorageMatching)
-		useCaseMatchingService := matching_service_usecase.NewUseCase(storageFacadeMatching)
+		useCaseMatchingService := matching_service_usecase.NewUseCase(storageFacadeMatching, sqsClient)
 		implMatchingService := matching_service.NewImplementation(useCaseMatchingService)
 
 		pgStorageSearch := postgres4.NewPgStorageSearch(txManager)

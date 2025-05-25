@@ -25,3 +25,7 @@ s3:
   accessKey: minio
   secretKey: minio123
   bucket: profile-photos
+
+secrets:
+  ids:
+    sqs: e6q11avjgsnllkss9nqr
