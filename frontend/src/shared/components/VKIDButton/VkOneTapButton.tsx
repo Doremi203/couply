@@ -58,6 +58,11 @@ const VkOneTapButton: React.FC<VkOneTapButtonProps> = ({
         container: containerRef.current,
         scheme,
         lang,
+        styles: {
+          borderRadius: 22,
+          width: 280,
+          height: 44,
+        },
       })
       .on(VKID.WidgetEvents.ERROR, onError);
     oneTap.on(VKID.OneTapInternalEvents.LOGIN_SUCCESS, (payload: VKID.AuthResponse) => {

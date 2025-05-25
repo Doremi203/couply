@@ -7,6 +7,8 @@ import userReducer from '../../entities/user/model/userSlice';
 import filtersReducer from '../../features/filters/model/filtersSlice';
 import { baseApi, matcherApi } from '../../shared/api/baseApi';
 
+import blockingReducer from './blockingSlice';
+
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
@@ -15,6 +17,7 @@ export const store = configureStore({
     filters: filtersReducer,
     user: userReducer,
     profile: profileReducer,
+    blocking: blockingReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware().concat(baseApi.middleware, matcherApi.middleware),
