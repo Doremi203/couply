@@ -1,21 +1,27 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { Dialog, Link } from '@mui/material';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { setBlocking } from '../../../../app/store/blockingSlice';
 import { useLogin } from '../../../../entities/auth/hooks/useLogin';
+import { useGetBlockInfoMutation } from '../../../../entities/blocker';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 import { CustomInput } from '../../../../shared/components/CustomInput';
 
 import styles from './loginPage.module.css';
 
 export const LoginPage = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
+
+  const [getBlockInfo] = useGetBlockInfoMutation();
 
   const [errors, setErrors] = useState({
     email: '',
@@ -77,12 +83,39 @@ export const LoginPage = () => {
         };
 
         const result = await loginUser(loginData);
+        let blockInfo;
+
+        try {
+          blockInfo = await getBlockInfo({}).unwrap();
+        } catch {
+          /* empty */
+        }
+
+        if (blockInfo) {
+          dispatch(
+            setBlocking({
+              isBlocked: true,
+              reasons: blockInfo.reasons,
+              message: blockInfo.message,
+              createdAt: blockInfo.createdAt,
+            }),
+          );
+          navigate('/blocked');
+          return;
+        } else {
+          dispatch(
+            setBlocking({
+              isBlocked: false,
+              reasons: [],
+              message: '',
+              createdAt: null,
+            }),
+          );
+        }
 
         if (result.data?.token) {
           navigate('/home');
         } else if (result.error) {
-          console.log(result.error);
-          // Handle specific error types
           if (result.error.includes('не найден')) {
             setShowRegistrationModal(true);
             setErrors({

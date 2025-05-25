@@ -8,6 +8,7 @@ import styles from './splashPage.module.css';
 export const SplashPage = () => {
   const navigate = useNavigate();
   // const userId = useSelector(getUserId);
+
   const { updateUserLocation } = useGeolocation();
 
   // Get user's geolocation and update in backend if user is authorized
@@ -35,7 +36,11 @@ export const SplashPage = () => {
       const token = localStorage.getItem('token');
 
       if (token) {
-        navigate('/home');
+        if (localStorage.getItem('blocked') === 'true') {
+          navigate('/blocked');
+        } else {
+          navigate('/home');
+        }
       } else {
         navigate('/auth');
       }

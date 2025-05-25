@@ -25,3 +25,12 @@ export const reportToApi = {
   Возраст: 'REASON_AGE',
   'Другая причина': 'REASON_OTHER',
 };
+
+export const reasonsFromApi = {
+  REASON_FAKE_PROFILE: 'Фейковый профиль',
+  REASON_SPAM: 'Спам',
+  REASON_ABUSE: 'Оскорбительное поведениe',
+  REASON_INAPPROPRIATE_CONTENT: 'Неприемлемый контент',
+  REASON_AGE: 'Возраст',
+  REASON_OTHER: 'Другая причина',
+};

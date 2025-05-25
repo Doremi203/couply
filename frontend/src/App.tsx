@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
-import { getUserId, setUserId } from './entities/user/model/userSlice';
+import { setBlocking } from './app/store/blockingSlice';
+import { useGetBlockInfoMutation } from './entities/blocker/index.ts';
+import { getUserId, setUserId } from './entities/user/index.ts';
 import { AuthPage } from './pages/AuthPage';
+import { BlockerPage } from './pages/BlockerPage/BlockerPage';
 import { EnterInfoPage } from './pages/EnterInfoPage';
 import { EnterPhonePage } from './pages/EnterPhonePage';
 import { HomePage } from './pages/HomePage';
@@ -64,6 +67,10 @@ const router = createBrowserRouter([
     element: <PremiumPage key="premium-page" />,
   },
   {
+    path: 'blocked',
+    element: <BlockerPage />,
+  },
+  {
     path: '/oauth-callback',
     element: <OAuthCallback />,
   },
@@ -73,7 +80,6 @@ const router = createBrowserRouter([
   },
 ]);
 
-// Компонент для отображения сообщения о повороте устройства
 const OrientationMessage: React.FC = () => {
   return (
     <div className="orientation-message">
@@ -90,6 +96,8 @@ function App() {
   const dispatch = useDispatch();
   const [isLandscape, setIsLandscape] = useState(false);
 
+  const [getBlockInfo] = useGetBlockInfoMutation();
+
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);
 
@@ -102,6 +110,47 @@ function App() {
       }
     }
   }, [userId, dispatch]);
+
+  useEffect(() => {
+    const fetchBlockInfo = async () => {
+      if (localStorage.getItem('token')) {
+        try {
+          const blockInfo = await getBlockInfo({}).unwrap();
+          if (blockInfo && blockInfo.blockId) {
+            dispatch(
+              setBlocking({
+                isBlocked: true,
+                reasons: blockInfo.reasons,
+                message: blockInfo.message,
+                createdAt: blockInfo.createdAt,
+              }),
+            );
+          } else {
+            dispatch(
+              setBlocking({
+                isBlocked: false,
+                reasons: [],
+                message: '',
+                createdAt: null,
+              }),
+            );
+          }
+        } catch (error) {
+          console.error('Error checking block status:', error);
+          dispatch(
+            setBlocking({
+              isBlocked: false,
+              reasons: [],
+              message: '',
+              createdAt: null,
+            }),
+          );
+        }
+      }
+    };
+
+    fetchBlockInfo();
+  }, [getBlockInfo, dispatch]);
 
   // Функция проверки ориентации экрана
   const checkOrientation = () => {
