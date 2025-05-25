@@ -3,6 +3,9 @@ package matching_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
+
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
 	"google.golang.org/grpc/codes"
@@ -20,7 +23,10 @@ func (i *Implementation) DeleteMatchV1(ctx context.Context, in *desc.DeleteMatch
 	}
 
 	response, err := i.usecase.DeleteMatch(ctx, req)
-	if err != nil {
+	switch {
+	case errors.Is(err, matching.ErrMatchNotFound):
+		return nil, status.Error(codes.NotFound, matching.ErrMatchNotFound.Error())
+	case err != nil:
 		return nil, err
 	}
 

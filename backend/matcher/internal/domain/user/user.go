@@ -21,6 +21,7 @@ var (
 	ErrDuplicateUser   = errors.Error("user already exists")
 	ErrUserDoesntExist = errors.Error("user does not exist")
 	ErrUserNotFound    = errors.Error("user not found")
+	ErrUsersNotFound   = errors.Error("users not found")
 )
 
 type User struct {
