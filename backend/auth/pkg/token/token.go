@@ -13,16 +13,16 @@ var (
 )
 
 type Token struct {
-	userID uuid.UUID
+	UserID uuid.UUID
 }
 
 func (t Token) GetUserID() uuid.UUID {
-	return t.userID
+	return t.UserID
 }
 
 type tokenKey struct{}
 
-func contextWithToken(ctx context.Context, token Token) context.Context {
+func ContextWithToken(ctx context.Context, token Token) context.Context {
 	return context.WithValue(ctx, tokenKey{}, token)
 }
 func FromContext(ctx context.Context) (Token, bool) {

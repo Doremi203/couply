@@ -2,9 +2,6 @@ package user_service
 
 import (
 	"context"
-	"time"
-
-	"github.com/Doremi203/couply/backend/matcher/utils"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 
@@ -24,15 +21,13 @@ func (c *UseCase) CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (
 		return nil, errors.Wrap(err, "createPhotos")
 	}
 
-	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(in.Latitude, in.Longitude)
-
 	userToCreate := user.NewUserBuilder().
 		SetID(userID).
 		SetName(in.Name).
 		SetAge(in.Age).
 		SetGender(in.Gender).
-		SetLatitude(latitudeWithNoise).
-		SetLongitude(longitudeWithNoise).
+		SetLatitude(in.Latitude).
+		SetLongitude(in.Longitude).
 		SetBIO(in.Bio).
 		SetGoal(in.Goal).
 		SetInterest(in.Interest).
@@ -47,8 +42,8 @@ func (c *UseCase) CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (
 		SetIsPremium(in.IsPremium).
 		SetIsBlocked(in.IsBlocked).
 		SetPhotos(photos).
-		SetCreatedAt(time.Now()).
-		SetUpdatedAt(time.Now()).
+		SetCreatedAt(in.CreatedAt).
+		SetUpdatedAt(in.UpdatedAt).
 		Build()
 
 	if err = c.userStorageFacade.CreateUserTx(ctx, userToCreate); err != nil {

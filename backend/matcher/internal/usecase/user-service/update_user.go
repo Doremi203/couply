@@ -4,8 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/Doremi203/couply/backend/matcher/utils"
-
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -24,15 +22,13 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		return nil, errors.Wrap(err, "createPhotos")
 	}
 
-	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(in.Latitude, in.Longitude)
-
 	user := user.NewUserBuilder().
 		SetID(userID).
 		SetName(in.Name).
 		SetAge(in.Age).
 		SetGender(in.Gender).
-		SetLatitude(latitudeWithNoise).
-		SetLongitude(longitudeWithNoise).
+		SetLatitude(in.Latitude).
+		SetLongitude(in.Longitude).
 		SetBIO(in.Bio).
 		SetGoal(in.Goal).
 		SetInterest(in.Interest).

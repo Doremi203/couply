@@ -6,6 +6,7 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+	"github.com/Doremi203/couply/backend/matcher/utils"
 )
 
 type UpdateUserV1Request struct {
@@ -35,12 +36,14 @@ type UpdateUserV1Response struct {
 }
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
+	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(req.Latitude, req.Longitude)
+
 	return &UpdateUserV1Request{
 		Name:       req.GetName(),
 		Age:        req.GetAge(),
 		Gender:     user.PBToGender(req.GetGender()),
-		Latitude:   req.GetLatitude(),
-		Longitude:  req.GetLongitude(),
+		Latitude:   latitudeWithNoise,
+		Longitude:  longitudeWithNoise,
 		Bio:        req.GetBio(),
 		Goal:       common.PBToGoal(req.GetGoal()),
 		Interest:   interest.PBToInterest(req.GetInterest()),
