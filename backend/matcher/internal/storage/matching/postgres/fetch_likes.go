@@ -63,10 +63,11 @@ func executeFetchLikesQuery(ctx context.Context, queryEngine storage.QueryEngine
 
 	likes, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[matching.Like])
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(matching.ErrLikesNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
+	}
+
+	if len(likes) == 0 {
+		return nil, errors.Wrap(matching.ErrLikesNotFound, "pgx.CollectRows")
 	}
 
 	return likes, nil

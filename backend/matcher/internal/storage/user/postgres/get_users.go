@@ -51,10 +51,11 @@ func executeGetUsersQuery(ctx context.Context, queryEngine storage.QueryEngine, 
 
 	users, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[user.User])
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(user.ErrUserNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
+	}
+
+	if len(users) == 0 {
+		return nil, errors.Wrap(user.ErrUserNotFound, "pgx.CollectRows")
 	}
 
 	return users, nil

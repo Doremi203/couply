@@ -24,8 +24,7 @@ const (
 )
 
 var (
-	ErrInterestsNotFound   = errors.Error("interest not found")
-	ErrUnknownInterestType = errors.Error("unknown interest type")
+	ErrInterestsNotFound = errors.Error("interest not found")
 )
 
 type Interest struct {
@@ -52,6 +51,19 @@ func NewInterest() *Interest {
 	}
 }
 
+func NewUnspecifiedInterest() *Interest {
+	return &Interest{
+		Sport:             []Sport{SportUnspecified},
+		SelfDevelopment:   []SelfDevelopment{SelfDevelopmentUnspecified},
+		Hobby:             []Hobby{HobbyUnspecified},
+		Music:             []Music{MusicUnspecified},
+		MoviesTV:          []MoviesTV{MoviesTVUnspecified},
+		FoodDrink:         []FoodDrink{FoodDrinkUnspecified},
+		PersonalityTraits: []PersonalityTraits{PersonalityTraitUnspecified},
+		Pets:              []Pets{PetsUnspecified},
+	}
+}
+
 func InterestToPB(interest *Interest) *desc.Interest {
 	if interest == nil {
 		return nil
@@ -71,7 +83,7 @@ func InterestToPB(interest *Interest) *desc.Interest {
 
 func PBToInterest(pb *desc.Interest) *Interest {
 	if pb == nil {
-		return nil
+		return NewUnspecifiedInterest()
 	}
 
 	return &Interest{
@@ -87,6 +99,10 @@ func PBToInterest(pb *desc.Interest) *Interest {
 }
 
 func MapInterestsToGroups(interests *Interest) map[string][]int {
+	if interests == nil {
+		return nil
+	}
+
 	return map[string][]int{
 		SportName:             convertSlice(interests.Sport),
 		SelfDevelopmentName:   convertSlice(interests.SelfDevelopment),

@@ -52,7 +52,7 @@ func executeGetLikeQuery(ctx context.Context, queryEngine storage.QueryEngine, q
 	like, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[matching.Like])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(matching.ErrLikeNotFound, "query")
+			return nil, errors.Wrap(matching.ErrLikeNotFound, "pgx.CollectExactlyOneRow")
 		}
 		return nil, errors.Wrap(err, "pgx.CollectExactlyOneRow")
 	}

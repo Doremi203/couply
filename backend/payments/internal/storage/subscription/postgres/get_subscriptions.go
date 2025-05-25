@@ -49,9 +49,6 @@ func executeGetSubscriptionsQuery(ctx context.Context, queryEngine storage.Query
 
 	subs, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[subscription.Subscription])
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(subscription.ErrSubscriptionsNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
 	}
 

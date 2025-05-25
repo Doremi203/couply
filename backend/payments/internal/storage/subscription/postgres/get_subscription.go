@@ -64,7 +64,7 @@ func executeGetSubscriptionQuery(ctx context.Context, queryEngine storage.QueryE
 	sub, err := pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[subscription.Subscription])
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(subscription.ErrSubscriptionNotFound, "query")
+			return nil, errors.Wrap(subscription.ErrSubscriptionNotFound, "pgx.CollectExactlyOneRow")
 		}
 		return nil, errors.Wrap(err, "pgx.CollectExactlyOneRow")
 	}

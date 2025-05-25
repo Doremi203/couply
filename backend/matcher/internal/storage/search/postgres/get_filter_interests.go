@@ -63,10 +63,10 @@ func executeGetFilterInterestsQuery(ctx context.Context, queryEngine storage.Que
 
 	interests, err := pgx.CollectRows(rows, pgx.RowToStructByName[DBFilterInterest])
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(interest.ErrInterestsNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
+	}
+	if len(interests) == 0 {
+		return nil, errors.Wrap(interest.ErrInterestsNotFound, "pgx.CollectRows")
 	}
 
 	return interests, nil

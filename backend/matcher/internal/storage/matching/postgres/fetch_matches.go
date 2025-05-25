@@ -54,13 +54,14 @@ func executeFetchMatchesQuery(ctx context.Context, queryEngine storage.QueryEngi
 		return nil, errors.Wrap(err, "query")
 	}
 
-	likes, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[matching.Match])
+	matches, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[matching.Match])
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, errors.Wrap(matching.ErrMatchesNotFound, "query")
-		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
 	}
 
-	return likes, nil
+	if len(matches) == 0 {
+		return nil, errors.Wrap(matching.ErrMatchesNotFound, "pgx.CollectRows")
+	}
+
+	return matches, nil
 }
