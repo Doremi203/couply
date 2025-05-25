@@ -2,8 +2,9 @@ package user
 
 import (
 	"context"
-	"errors"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 
@@ -16,6 +17,12 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+var (
+	ErrDuplicateUser   = errors.Error("user already exists")
+	ErrUserDoesntExist = errors.Error("user does not exist")
+	ErrUserNotFound    = errors.Error("user not found")
+)
+
 type User struct {
 	ID         uuid.UUID          `db:"id"`
 	Name       string             `db:"name"`
@@ -25,7 +32,7 @@ type User struct {
 	Longitude  float64            `db:"longitude"`
 	BIO        string             `db:"bio"`
 	Goal       common.Goal        `db:"goal"`
-	Interest   *interest.Interest `db:"interest"`
+	Interest   *interest.Interest `db:"-"`
 	Zodiac     common.Zodiac      `db:"zodiac"`
 	Height     int32              `db:"height"`
 	Education  common.Education   `db:"education"`
@@ -36,7 +43,7 @@ type User struct {
 	IsVerified bool               `db:"is_verified"`
 	IsPremium  bool               `db:"is_premium"`
 	IsBlocked  bool               `db:"is_blocked"`
-	Photos     []Photo            `db:"photos"`
+	Photos     []Photo            `db:"-"`
 	CreatedAt  time.Time          `db:"created_at"`
 	UpdatedAt  time.Time          `db:"updated_at"`
 }
@@ -50,160 +57,6 @@ func (x *User) GenerateDownloadPhotoURLS(ctx context.Context, gen PhotoURLGenera
 	}
 
 	return errors.Join(errs...)
-}
-
-func (x *User) GetID() uuid.UUID {
-	if x != nil {
-		return x.ID
-	}
-	return uuid.Nil
-}
-
-func (x *User) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *User) GetAge() int32 {
-	if x != nil {
-		return x.Age
-	}
-	return 0
-}
-
-func (x *User) GetGender() Gender {
-	if x != nil {
-		return x.Gender
-	}
-	return 0
-}
-
-func (x *User) GetLatitude() float64 {
-	if x != nil {
-		return x.Latitude
-	}
-	return 0
-}
-
-func (x *User) GetLongitude() float64 {
-	if x != nil {
-		return x.Longitude
-	}
-	return 0
-}
-
-func (x *User) GetBIO() string {
-	if x != nil {
-		return x.BIO
-	}
-	return ""
-}
-
-func (x *User) GetGoal() common.Goal {
-	if x != nil {
-		return x.Goal
-	}
-	return 0
-}
-
-func (x *User) GetInterest() *interest.Interest {
-	if x != nil {
-		return x.Interest
-	}
-	return nil
-}
-
-func (x *User) GetZodiac() common.Zodiac {
-	if x != nil {
-		return x.Zodiac
-	}
-	return 0
-}
-
-func (x *User) GetHeight() int32 {
-	if x != nil {
-		return x.Height
-	}
-	return 0
-}
-
-func (x *User) GetEducation() common.Education {
-	if x != nil {
-		return x.Education
-	}
-	return 0
-}
-
-func (x *User) GetChildren() common.Children {
-	if x != nil {
-		return x.Children
-	}
-	return 0
-}
-
-func (x *User) GetAlcohol() common.Alcohol {
-	if x != nil {
-		return x.Alcohol
-	}
-	return 0
-}
-
-func (x *User) GetSmoking() common.Smoking {
-	if x != nil {
-		return x.Smoking
-	}
-	return 0
-}
-
-func (x *User) GetIsHidden() bool {
-	if x != nil {
-		return x.IsHidden
-	}
-	return false
-}
-
-func (x *User) GetIsVerified() bool {
-	if x != nil {
-		return x.IsVerified
-	}
-	return false
-}
-
-func (x *User) GetIsPremium() bool {
-	if x != nil {
-		return x.IsPremium
-	}
-	return false
-}
-
-func (x *User) GetIsBlocked() bool {
-	if x != nil {
-		return x.IsBlocked
-	}
-	return false
-}
-
-func (x *User) GetPhotos() []Photo {
-	if x != nil {
-		return x.Photos
-	}
-	return nil
-}
-
-func (x *User) GetCreatedAt() time.Time {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return time.Time{}
-}
-
-func (x *User) GetUpdatedAt() time.Time {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return time.Time{}
 }
 
 type UserBuilder struct {
@@ -330,42 +183,32 @@ func (b *UserBuilder) Build() *User {
 
 func UserToPB(user *User) *desc.User {
 	return &desc.User{
-		Id:         user.GetID().String(),
-		Name:       user.GetName(),
-		Age:        user.GetAge(),
-		Gender:     GenderToPB(user.GetGender()),
-		Latitude:   user.GetLatitude(),
-		Longitude:  user.GetLongitude(),
-		Bio:        user.GetBIO(),
-		Goal:       common.GoalToPB(user.GetGoal()),
-		Interest:   interest.InterestToPB(user.GetInterest()),
-		Zodiac:     common.ZodiacToPB(user.GetZodiac()),
-		Height:     user.GetHeight(),
-		Education:  common.EducationToPB(user.GetEducation()),
-		Children:   common.ChildrenToPB(user.GetChildren()),
-		Alcohol:    common.AlcoholToPB(user.GetAlcohol()),
-		Smoking:    common.SmokingToPB(user.GetSmoking()),
-		IsHidden:   user.GetIsHidden(),
-		IsVerified: user.GetIsVerified(),
-		IsPremium:  user.GetIsPremium(),
-		IsBlocked:  user.GetIsBlocked(),
-		Photos: slices.Map(user.GetPhotos(), func(from Photo) *desc.Photo {
+		Id:         user.ID.String(),
+		Name:       user.Name,
+		Age:        user.Age,
+		Gender:     GenderToPB(user.Gender),
+		Latitude:   user.Latitude,
+		Longitude:  user.Longitude,
+		Bio:        user.BIO,
+		Goal:       common.GoalToPB(user.Goal),
+		Interest:   interest.InterestToPB(user.Interest),
+		Zodiac:     common.ZodiacToPB(user.Zodiac),
+		Height:     user.Height,
+		Education:  common.EducationToPB(user.Education),
+		Children:   common.ChildrenToPB(user.Children),
+		Alcohol:    common.AlcoholToPB(user.Alcohol),
+		Smoking:    common.SmokingToPB(user.Smoking),
+		IsHidden:   user.IsHidden,
+		IsVerified: user.IsVerified,
+		IsPremium:  user.IsPremium,
+		IsBlocked:  user.IsBlocked,
+		Photos: slices.Map(user.Photos, func(from Photo) *desc.Photo {
 			return &desc.Photo{
-				OrderNumber: from.GetOrderNumber(),
+				OrderNumber: from.OrderNumber,
 				Url:         from.DownloadURL,
 			}
 		}),
-		CreatedAt: timestamppb.New(user.GetCreatedAt()),
-		UpdatedAt: timestamppb.New(user.GetUpdatedAt()),
+		CreatedAt: timestamppb.New(user.CreatedAt),
+		UpdatedAt: timestamppb.New(user.UpdatedAt),
 	}
-}
-
-func UsersToPB(users []*User) []*desc.User {
-	pbUsers := make([]*desc.User, 0, len(users))
-	for _, u := range users {
-		if u != nil {
-			pbUsers = append(pbUsers, UserToPB(u))
-		}
-	}
-	return pbUsers
 }

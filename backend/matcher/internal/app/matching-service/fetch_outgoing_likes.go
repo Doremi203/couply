@@ -14,12 +14,9 @@ func (i *Implementation) FetchOutgoingLikesV1(ctx context.Context, in *desc.Fetc
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	req := dto.PBToFetchOutgoingLikesRequest(in)
-
-	response, err := i.usecase.FetchOutgoingLikes(ctx, req)
+	response, err := i.usecase.FetchOutgoingLikes(ctx, dto.PBToFetchOutgoingLikesRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.FetchOutgoingLikesResponseToPB(response), nil

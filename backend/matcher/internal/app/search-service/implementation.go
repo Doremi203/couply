@@ -3,7 +3,6 @@ package search_service
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
@@ -23,16 +22,13 @@ type Implementation struct {
 	desc.UnimplementedSearchServiceServer
 	usecase           searchServiceUseCase
 	photoURLGenerator user.PhotoURLGenerator
-	logger            log.Logger
 }
 
 func NewImplementation(
-	logger log.Logger,
 	usecase searchServiceUseCase,
 	photoURLGenerator user.PhotoURLGenerator,
 ) *Implementation {
 	return &Implementation{
-		logger:            logger,
 		usecase:           usecase,
 		photoURLGenerator: photoURLGenerator,
 	}

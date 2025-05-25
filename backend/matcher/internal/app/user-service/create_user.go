@@ -17,8 +17,7 @@ func (i *Implementation) CreateUserV1(ctx context.Context, in *desc.CreateUserV1
 
 	response, err := i.usecase.CreateUser(ctx, dto.PBToCreateUserRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.CreateUserResponseToPB(response), nil

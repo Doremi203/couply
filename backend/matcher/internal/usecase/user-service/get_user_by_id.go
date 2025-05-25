@@ -8,14 +8,14 @@ import (
 )
 
 func (c *UseCase) GetUserByID(ctx context.Context, req *dto.GetUserByIDV1Request) (*dto.GetUserByIDV1Response, error) {
-	user, err := c.userStorageFacade.GetUserTx(ctx, req.GetUserID())
+	user, err := c.userStorageFacade.GetUserTx(ctx, req.UserID)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "userStorageFacade.GetUserTx")
 	}
 
 	err = user.GenerateDownloadPhotoURLS(ctx, c.photoURLGenerator)
 	if err != nil {
-		return nil, errors.WrapFail(err, "generate download photo urls")
+		return nil, errors.Wrap(err, "GenerateDownloadPhotoURLS")
 	}
 
 	return &dto.GetUserByIDV1Response{User: user}, nil

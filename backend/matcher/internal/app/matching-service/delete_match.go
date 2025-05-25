@@ -21,7 +21,7 @@ func (i *Implementation) DeleteMatchV1(ctx context.Context, in *desc.DeleteMatch
 
 	response, err := i.usecase.DeleteMatch(ctx, req)
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, err
 	}
 
 	return dto.DeleteMatchResponseToPB(response), nil

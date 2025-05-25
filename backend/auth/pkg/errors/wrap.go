@@ -5,8 +5,11 @@ import (
 	"fmt"
 )
 
-var Is = errors.Is
-var As = errors.As
+var (
+	Is   = errors.Is
+	As   = errors.As
+	Join = errors.Join
+)
 
 func Wrap(err error, msg string) error {
 	return Wrapf(err, msg)

@@ -3,7 +3,6 @@ package user_service
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/auth/pkg/log"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
@@ -25,15 +24,12 @@ type userServiceUseCase interface {
 type Implementation struct {
 	desc.UnimplementedUserServiceServer
 	usecase userServiceUseCase
-	logger  log.Logger
 }
 
 func NewImplementation(
-	logger log.Logger,
 	usecase userServiceUseCase,
 ) *Implementation {
 	return &Implementation{
-		logger:  logger,
 		usecase: usecase,
 	}
 }

@@ -1,6 +1,7 @@
 package matching_service
 
 import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
 	"github.com/google/uuid"
 )
@@ -9,19 +10,12 @@ type DeleteMatchV1Request struct {
 	TargetUserID uuid.UUID
 }
 
-func (x *DeleteMatchV1Request) GetTargetUserID() uuid.UUID {
-	if x != nil {
-		return x.TargetUserID
-	}
-	return uuid.Nil
-}
-
 type DeleteMatchV1Response struct{}
 
 func PBToDeleteMatchRequest(req *desc.DeleteMatchV1Request) (*DeleteMatchV1Request, error) {
 	targetUserID, err := uuid.Parse(req.GetTargetUserId())
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "uuid.Parse")
 	}
 
 	return &DeleteMatchV1Request{

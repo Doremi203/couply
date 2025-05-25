@@ -3,12 +3,18 @@ package search
 import (
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+
 	"github.com/google/uuid"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/search-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
 	"google.golang.org/protobuf/types/known/timestamppb"
+)
+
+var (
+	ErrFilterNotFound = errors.Error("filter not found")
 )
 
 type Filter struct {
@@ -33,178 +39,22 @@ type Filter struct {
 	UpdatedAt      time.Time
 }
 
-func (x *Filter) GetUserID() uuid.UUID {
-	if x != nil {
-		return x.UserID
-	}
-	return uuid.Nil
-}
-
-func (x *Filter) GetGenderPriority() GenderPriority {
-	if x != nil {
-		return x.GenderPriority
-	}
-	return 0
-}
-
-func (x *Filter) GetMinAge() int32 {
-	if x != nil {
-		return x.MinAge
-	}
-	return 0
-}
-
-func (x *Filter) GetMaxAge() int32 {
-	if x != nil {
-		return x.MaxAge
-	}
-	return 0
-}
-
-func (x *Filter) GetMinHeight() int32 {
-	if x != nil {
-		return x.MinHeight
-	}
-	return 0
-}
-
-func (x *Filter) GetMaxHeight() int32 {
-	if x != nil {
-		return x.MaxHeight
-	}
-	return 0
-}
-
-func (x *Filter) GetMinDistanceKM() int32 {
-	if x != nil {
-		return x.MinDistanceKM
-	}
-	return 0
-}
-
-func (x *Filter) GetMaxDistanceKM() int32 {
-	if x != nil {
-		return x.MaxDistanceKM
-	}
-	return 0
-}
-
-func (x *Filter) GetGoal() common.Goal {
-	if x != nil {
-		return x.Goal
-	}
-	return 0
-}
-
-func (x *Filter) GetZodiac() common.Zodiac {
-	if x != nil {
-		return x.Zodiac
-	}
-	return 0
-}
-
-func (x *Filter) GetEducation() common.Education {
-	if x != nil {
-		return x.Education
-	}
-	return 0
-}
-
-func (x *Filter) GetChildren() common.Children {
-	if x != nil {
-		return x.Children
-	}
-	return 0
-}
-
-func (x *Filter) GetAlcohol() common.Alcohol {
-	if x != nil {
-		return x.Alcohol
-	}
-	return 0
-}
-
-func (x *Filter) GetSmoking() common.Smoking {
-	if x != nil {
-		return x.Smoking
-	}
-	return 0
-}
-
-func (x *Filter) GetInterest() *interest.Interest {
-	if x != nil {
-		return x.Interest
-	}
-	return nil
-}
-
-func (x *Filter) GetOnlyVerified() bool {
-	if x != nil {
-		return x.OnlyVerified
-	}
-	return false
-}
-
-func (x *Filter) GetOnlyPremium() bool {
-	if x != nil {
-		return x.OnlyPremium
-	}
-	return false
-}
-
-func (x *Filter) GetCreatedAt() time.Time {
-	if x != nil {
-		return x.CreatedAt
-	}
-	return time.Time{}
-}
-
-func (x *Filter) GetUpdatedAt() time.Time {
-	if x != nil {
-		return x.UpdatedAt
-	}
-	return time.Time{}
-}
-
 func FilterToPB(filter *Filter) *desc.Filter {
 	return &desc.Filter{
-		GenderPriority:  GenderPriorityToPB(filter.GetGenderPriority()),
-		AgeRange:        &desc.Range{Min: filter.GetMinAge(), Max: filter.GetMaxAge()},
-		HeightRange:     &desc.Range{Min: filter.GetMinHeight(), Max: filter.GetMaxHeight()},
-		DistanceKmRange: &desc.Range{Min: filter.GetMinDistanceKM(), Max: filter.GetMaxDistanceKM()},
-		Goal:            common.GoalToPB(filter.GetGoal()),
-		Zodiac:          common.ZodiacToPB(filter.GetZodiac()),
-		Education:       common.EducationToPB(filter.GetEducation()),
-		Children:        common.ChildrenToPB(filter.GetChildren()),
-		Alcohol:         common.AlcoholToPB(filter.GetAlcohol()),
-		Smoking:         common.SmokingToPB(filter.GetSmoking()),
-		Interest:        interest.InterestToPB(filter.GetInterest()),
-		OnlyVerified:    filter.GetOnlyVerified(),
-		OnlyPremium:     filter.GetOnlyPremium(),
-		CreatedAt:       timestamppb.New(filter.GetCreatedAt()),
-		UpdatedAt:       timestamppb.New(filter.GetUpdatedAt()),
-	}
-}
-
-func PBToFilter(filter *desc.Filter) *Filter {
-	return &Filter{
-		GenderPriority: PBToGenderPriority(filter.GetGenderPriority()),
-		MinAge:         filter.GetAgeRange().GetMin(),
-		MaxAge:         filter.GetAgeRange().GetMax(),
-		MinHeight:      filter.GetHeightRange().GetMin(),
-		MaxHeight:      filter.GetHeightRange().GetMax(),
-		MinDistanceKM:  filter.GetDistanceKmRange().GetMin(),
-		MaxDistanceKM:  filter.GetDistanceKmRange().GetMax(),
-		Goal:           common.PBToGoal(filter.GetGoal()),
-		Zodiac:         common.PBToZodiac(filter.GetZodiac()),
-		Education:      common.PBToEducation(filter.GetEducation()),
-		Children:       common.PBToChildren(filter.GetChildren()),
-		Alcohol:        common.PBToAlcohol(filter.GetAlcohol()),
-		Smoking:        common.PBToSmoking(filter.GetSmoking()),
-		Interest:       interest.PBToInterest(filter.GetInterest()),
-		OnlyVerified:   filter.GetOnlyVerified(),
-		OnlyPremium:    filter.GetOnlyPremium(),
-		CreatedAt:      filter.GetCreatedAt().AsTime(),
-		UpdatedAt:      filter.GetUpdatedAt().AsTime(),
+		GenderPriority:  GenderPriorityToPB(filter.GenderPriority),
+		AgeRange:        &desc.Range{Min: filter.MinAge, Max: filter.MaxAge},
+		HeightRange:     &desc.Range{Min: filter.MinHeight, Max: filter.MaxHeight},
+		DistanceKmRange: &desc.Range{Min: filter.MinDistanceKM, Max: filter.MaxDistanceKM},
+		Goal:            common.GoalToPB(filter.Goal),
+		Zodiac:          common.ZodiacToPB(filter.Zodiac),
+		Education:       common.EducationToPB(filter.Education),
+		Children:        common.ChildrenToPB(filter.Children),
+		Alcohol:         common.AlcoholToPB(filter.Alcohol),
+		Smoking:         common.SmokingToPB(filter.Smoking),
+		Interest:        interest.InterestToPB(filter.Interest),
+		OnlyVerified:    filter.OnlyVerified,
+		OnlyPremium:     filter.OnlyPremium,
+		CreatedAt:       timestamppb.New(filter.CreatedAt),
+		UpdatedAt:       timestamppb.New(filter.UpdatedAt),
 	}
 }

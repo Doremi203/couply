@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *Implementation) CancelSubscription(ctx context.Context, in *desc.CancelSubscriptionV1Request) (*desc.CancelSubscriptionV1Response, error) {
+func (i *Implementation) CancelSubscriptionV1(ctx context.Context, in *desc.CancelSubscriptionV1Request) (*desc.CancelSubscriptionV1Response, error) {
 	if err := in.Validate(); err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
@@ -21,8 +21,7 @@ func (i *Implementation) CancelSubscription(ctx context.Context, in *desc.Cancel
 
 	response, err := i.usecase.CancelSubscription(ctx, req)
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.CancelSubscriptionResponseToPB(response), nil

@@ -12,11 +12,19 @@ import (
 )
 
 type searchStorageFacade interface {
-	CreateFilterTx(ctx context.Context, newFilter *search.Filter) (*search.Filter, error)
-	UpdateFilterTx(ctx context.Context, filter *search.Filter) (*search.Filter, error)
+	searchStorageSetterFacade
+	searchStorageGetterFacade
+}
+
+type searchStorageSetterFacade interface {
+	CreateFilterTx(ctx context.Context, newFilter *search.Filter) error
+	UpdateFilterTx(ctx context.Context, filter *search.Filter) error
+	CreateViewTx(ctx context.Context, viewerID, viewedID uuid.UUID) error
+}
+
+type searchStorageGetterFacade interface {
 	GetFilterTx(ctx context.Context, userID uuid.UUID) (*search.Filter, error)
 	SearchUsersTx(ctx context.Context, userID uuid.UUID, page, limit uint64) ([]*user.User, map[uuid.UUID]float64, error)
-	AddViewTx(ctx context.Context, viewerID, viewedID uuid.UUID) error
 }
 
 type UseCase struct {

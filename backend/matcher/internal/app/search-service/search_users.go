@@ -16,8 +16,7 @@ func (i *Implementation) SearchUsersV1(ctx context.Context, in *desc.SearchUsers
 
 	response, err := i.usecase.SearchUsers(ctx, dto.PBToSearchUsersRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.SearchUsersResponseToPB(response), nil

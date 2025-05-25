@@ -6,6 +6,8 @@ import (
 	"encoding/binary"
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	"github.com/google/uuid"
 )
@@ -20,7 +22,7 @@ func NewMockGateway() *MockGateway {
 func (g *MockGateway) CreatePayment(_ context.Context, _ int64, _ string) (string, error) {
 	id, err := uuid.NewV7()
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, "uuid.NewV7")
 	}
 	return id.String(), nil
 }
@@ -28,7 +30,7 @@ func (g *MockGateway) CreatePayment(_ context.Context, _ int64, _ string) (strin
 func (g *MockGateway) GetPaymentStatus(_ context.Context, gatewayID string) (payment.PaymentStatus, error) {
 	parsedGatewayID, err := uuid.Parse(gatewayID)
 	if err != nil {
-		return 0, err
+		return 0, errors.Wrap(err, "uuid.Parse")
 	}
 
 	createdAt := extractTimeFromUUIDv7(parsedGatewayID)
@@ -41,6 +43,7 @@ func (g *MockGateway) GetPaymentStatus(_ context.Context, gatewayID string) (pay
 	if isPaymentSuccessful(parsedGatewayID) {
 		return payment.PaymentStatusSuccess, nil
 	}
+
 	return payment.PaymentStatusFailed, nil
 }
 

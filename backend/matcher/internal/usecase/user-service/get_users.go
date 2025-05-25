@@ -8,15 +8,15 @@ import (
 )
 
 func (c *UseCase) GetUsers(ctx context.Context, in *dto.GetUsersV1Request) (*dto.GetUsersV1Response, error) {
-	users, err := c.userStorageFacade.GetUsersTx(ctx, in.GetUserIDs())
+	users, err := c.userStorageFacade.GetUsersTx(ctx, in.UserIDs)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "serStorageFacade.GetUsersTx")
 	}
 
 	for i := range users {
 		err = users[i].GenerateDownloadPhotoURLS(ctx, c.photoURLGenerator)
 		if err != nil {
-			return nil, errors.WrapFail(err, "generate download photo urls")
+			return nil, errors.Wrap(err, "GenerateDownloadPhotoURLS")
 		}
 	}
 

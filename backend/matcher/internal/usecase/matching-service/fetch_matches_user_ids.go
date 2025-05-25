@@ -3,27 +3,29 @@ package matching_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
+
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/matching-service"
-	"github.com/Doremi203/couply/backend/matcher/utils"
 	"github.com/google/uuid"
 )
 
 func (c *UseCase) FetchMatchesUserIDs(ctx context.Context, in *dto.FetchMatchesUserIDsV1Request) (*dto.FetchMatchesUserIDsV1Response, error) {
-	userID, err := utils.GetUserIDFromContext(ctx)
+	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "token.GetUserIDFromContext")
 	}
 
-	matches, err := c.matchingStorageFacade.FetchMatchesTx(ctx, userID, in.GetLimit(), in.GetOffset())
+	matches, err := c.matchingStorageFacade.FetchMatchesTx(ctx, userID, in.Limit, in.Offset)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "matchingStorageFacade.FetchMatchesTx")
 	}
 
 	otherUserIDS := make([]*uuid.UUID, 0)
 	for _, match := range matches {
-		otherUserID := match.GetFirstUserID()
+		otherUserID := match.FirstUserID
 		if userID == otherUserID {
-			otherUserID = match.GetSecondUserID()
+			otherUserID = match.SecondUserID
 		}
 
 		otherUserIDS = append(otherUserIDS, &otherUserID)

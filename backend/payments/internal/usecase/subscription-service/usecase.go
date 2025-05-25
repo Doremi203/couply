@@ -8,9 +8,17 @@ import (
 )
 
 type subscriptionStorageFacade interface {
-	CreateSubscriptionTx(ctx context.Context, newSubscription *subscription.Subscription) (*subscription.Subscription, error)
+	subscriptionStorageSetterFacade
+	subscriptionStorageGetterFacade
+}
+
+type subscriptionStorageSetterFacade interface {
+	CreateSubscriptionTx(ctx context.Context, newSubscription *subscription.Subscription) error
+	CancelSubscriptionTx(ctx context.Context, subscriptionID uuid.UUID) error
+}
+
+type subscriptionStorageGetterFacade interface {
 	GetActiveSubscriptionTx(ctx context.Context, userID uuid.UUID) (*subscription.Subscription, error)
-	UpdateSubscriptionStatusTx(ctx context.Context, subscriptionID uuid.UUID, status subscription.SubscriptionStatus) error
 }
 
 type UseCase struct {

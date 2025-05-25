@@ -3,20 +3,21 @@ package search_service
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/matcher/utils"
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
 
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
 )
 
 func (c *UseCase) GetFilter(ctx context.Context, in *dto.GetFilterV1Request) (*dto.GetFilterV1Response, error) {
-	userID, err := utils.GetUserIDFromContext(ctx)
+	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "token.GetUserIDFromContext")
 	}
 
 	filter, err := c.searchStorageFacade.GetFilterTx(ctx, userID)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "searchStorageFacade.GetFilterTx")
 	}
 
 	return &dto.GetFilterV1Response{Filter: filter}, nil

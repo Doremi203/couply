@@ -20,5 +20,5 @@ database:
   database: payments
   options: sslmode=disable
 
-user_service:
+matcher:
   address:  "matcher:7002"

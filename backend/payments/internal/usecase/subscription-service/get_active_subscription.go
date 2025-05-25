@@ -3,28 +3,22 @@ package subscription_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
+
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/subscription-service"
-	"github.com/Doremi203/couply/backend/payments/utils"
 )
 
 func (c *UseCase) GetActiveSubscription(ctx context.Context, _ *dto.GetActiveSubscriptionV1Request) (*dto.GetActiveSubscriptionV1Response, error) {
-	userID, err := utils.GetUserIDFromContext(ctx)
+	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "GetActiveSubscription")
 	}
 
 	sub, err := c.subscriptionStorageFacade.GetActiveSubscriptionTx(ctx, userID)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "GetActiveSubscription")
 	}
 
-	return &dto.GetActiveSubscriptionV1Response{
-		SubscriptionID:     sub.GetID(),
-		SubscriptionPlan:   sub.GetPlan(),
-		SubscriptionStatus: sub.GetStatus(),
-		AutoRenew:          sub.GetAutoRenew(),
-		StartDate:          sub.GetStartDate(),
-		EndDate:            sub.GetEndDate(),
-		PaymentIDs:         sub.GetPaymentIDs(),
-	}, nil
+	return dto.SubscriptionToGetActiveSubscriptionResponse(sub), nil
 }

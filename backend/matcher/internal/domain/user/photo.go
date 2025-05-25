@@ -9,10 +9,17 @@ import (
 	"github.com/minio/minio-go/v7"
 )
 
-func NewObjectStoragePhotoURLGenerator(
-	client *minio.Client,
-	bucket string,
-) *objectStoragePhotoURLGenerator {
+const (
+	uploadURLLiveTime   = 15 * time.Minute
+	downloadURLLiveTime = 30 * time.Minute
+)
+
+var (
+	ErrPhotoNotFound  = errors.Error("photo not found")
+	ErrPhotosNotFound = errors.Error("photos not found")
+)
+
+func NewObjectStoragePhotoURLGenerator(client *minio.Client, bucket string) *objectStoragePhotoURLGenerator {
 	return &objectStoragePhotoURLGenerator{
 		client: client,
 		bucket: bucket,
@@ -24,12 +31,8 @@ type objectStoragePhotoURLGenerator struct {
 	bucket string
 }
 
-func (g *objectStoragePhotoURLGenerator) GenerateUpload(
-	ctx context.Context,
-	key string,
-	contentType string,
-) (string, error) {
-	expires := time.Minute * 15
+func (g *objectStoragePhotoURLGenerator) GenerateUpload(ctx context.Context, key string, _ string) (string, error) {
+	expires := uploadURLLiveTime
 	uploadURL, err := g.client.PresignedPutObject(ctx, g.bucket, key, expires)
 	if err != nil {
 		return "", errors.WrapFailf(
@@ -43,11 +46,8 @@ func (g *objectStoragePhotoURLGenerator) GenerateUpload(
 	return uploadURL.String(), nil
 }
 
-func (g *objectStoragePhotoURLGenerator) GenerateDownload(
-	ctx context.Context,
-	key string,
-) (string, error) {
-	downloadURL, err := g.client.PresignedGetObject(ctx, g.bucket, key, time.Minute*30, nil)
+func (g *objectStoragePhotoURLGenerator) GenerateDownload(ctx context.Context, key string) (string, error) {
+	downloadURL, err := g.client.PresignedGetObject(ctx, g.bucket, key, downloadURLLiveTime, nil)
 	if err != nil {
 		return "", errors.WrapFailf(
 			err,
@@ -61,15 +61,8 @@ func (g *objectStoragePhotoURLGenerator) GenerateDownload(
 }
 
 type PhotoURLGenerator interface {
-	GenerateUpload(
-		ctx context.Context,
-		key string,
-		contentType string,
-	) (string, error)
-	GenerateDownload(
-		ctx context.Context,
-		key string,
-	) (string, error)
+	GenerateUpload(ctx context.Context, key string, contentType string) (string, error)
+	GenerateDownload(ctx context.Context, key string) (string, error)
 }
 
 type PhotoUploadRequest struct {
@@ -86,34 +79,6 @@ type Photo struct {
 
 	UploadURL   *string
 	DownloadURL *string
-}
-
-func (x *Photo) GetOrderNumber() int32 {
-	if x != nil {
-		return x.OrderNumber
-	}
-	return 0
-}
-
-func (x *Photo) GetObjectKey() string {
-	if x != nil {
-		return x.ObjectKey
-	}
-	return ""
-}
-
-func (x *Photo) GetMimeType() string {
-	if x != nil {
-		return x.MimeType
-	}
-	return ""
-}
-
-func (x *Photo) GetUploadedAt() *time.Time {
-	if x != nil {
-		return x.UploadedAt
-	}
-	return nil
 }
 
 func (x *Photo) GetDownloadURL(ctx context.Context, gen PhotoURLGenerator) error {

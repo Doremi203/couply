@@ -1,6 +1,32 @@
 package interest
 
-import desc "github.com/Doremi203/couply/backend/matcher/gen/api/common/v1"
+import (
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	desc "github.com/Doremi203/couply/backend/matcher/gen/api/common/v1"
+)
+
+const (
+	GoalDBName      = "goal"
+	ZodiacDBName    = "zodiac"
+	EducationDBName = "education"
+	ChildrenDBName  = "children"
+	AlcoholDBName   = "alcohol"
+	SmokingDBName   = "smoking"
+
+	SportName             = "sport"
+	SelfDevelopmentName   = "self_development"
+	HobbyName             = "hobby"
+	MusicName             = "music"
+	MoviesTVName          = "movies_tv"
+	FoodDrinkName         = "food_drink"
+	PersonalityTraitsName = "personality_traits"
+	PetsName              = "pets"
+)
+
+var (
+	ErrInterestsNotFound   = errors.Error("interest not found")
+	ErrUnknownInterestType = errors.Error("unknown interest type")
+)
 
 type Interest struct {
 	Sport             []Sport
@@ -13,17 +39,6 @@ type Interest struct {
 	Pets              []Pets
 }
 
-var (
-	SportDBName             = "sport"
-	SelfDevelopmentDBName   = "self_development"
-	HobbyDBName             = "hobby"
-	MusicDBName             = "music"
-	MoviesTVDBName          = "movies_tv"
-	FoodDrinkDBName         = "food_drink"
-	PersonalityTraitsDBName = "personality_traits"
-	PetsDBName              = "pets"
-)
-
 func NewInterest() *Interest {
 	return &Interest{
 		Sport:             make([]Sport, 0),
@@ -35,62 +50,6 @@ func NewInterest() *Interest {
 		PersonalityTraits: make([]PersonalityTraits, 0),
 		Pets:              make([]Pets, 0),
 	}
-}
-
-func (x *Interest) GetSport() []Sport {
-	if x != nil {
-		return x.Sport
-	}
-	return nil
-}
-
-func (x *Interest) GetSelfDevelopment() []SelfDevelopment {
-	if x != nil {
-		return x.SelfDevelopment
-	}
-	return nil
-}
-
-func (x *Interest) GetHobby() []Hobby {
-	if x != nil {
-		return x.Hobby
-	}
-	return nil
-}
-
-func (x *Interest) GetMusic() []Music {
-	if x != nil {
-		return x.Music
-	}
-	return nil
-}
-
-func (x *Interest) GetMoviesTV() []MoviesTV {
-	if x != nil {
-		return x.MoviesTV
-	}
-	return nil
-}
-
-func (x *Interest) GetFoodDrink() []FoodDrink {
-	if x != nil {
-		return x.FoodDrink
-	}
-	return nil
-}
-
-func (x *Interest) GetPersonalityTraits() []PersonalityTraits {
-	if x != nil {
-		return x.PersonalityTraits
-	}
-	return nil
-}
-
-func (x *Interest) GetPets() []Pets {
-	if x != nil {
-		return x.Pets
-	}
-	return nil
 }
 
 func InterestToPB(interest *Interest) *desc.Interest {
@@ -125,4 +84,25 @@ func PBToInterest(pb *desc.Interest) *Interest {
 		PersonalityTraits: PBToPersonalityTraitsSlice(pb.GetPersonalityTraits()),
 		Pets:              PBToPetsSlice(pb.GetPets()),
 	}
+}
+
+func MapInterestsToGroups(interests *Interest) map[string][]int {
+	return map[string][]int{
+		SportName:             convertSlice(interests.Sport),
+		SelfDevelopmentName:   convertSlice(interests.SelfDevelopment),
+		HobbyName:             convertSlice(interests.Hobby),
+		MusicName:             convertSlice(interests.Music),
+		MoviesTVName:          convertSlice(interests.MoviesTV),
+		FoodDrinkName:         convertSlice(interests.FoodDrink),
+		PersonalityTraitsName: convertSlice(interests.PersonalityTraits),
+		PetsName:              convertSlice(interests.Pets),
+	}
+}
+
+func convertSlice[T ~int](slice []T) []int {
+	result := make([]int, 0, len(slice))
+	for _, v := range slice {
+		result = append(result, int(v))
+	}
+	return result
 }

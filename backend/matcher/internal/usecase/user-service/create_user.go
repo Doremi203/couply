@@ -4,52 +4,56 @@ import (
 	"context"
 	"time"
 
+	"github.com/Doremi203/couply/backend/matcher/utils"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/token"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
-	"github.com/Doremi203/couply/backend/matcher/utils"
 )
 
 func (c *UseCase) CreateUser(ctx context.Context, in *dto.CreateUserV1Request) (*dto.CreateUserV1Response, error) {
-	userID, err := utils.GetUserIDFromContext(ctx)
+	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "token.GetUserIDFromContext")
 	}
 
-	photos, err := c.createPhotos(ctx, userID, in.GetPhotoUploadRequests())
+	photos, err := c.createPhotos(ctx, userID, in.PhotoUploadRequests)
 	if err != nil {
-		return nil, errors.WrapFail(err, "create photos")
+		return nil, errors.Wrap(err, "createPhotos")
 	}
+
+	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(in.Latitude, in.Longitude)
 
 	userToCreate := user.NewUserBuilder().
 		SetID(userID).
-		SetName(in.GetName()).
-		SetAge(in.GetAge()).
-		SetGender(in.GetGender()).
-		SetLatitude(in.GetLatitude()).
-		SetLongitude(in.GetLongitude()).
-		SetBIO(in.GetBio()).
-		SetGoal(in.GetGoal()).
-		SetInterest(in.GetInterest()).
-		SetZodiac(in.GetZodiac()).
-		SetHeight(in.GetHeight()).
-		SetEducation(in.GetEducation()).
-		SetChildren(in.GetChildren()).
-		SetAlcohol(in.GetAlcohol()).
-		SetSmoking(in.GetSmoking()).
-		SetIsHidden(in.GetIsHidden()).
-		SetIsVerified(in.GetIsVerified()).
-		SetIsPremium(in.GetIsPremium()).
-		SetIsBlocked(in.GetIsBlocked()).
+		SetName(in.Name).
+		SetAge(in.Age).
+		SetGender(in.Gender).
+		SetLatitude(latitudeWithNoise).
+		SetLongitude(longitudeWithNoise).
+		SetBIO(in.Bio).
+		SetGoal(in.Goal).
+		SetInterest(in.Interest).
+		SetZodiac(in.Zodiac).
+		SetHeight(in.Height).
+		SetEducation(in.Education).
+		SetChildren(in.Children).
+		SetAlcohol(in.Alcohol).
+		SetSmoking(in.Smoking).
+		SetIsHidden(in.IsHidden).
+		SetIsVerified(in.IsVerified).
+		SetIsPremium(in.IsPremium).
+		SetIsBlocked(in.IsBlocked).
 		SetPhotos(photos).
 		SetCreatedAt(time.Now()).
 		SetUpdatedAt(time.Now()).
 		Build()
 
-	createdUser, err := c.userStorageFacade.CreateUserTx(ctx, userToCreate)
-	if err != nil {
-		return nil, err
+	if err = c.userStorageFacade.CreateUserTx(ctx, userToCreate); err != nil {
+		return nil, errors.Wrap(err, "userStorageFacade.CreateUserTx")
 	}
 
-	return &dto.CreateUserV1Response{User: createdUser}, nil
+	return &dto.CreateUserV1Response{User: userToCreate}, nil
 }

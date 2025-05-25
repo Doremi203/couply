@@ -4,24 +4,22 @@ import (
 	"context"
 	"time"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+
 	"github.com/Doremi203/couply/backend/payments/internal/domain/payment"
 	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"
 	"github.com/google/uuid"
 )
 
-func (u *Updater) StartPaymentStatusUpdater(ctx context.Context, interval time.Duration) {
-	ticker := time.NewTicker(interval)
-	defer ticker.Stop()
+const (
+	initialDelay = 2500 * time.Millisecond
+	maxRetries   = 3
+	factor       = 2
+)
 
-	for {
-		select {
-		case <-ctx.Done():
-			return
-		case <-ticker.C:
-			u.updatePendingPayments(ctx)
-		}
-	}
-}
+var (
+	errInvalidPaymentStatus = errors.Error("invalid payment status")
+)
 
 func (u *Updater) updatePendingPayments(ctx context.Context) {
 	pendingPayments, err := u.paymentStorageFacade.GetPendingPaymentsTx(ctx)
@@ -31,17 +29,11 @@ func (u *Updater) updatePendingPayments(ctx context.Context) {
 	}
 
 	for _, p := range pendingPayments {
-		go u.CheckAndUpdatePaymentStatusWithRetry(ctx, p.GetID(), p.GetGatewayID())
+		go u.CheckAndUpdatePaymentStatusWithRetry(ctx, p.ID, p.GatewayID)
 	}
 }
 
 func (u *Updater) CheckAndUpdatePaymentStatusWithRetry(ctx context.Context, paymentID uuid.UUID, gatewayID string) {
-	const (
-		initialDelay = 2500 * time.Millisecond
-		maxRetries   = 3
-		factor       = 2
-	)
-
 	delay := initialDelay
 	for i := 0; i < maxRetries; i++ {
 		time.Sleep(delay)
@@ -53,19 +45,9 @@ func (u *Updater) CheckAndUpdatePaymentStatusWithRetry(ctx context.Context, paym
 			continue
 		}
 
-		currentPayment, err := u.paymentStorageFacade.GetPaymentStatusTx(ctx, paymentID)
-		if err != nil {
+		if err = u.processPaymentStatusUpdate(ctx, paymentID, status); err != nil {
 			u.logger.Error(err)
 			return
-		}
-
-		if status != currentPayment.GetStatus() {
-			if err := u.paymentStorageFacade.UpdatePaymentStatusTx(ctx, paymentID, status); err != nil {
-				u.logger.Error(err)
-				return
-			}
-
-			u.updateRelatedSubscriptions(ctx, currentPayment.GetSubscriptionID(), status)
 		}
 
 		if status == payment.PaymentStatusPending {
@@ -77,57 +59,64 @@ func (u *Updater) CheckAndUpdatePaymentStatusWithRetry(ctx context.Context, paym
 	}
 }
 
-func (u *Updater) updateRelatedSubscriptions(ctx context.Context, subID uuid.UUID, paymentStatus payment.PaymentStatus) {
+func (u *Updater) processPaymentStatusUpdate(ctx context.Context, paymentID uuid.UUID, status payment.PaymentStatus) error {
+	currentPayment, err := u.paymentStorageFacade.GetPaymentByIDTx(ctx, paymentID)
+	if err != nil {
+		return err
+	}
+
+	if status != currentPayment.Status {
+		if err = u.paymentStorageFacade.UpdatePaymentStatusTx(ctx, paymentID, status); err != nil {
+			return err
+		}
+
+		u.updateRelatedSubscription(ctx, currentPayment.SubscriptionID, status)
+	}
+	return nil
+}
+
+func (u *Updater) updateRelatedSubscription(ctx context.Context, subID uuid.UUID, paymentStatus payment.PaymentStatus) {
 	sub, err := u.subscriptionStorageFacade.GetSubscriptionTx(ctx, subID)
 	if err != nil {
 		u.logger.Error(err)
 		return
 	}
 
-	var newStatus subscription.SubscriptionStatus
-
-	switch paymentStatus {
-	case payment.PaymentStatusSuccess:
-		newStatus = subscription.SubscriptionStatusActive
-		if sub.GetStatus() == subscription.SubscriptionStatusPendingPayment {
-			now := time.Now()
-			endDate := u.calculateEndDate(now, sub.GetPlan())
-			err := u.subscriptionStorageFacade.UpdateSubscriptionDatesTx(ctx, sub.GetID(), now, endDate)
-			if err != nil {
-				u.logger.Error(err)
-				return
-			}
-		}
-		user, err := u.userClient.GetUserByIDV1(ctx, sub.GetUserID().String())
-		if err != nil {
-			u.logger.Error(err)
-		}
-
-		user.IsPremium = true
-
-		err = u.userClient.UpdateUserByIDV1(ctx, user)
-		if err != nil {
-			u.logger.Error(err)
-		}
-	case payment.PaymentStatusFailed:
-		newStatus = subscription.SubscriptionStatusPendingPayment
-	default:
+	newStatus := determineSubscriptionStatus(paymentStatus)
+	if newStatus == subscription.SubscriptionStatusUnspecified {
+		u.logger.Error(errInvalidPaymentStatus)
 		return
 	}
 
-	err = u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.GetID(), newStatus)
-	if err != nil {
+	if paymentStatus == payment.PaymentStatusSuccess && sub.Status == subscription.SubscriptionStatusPendingPayment {
+		if err = u.activateSubscription(ctx, sub); err != nil {
+			u.logger.Error(err)
+			return
+		}
+	}
+
+	if err = u.subscriptionStorageFacade.UpdateSubscriptionStatusTx(ctx, sub.ID, newStatus); err != nil {
 		u.logger.Error(err)
-		return
 	}
 }
 
-func (u *Updater) calculateEndDate(now time.Time, plan subscription.SubscriptionPlan) time.Time {
-	durationMap := map[subscription.SubscriptionPlan]time.Duration{
-		subscription.SubscriptionPlanMonthly:    30 * 24 * time.Hour,
-		subscription.SubscriptionPlanSemiAnnual: 180 * 24 * time.Hour,
-		subscription.SubscriptionPlanAnnual:     365 * 24 * time.Hour,
+func determineSubscriptionStatus(paymentStatus payment.PaymentStatus) subscription.SubscriptionStatus {
+	switch paymentStatus {
+	case payment.PaymentStatusSuccess:
+		return subscription.SubscriptionStatusActive
+	case payment.PaymentStatusFailed:
+		return subscription.SubscriptionStatusPendingPayment
+	default:
+		return subscription.SubscriptionStatusUnspecified
+	}
+}
+
+func (u *Updater) activateSubscription(ctx context.Context, sub *subscription.Subscription) error {
+	now := time.Now()
+	endDate := subscription.CalculateEndDate(now, sub.Plan)
+	if err := u.subscriptionStorageFacade.UpdateSubscriptionDatesTx(ctx, sub.ID, now, endDate); err != nil {
+		return err
 	}
 
-	return now.Add(durationMap[plan])
+	return u.updateUserPremiumStatus(ctx, sub.UserID, true)
 }

@@ -30,127 +30,8 @@ type CreateFilterV1Request struct {
 	OnlyPremium    bool
 }
 
-func (x *CreateFilterV1Request) GetGenderPriority() search.GenderPriority {
-	if x != nil {
-		return x.GenderPriority
-	}
-	return search.GenderPriority(0)
-}
-
-func (x *CreateFilterV1Request) GetMinAge() int32 {
-	if x != nil {
-		return x.MinAge
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetMaxAge() int32 {
-	if x != nil {
-		return x.MaxAge
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetMinHeight() int32 {
-	if x != nil {
-		return x.MinHeight
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetMaxHeight() int32 {
-	if x != nil {
-		return x.MaxHeight
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetMinDistanceKM() int32 {
-	if x != nil {
-		return x.MinDistanceKM
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetMaxDistanceKM() int32 {
-	if x != nil {
-		return x.MaxDistanceKM
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetGoal() common.Goal {
-	if x != nil {
-		return x.Goal
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetZodiac() common.Zodiac {
-	if x != nil {
-		return x.Zodiac
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetEducation() common.Education {
-	if x != nil {
-		return x.Education
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetChildren() common.Children {
-	if x != nil {
-		return x.Children
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetAlcohol() common.Alcohol {
-	if x != nil {
-		return x.Alcohol
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetSmoking() common.Smoking {
-	if x != nil {
-		return x.Smoking
-	}
-	return 0
-}
-
-func (x *CreateFilterV1Request) GetInterest() *interest.Interest {
-	if x != nil {
-		return x.Interest
-	}
-	return nil
-}
-
-func (x *CreateFilterV1Request) GetOnlyVerified() bool {
-	if x != nil {
-		return x.OnlyVerified
-	}
-	return false
-}
-
-func (x *CreateFilterV1Request) GetOnlyPremium() bool {
-	if x != nil {
-		return x.OnlyPremium
-	}
-	return false
-}
-
 type CreateFilterV1Response struct {
 	Filter *search.Filter
-}
-
-func (x *CreateFilterV1Response) GetFilter() *search.Filter {
-	if x != nil {
-		return x.Filter
-	}
-	return nil
 }
 
 func PBToCreateFilterRequest(req *desc.CreateFilterV1Request) *CreateFilterV1Request {
@@ -176,29 +57,29 @@ func PBToCreateFilterRequest(req *desc.CreateFilterV1Request) *CreateFilterV1Req
 
 func CreateFilterResponseToPB(resp *CreateFilterV1Response) *desc.CreateFilterV1Response {
 	return &desc.CreateFilterV1Response{
-		Filter: search.FilterToPB(resp.GetFilter()),
+		Filter: search.FilterToPB(resp.Filter),
 	}
 }
 
 func CreateFilterRequestToFilter(req *CreateFilterV1Request, userID uuid.UUID) *search.Filter {
 	return &search.Filter{
 		UserID:         userID,
-		GenderPriority: req.GetGenderPriority(),
-		MinAge:         req.GetMinAge(),
-		MaxAge:         req.GetMaxAge(),
-		MinHeight:      req.GetMinHeight(),
-		MaxHeight:      req.GetMaxHeight(),
-		MinDistanceKM:  req.GetMinDistanceKM(),
-		MaxDistanceKM:  req.GetMaxDistanceKM(),
-		Goal:           req.GetGoal(),
-		Zodiac:         req.GetZodiac(),
-		Education:      req.GetEducation(),
-		Children:       req.GetChildren(),
-		Alcohol:        req.GetAlcohol(),
-		Smoking:        req.GetSmoking(),
-		Interest:       req.GetInterest(),
-		OnlyVerified:   req.GetOnlyVerified(),
-		OnlyPremium:    req.GetOnlyPremium(),
+		GenderPriority: req.GenderPriority,
+		MinAge:         req.MinAge,
+		MaxAge:         req.MaxAge,
+		MinHeight:      req.MinHeight,
+		MaxHeight:      req.MaxHeight,
+		MinDistanceKM:  req.MinDistanceKM,
+		MaxDistanceKM:  req.MaxDistanceKM,
+		Goal:           req.Goal,
+		Zodiac:         req.Zodiac,
+		Education:      req.Education,
+		Children:       req.Children,
+		Alcohol:        req.Alcohol,
+		Smoking:        req.Smoking,
+		Interest:       req.Interest,
+		OnlyVerified:   req.OnlyVerified,
+		OnlyPremium:    req.OnlyPremium,
 		CreatedAt:      time.Now(),
 		UpdatedAt:      time.Now(),
 	}

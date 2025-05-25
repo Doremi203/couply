@@ -10,29 +10,8 @@ type FetchMatchesUserIDsV1Request struct {
 	Offset uint64
 }
 
-func (x *FetchMatchesUserIDsV1Request) GetLimit() uint64 {
-	if x != nil {
-		return x.Limit
-	}
-	return 0
-}
-
-func (x *FetchMatchesUserIDsV1Request) GetOffset() uint64 {
-	if x != nil {
-		return x.Offset
-	}
-	return 0
-}
-
 type FetchMatchesUserIDsV1Response struct {
 	UserIDs []*uuid.UUID
-}
-
-func (x *FetchMatchesUserIDsV1Response) GetUserIDs() []*uuid.UUID {
-	if x != nil {
-		return x.UserIDs
-	}
-	return nil
 }
 
 func PBToFetchMatchesUserIDsRequest(req *desc.FetchMatchesUserIDsV1Request) *FetchMatchesUserIDsV1Request {
@@ -43,8 +22,8 @@ func PBToFetchMatchesUserIDsRequest(req *desc.FetchMatchesUserIDsV1Request) *Fet
 }
 
 func FetchMatchesUserIDsResponseToPB(resp *FetchMatchesUserIDsV1Response) *desc.FetchMatchesUserIDsV1Response {
-	pbUserIDs := make([]string, len(resp.GetUserIDs()))
-	for i, id := range resp.GetUserIDs() {
+	pbUserIDs := make([]string, len(resp.UserIDs))
+	for i, id := range resp.UserIDs {
 		pbUserIDs[i] = id.String()
 	}
 

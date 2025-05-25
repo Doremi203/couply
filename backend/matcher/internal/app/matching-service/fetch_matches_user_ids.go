@@ -14,12 +14,9 @@ func (i *Implementation) FetchMatchesUserIDsV1(ctx context.Context, in *desc.Fet
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	req := dto.PBToFetchMatchesUserIDsRequest(in)
-
-	response, err := i.usecase.FetchMatchesUserIDs(ctx, req)
+	response, err := i.usecase.FetchMatchesUserIDs(ctx, dto.PBToFetchMatchesUserIDsRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.FetchMatchesUserIDsResponseToPB(response), nil

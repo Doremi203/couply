@@ -17,8 +17,7 @@ func (i *Implementation) GetUserV1(ctx context.Context, in *desc.GetUserV1Reques
 
 	response, err := i.usecase.GetUser(ctx, dto.PBToGetUserRequest(in))
 	if err != nil {
-		i.logger.Error(err)
-		return nil, status.Error(codes.Internal, "internal server error")
+		return nil, err
 	}
 
 	return dto.GetUserResponseToPB(response), nil
