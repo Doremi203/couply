@@ -48,7 +48,6 @@ export const ProfileSlider = () => {
 
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<(typeof profiles)[0] | null>(null);
@@ -67,7 +66,6 @@ export const ProfileSlider = () => {
   const [messageOpen, setMessageOpen] = useState(false);
   const [premiumOpen, setPremiumOpen] = useState(false);
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const PAGE_SIZE = 10;
@@ -77,17 +75,13 @@ export const ProfileSlider = () => {
       try {
         //@ts-ignore
         setLoading(true);
-        // const defaultFilter = getDefaultFilter();
-        // //@ts-ignore
-        // await createFilter(defaultFilter).unwrap();
         const response = await searchUsers({ limit: PAGE_SIZE, offset: 0 }).unwrap();
-        // console.log(response);
         //@ts-ignore
         if (response.usersSearchInfo?.length > 0) {
           //@ts-ignore
           setProfiles(response.usersSearchInfo || []);
-          // Update pagination info
-          setHasMore(response.pagination?.hasMore || false);
+          //@ts-ignore
+          setHasMore(response.usersSearchInfo.length >= PAGE_SIZE);
           setCurrentPage(0);
           setLoading(false);
         } else {
@@ -96,8 +90,7 @@ export const ProfileSlider = () => {
         }
       } catch {
         //@ts-ignore
-        // setError('Ошибка при загрузке профилей');
-        // console.error(err);
+        setHasMore(false);
       } finally {
         setLoading(false);
       }
@@ -106,9 +99,8 @@ export const ProfileSlider = () => {
     fetchData();
   }, [createFilter, searchUsers]);
 
-  // Load more profiles when needed
   const loadMoreProfiles = async () => {
-    if (!hasMore || loading) return;
+    if (loading || !hasMore) return;
 
     try {
       setLoading(true);
@@ -125,23 +117,24 @@ export const ProfileSlider = () => {
         //@ts-ignore
         setProfiles(prevProfiles => [...prevProfiles, ...response.usersSearchInfo]);
         setCurrentPage(nextPage);
-        setHasMore(response.pagination?.hasMore || false);
+        //@ts-ignore
+        setHasMore(response.usersSearchInfo.length >= PAGE_SIZE);
       } else {
         setHasMore(false);
       }
     } catch (err) {
       console.error('Error loading more profiles', err);
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
   };
 
-  // Check if we need to load more profiles when approaching the end
   useEffect(() => {
     if (profiles.length > 0 && currentIndex >= profiles.length - 3 && hasMore) {
       loadMoreProfiles();
     }
-  }, [currentIndex, profiles.length, hasMore]);
+  }, [currentIndex, profiles.length, hasMore, loadMoreProfiles]);
 
   useEffect(() => {
     const storedUndoCount = localStorage.getItem('undoCount');
@@ -290,11 +283,10 @@ export const ProfileSlider = () => {
     if (showingAd) return;
 
     const currentUser = profiles[currentIndex];
-    // Check if photos array exists and has more than one photo
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     if (!currentUser?.user?.photos || currentUser.user.photos.length <= 1) return;
 
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     setCurrentPhotoIndex(prevIndex => (prevIndex + 1) % currentUser.user.photos.length);
   };
 
@@ -302,13 +294,13 @@ export const ProfileSlider = () => {
     if (currentIndex < 0 || currentIndex >= profiles.length) return;
     if (showingAd) return;
 
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     const currentUser = profiles[currentIndex];
-    // Check if photos array exists and has more than one photo
-    //@ts-ignore - Needed to handle possible ad profile case
+
+    //@ts-ignore
     if (!currentUser?.user?.photos || currentUser.user.photos.length <= 1) return;
 
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     setCurrentPhotoIndex(
       prevIndex =>
         //@ts-ignore
@@ -339,10 +331,8 @@ export const ProfileSlider = () => {
         setTimeout(() => {
           setCurrentPhotoIndex(0);
           if (e.deltaX > 0) {
-            // Swiping right is a like
             handleLikeUser();
           } else {
-            // Swiping left is a pass
             handleNextUser();
           }
 
@@ -374,11 +364,17 @@ export const ProfileSlider = () => {
       ? profiles[currentIndex]
       : null;
 
+  useEffect(() => {
+    if (!currentProfile && !showingAd && !loading && hasMore) {
+      loadMoreProfiles();
+    }
+  }, [currentProfile, showingAd, loading, hasMore, loadMoreProfiles]);
+
   if (loading) {
     return <div className={styles.loading}>Загрузка...</div>;
   }
 
-  if (!currentProfile && !showingAd) {
+  if (!currentProfile && !showingAd && !loading && !hasMore) {
     return <NoUsersLeft />;
   }
 
@@ -405,12 +401,10 @@ export const ProfileSlider = () => {
 
   const handleCloseProfile = () => {
     setSelectedProfile(null);
-    // We don't want to go to next user when pressing the back button
   };
 
   const handleLike = () => {
     handleCloseProfile();
-    // Only go to next user if this is from the swipe flow, not from profile preview
     if (
       !document.querySelector('#likes-page-container') &&
       !document.querySelector('.pageContainer')
@@ -516,8 +510,6 @@ export const ProfileSlider = () => {
 
   const isAd = showingAd;
 
-  // //
-  // console.log(currentProfile?.user?.name, currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (
@@ -593,7 +585,6 @@ export const ProfileSlider = () => {
               className={styles.likeButton}
               likeClassName={styles.like}
             />
-            {/* <MessageButton onClick={() => setPremiumOpen(true)} /> */}
             <MessageButton onClick={handleMessageOpen} />
           </div>
         </>
