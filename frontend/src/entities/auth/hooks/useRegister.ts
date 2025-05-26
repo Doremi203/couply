@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 
+import { setTokens } from '../../../shared/lib/services/TokenService';
 import { useRegisterMutation, useLoginMutation } from '../api/authApi';
 import { LoginParams, LoginResponse, RegisterParams } from '../api/types';
 
@@ -18,8 +19,7 @@ export const useRegister = () => {
         };
 
         const loginResponse = await login(loginParams).unwrap();
-
-        localStorage.setItem('token', loginResponse.token);
+        setTokens(loginResponse.token, loginResponse.refreshToken.token, loginResponse.expiresIn);
         return { data: loginResponse };
       } catch (error: any) {
         // Provide specific error messages based on error response
