@@ -1,14 +1,11 @@
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-// import { useCreatePaymentMutation } from '../../entities/payments/api/paymentsApi';
 import { useCreatePaymentMutation } from '../../entities/payments/api/paymentsApi';
 import { useCreateSubscriptionMutation } from '../../entities/subscription/api/subscriptionApi';
-import { setSubscriptionData } from '../../entities/subscription/model/subscriptionSlice';
-import { Plan, Status } from '../../entities/subscription/types';
+import { Plan } from '../../entities/subscription/types';
 
 import styles from './paymentModal.module.css';
 
@@ -87,6 +84,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               placeholder="1234 5678 9012 3456"
               maxLength={19}
               required
+              disabled
             />
           </div>
 
@@ -101,6 +99,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 placeholder="MM/YY"
                 maxLength={5}
                 required
+                disabled
               />
             </div>
 
@@ -114,6 +113,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 placeholder="123"
                 maxLength={3}
                 required
+                disabled
               />
             </div>
           </div>
