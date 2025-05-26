@@ -9,7 +9,8 @@ import {
   useCreateFilterMutation,
   useSearchUsersMutation,
 } from '../../../../entities/search/api/searchApi';
-import { getIsPremium, setUserVerified } from '../../../../entities/user';
+import { useGetSubscriptionMutation } from '../../../../entities/subscription/api/subscriptionApi';
+import { setUserVerified } from '../../../../entities/user';
 import { MessageModal } from '../../../../pages/HomePage/components/MessageModal/MessageModal';
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
@@ -37,14 +38,11 @@ const adProfiles = [
 
 const AD = 5;
 
-const MAX_UNDO_PER_DAY = 3;
-
 export const ProfileSlider = () => {
   const dispatch = useDispatch();
 
   dispatch(setUserVerified());
-
-  const isPremium = useSelector(getIsPremium);
+  const [getSubscription] = useGetSubscriptionMutation();
 
   const [searchUsers] = useSearchUsersMutation();
   const [createFilter] = useCreateFilterMutation();
@@ -74,6 +72,10 @@ export const ProfileSlider = () => {
   const [hasMore, setHasMore] = useState(true);
   const PAGE_SIZE = 10;
 
+  const [isPremium, setIsPremium] = useState(false);
+
+  const [MAX_UNDO_PER_DAY, setMAX_UNDO_PER_DAY] = useState(3);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -88,6 +90,10 @@ export const ProfileSlider = () => {
           setHasMore(response.usersSearchInfo.length >= PAGE_SIZE);
           setCurrentPage(0);
           setLoading(false);
+
+          const sub = await getSubscription({}).unwrap();
+          setIsPremium(sub.status === 'SUBSCRIPTION_STATUS_ACTIVE');
+          if (isPremium) setMAX_UNDO_PER_DAY(10000);
         } else {
           setHasMore(false);
           setLoading(false);
@@ -506,9 +512,7 @@ export const ProfileSlider = () => {
       console.log('here');
       setMessageOpen(true);
     } else {
-      console.log('l');
-      setMessageOpen(true);
-      //setPremiumOpen(true);
+      setPremiumOpen(true);
     }
   };
 
