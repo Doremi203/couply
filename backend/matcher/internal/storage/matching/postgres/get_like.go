@@ -15,6 +15,7 @@ import (
 type GetLikeOptions struct {
 	SenderID   uuid.UUID
 	ReceiverID uuid.UUID
+	IsWaiting  bool
 }
 
 func (s *PgStorageMatching) GetLike(ctx context.Context, opts GetLikeOptions) (*matching.Like, error) {
@@ -32,15 +33,18 @@ func (s *PgStorageMatching) GetLike(ctx context.Context, opts GetLikeOptions) (*
 }
 
 func buildGetLikeQuery(opts GetLikeOptions) (string, []any, error) {
-	query, args, err := sq.Select(likesColumns...).
+	sb := sq.Select(likesColumns...).
 		From(likesTableName).
 		Where(sq.Eq{
 			senderIDColumnName:   opts.SenderID,
 			receiverIDColumnName: opts.ReceiverID,
-		}).
-		PlaceholderFormat(sq.Dollar).
-		ToSql()
-	return query, args, err
+		})
+
+	if opts.IsWaiting {
+		sb = sb.Where(sq.Eq{statusColumnName: matching.StatusWaiting})
+	}
+
+	return sb.PlaceholderFormat(sq.Dollar).ToSql()
 }
 
 func executeGetLikeQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) (*matching.Like, error) {

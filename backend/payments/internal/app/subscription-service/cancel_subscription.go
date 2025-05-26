@@ -3,6 +3,9 @@ package subscription_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
+	"github.com/Doremi203/couply/backend/payments/internal/domain/subscription"
+
 	desc "github.com/Doremi203/couply/backend/payments/gen/api/subscription-service/v1"
 	dto "github.com/Doremi203/couply/backend/payments/internal/dto/subscription-service"
 	"google.golang.org/grpc/codes"
@@ -20,7 +23,10 @@ func (i *Implementation) CancelSubscriptionV1(ctx context.Context, in *desc.Canc
 	}
 
 	response, err := i.usecase.CancelSubscription(ctx, req)
-	if err != nil {
+	switch {
+	case errors.Is(err, subscription.ErrSubscriptionNotFound):
+		return nil, status.Error(codes.NotFound, subscription.ErrSubscriptionNotFound.Error())
+	case err != nil:
 		return nil, err
 	}
 

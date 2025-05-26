@@ -25,6 +25,7 @@ type matchingStorageSetterFacade interface {
 
 type matchingStorageGetterFacade interface {
 	GetLikeTx(ctx context.Context, senderID, receiverID uuid.UUID) (*matching.Like, error)
+	GetWaitingLikeTx(ctx context.Context, senderID, receiverID uuid.UUID) (*matching.Like, error)
 	FetchMatchesTx(ctx context.Context, userID uuid.UUID, limit, offset uint64) ([]*matching.Match, error)
 	FetchOutgoingLikesTx(ctx context.Context, userID uuid.UUID, limit, offset uint64) ([]*matching.Like, error)
 	FetchIncomingLikesTx(ctx context.Context, userID uuid.UUID, limit, offset uint64) ([]*matching.Like, error)

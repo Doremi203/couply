@@ -17,6 +17,7 @@ type GetSubscriptionOptions struct {
 	UserID                      uuid.UUID
 	ActiveSubscription          bool
 	ActiveOrPendingSubscription bool
+	ForUpdate                   bool
 }
 
 func (s *PgStorageSubscription) GetSubscription(ctx context.Context, opts GetSubscriptionOptions) (*subscription.Subscription, error) {
@@ -50,6 +51,10 @@ func buildGetSubscriptionQuery(opts GetSubscriptionOptions) (string, []any, erro
 			})
 	} else {
 		sb = sb.Where(sq.Eq{idColumn: opts.SubscriptionID})
+	}
+
+	if opts.ForUpdate {
+		sb = sb.Suffix("FOR UPDATE")
 	}
 
 	return sb.PlaceholderFormat(sq.Dollar).ToSql()
