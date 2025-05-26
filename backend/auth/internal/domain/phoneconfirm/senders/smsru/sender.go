@@ -4,9 +4,10 @@ import (
 	"context"
 	"strings"
 
+	"github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
-	"github.com/Doremi203/couply/backend/auth/pkg/sms"
 	"github.com/go-resty/resty/v2"
 )
 
@@ -18,23 +19,20 @@ type Config struct {
 func NewSender(
 	cfg Config,
 	httpClient *resty.Client,
-	logger log.Logger,
 ) *sender {
 	return &sender{
 		cfg:        cfg,
 		httpClient: httpClient,
-		logger:     logger,
 	}
 }
 
 type sender struct {
 	cfg        Config
 	httpClient *resty.Client
-	logger     log.Logger
 }
 
-func (s *sender) Send(ctx context.Context, text, phoneE164 string) error {
-	toParam := strings.TrimPrefix(phoneE164, "+")
+func (s *sender) Send(ctx context.Context, logger log.Logger, code phoneconfirm.Code, phoneE164 user.Phone) error {
+	toParam := strings.TrimPrefix(string(phoneE164), "+")
 
 	var result struct {
 		Status     string `json:"status"`
@@ -52,14 +50,14 @@ func (s *sender) Send(ctx context.Context, text, phoneE164 string) error {
 	query := map[string]string{
 		"api_id": s.cfg.ApiKey,
 		"to":     toParam,
-		"msg":    text,
+		"msg":    string(code.Value()),
 		"json":   "1",
 	}
 	if s.cfg.Test {
 		query["test"] = "1"
-		s.logger.Infof(
+		logger.Infof(
 			"Sending %v to %v",
-			errors.Token("code", text),
+			errors.Token("code", code),
 			errors.Token("phone", phoneE164),
 		)
 	}
@@ -92,7 +90,7 @@ func (s *sender) Send(ctx context.Context, text, phoneE164 string) error {
 		case 100:
 			continue
 		case 204:
-			return sms.ErrUnsupportedPhoneOperator
+			return phoneconfirm.ErrUnsupportedPhone
 		default:
 			return errors.Errorf(
 				"got sms ru api error for sms %v %v",

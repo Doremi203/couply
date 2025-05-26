@@ -59,9 +59,9 @@ func (s *phoneConfirmationService) SendCodeV1(
 		return nil, status.Error(codes.Unauthenticated, "missing token")
 	}
 
-	confirmReq, err := s.phoneConfirmationUseCase.SendCodeV1(ctx, user.ID(t.GetUserID()), phone)
+	confirmReq, err := s.phoneConfirmationUseCase.SendCodeV1(ctx, s.logger, user.ID(t.GetUserID()), phone)
 	switch {
-	case errors.Is(err, usecase.ErrUnsupportedPhoneOperator):
+	case errors.Is(err, usecase.ErrUnsupportedPhone):
 		return nil, status.Error(codes.FailedPrecondition, err.Error())
 
 	case errors.Is(err, usecase.ErrPendingConfirmationRequestAlreadyExists):

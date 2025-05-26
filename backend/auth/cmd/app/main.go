@@ -8,6 +8,9 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/oauth"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm/senders/fallback"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm/senders/smsru"
+	"github.com/Doremi203/couply/backend/auth/internal/domain/phoneconfirm/senders/telegram"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/token"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc"
 	"github.com/Doremi203/couply/backend/auth/internal/grpc/login"
@@ -23,7 +26,6 @@ import (
 	idempotencypostgres "github.com/Doremi203/couply/backend/auth/pkg/idempotency/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/postgres"
 	"github.com/Doremi203/couply/backend/auth/pkg/salt"
-	"github.com/Doremi203/couply/backend/auth/pkg/sms/smsru"
 	"github.com/Doremi203/couply/backend/auth/pkg/timeprovider"
 	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
@@ -58,6 +60,12 @@ func main() {
 
 		smsruSenderConfig := smsru.Config{}
 		err = app.Config.ReadSection("smsru", &smsruSenderConfig)
+		if err != nil {
+			return err
+		}
+
+		telegramSenderConfig := telegram.Config{}
+		err = app.Config.ReadSection("telegram-sender", &telegramSenderConfig)
 		if err != nil {
 			return err
 		}
@@ -135,10 +143,12 @@ func main() {
 		)
 
 		phoneConfirmationUseCase := usecase.NewPhoneConfirmation(
-			smsru.NewSender(
-				smsruSenderConfig,
-				app.HTTPClient(),
-				app.Log,
+			fallback.NewSender(
+				telegram.NewSender(telegramSenderConfig),
+				smsru.NewSender(
+					smsruSenderConfig,
+					app.HTTPClient(),
+				),
 			),
 			phoneconfirm.NewDigitCodeGenerator(phoneConfirmationConfig),
 			hashProvider,
