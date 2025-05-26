@@ -12,7 +12,8 @@ import (
 )
 
 type Config struct {
-	ApiKey string `secret:"telegram-gateway-api-key"`
+	ApiKey   string `secret:"telegram-gateway-api-key"`
+	Disabled bool
 }
 
 func NewSender(cfg Config) *sender {
@@ -36,6 +37,10 @@ type sender struct {
 }
 
 func (s *sender) Send(ctx context.Context, logger log.Logger, code phoneconfirm.Code, phoneE164 user.Phone) error {
+	if s.cfg.Disabled {
+		return errors.Error("telegram code sender is disabled")
+	}
+
 	requestID, err := s.checkSendAbility(ctx, phoneE164)
 	if err != nil {
 		logger.Warn(errors.WrapFail(err, "check telegram code send ability"))
