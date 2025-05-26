@@ -31,6 +31,8 @@ func (i *Implementation) LikeUserV1(ctx context.Context, in *desc.LikeUserV1Requ
 		return nil, status.Error(codes.FailedPrecondition, user.ErrUserDoesntExist.Error())
 	case errors.Is(err, matching.ErrMatchAlreadyExists):
 		return nil, status.Error(codes.FailedPrecondition, matching.ErrMatchAlreadyExists.Error())
+	case errors.Is(err, matching.ErrWaitingLikeAlreadyExists):
+		return nil, status.Error(codes.AlreadyExists, matching.ErrWaitingLikeAlreadyExists.Error())
 	case err != nil:
 		return nil, err
 	}

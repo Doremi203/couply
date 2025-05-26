@@ -10,8 +10,9 @@ import (
 )
 
 var (
-	ErrLikeNotFound  = errors.Error("like not found")
-	ErrLikesNotFound = errors.Error("likes not found")
+	ErrLikeNotFound             = errors.Error("like not found")
+	ErrLikesNotFound            = errors.Error("likes not found")
+	ErrWaitingLikeAlreadyExists = errors.Error("waiting like already exist")
 )
 
 type Like struct {

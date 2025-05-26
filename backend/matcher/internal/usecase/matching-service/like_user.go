@@ -35,22 +35,18 @@ func (c *UseCase) LikeUser(ctx context.Context, in *dto.LikeUserV1Request) (*dto
 }
 
 func (p *likeProcess) ProcessLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {
-	revertedLike, err := p.storage.GetLikeTx(ctx, targetUserID, userID)
+	revertedLike, err := p.storage.GetWaitingLikeTx(ctx, targetUserID, userID)
 	if err != nil {
 		if !errors.Is(err, matching.ErrLikeNotFound) {
-			return nil, errors.Wrap(err, "storage.GetLikeTx")
+			return nil, errors.Wrap(err, "storage.GetWaitingLikeTx")
 		}
 	}
 
-	if isMutualLike(revertedLike) {
+	if revertedLike != nil {
 		return p.handleMutualLike(ctx, userID, targetUserID, revertedLike.Message)
 	}
 
 	return p.handleNewLike(ctx, userID, targetUserID, message)
-}
-
-func isMutualLike(revertedLike *matching.Like) bool {
-	return revertedLike != nil && revertedLike.Status == matching.StatusWaiting
 }
 
 func (p *likeProcess) handleNewLike(ctx context.Context, userID, targetUserID uuid.UUID, message string) (*dto.LikeUserV1Response, error) {

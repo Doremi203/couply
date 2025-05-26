@@ -13,6 +13,7 @@ func (f *StorageFacadeSubscription) CancelSubscriptionTx(ctx context.Context, su
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
 		sub, err := f.subscriptionStorage.GetSubscription(ctxTx, postgres.GetSubscriptionOptions{
 			SubscriptionID: subscriptionID,
+			ForUpdate:      true,
 		})
 		if err != nil {
 			return errors.Wrap(err, "storage.GetSubscription")

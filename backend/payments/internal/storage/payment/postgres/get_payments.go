@@ -53,6 +53,9 @@ func executeGetPaymentsQuery(ctx context.Context, queryEngine storage.QueryEngin
 
 	pays, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByName[payment.Payment])
 	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, errors.Wrap(payment.ErrPaymentsNotFound, "pgx.CollectExactlyOneRow")
+		}
 		return nil, errors.Wrap(err, "pgx.CollectRows")
 	}
 
