@@ -5,7 +5,13 @@ import matchesReducer from '../../entities/matches/model/matchesSlice';
 import profileReducer from '../../entities/profile/model/profileSlice';
 import userReducer from '../../entities/user/model/userSlice';
 import filtersReducer from '../../features/filters/model/filtersSlice';
-import { baseApi, blockerApi, matcherApi, notificatorApi, paymentsApi } from '../../shared/api/baseApi';
+import {
+  baseApi,
+  blockerApi,
+  matcherApi,
+  notificatorApi,
+  paymentsApi,
+} from '../../shared/api/baseApi';
 
 import blockingReducer from './blockingSlice';
 
@@ -24,7 +30,7 @@ const rootReducer = combineReducers({
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => {
+  middleware: getDefaultMiddleware => {
     return getDefaultMiddleware()
       .concat(baseApi.middleware)
       .concat(matcherApi.middleware)

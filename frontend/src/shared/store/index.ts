@@ -14,11 +14,9 @@
 // export type RootState = ReturnType<typeof store.getState>;
 // export type AppDispatch = typeof store.dispatch;
 
-
 import { configureStore } from '@reduxjs/toolkit';
 
 import { baseApi, blockerApi, matcherApi, notificatorApi, paymentsApi } from '../api/baseApi';
-
 
 export const store = configureStore({
   reducer: {
@@ -28,7 +26,7 @@ export const store = configureStore({
     [paymentsApi.reducerPath]: paymentsApi.reducer,
     [notificatorApi.reducerPath]: notificatorApi.reducer,
   },
-  middleware: (getDefaultMiddleware) =>
+  middleware: getDefaultMiddleware =>
     getDefaultMiddleware()
       .concat(baseApi.middleware)
       .concat(matcherApi.middleware)
