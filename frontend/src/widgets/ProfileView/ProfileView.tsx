@@ -161,12 +161,6 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
       {/**@ts-ignore */}
       <ProfileInfo profile={profileData} profileDetails={profileDetails} isCommonInterest={[]} />
 
-      <div className={styles.subscriptionButtonContainer}>
-        <button className={styles.subscriptionButton} onClick={() => setIsPremiumModalOpen(true)}>
-          Подписаться
-        </button>
-      </div>
-
       <PremiumModal isOpen={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
     </div>
   );
