@@ -30,4 +30,4 @@ export const paymentsApiExtended = paymentsApi.injectEndpoints({
   }),
 });
 
-export const { useGetBlockInfoMutation, useCreateComplaintMutation } = blockerApiExtended;
+export const { useCreatePaymentMutation, useGetPaymentStatusMutation } = paymentsApiExtended;

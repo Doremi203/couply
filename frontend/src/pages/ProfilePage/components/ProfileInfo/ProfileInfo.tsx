@@ -10,6 +10,7 @@ interface ProfileInfoProps {
   isVerified: boolean;
   onVerificationRequest: () => void;
   onPreviewClick: () => void;
+  isPremium: boolean;
 }
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({
@@ -17,9 +18,8 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   isVerified,
   onVerificationRequest,
   onPreviewClick,
+  isPremium,
 }) => {
-  const isPro = false;
-
   // Get profile image URL safely
   const getProfileImageUrl = () => {
     if (!profileData.photos || profileData.photos.length === 0) {
@@ -47,7 +47,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
             (e.target as HTMLImageElement).src = '/photo1.png';
           }}
         />
-        {isPro && (
+        {isPremium && (
           <div className={styles.proBadge}>
             <span>PRO</span>
           </div>

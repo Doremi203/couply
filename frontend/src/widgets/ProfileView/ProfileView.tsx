@@ -1,10 +1,11 @@
 import VerifiedIcon from '@mui/icons-material/Verified';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import { useLikeUserMutation } from '../../entities/matches';
 import { BackButton } from '../../shared/components/BackButton';
 import { DislikeButton } from '../../shared/components/DislikeButton';
 import { LikeButton } from '../../shared/components/LikeButton';
+import { PremiumModal } from '../../widgets/PremiumModal';
 
 import ProfileInfo from './components/ProfileInfo';
 import styles from './profileView.module.css';
@@ -49,6 +50,7 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 }) => {
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
 
   const profileData = profile.user || profile;
 
@@ -158,6 +160,14 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
       {/**@ts-ignore */}
       <ProfileInfo profile={profileData} profileDetails={profileDetails} isCommonInterest={[]} />
+
+      <div className={styles.subscriptionButtonContainer}>
+        <button className={styles.subscriptionButton} onClick={() => setIsPremiumModalOpen(true)}>
+          Подписаться
+        </button>
+      </div>
+
+      <PremiumModal isOpen={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
     </div>
   );
 };

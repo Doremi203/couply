@@ -17,6 +17,7 @@ interface ProfileViewProps {
   onActivityClick: () => void;
   onPreviewClick: () => void;
   onVerificationRequest: () => void;
+  isPremium: boolean;
 }
 
 export const Profile: React.FC<ProfileViewProps> = ({
@@ -28,6 +29,7 @@ export const Profile: React.FC<ProfileViewProps> = ({
   onActivityClick,
   onPreviewClick,
   onVerificationRequest,
+  isPremium,
 }) => {
   const navigate = useNavigate();
 
@@ -51,15 +53,18 @@ export const Profile: React.FC<ProfileViewProps> = ({
           isVerified={isVerified}
           onVerificationRequest={onVerificationRequest}
           onPreviewClick={onPreviewClick}
+          isPremium={isPremium}
         />
 
-        <div className={styles.premium}>
-          <div>Оформите премиум подписку</div>
-          <div className={styles.text}>чтобы повысить шансы найти свою каплю</div>
-          <button className={styles.premiumButton} onClick={() => navigate('/premium')}>
-            Подробнее
-          </button>
-        </div>
+        {!isPremium && (
+          <div className={styles.premium}>
+            <div>Оформите премиум подписку</div>
+            <div className={styles.text}>чтобы повысить шансы найти свою каплю</div>
+            <button className={styles.premiumButton} onClick={() => navigate('/premium')}>
+              Подробнее
+            </button>
+          </div>
+        )}
 
         <ProfileMenu onEditProfileClick={onEditToggle} onSettingsClick={handleSettingsClick} />
       </div>
