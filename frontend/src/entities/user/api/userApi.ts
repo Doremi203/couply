@@ -10,9 +10,8 @@ import {
   GetUsersRequest,
 } from './types';
 
-//TODO
+
 const basicData = {
-  location: 'Москва, Россия', // todo
   bio: 'bio',
   education: Education.unspecified,
   children: Children.unspecified,

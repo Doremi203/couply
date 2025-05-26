@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   goalFromApi,
@@ -10,6 +10,7 @@ import {
 } from '../../../../features/filters/components/constants';
 import { mapInterestsFromApiFormat } from '../../../../features/filters/helpers/mapInterestsFromApiFormat';
 import { CommonInterest } from '../../../../shared/components/CommonInterest';
+import { getLocationFromCoordinates } from '../../../../shared/lib/location';
 import styles from '../../profileView.module.css';
 
 interface ProfileInfoProps {
@@ -21,6 +22,8 @@ interface ProfileInfoProps {
     hasLikedYou?: boolean;
     bio?: string;
     location?: string;
+    latitude?: number;
+    longitude?: number;
     interests?: string[];
     interest?: string[];
     lifestyle?: { [key: string]: string };
@@ -46,7 +49,22 @@ interface ProfileInfoProps {
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   profile,
   profileDetails: _profileDetails,
+  isCommonInterest: _isCommonInterest,
 }) => {
+  const [location, setLocation] = useState<string>('Загрузка...');
+
+  useEffect(() => {
+    if (profile?.latitude && profile?.longitude) {
+      getLocationFromCoordinates(profile.latitude, profile.longitude)
+        .then(setLocation)
+        .catch(() => setLocation('Ошибка определения локации'));
+    } else if (profile?.location) {
+      setLocation(profile.location);
+    } else {
+      setLocation('Локация не указана');
+    }
+  }, [profile?.latitude, profile?.longitude, profile?.location]);
+
   const getPhotoUrl = (photo: string | { url: string }): string => {
     if (typeof photo === 'string') {
       return photo;
@@ -86,7 +104,9 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   const hasPhotos = profile.photos && profile.photos.length > 0;
   const hasGoal = !!profile.goal && !!goalFromApi[profile.goal as keyof typeof goalFromApi];
 
-  const interest = mapInterestsFromApiFormat(profile.interest);
+  const interest = mapInterestsFromApiFormat(
+    (profile.interest as unknown as Record<string, string[]>) || {},
+  );
 
   const hasInterest = interest.length > 0;
 
@@ -100,7 +120,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
         <div>
           <h2 className={styles.profileName}>{profile.name}</h2>
           <p className={styles.profileAge}>
-            {profile.age} | {profile.location}
+            {profile.age} | {location}
           </p>
         </div>
       </div>
@@ -117,10 +137,10 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
           <section className={styles.infoSection}>
             <h3>Основное</h3>
             {basicInfoFields.map((field, index) => (
-              <>
-                <h4 key={index}>{field.key}</h4>
-                <p key={index}>{field.value}</p>
-              </>
+              <React.Fragment key={index}>
+                <h4>{field.key}</h4>
+                <p>{field.value}</p>
+              </React.Fragment>
             ))}
           </section>
         )}
