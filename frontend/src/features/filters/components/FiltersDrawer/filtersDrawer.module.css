@@ -225,7 +225,6 @@ input:checked + .slider:before {
   }
 
   .chip {
-    padding: 6px 12px;
     font-size: 13px;
   }
 }
@@ -260,4 +259,40 @@ input:checked + .slider:before {
 
 .chipBigSelected:hover {
   background-color: var(--primary-color);
+}
+
+.buttonSave {
+  background-color: var(--tag-background);
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  color: var(--tag-color);
+  cursor: pointer;
+  transition: all 0.3s;
+  border: none;
+  outline: none;
+  font-weight: 400;
+  margin-top: 8px;
+  width: 100px;
+}
+
+.sectionTitleInterest {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.contentInterest {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  background-color: var(--section-background);
+  color: var(--text-color);
+  position: relative;
+  z-index: 1001;
+  padding-bottom: 120px;
 }

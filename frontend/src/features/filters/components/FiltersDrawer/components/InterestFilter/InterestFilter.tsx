@@ -60,7 +60,7 @@ const InterestFilter: React.FC<InterestFilterProps> = ({ title, selectedOptions,
 
   return (
     <div className={styles.cont}>
-      <h3 className={styles.sectionTitle}>{title}</h3>
+      <h3 className={styles.sectionTitleInterest}>{title}</h3>
       <div className={styles.section}>
         <div className={styles.chipContainer}>
           {selectedOptions
@@ -76,18 +76,19 @@ const InterestFilter: React.FC<InterestFilterProps> = ({ title, selectedOptions,
         </div>
       </div>
 
-      <CustomButton
-        text={selectedOptions.length ? 'Изменить' : 'Добавить'}
-        onClick={handleOpenModal}
-        className={styles.button}
-      />
+      <button onClick={handleOpenModal} className={styles.buttonSave}>
+        {selectedOptions.length ? 'Изменить' : 'Добавить'}
+      </button>
 
       <Dialog fullScreen open={isModalOpen} onClose={handleCloseModal}>
         <DialogTitle sx={{ p: 1.5, borderBottom: '1px solid #eee', fontFamily: 'Jost' }}>
           {title}
         </DialogTitle>
 
-        <DialogContent sx={{ p: 0, padding: '20px', marginTop: '10px' }} className={styles.content}>
+        <DialogContent
+          sx={{ p: 0, padding: '20px', marginTop: '10px' }}
+          className={styles.contentInterest}
+        >
           <ChipFilter
             title="Спорт"
             options={Object.values(sportOptions)}
