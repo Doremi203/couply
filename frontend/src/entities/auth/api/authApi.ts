@@ -2,7 +2,13 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { baseApi } from '../../../shared/api/baseApi';
 
-import { LoginParams, LoginResponse, RegisterParams } from './types';
+import {
+  LoginParams,
+  LoginResponse,
+  RefreshRequest,
+  RefreshResponse,
+  RegisterParams,
+} from './types';
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: builder => ({
@@ -25,20 +31,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
     }),
 
-    // refreshToken: builder.mutation<LoginResponse, void>({
-    //   query: () => ({
-    //     url: '/v1/refresh',
-    //     method: 'POST',
-    //     headers: {
-    //       Authorization: `Bearer ${getToken()}`,
-    //     },
-    //   }),
-    // }),
+    refreshToken: builder.mutation<RefreshResponse, RefreshRequest>({
+      query: credentials => ({
+        url: '/v1/token/refresh',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
   }),
 });
 
-export const {
-  useRegisterMutation,
-  useLoginMutation,
-  // useRefreshTokenMutation,
-} = authApi;
+export const { useRegisterMutation, useLoginMutation, useRefreshTokenMutation } = authApi;

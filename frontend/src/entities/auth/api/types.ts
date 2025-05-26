@@ -26,4 +26,23 @@ export interface AuthResponse {
 export interface LoginResponse {
   token: string;
   expiresIn: number;
+  refreshToken: {
+    token: string;
+    expiresIn: number;
+  };
+}
+
+export interface RefreshResponse {
+  refreshToken: string;
+}
+
+export interface RefreshRequest {
+  accessToken: {
+    token: string;
+    expiresIn: number;
+  };
+  refreshToken: {
+    token: string;
+    expiresIn: number;
+  };
 }
