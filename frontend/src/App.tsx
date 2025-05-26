@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom';
 
 import { setBlocking } from './app/store/blockingSlice';
+import { useTokenRefresh } from './entities/auth';
 import { useGetBlockInfoMutation } from './entities/blocker/index.ts';
 import { getUserId, setUserId } from './entities/user/index.ts';
 import { AuthPage } from './pages/AuthPage';
@@ -97,6 +98,8 @@ function App() {
   const [isLandscape, setIsLandscape] = useState(false);
 
   const [getBlockInfo] = useGetBlockInfoMutation();
+
+  useTokenRefresh();
 
   // Get userId directly from Redux store
   const userId = useSelector(getUserId);

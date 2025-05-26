@@ -8,7 +8,7 @@ import {
   QueryReturnValue,
 } from '@reduxjs/toolkit/query/react';
 
-import { getRefreshToken, getToken, setTokens, clearTokens } from '../lib/services/TokenService';
+import { getRefreshToken, getToken, setTokens, clearTokens, isTokenExpired } from '../lib/services/TokenService';
 
 interface RefreshTokenResponse {
   accessToken: {
@@ -51,58 +51,77 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
     extraOptions: object;
   }> = [];
 
+  const refreshTokenFn = async (api: any, extraOptions: object) => {
+    try {
+      const token = getToken();
+      const refreshToken = getRefreshToken();
+
+      if (!token || !refreshToken) {
+        clearTokens();
+        return false;
+      }
+
+      const refreshResult = await authBaseQuery(
+        {
+          url: '/v1/token/refresh',
+          method: 'POST',
+          body: {
+            token: token,
+            refreshToken: refreshToken,
+          },
+        },
+        api,
+        extraOptions,
+      );
+
+      if (refreshResult.data) {
+        const data = refreshResult.data as RefreshTokenResponse;
+        setTokens(data.accessToken.token, data.refreshToken.token, data.accessToken.expiresIn);
+        return true;
+      } else {
+        clearTokens();
+        window.location.href = '/auth';
+        return false;
+      }
+    } catch {
+      clearTokens();
+      return false;
+    }
+  };
+
   return async (args: string | FetchArgs, api: any, extraOptions: object) => {
+    if (isTokenExpired() && !isRefreshing) {
+      isRefreshing = true;
+      
+      const refreshSuccess = await refreshTokenFn(api, extraOptions);
+      
+      isRefreshing = false;
+      
+      if (!refreshSuccess) {
+        return baseQuery(args, api, extraOptions);
+      }
+    }
+    
     const result = await baseQuery(args, api, extraOptions);
 
-    // If 401 Unauthorized, attempt token refresh
     if (result.error?.status === 401) {
       if (!isRefreshing) {
         isRefreshing = true;
 
-        try {
-          const token = getToken();
-          const refreshToken = getRefreshToken();
-
-          if (!token || !refreshToken) {
-            clearTokens();
+        const refreshSuccess = await refreshTokenFn(api, extraOptions);
+        
+        if (refreshSuccess) {
+          const promises = pendingRequests.map(async request => {
+            const result = await baseQuery(request.args, request.api, request.extraOptions);
+            request.resolve(result);
             return result;
-          }
+          });
 
-          const refreshResult = await authBaseQuery(
-            {
-              url: '/v1/token/refresh',
-              method: 'POST',
-              body: {
-                token: token,
-                refreshToken: refreshToken,
-              },
-            },
-            api,
-            extraOptions,
-          );
-
-          if (refreshResult.data) {
-            const data = refreshResult.data as RefreshTokenResponse;
-            setTokens(data.accessToken.token, data.refreshToken.token, data.accessToken.expiresIn);
-
-            const promises = pendingRequests.map(async request => {
-              const result = await baseQuery(request.args, request.api, request.extraOptions);
-              request.resolve(result);
-              return result;
-            });
-
-            await Promise.all(promises);
-          } else {
-            clearTokens();
-            window.location.href = '/auth';
-          }
-        } catch {
-          clearTokens();
-          // window.location.href = '/auth';
-        } finally {
-          isRefreshing = false;
-          pendingRequests = [];
+          await Promise.all(promises);
         }
+        
+        isRefreshing = false;
+        pendingRequests = [];
       }
 
       if (isRefreshing) {

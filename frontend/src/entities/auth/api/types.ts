@@ -33,10 +33,6 @@ export interface LoginResponse {
 }
 
 export interface RefreshResponse {
-  refreshToken: string;
-}
-
-export interface RefreshRequest {
   accessToken: {
     token: string;
     expiresIn: number;
@@ -45,4 +41,9 @@ export interface RefreshRequest {
     token: string;
     expiresIn: number;
   };
+}
+
+export interface RefreshRequest {
+  token: string;
+  refreshToken: string;
 }

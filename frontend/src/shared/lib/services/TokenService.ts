@@ -24,10 +24,15 @@ export const clearTokens = () => {
   localStorage.removeItem(TOKEN_EXPIRY_KEY);
 };
 
-// export const isTokenExpired = (): boolean => {
-//   const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
-//   if (!expiryTime) return true;
+export const isTokenExpired = (): boolean => {
+  const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
+  if (!expiryTime) return true;
 
-//   const bufferTime = 5 * 60 * 1000;
-//   return Date.now() + bufferTime >= parseInt(expiryTime);
-// };
+  const bufferTime = 5 * 60 * 1000; 
+  return Date.now() + bufferTime >= parseInt(expiryTime);
+};
+
+export const getTokenExpiryTime = (): number | null => {
+  const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
+  return expiryTime ? parseInt(expiryTime) : null;
+};
