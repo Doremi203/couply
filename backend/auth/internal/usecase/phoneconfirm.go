@@ -9,13 +9,12 @@ import (
 	"github.com/Doremi203/couply/backend/auth/internal/domain/user"
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/auth/pkg/log"
-	"github.com/Doremi203/couply/backend/auth/pkg/sms"
 	"github.com/Doremi203/couply/backend/auth/pkg/timeprovider"
 	"github.com/Doremi203/couply/backend/auth/pkg/tx"
 )
 
 func NewPhoneConfirmation(
-	smsSender sms.Sender,
+	smsSender phoneconfirm.CodeSender,
 	codeGenerator phoneconfirm.CodeGenerator,
 	hashProvider hash.Provider,
 	confirmRepo phoneconfirm.Repo,
@@ -23,7 +22,7 @@ func NewPhoneConfirmation(
 	txProvider tx.Provider,
 ) PhoneConfirmation {
 	return PhoneConfirmation{
-		smsSender:     smsSender,
+		codeSender:    smsSender,
 		codeGenerator: codeGenerator,
 		hashProvider:  hashProvider,
 		confirmRepo:   confirmRepo,
@@ -34,7 +33,7 @@ func NewPhoneConfirmation(
 }
 
 type PhoneConfirmation struct {
-	smsSender     sms.Sender
+	codeSender    phoneconfirm.CodeSender
 	codeGenerator phoneconfirm.CodeGenerator
 	hashProvider  hash.Provider
 	timeProvider  timeprovider.Provider
@@ -45,9 +44,14 @@ type PhoneConfirmation struct {
 
 var ErrPendingConfirmationRequestAlreadyExists = errors.Error("phone confirmation request already exists")
 var ErrPhoneAlreadyConfirmed = errors.Error("phone already confirmed for some user")
-var ErrUnsupportedPhoneOperator = errors.Error("phone operator not supported")
+var ErrUnsupportedPhone = errors.Error("phone number is not supported")
 
-func (u PhoneConfirmation) SendCodeV1(ctx context.Context, userID user.ID, phone user.Phone) (phoneconfirm.Request, error) {
+func (u PhoneConfirmation) SendCodeV1(
+	ctx context.Context,
+	logger log.Logger,
+	userID user.ID,
+	phone user.Phone,
+) (phoneconfirm.Request, error) {
 	_, err := u.userRepo.GetByAny(ctx, user.GetByAnyParams{Phone: phone})
 	switch {
 	case err == nil:
@@ -87,10 +91,10 @@ func (u PhoneConfirmation) SendCodeV1(ctx context.Context, userID user.ID, phone
 		return phoneconfirm.Request{}, errors.WrapFail(err, "upsert phone confirmation request")
 	}
 
-	err = u.smsSender.Send(ctx, string(request.Code.Value()), string(phone))
+	err = u.codeSender.Send(ctx, logger, request.Code, phone)
 	switch {
-	case errors.Is(err, sms.ErrUnsupportedPhoneOperator):
-		return phoneconfirm.Request{}, ErrUnsupportedPhoneOperator
+	case errors.Is(err, phoneconfirm.ErrUnsupportedPhone):
+		return phoneconfirm.Request{}, ErrUnsupportedPhone
 	case err != nil:
 		return phoneconfirm.Request{}, errors.WrapFail(err, "send phone code")
 	}
