@@ -27,9 +27,7 @@ export const clearTokens = () => {
 export const isTokenExpired = (): boolean => {
   const expiryTime = localStorage.getItem(TOKEN_EXPIRY_KEY);
   if (!expiryTime) return true;
-
-  const bufferTime = 5 * 60 * 1000; 
-  return Date.now() + bufferTime >= parseInt(expiryTime);
+  return Date.now() >= parseInt(expiryTime);
 };
 
 export const getTokenExpiryTime = (): number | null => {

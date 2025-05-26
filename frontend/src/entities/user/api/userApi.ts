@@ -16,7 +16,7 @@ const basicData = {
   bio: 'bio',
   education: Education.unspecified,
   children: Children.unspecified,
-  alcohol: Alcohol.neutrally,
+  alcohol: Alcohol.unspecified,
   smoking: Smoking.unspecified,
   zodiac: Zodiac.unspecified,
   hidden: false,

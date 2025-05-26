@@ -1,31 +1,30 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { getToken, getRefreshToken, isTokenExpired, getTokenExpiryTime } from '../../../shared/lib/services/TokenService';
-import { useRefreshTokenMutation } from '../api/authApi';
-
+import { refreshToken } from '../../../shared/api/refreshToken';
+import { isTokenExpired, getTokenExpiryTime } from '../../../shared/lib/services/TokenService';
 
 export const useTokenRefresh = () => {
-  const [refreshToken, { isLoading }] = useRefreshTokenMutation();
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const timerRef = useRef<number | null>(null);
 
   const checkAndRefreshToken = useCallback(async () => {
     if (isTokenExpired()) {
-      const token = getToken();
-      const refreshTokenValue = getRefreshToken();
-      
-      if (token && refreshTokenValue) {
-        try {
-          await refreshToken({
-            token,
-            refreshToken: refreshTokenValue,
-          }).unwrap();
-          console.log('Token refreshed successfully');
-        } catch (error) {
-          console.error('Failed to refresh token:', error);
-        }
+      try {
+        setIsRefreshing(true);
+        console.log('Attempting to refresh token from hook');
+        const success = await refreshToken();
+        console.log('Token refresh result:', success);
+        return success;
+      } catch (error) {
+        console.error('Failed to refresh token:', error);
+        return false;
+      } finally {
+        setIsRefreshing(false);
       }
     }
-  }, [refreshToken]);
+    
+    return false;
+  }, []);
 
   useEffect(() => {
     const setupExpiryTimer = () => {
@@ -34,14 +33,20 @@ export const useTokenRefresh = () => {
       }
 
       const expiryTime = getTokenExpiryTime();
-      if (!expiryTime) return;
-
-      const timeUntilRefresh = Math.max(0, expiryTime - Date.now() - 5 * 60 * 1000);
+      if (!expiryTime) {
+        checkAndRefreshToken();
+        return;
+      }
+      
+      const timeUntilExpiry = Math.max(0, expiryTime - Date.now());
+      
+      console.log(`Setting up token refresh timer for ${Math.floor(timeUntilExpiry / 1000)}s from now`);
       
       timerRef.current = window.setTimeout(() => {
-        checkAndRefreshToken();
-        setupExpiryTimer();
-      }, timeUntilRefresh);
+        checkAndRefreshToken().then(() => {
+          setupExpiryTimer();
+        });
+      }, timeUntilExpiry);
     };
 
     checkAndRefreshToken();
@@ -56,6 +61,6 @@ export const useTokenRefresh = () => {
 
   return {
     refreshToken: checkAndRefreshToken,
-    isRefreshing: isLoading,
+    isRefreshing,
   };
 };

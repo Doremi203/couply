@@ -44,6 +44,5 @@ export interface RefreshResponse {
 }
 
 export interface RefreshRequest {
-  token: string;
   refreshToken: string;
 }

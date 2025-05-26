@@ -50,30 +50,16 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Handle the profile data - it might come directly or nested in a user property
   const profileData = profile.user || profile;
 
-  // Get the profile photo safely
   const getProfilePhoto = () => {
-    // if (!profileData.photos || !profileData.photos.length) {
-    //   return '/photo1.png';
-    // }
-
     const firstPhoto = profileData.photos[0];
     if (typeof firstPhoto === 'string') {
       return firstPhoto;
     } else if (firstPhoto && typeof firstPhoto === 'object') {
       return firstPhoto.url;
     }
-
-    // return '/photo1.png';
   };
-
-  // const commonInterests = ['Music', 'Travel', 'Photography'];
-
-  // const isCommonInterest = (interest: string) => {
-  //   return commonInterests.includes(interest);
-  // };
 
   const handleLike = () => {
     const userId = profileData.id;
