@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package couply;
+
+service UserService {
+  rpc SetUserVerificationStatusByID(SetUserVerificationStatusByIDRequest)
+    returns (SetUserVerificationStatusByIDResponse);
+}
+
+message SetUserVerificationStatusByIDRequest {
+  string user_id = 1;
+  VerificationStatus status  = 2;
+}
+
+enum VerificationStatus {
+  UNKNOWN = 0;
+  PASS = 1;
+  FAIL = 2;
+  MANUAL = 3;
+}
+
+message SetUserVerificationStatusByIDResponse {
+  bool success = 1;
+}
