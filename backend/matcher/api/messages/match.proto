@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package messages.v1;
+
+option go_package = "github.com/Doremi203/couply/backend/matcher/gen/api/messages";
+
+message MatcherEvent {
+  enum Type {
+    TYPE_UNSPECIFIED = 0;
+    MATCH = 1;
+    LIKE = 2;
+  }
+  Type type = 1;
+  string receiver_id = 2;
+  oneof data {
+    Match match = 3;
+    Like like = 4;
+  }
+}
+
+message Match {}
+
+message Like {
+  string msg_text = 1;
+}

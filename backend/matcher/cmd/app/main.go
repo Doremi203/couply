@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 
-	"github.com/Doremi203/couply/backend/matcher/internal/client/sqs"
-
+	"github.com/Doremi203/couply/backend/common/libs/sqs"
+	"github.com/Doremi203/couply/backend/matcher/gen/api/messages"
 	"github.com/Doremi203/couply/backend/matcher/internal/storage"
 	matching_service_facade "github.com/Doremi203/couply/backend/matcher/internal/storage/matching/facade"
 	postgres2 "github.com/Doremi203/couply/backend/matcher/internal/storage/matching/postgres"
@@ -74,13 +74,13 @@ func main() {
 
 		photoURLGenerator := user_domain.NewObjectStoragePhotoURLGenerator(s3Client, s3Config.Bucket)
 
-		sqsConfig := sqs.SQSConfig{}
+		sqsConfig := sqs.Config{}
 		err = app.Config.ReadSection("sqs", &sqsConfig)
 		if err != nil {
 			return err
 		}
 
-		sqsClient, err := sqs.New(sqsConfig)
+		sqsClient, err := sqs.New[*messages.MatcherEvent](sqsConfig)
 		if err != nil {
 			return errors.WrapFail(err, "create sqs client")
 		}
