@@ -24,14 +24,18 @@ import styles from './profileSlider.module.css';
 
 const adProfiles = [
   {
-    id: 'ad1',
-    isAd: true,
-    adText: 'Главный платформер 2025 года!!',
-    adLink: 'https://t.me/cactus_carnage',
-    photos: ['cactus3.jpg'],
-    name: 'Cactus Carnage',
+    user: {
+      id: 'ad1',
+      isAd: true,
+      adText: 'Главный платформер 2025 года!!',
+      adLink: 'https://t.me/cactus_carnage',
+      photos: [{ url: 'cactus3.jpg' }],
+      name: 'Cactus Carnage',
+    },
   },
 ];
+
+const AD = 5;
 
 const MAX_UNDO_PER_DAY = 3;
 
@@ -157,7 +161,7 @@ export const ProfileSlider = () => {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
 
-      if (newSwipeCount % 15 === 0) {
+      if (newSwipeCount % AD === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
@@ -214,7 +218,7 @@ export const ProfileSlider = () => {
         await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
       }
 
-      if (newSwipeCount % 15 === 0) {
+      if (newSwipeCount % AD === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
@@ -380,8 +384,8 @@ export const ProfileSlider = () => {
 
   const handleProfileClick = (e: React.MouseEvent<HTMLDivElement>) => {
     //@ts-ignore
-    if (showingAd && 'adLink' in currentProfile) {
-      window.open(currentProfile.adLink, '_blank');
+    if (showingAd) {
+      window.open(currentProfile.user.adLink, '_blank');
       return;
     }
 
@@ -510,6 +514,7 @@ export const ProfileSlider = () => {
 
   const isAd = showingAd;
 
+  console.log(currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (
@@ -560,9 +565,9 @@ export const ProfileSlider = () => {
 
             {isAd && (
               <div>
-                <div className={styles.nameWithBioOne}>{currentProfile.name}</div>
+                <div className={styles.nameWithBioOne}>{currentProfile.user.name}</div>
                 <div className={styles.bio}>
-                  {'adText' in currentProfile ? currentProfile.adText : ''}
+                  {'adText' in currentProfile.user ? currentProfile.user.adText : ''}
                 </div>
                 {timerActive && <div className={styles.adTimer}>{timer}</div>}
                 <div className={styles.adText}>Реклама</div>
@@ -595,7 +600,6 @@ export const ProfileSlider = () => {
           profile={{
             //@ts-ignore
             ...selectedProfile,
-            imageUrl: 'man1.jpg',
           }}
           onClose={handleCloseProfile}
           onLike={handleLike}
