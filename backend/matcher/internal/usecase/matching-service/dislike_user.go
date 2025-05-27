@@ -16,8 +16,11 @@ func (c *UseCase) DislikeUser(ctx context.Context, in *dto.DislikeUserV1Request)
 		return nil, errors.Wrap(err, "token.GetUserIDFromContext")
 	}
 
-	// message value doesnt matter
-	updatedLike := matching.NewLike(in.TargetUserID, userID, "", matching.StatusDeclined)
+	updatedLike := &matching.Like{
+		SenderID:   in.TargetUserID,
+		ReceiverID: userID,
+		Status:     matching.StatusDeclined,
+	}
 
 	if err = c.matchingStorageFacade.UpdateLikeTx(ctx, updatedLike); err != nil {
 		return nil, errors.Wrap(err, "matchingStorageFacade.UpdateLikeTx")

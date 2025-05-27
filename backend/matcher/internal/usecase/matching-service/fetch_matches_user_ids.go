@@ -21,14 +21,14 @@ func (c *UseCase) FetchMatchesUserIDs(ctx context.Context, in *dto.FetchMatchesU
 		return nil, errors.Wrap(err, "matchingStorageFacade.FetchMatchesTx")
 	}
 
-	otherUserIDS := make([]*uuid.UUID, 0)
+	otherUserIDS := make([]uuid.UUID, 0)
 	for _, match := range matches {
 		otherUserID := match.FirstUserID
 		if userID == otherUserID {
 			otherUserID = match.SecondUserID
 		}
 
-		otherUserIDS = append(otherUserIDS, &otherUserID)
+		otherUserIDS = append(otherUserIDS, otherUserID)
 	}
 
 	return &dto.FetchMatchesUserIDsV1Response{

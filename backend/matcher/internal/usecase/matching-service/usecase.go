@@ -1,3 +1,5 @@
+//go:generate mockgen -source=usecase.go -destination=../../mocks/usecase/matching/facade_mock.go -typed
+
 package matching_service
 
 import (

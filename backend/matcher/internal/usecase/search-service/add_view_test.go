@@ -14,13 +14,13 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-type Logger struct{}
+type loggerStub struct{}
 
-func (l *Logger) Infof(_ string, _ ...any) {}
+func (l *loggerStub) Infof(_ string, _ ...any) {}
 
-func (l *Logger) Error(_ error) {}
+func (l *loggerStub) Error(_ error) {}
 
-func (l *Logger) Warn(_ error) {}
+func (l *loggerStub) Warn(_ error) {}
 
 func TestUseCase_AddView(t *testing.T) {
 	t.Parallel()
@@ -104,7 +104,7 @@ func TestUseCase_AddView(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			logger := &Logger{}
+			logger := &loggerStub{}
 
 			usecase := NewUseCase(mocks.searchStorageFacade, mocks.photoURLGenerator, logger)
 

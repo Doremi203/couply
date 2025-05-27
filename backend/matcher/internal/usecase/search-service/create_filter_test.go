@@ -119,7 +119,7 @@ func TestUseCase_CreateFilter(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			logger := &Logger{}
+			logger := &loggerStub{}
 
 			usecase := NewUseCase(mocks.searchStorageFacade, mocks.photoURLGenerator, logger)
 
