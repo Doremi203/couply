@@ -7,6 +7,7 @@ interface MatchModalProps {
   matchImage: string;
   matchName: string;
   onKeepSwiping: () => void;
+  isOpen: boolean;
 }
 
 export const MatchModal: React.FC<MatchModalProps> = ({
@@ -14,6 +15,7 @@ export const MatchModal: React.FC<MatchModalProps> = ({
   matchImage,
   matchName,
   onKeepSwiping,
+  isOpen,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -24,8 +26,9 @@ export const MatchModal: React.FC<MatchModalProps> = ({
   };
 
   useEffect(() => {
-    document.body.style.overflow = 'hidden';
+    console.log('MatchModal: mounted with isOpen =', isOpen);
 
+    document.body.style.overflow = 'hidden';
     document.addEventListener('mousedown', handleClickOutside);
 
     if (modalRef.current) {
@@ -33,14 +36,22 @@ export const MatchModal: React.FC<MatchModalProps> = ({
     }
 
     return () => {
+      console.log('MatchModal: unmounting');
       document.removeEventListener('mousedown', handleClickOutside);
       document.body.style.overflow = '';
     };
-  }, []);
+  }, [isOpen]);
 
   const handleModalClick = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
+
+  if (!isOpen) {
+    console.log('MatchModal: Not rendering because isOpen is false');
+    return null;
+  }
+
+  console.log('MatchModal: Rendering modal content');
 
   return (
     <div className={styles.darkOverlay} onClick={handleModalClick}>

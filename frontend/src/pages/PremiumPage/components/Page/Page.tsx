@@ -4,12 +4,15 @@ import CloseIcon from '@mui/icons-material/Close';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { Plan } from '../../../../entities/subscription/types';
 import { NavBar } from '../../../../shared/components/NavBar';
+import { PaymentModal } from '../../../../widgets/PaymentModal';
 
 import styles from './premiumPage.module.css';
 
 export const PremiumPage: React.FC = () => {
   const navigate = useNavigate();
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   const handleBack = () => {
     navigate(-1);
@@ -21,16 +24,23 @@ export const PremiumPage: React.FC = () => {
 
   const [selectedPlan, setSelectedPlan] = useState<string | null>('6-month');
   const [selectedPrice, setSelectedPrice] = useState<string | null>('999₽');
+  const [selectedToApi, setSelectedToApi] = useState<Plan>(Plan.semiAnnual);
 
   const plans = [
-    { id: 'monthly', duration: '1 месяц', price: '199₽' },
-    { id: '6-month', duration: '6 месяцев', price: '999₽' },
-    { id: 'yearly', duration: '12 месяцев', price: '1799₽' },
+    { id: 'monthly', duration: '1 месяц', price: '199₽', toApi: Plan.monthly },
+    { id: '6-month', duration: '6 месяцев', price: '999₽', toApi: Plan.semiAnnual },
+    { id: 'yearly', duration: '12 месяцев', price: '1799₽', toApi: Plan.annual },
   ];
 
-  const handleSubscribe = (plan: string, price: string) => {
+  const handleSubscribe = async (plan: string, price: string, toApi: Plan) => {
     setSelectedPlan(plan);
     setSelectedPrice(price);
+    setSelectedToApi(toApi);
+    setIsPaymentModalOpen(true);
+  };
+
+  const handleCreateSub = async () => {
+    setIsPaymentModalOpen(true);
   };
 
   return (
@@ -72,7 +82,7 @@ export const PremiumPage: React.FC = () => {
             <div
               key={plan.id}
               className={`${styles.planCard} ${selectedPlan === plan.id ? styles.selectedPlan : ''}`}
-              onClick={() => handleSubscribe(plan.id, plan.price)}
+              onClick={() => handleSubscribe(plan.id, plan.price, plan.toApi)}
             >
               <div className={styles.planInfo}>
                 <div className={styles.planDuration}>{plan.duration}</div>
@@ -84,12 +94,21 @@ export const PremiumPage: React.FC = () => {
           ))}
         </div>
 
-        <button className={styles.restoreButton}>Подписаться за {selectedPrice}</button>
+        <button className={styles.restoreButton} onClick={handleCreateSub}>
+          Подписаться за {selectedPrice}
+        </button>
       </div>
 
       <div className={styles.navBarWrapper}>
         <NavBar />
       </div>
+
+      <PaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        selectedPlan={selectedToApi}
+        price={selectedPrice || '0₽'}
+      />
     </div>
   );
 };

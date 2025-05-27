@@ -10,13 +10,11 @@ import {
   GetUsersRequest,
 } from './types';
 
-//TODO
 const basicData = {
-  location: 'Москва, Россия', // todo
   bio: 'bio',
   education: Education.unspecified,
   children: Children.unspecified,
-  alcohol: Alcohol.neutrally,
+  alcohol: Alcohol.unspecified,
   smoking: Smoking.unspecified,
   zodiac: Zodiac.unspecified,
   hidden: false,

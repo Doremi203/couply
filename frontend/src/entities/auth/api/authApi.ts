@@ -32,11 +32,17 @@ export const authApi = baseApi.injectEndpoints({
     }),
 
     refreshToken: builder.mutation<RefreshResponse, RefreshRequest>({
-      query: credentials => ({
-        url: '/v1/token/refresh',
-        method: 'POST',
-        body: credentials,
-      }),
+      query: credentials => {
+        const token = localStorage.getItem('token');
+        return {
+          url: '/v1/token/refresh',
+          method: 'POST',
+          body: credentials,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
     }),
   }),
 });

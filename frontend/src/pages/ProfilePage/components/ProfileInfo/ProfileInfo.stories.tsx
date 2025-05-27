@@ -45,6 +45,7 @@ export const Verified: Story = {
   args: {
     profileData: mockProfileData,
     isVerified: true,
+    //@ts-ignore
     onVerificationRequest: () => console.log('Verification requested'),
   },
 };
@@ -54,6 +55,7 @@ export const Unverified: Story = {
   args: {
     profileData: mockProfileData,
     isVerified: false,
+    //@ts-ignore
     onVerificationRequest: () => console.log('Verification requested'),
   },
 };

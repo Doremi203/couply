@@ -1,7 +1,7 @@
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useSwipeable } from 'react-swipeable';
 
 import { useLikeUserMutation } from '../../../../entities/matches';
@@ -9,7 +9,8 @@ import {
   useCreateFilterMutation,
   useSearchUsersMutation,
 } from '../../../../entities/search/api/searchApi';
-import { getIsPremium, setUserVerified } from '../../../../entities/user';
+import { useGetSubscriptionMutation } from '../../../../entities/subscription/api/subscriptionApi';
+import { setUserVerified } from '../../../../entities/user';
 import { MessageModal } from '../../../../pages/HomePage/components/MessageModal/MessageModal';
 import { NoUsersLeft } from '../../../../pages/HomePage/components/NoUsersLeft/NoUsersLeft';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
@@ -24,23 +25,24 @@ import styles from './profileSlider.module.css';
 
 const adProfiles = [
   {
-    id: 'ad1',
-    isAd: true,
-    adText: 'Главный платформер 2025 года!!',
-    adLink: 'https://t.me/cactus_carnage',
-    photos: ['cactus3.jpg'],
-    name: 'Cactus Carnage',
+    user: {
+      id: 'ad1',
+      isAd: true,
+      adText: 'Главный платформер 2025 года!!',
+      adLink: 'https://t.me/cactus_carnage',
+      photos: [{ url: 'cactus3.jpg' }],
+      name: 'Cactus Carnage',
+    },
   },
 ];
 
-const MAX_UNDO_PER_DAY = 3;
+const AD = 5;
 
 export const ProfileSlider = () => {
   const dispatch = useDispatch();
 
   dispatch(setUserVerified());
-
-  const isPremium = useSelector(getIsPremium);
+  const [getSubscription] = useGetSubscriptionMutation();
 
   const [searchUsers] = useSearchUsersMutation();
   const [createFilter] = useCreateFilterMutation();
@@ -48,7 +50,6 @@ export const ProfileSlider = () => {
 
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [selectedProfile, setSelectedProfile] = useState<(typeof profiles)[0] | null>(null);
@@ -67,37 +68,39 @@ export const ProfileSlider = () => {
   const [messageOpen, setMessageOpen] = useState(false);
   const [premiumOpen, setPremiumOpen] = useState(false);
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const PAGE_SIZE = 10;
+
+  const [isPremium, setIsPremium] = useState(false);
+
+  const [MAX_UNDO_PER_DAY, setMAX_UNDO_PER_DAY] = useState(3);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         //@ts-ignore
         setLoading(true);
-        // const defaultFilter = getDefaultFilter();
-        // //@ts-ignore
-        // await createFilter(defaultFilter).unwrap();
         const response = await searchUsers({ limit: PAGE_SIZE, offset: 0 }).unwrap();
-        // console.log(response);
         //@ts-ignore
         if (response.usersSearchInfo?.length > 0) {
           //@ts-ignore
           setProfiles(response.usersSearchInfo || []);
-          // Update pagination info
-          setHasMore(response.pagination?.hasMore || false);
+          //@ts-ignore
+          setHasMore(response.usersSearchInfo.length >= PAGE_SIZE);
           setCurrentPage(0);
           setLoading(false);
+
+          const sub = await getSubscription({}).unwrap();
+          setIsPremium(sub.status === 'SUBSCRIPTION_STATUS_ACTIVE');
+          if (isPremium) setMAX_UNDO_PER_DAY(10000);
         } else {
           setHasMore(false);
           setLoading(false);
         }
       } catch {
         //@ts-ignore
-        // setError('Ошибка при загрузке профилей');
-        // console.error(err);
+        setHasMore(false);
       } finally {
         setLoading(false);
       }
@@ -106,9 +109,8 @@ export const ProfileSlider = () => {
     fetchData();
   }, [createFilter, searchUsers]);
 
-  // Load more profiles when needed
   const loadMoreProfiles = async () => {
-    if (!hasMore || loading) return;
+    if (loading || !hasMore) return;
 
     try {
       setLoading(true);
@@ -125,23 +127,24 @@ export const ProfileSlider = () => {
         //@ts-ignore
         setProfiles(prevProfiles => [...prevProfiles, ...response.usersSearchInfo]);
         setCurrentPage(nextPage);
-        setHasMore(response.pagination?.hasMore || false);
+        //@ts-ignore
+        setHasMore(response.usersSearchInfo.length >= PAGE_SIZE);
       } else {
         setHasMore(false);
       }
     } catch (err) {
       console.error('Error loading more profiles', err);
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
   };
 
-  // Check if we need to load more profiles when approaching the end
   useEffect(() => {
     if (profiles.length > 0 && currentIndex >= profiles.length - 3 && hasMore) {
       loadMoreProfiles();
     }
-  }, [currentIndex, profiles.length, hasMore]);
+  }, [currentIndex, profiles.length, hasMore, loadMoreProfiles]);
 
   useEffect(() => {
     const storedUndoCount = localStorage.getItem('undoCount');
@@ -164,7 +167,7 @@ export const ProfileSlider = () => {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
 
-      if (newSwipeCount % 15 === 0) {
+      if (newSwipeCount % AD === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
@@ -221,7 +224,7 @@ export const ProfileSlider = () => {
         await likeUser({ targetUserId: profiles[currentIndex].user.id, message: '' });
       }
 
-      if (newSwipeCount % 15 === 0) {
+      if (newSwipeCount % AD === 0) {
         setShowingAd(true);
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
@@ -290,11 +293,10 @@ export const ProfileSlider = () => {
     if (showingAd) return;
 
     const currentUser = profiles[currentIndex];
-    // Check if photos array exists and has more than one photo
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     if (!currentUser?.user?.photos || currentUser.user.photos.length <= 1) return;
 
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     setCurrentPhotoIndex(prevIndex => (prevIndex + 1) % currentUser.user.photos.length);
   };
 
@@ -302,13 +304,13 @@ export const ProfileSlider = () => {
     if (currentIndex < 0 || currentIndex >= profiles.length) return;
     if (showingAd) return;
 
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     const currentUser = profiles[currentIndex];
-    // Check if photos array exists and has more than one photo
-    //@ts-ignore - Needed to handle possible ad profile case
+
+    //@ts-ignore
     if (!currentUser?.user?.photos || currentUser.user.photos.length <= 1) return;
 
-    //@ts-ignore - Needed to handle possible ad profile case
+    //@ts-ignore
     setCurrentPhotoIndex(
       prevIndex =>
         //@ts-ignore
@@ -339,10 +341,8 @@ export const ProfileSlider = () => {
         setTimeout(() => {
           setCurrentPhotoIndex(0);
           if (e.deltaX > 0) {
-            // Swiping right is a like
             handleLikeUser();
           } else {
-            // Swiping left is a pass
             handleNextUser();
           }
 
@@ -374,18 +374,25 @@ export const ProfileSlider = () => {
       ? profiles[currentIndex]
       : null;
 
+  useEffect(() => {
+    if (!currentProfile && !showingAd && !loading && hasMore) {
+      loadMoreProfiles();
+    }
+  }, [currentProfile, showingAd, loading, hasMore, loadMoreProfiles]);
+
   if (loading) {
     return <div className={styles.loading}>Загрузка...</div>;
   }
 
-  if (!currentProfile && !showingAd) {
+  if (!currentProfile && !showingAd && !loading && !hasMore) {
     return <NoUsersLeft />;
   }
 
   const handleProfileClick = (e: React.MouseEvent<HTMLDivElement>) => {
     //@ts-ignore
-    if (showingAd && 'adLink' in currentProfile) {
-      window.open(currentProfile.adLink, '_blank');
+    if (showingAd) {
+      //@ts-ignore
+      window.open(currentProfile.user.adLink, '_blank');
       return;
     }
 
@@ -405,12 +412,10 @@ export const ProfileSlider = () => {
 
   const handleCloseProfile = () => {
     setSelectedProfile(null);
-    // We don't want to go to next user when pressing the back button
   };
 
   const handleLike = () => {
     handleCloseProfile();
-    // Only go to next user if this is from the swipe flow, not from profile preview
     if (
       !document.querySelector('#likes-page-container') &&
       !document.querySelector('.pageContainer')
@@ -508,16 +513,13 @@ export const ProfileSlider = () => {
       console.log('here');
       setMessageOpen(true);
     } else {
-      console.log('l');
-      setMessageOpen(true);
-      //setPremiumOpen(true);
+      setPremiumOpen(true);
     }
   };
 
   const isAd = showingAd;
 
-  // //
-  // console.log(currentProfile?.user?.name, currentProfile);
+  console.log(currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (
@@ -541,6 +543,7 @@ export const ProfileSlider = () => {
               //@ts-ignore
               src={currentProfile.user?.photos?.[currentPhotoIndex]?.url || ''}
               // src="man1.jpg"
+              //@ts-ignore
               alt={currentProfile.name}
               className={styles.profileImage}
               draggable="false"
@@ -568,9 +571,9 @@ export const ProfileSlider = () => {
 
             {isAd && (
               <div>
-                <div className={styles.nameWithBioOne}>{currentProfile.name}</div>
+                <div className={styles.nameWithBioOne}>{currentProfile.user.name}</div>
                 <div className={styles.bio}>
-                  {'adText' in currentProfile ? currentProfile.adText : ''}
+                  {'adText' in currentProfile.user ? currentProfile.user.adText : ''}
                 </div>
                 {timerActive && <div className={styles.adTimer}>{timer}</div>}
                 <div className={styles.adText}>Реклама</div>
@@ -593,7 +596,6 @@ export const ProfileSlider = () => {
               className={styles.likeButton}
               likeClassName={styles.like}
             />
-            {/* <MessageButton onClick={() => setPremiumOpen(true)} /> */}
             <MessageButton onClick={handleMessageOpen} />
           </div>
         </>
@@ -604,7 +606,6 @@ export const ProfileSlider = () => {
           profile={{
             //@ts-ignore
             ...selectedProfile,
-            imageUrl: 'man1.jpg',
           }}
           onClose={handleCloseProfile}
           onLike={handleLike}

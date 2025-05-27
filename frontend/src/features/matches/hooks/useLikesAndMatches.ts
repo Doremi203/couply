@@ -75,6 +75,7 @@ export const useLikesAndMatches = () => {
           return;
         }
 
+        console.log('matchesIds', matchesIds);
         //@ts-ignore
         const matchesUsersResponse = await getUsers(matchesIds.userIds).unwrap();
 
@@ -173,19 +174,31 @@ export const useLikesAndMatches = () => {
     async (id: string) => {
       const likedProfile = likes.find(like => like.senderId === id);
 
-      if (likedProfile) {
-        try {
+      console.log('handleLike called with id:', id);
+      console.log('likedProfile found:', likedProfile);
+
+      try {
+        // Case 1: This is a profile that has already liked the user
+        if (likedProfile) {
+          // Immediately remove the like from the UI to provide instant feedback
+          dispatch(removeLike(id));
+
           const response = await likeUser({
             targetUserId: likedProfile.senderId,
             message: '',
           }).unwrap();
 
-          if (response.isMatch) {
-            dispatch(setShowMatchModal(true));
+          console.log('Like response:', response);
 
+          if (response.isMatch) {
+            console.log('Match detected!');
+            // Get user data for the match
             const userResponse = await getUsers({ userIds: [likedProfile.senderId] }).unwrap();
             const userData = userResponse.users[0].user;
 
+            console.log('User data for match:', userData);
+
+            // Create the profile object for the match modal
             const likeProfile = {
               name: userData.name,
               age: userData.age,
@@ -199,25 +212,87 @@ export const useLikesAndMatches = () => {
               photos: userData.photos,
             } as any;
 
-            dispatch(setMatchedProfile(likeProfile));
+            console.log('Created like profile:', likeProfile);
+
+            // First add the match to the matches list
             dispatch(addMatch(userData));
-            dispatch(removeLike(id));
+
+            // Then reload the matches list to ensure it's fully updated
+            await loadMatches(0);
+
+            // Finally show the match modal
+            dispatch(setMatchedProfile(likeProfile));
+            dispatch(setShowMatchModal(true));
+
+            console.log('Match modal state updated');
           }
-        } catch (error) {
-          console.error('Error creating match:', error);
+        }
+        // Case 2: This is a new like (not a match yet)
+        else {
+          console.log('Sending new like to user:', id);
+
+          // Send the like
+          const response = await likeUser({
+            targetUserId: id,
+            message: '',
+          }).unwrap();
+
+          console.log('New like response:', response);
+
+          // If it's a match (the other user had already liked this user through another channel)
+          if (response.isMatch) {
+            console.log('Unexpected match detected!');
+
+            // Get user data for the match
+            const userResponse = await getUsers({ userIds: [id] }).unwrap();
+            const userData = userResponse.users[0].user;
+
+            console.log('User data for unexpected match:', userData);
+
+            // Create the profile object for the match modal
+            const likeProfile = {
+              name: userData.name,
+              age: userData.age,
+              imageUrl: userData.photos?.[0]?.url || '',
+              hasLikedYou: true,
+              bio: userData.bio,
+              location: userData.location,
+              interests: [],
+              lifestyle: {},
+              passion: [],
+              photos: userData.photos,
+            } as any;
+
+            // Add the match and show the modal
+            dispatch(addMatch(userData));
+            await loadMatches(0);
+            dispatch(setMatchedProfile(likeProfile));
+            dispatch(setShowMatchModal(true));
+
+            console.log('Match modal state updated for unexpected match');
+          }
+        }
+      } catch (error) {
+        console.error('Error processing like:', error);
+        // If there was an error and we removed a like, add it back
+        if (likedProfile) {
+          await loadLikes(0);
         }
       }
     },
-    [dispatch, likeUser, likes, getUsers],
+    [dispatch, likeUser, likes, getUsers, loadMatches, loadLikes],
   );
 
   const handleSendMessage = useCallback(() => {
     dispatch(setShowMatchModal(false));
   }, [dispatch]);
 
-  const handleKeepSwiping = useCallback(() => {
+  const handleKeepSwiping = useCallback(async () => {
     dispatch(setShowMatchModal(false));
-  }, [dispatch]);
+
+    // Reload both likes and matches lists to ensure UI is up-to-date
+    await Promise.all([loadMatches(0), loadLikes(0)]);
+  }, [dispatch, loadMatches, loadLikes]);
 
   const handleSocialClick = useCallback(
     (matchId: number) => {

@@ -26,7 +26,7 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Empty: Story = {
+export const Empty2: Story = {
   args: {
     title: 'Interests',
     placeholder: 'Add your interests (e.g. hiking, reading)',
@@ -36,7 +36,7 @@ export const Empty: Story = {
   },
 };
 
-export const WithValues: Story = {
+export const WithValues2: Story = {
   args: {
     title: 'Interests',
     placeholder: 'Add your interests (e.g. hiking, reading)',
@@ -46,7 +46,7 @@ export const WithValues: Story = {
   },
 };
 
-export const Hobbies: Story = {
+export const Hobbies2: Story = {
   args: {
     title: 'Hobbies',
     placeholder: 'What do you enjoy doing?',
@@ -56,7 +56,7 @@ export const Hobbies: Story = {
   },
 };
 
-export const MusicTastes: Story = {
+export const MusicTastes2: Story = {
   args: {
     title: 'Music Tastes',
     placeholder: 'What music do you like?',

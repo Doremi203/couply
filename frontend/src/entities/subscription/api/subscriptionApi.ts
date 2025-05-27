@@ -1,14 +1,14 @@
 import { paymentsApi } from '../../../shared/api/baseApi';
-import { blockerApiExtended } from '../../blocker';
+
 import { CancelRequest, CreateSubRequst, GetSubscriptionResponse } from '../types';
 
 export const subscriptionApi = paymentsApi.injectEndpoints({
   endpoints: builder => ({
     createSubscription: builder.mutation<GetSubscriptionResponse, CreateSubRequst>({
-      query: userData => ({
+      query: data => ({
         url: '/v1/subscriptions/create',
         method: 'POST',
-        body: { ...userData },
+        body: data,
       }),
       // invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
@@ -33,4 +33,8 @@ export const subscriptionApi = paymentsApi.injectEndpoints({
   }),
 });
 
-export const { useGetBlockInfoMutation, useCreateComplaintMutation } = blockerApiExtended;
+export const {
+  useCreateSubscriptionMutation,
+  useCancelSubscriptionMutation,
+  useGetSubscriptionMutation,
+} = subscriptionApi;

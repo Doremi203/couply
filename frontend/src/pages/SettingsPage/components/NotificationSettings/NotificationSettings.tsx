@@ -11,8 +11,13 @@ import {
   sendSubscriptionToServer,
   unsubscribeFromPushNotifications,
 } from '../../../../shared/lib/services/PushNotificationService.ts';
+import ConfirmModal from '../../../../shared/components/ConfirmModal';
 
 import styles from './notificationSettings.module.css';
+import {
+  useGetSubscriptionMutation,
+  useCancelSubscriptionMutation,
+} from '../../../../entities/subscription/api/subscriptionApi.ts';
 
 interface NotificationOption {
   id: string;
@@ -33,6 +38,25 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
   const { subscription, subscribe, unsubscribe } = usePushSubscription();
   const { requestPermission } = usePushNotificationPermission();
   const isPushEnabled = Boolean(subscription);
+  const [getSubscription] = useGetSubscriptionMutation();
+  const [cancelSubscription] = useCancelSubscriptionMutation();
+  const [isPremium, setIsPremium] = useState(false);
+  const [showUnsubscribeModal, setShowUnsubscribeModal] = useState(false);
+  const [subscriptionId, setSubscriptionId] = useState<string>('');
+
+  useEffect(() => {
+    const fetchSubscription = async () => {
+      try {
+        const subscription = await getSubscription({}).unwrap();
+        setIsPremium(subscription.status === 'SUBSCRIPTION_STATUS_ACTIVE');
+        setSubscriptionId(subscription.subscriptionId);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchSubscription();
+  }, [getSubscription]);
 
   useEffect(() => {
     setNotifications([
@@ -52,10 +76,10 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         id: 'unsubscribe',
         label: 'Отменить подписку',
         icon: <CreditCardOffOutlinedIcon />,
-        enabled: false,
+        enabled: isPremium,
       },
     ]);
-  }, [theme, isPushEnabled]);
+  }, [theme, isPushEnabled, isPremium]);
 
   const handleToggle = async (id: string) => {
     if (isLoading) return;
@@ -78,13 +102,7 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
           await unsubscribe();
         }
       } else if (id === 'unsubscribe') {
-        setNotifications(prev =>
-          prev.map(notification =>
-            notification.id === id
-              ? { ...notification, enabled: !notification.enabled }
-              : notification,
-          ),
-        );
+        setShowUnsubscribeModal(true);
       }
     } catch (error) {
       console.error('Error toggling:', error);
@@ -92,6 +110,22 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
     } finally {
       setIsLoading(false);
       setActiveId(null);
+    }
+  };
+
+  const handleUnsubscribe = async () => {
+    try {
+      await cancelSubscription({ subscriptionId }).unwrap();
+      setIsPremium(false);
+      setShowUnsubscribeModal(false);
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification.id === 'unsubscribe' ? { ...notification, enabled: false } : notification,
+        ),
+      );
+    } catch (error) {
+      console.error('Error canceling subscription:', error);
+      alert('Произошла ошибка при отмене подписки');
     }
   };
 
@@ -123,6 +157,16 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
           </div>
         </div>
       ))}
+
+      <ConfirmModal
+        isOpen={showUnsubscribeModal}
+        onClose={() => setShowUnsubscribeModal(false)}
+        onConfirm={handleUnsubscribe}
+        title="Отмена подписки"
+        message="Вы уверены, что хотите отменить подписку? После отмены вы потеряете доступ к премиум-функциям."
+        confirmText="Отменить подписку"
+        cancelText="Вернуться"
+      />
     </div>
   );
 };

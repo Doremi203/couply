@@ -4,13 +4,13 @@ import styles from './commonInterest.module.css';
 
 interface CommonInterestProps {
   text: string;
-  isCommon: boolean;
+  isCommon?: boolean;
   className?: string;
 }
 
 export const CommonInterest: React.FC<CommonInterestProps> = ({
   text,
-  isCommon,
+  isCommon = false,
   className = '',
 }) => {
   return (

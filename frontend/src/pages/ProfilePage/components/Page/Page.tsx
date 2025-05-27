@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import {
@@ -8,6 +8,7 @@ import {
   setLoading,
   setError,
 } from '../../../../entities/profile/model/profileSlice';
+import { useGetSubscriptionMutation } from '../../../../entities/subscription/api/subscriptionApi';
 import { useGetUserMutation } from '../../../../entities/user';
 import { NavBar } from '../../../../shared/components/NavBar';
 import { EditProfile } from '../../../../widgets/EditProfile';
@@ -35,10 +36,14 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
 }) => {
   const dispatch = useDispatch();
   const [getUser] = useGetUserMutation();
+
+  const [getSubscription] = useGetSubscriptionMutation();
   const profileData = useSelector(selectProfileData);
   const isLoading = useSelector(selectProfileLoading);
 
   const [newPhotoFiles, setNewPhotoFiles] = React.useState<PhotoItem[]>([]);
+
+  const [isPremium, setIsPremium] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +51,9 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
         dispatch(setLoading(true));
         const data = await getUser({}).unwrap();
         dispatch(setProfileData(data.user));
+
+        const sub = await getSubscription({}).unwrap();
+        setIsPremium(sub.status === 'SUBSCRIPTION_STATUS_ACTIVE');
       } catch (error) {
         console.error('Failed to fetch user:', error);
         dispatch(setError('Failed to fetch user data'));
@@ -55,7 +63,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     };
 
     fetchData();
-  }, [getUser, dispatch]);
+  }, [getUser, dispatch, getSubscription]);
 
   const [isEditMode, setIsEditMode] = React.useState(initialEditMode);
   const [activeTab, setActiveTab] = React.useState(initialTab);
@@ -188,6 +196,7 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
             onActivityClick={() => setActiveTab('activity')}
             onPreviewClick={() => setActiveTab('preview')}
             onVerificationRequest={handleVerificationRequest}
+            isPremium={isPremium}
           />
         );
     }

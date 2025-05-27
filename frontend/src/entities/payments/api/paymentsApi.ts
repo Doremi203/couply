@@ -1,5 +1,4 @@
 import { paymentsApi } from '../../../shared/api/baseApi';
-import { blockerApiExtended } from '../../blocker';
 
 import {
   CreatePaymentResponse,
@@ -30,4 +29,4 @@ export const paymentsApiExtended = paymentsApi.injectEndpoints({
   }),
 });
 
-export const { useGetBlockInfoMutation, useCreateComplaintMutation } = blockerApiExtended;
+export const { useCreatePaymentMutation, useGetPaymentStatusMutation } = paymentsApiExtended;

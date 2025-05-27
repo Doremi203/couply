@@ -11,7 +11,7 @@ interface LikesSectionProps {
   likesUsers: LikesUsersData[];
   //@ts-ignore
   onProfileClick: (profile) => void;
-  onLike: (id: number) => void;
+  onLike: (id: string) => void;
 }
 
 export const LikesSection: React.FC<LikesSectionProps> = ({

@@ -150,27 +150,27 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
   };
 
   const handleZodiacToggle = (value: string) => {
-    setSelectedZodiac([value]);
+    setSelectedZodiac(prev => (prev.includes(value) ? [] : [value]));
   };
 
   const handleEducationToggle = (value: string) => {
-    setSelectedEducation([value]);
+    setSelectedEducation(prev => (prev.includes(value) ? [] : [value]));
   };
 
   const handleChildrenToggle = (value: string) => {
-    setSelectedChildren([value]);
+    setSelectedChildren(prev => (prev.includes(value) ? [] : [value]));
   };
 
   const handleAlcoholToggle = (value: string) => {
-    setSelectedAlcohol([value]);
+    setSelectedAlcohol(prev => (prev.includes(value) ? [] : [value]));
   };
 
   const handleSmokingToggle = (value: string) => {
-    setSelectedSmoking([value]);
+    setSelectedSmoking(prev => (prev.includes(value) ? [] : [value]));
   };
 
   const handleGoalToggle = (value: string) => {
-    setSelectedGoal([value]);
+    setSelectedGoal(prev => (prev.includes(value) ? [] : [value]));
   };
 
   const handleClearFilters = () => {

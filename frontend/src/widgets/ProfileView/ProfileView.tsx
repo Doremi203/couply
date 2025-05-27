@@ -1,10 +1,11 @@
 import VerifiedIcon from '@mui/icons-material/Verified';
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 import { useLikeUserMutation } from '../../entities/matches';
 import { BackButton } from '../../shared/components/BackButton';
 import { DislikeButton } from '../../shared/components/DislikeButton';
 import { LikeButton } from '../../shared/components/LikeButton';
+import { PremiumModal } from '../../widgets/PremiumModal';
 
 import ProfileInfo from './components/ProfileInfo';
 import styles from './profileView.module.css';
@@ -49,31 +50,18 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 }) => {
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
 
-  // Handle the profile data - it might come directly or nested in a user property
   const profileData = profile.user || profile;
 
-  // Get the profile photo safely
   const getProfilePhoto = () => {
-    // if (!profileData.photos || !profileData.photos.length) {
-    //   return '/photo1.png';
-    // }
-
     const firstPhoto = profileData.photos[0];
     if (typeof firstPhoto === 'string') {
       return firstPhoto;
     } else if (firstPhoto && typeof firstPhoto === 'object') {
       return firstPhoto.url;
     }
-
-    // return '/photo1.png';
   };
-
-  // const commonInterests = ['Music', 'Travel', 'Photography'];
-
-  // const isCommonInterest = (interest: string) => {
-  //   return commonInterests.includes(interest);
-  // };
 
   const handleLike = () => {
     const userId = profileData.id;
@@ -172,6 +160,8 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
 
       {/**@ts-ignore */}
       <ProfileInfo profile={profileData} profileDetails={profileDetails} isCommonInterest={[]} />
+
+      <PremiumModal isOpen={isPremiumModalOpen} onClose={() => setIsPremiumModalOpen(false)} />
     </div>
   );
 };

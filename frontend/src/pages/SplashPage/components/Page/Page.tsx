@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { RootState } from '../../../../app/store';
 import { useGeolocation } from '../../../../shared/lib/hooks/useGeolocation';
 
 import styles from './splashPage.module.css';
 
 export const SplashPage = () => {
   const navigate = useNavigate();
-  // const userId = useSelector(getUserId);
+  const { isBlocked } = useSelector((state: RootState) => state.blocking);
 
   const { updateUserLocation } = useGeolocation();
 
@@ -36,7 +38,7 @@ export const SplashPage = () => {
       const token = localStorage.getItem('token');
 
       if (token) {
-        if (localStorage.getItem('blocked') === 'true') {
+        if (isBlocked) {
           navigate('/blocked');
         } else {
           navigate('/home');
@@ -47,7 +49,7 @@ export const SplashPage = () => {
     }, 4000);
 
     return () => clearTimeout(timer);
-  }, [navigate]);
+  }, [navigate, isBlocked]);
 
   return (
     <div className={styles.page}>

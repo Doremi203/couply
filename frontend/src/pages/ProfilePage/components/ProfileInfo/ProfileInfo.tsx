@@ -1,5 +1,6 @@
 import VerifiedIcon from '@mui/icons-material/Verified';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { ProfileData } from '../../types';
 
@@ -8,22 +9,22 @@ import styles from './profileInfo.module.css';
 interface ProfileInfoProps {
   profileData: ProfileData;
   isVerified: boolean;
-  onVerificationRequest: () => void;
   onPreviewClick: () => void;
+  isPremium: boolean;
 }
 
 export const ProfileInfo: React.FC<ProfileInfoProps> = ({
   profileData,
   isVerified,
-  onVerificationRequest,
+  // _onVerificationRequest,
   onPreviewClick,
+  isPremium,
 }) => {
-  const isPro = false;
+  const navigate = useNavigate();
 
-  // Get profile image URL safely
   const getProfileImageUrl = () => {
     if (!profileData.photos || profileData.photos.length === 0) {
-      return '/photo1.png'; // Default image
+      return '/photo1.png';
     }
 
     const firstPhoto = profileData.photos[0];
@@ -33,7 +34,11 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
       return (firstPhoto as any).url || '/photo1.png';
     }
 
-    return '/photo1.png'; // Fallback
+    return '/photo1.png';
+  };
+
+  const handleVerifyClick = () => {
+    navigate('/verification');
   };
 
   return (
@@ -47,7 +52,7 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
             (e.target as HTMLImageElement).src = '/photo1.png';
           }}
         />
-        {isPro && (
+        {isPremium && (
           <div className={styles.proBadge}>
             <span>PRO</span>
           </div>
@@ -62,9 +67,11 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
         {profileData.name}, {profileData.age}
       </h2>
       {!isVerified && (
-        <button className={styles.verifyButton} onClick={onVerificationRequest}>
-          Верифицировать профиль
-        </button>
+        <>
+          <button className={styles.verifyButton} onClick={handleVerifyClick}>
+            Верифицировать профиль
+          </button>
+        </>
       )}
     </div>
   );

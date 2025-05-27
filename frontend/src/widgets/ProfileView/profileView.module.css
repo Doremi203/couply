@@ -401,3 +401,41 @@
   opacity: 1 !important;
   pointer-events: auto !important;
 }
+
+.subscriptionButtonContainer {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  z-index: 1001;
+}
+
+.subscriptionButton {
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 15px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  width: 100%;
+  max-width: 300px;
+}
+
+.subscriptionButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+}
+
+.subscriptionButton:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
