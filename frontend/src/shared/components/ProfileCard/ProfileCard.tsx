@@ -8,6 +8,11 @@ import { LikeButton } from '../LikeButton';
 import { MessageModal } from '../MessageModal/MessageModal';
 
 import styles from './profileCard.module.css';
+import {
+  selectShowMatchModal,
+  setShowMatchModal,
+} from '../../../entities/matches/model/matchesSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export interface ProfileCardProps {
   profile: UserData;
@@ -24,13 +29,14 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onLike,
   className,
 }) => {
+  const dispatch = useDispatch();
   const [messageModalOpen, setMessageModalOpen] = useState(false);
-  const [showMatchModal, setShowMatchModal] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
 
   const [getUser] = useGetUserMutation();
-
   const [myData, setMyData] = useState<UserData>();
+
+  // Get the match modal state from Redux
+  const show = useSelector(selectShowMatchModal);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,36 +55,30 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   const message = like?.message;
 
   const handleLikeClick = async (e: React.MouseEvent) => {
-    console.log('like');
     e.stopPropagation();
     e.preventDefault();
 
     const userId = profile.id;
-    console.log('userId', userId);
 
     if (userId) {
       try {
-        // Set local state for immediate feedback
-        setIsLiked(true);
-        setShowMatchModal(true);
+        dispatch(setShowMatchModal(true));
+
         document.body.style.overflow = 'hidden';
 
-        // Call the onLike function from useLikesAndMatches
         if (onLike) {
-          console.log('onLike', userId);
+          console.log('ProfileCard: calling onLike with userId:', userId);
           onLike(userId);
         }
       } catch (error) {
-        console.error('Error liking user:', error);
-        setIsLiked(false);
-        setShowMatchModal(false);
+        console.error('ProfileCard: Error liking user:', error);
         document.body.style.overflow = '';
       }
     }
   };
 
   const handleCardClick = (_e: React.MouseEvent) => {
-    if (!messageModalOpen && !showMatchModal) {
+    if (!messageModalOpen && !show) {
       onClick?.();
     }
   };
@@ -95,29 +95,34 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   };
 
   const handleKeepSwiping = () => {
-    setIsLiked(false);
     document.body.style.overflow = '';
-
-    // Call onLike's handleKeepSwiping to ensure lists are reloaded
-    if (onLike) {
-      // This is a bit of a hack, but it ensures the lists are reloaded
-      setTimeout(() => {
-        onLike(profile.id);
-      }, 100);
-    }
+    dispatch(setShowMatchModal(false));
   };
 
-  console.log('State:', { isLiked, showMatchModal, myData });
+  // Log state changes for debugging
+  useEffect(() => {
+    console.log('ProfileCard state changed:', {
+      showModal: show,
+      profileId: profile.id,
+      profileName: profile.name,
+      myData: myData?.name,
+    });
 
-  // If the match modal should be shown
-  if (showMatchModal && myData) {
+    if (show) {
+      console.log('ProfileCard: Modal should be visible now');
+      document.body.style.overflow = 'hidden';
+    }
+  }, [show, profile.id, profile.name, myData]);
+
+  if (show) {
+    console.log('ProfileCard: Rendering MatchModal component');
     return (
       <MatchModal
-        //@ts-ignore
-        userImage={myData.photos?.[0].url}
-        matchImage={profile.photos?.[0]?.url}
+        userImage={myData?.photos?.[0]?.url || ''}
+        matchImage={profile.photos?.[0]?.url || ''}
         matchName={profile.name}
         onKeepSwiping={handleKeepSwiping}
+        isOpen={show}
       />
     );
   }
@@ -171,6 +176,30 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           />
         </div>
 
+        {/* Test button to directly trigger modal - for debugging only */}
+        {/* <div
+          style={{
+            position: 'absolute',
+            bottom: '10px',
+            right: '10px',
+            background: 'red',
+            color: 'white',
+            padding: '5px',
+            borderRadius: '5px',
+            fontSize: '10px',
+            cursor: 'pointer',
+            zIndex: 100,
+          }}
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+            console.log('Test button clicked, setting modal state to true');
+            dispatch(setShowMatchModal(true));
+          }}
+        >
+          Test Modal
+        </div> */}
+
         <MessageModal
           isOpen={messageModalOpen}
           onClose={handleMessageModalClose}
@@ -178,8 +207,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           senderName={profile.name}
         />
       </div>
-
-      {/* Match modal is now only rendered in the conditional above */}
     </>
   );
 };

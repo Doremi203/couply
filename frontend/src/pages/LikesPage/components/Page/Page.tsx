@@ -23,13 +23,18 @@ export const LikesPage = () => {
     showMatchModal,
   } = useLikesAndMatches();
 
-  // Switch to matches tab when a match is created
+  // Log modal state changes for debugging
   useEffect(() => {
-    if (showMatchModal) {
-      // Immediately switch to matches tab
-      setActiveTab('мэтчи');
-    }
+    console.log('LikesPage: showMatchModal state changed:', showMatchModal);
   }, [showMatchModal]);
+
+  // Comment out the automatic tab switching for now to fix the modal issue
+  // useEffect(() => {
+  //   if (showMatchModal) {
+  //     // Immediately switch to matches tab
+  //     setActiveTab('мэтчи');
+  //   }
+  // }, [showMatchModal]);
 
   const { selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile } =
     useProfileView();
