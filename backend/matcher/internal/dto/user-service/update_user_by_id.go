@@ -1,8 +1,9 @@
 package user_service
 
 import (
-	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"time"
+
+	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
