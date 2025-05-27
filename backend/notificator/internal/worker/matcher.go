@@ -37,7 +37,8 @@ func (p *MatcherEventProcessor) ProcessMessages(ctx context.Context) error {
 	for {
 		batch, err := p.sqsClient.ReadMessages(ctx, p.logger, 5)
 		if err != nil {
-			return errors.WrapFail(err, "read messages batch from sqs")
+			p.logger.Error(errors.WrapFail(err, "read messages batch from sqs"))
+			continue
 		}
 		p.logger.Infof("read %d messages from sqs", len(batch))
 

@@ -25,3 +25,4 @@ secrets:
     web-push-api: e6q2fjskiam5gqb224ss
     x-api-key: e6qrit49b41qnhsrfa8u
     token: e6qo9u8d7n70ciqo8omk
+    sqs: e6q11avjgsnllkss9nqr
