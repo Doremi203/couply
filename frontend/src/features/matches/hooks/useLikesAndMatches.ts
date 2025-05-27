@@ -182,7 +182,7 @@ export const useLikesAndMatches = () => {
         if (likedProfile) {
           // Immediately remove the like from the UI to provide instant feedback
           dispatch(removeLike(id));
-          
+
           const response = await likeUser({
             targetUserId: likedProfile.senderId,
             message: '',
@@ -216,39 +216,39 @@ export const useLikesAndMatches = () => {
 
             // First add the match to the matches list
             dispatch(addMatch(userData));
-            
+
             // Then reload the matches list to ensure it's fully updated
             await loadMatches(0);
-            
+
             // Finally show the match modal
             dispatch(setMatchedProfile(likeProfile));
             dispatch(setShowMatchModal(true));
-            
+
             console.log('Match modal state updated');
           }
         }
         // Case 2: This is a new like (not a match yet)
         else {
           console.log('Sending new like to user:', id);
-          
+
           // Send the like
           const response = await likeUser({
             targetUserId: id,
             message: '',
           }).unwrap();
-          
+
           console.log('New like response:', response);
-          
+
           // If it's a match (the other user had already liked this user through another channel)
           if (response.isMatch) {
             console.log('Unexpected match detected!');
-            
+
             // Get user data for the match
             const userResponse = await getUsers({ userIds: [id] }).unwrap();
             const userData = userResponse.users[0].user;
-            
+
             console.log('User data for unexpected match:', userData);
-            
+
             // Create the profile object for the match modal
             const likeProfile = {
               name: userData.name,
@@ -262,13 +262,13 @@ export const useLikesAndMatches = () => {
               passion: [],
               photos: userData.photos,
             } as any;
-            
+
             // Add the match and show the modal
             dispatch(addMatch(userData));
             await loadMatches(0);
             dispatch(setMatchedProfile(likeProfile));
             dispatch(setShowMatchModal(true));
-            
+
             console.log('Match modal state updated for unexpected match');
           }
         }
@@ -289,7 +289,7 @@ export const useLikesAndMatches = () => {
 
   const handleKeepSwiping = useCallback(async () => {
     dispatch(setShowMatchModal(false));
-    
+
     // Reload both likes and matches lists to ensure UI is up-to-date
     await Promise.all([loadMatches(0), loadLikes(0)]);
   }, [dispatch, loadMatches, loadLikes]);
@@ -344,5 +344,3 @@ export const useLikesAndMatches = () => {
     hasMoreLikes,
   };
 };
-
-

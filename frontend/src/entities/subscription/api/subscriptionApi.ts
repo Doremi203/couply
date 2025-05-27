@@ -33,6 +33,8 @@ export const subscriptionApi = paymentsApi.injectEndpoints({
   }),
 });
 
-export const { useCreateSubscriptionMutation, 
-  useCancelSubscriptionMutation, 
-  useGetSubscriptionMutation } = subscriptionApi;
+export const {
+  useCreateSubscriptionMutation,
+  useCancelSubscriptionMutation,
+  useGetSubscriptionMutation,
+} = subscriptionApi;

@@ -22,7 +22,7 @@ export const useTokenRefresh = () => {
         setIsRefreshing(false);
       }
     }
-    
+
     return false;
   }, []);
 
@@ -37,11 +37,13 @@ export const useTokenRefresh = () => {
         checkAndRefreshToken();
         return;
       }
-      
+
       const timeUntilExpiry = Math.max(0, expiryTime - Date.now());
-      
-      console.log(`Setting up token refresh timer for ${Math.floor(timeUntilExpiry / 1000)}s from now`);
-      
+
+      console.log(
+        `Setting up token refresh timer for ${Math.floor(timeUntilExpiry / 1000)}s from now`,
+      );
+
       timerRef.current = window.setTimeout(() => {
         checkAndRefreshToken().then(() => {
           setupExpiryTimer();

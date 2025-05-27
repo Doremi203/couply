@@ -11,12 +11,12 @@ export const refreshToken = async () => {
     }
 
     console.log('Attempting to refresh token with refreshToken');
-    
+
     const response = await fetch('https://auth.testing.couply.ru/v1/token/refresh', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ refreshToken }),
     });
@@ -28,7 +28,7 @@ export const refreshToken = async () => {
 
     const data = await response.json();
     console.log('Refresh token response:', data);
-    
+
     if (data.accessToken && data.refreshToken) {
       setTokens(data.accessToken.token, data.refreshToken.token, data.accessToken.expiresIn);
       return true;

@@ -69,10 +69,12 @@
   font-size: 16px;
   font-weight: 500;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .confirmButton:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
-} 
+}

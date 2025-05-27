@@ -18,9 +18,9 @@ export const getLocationFromCoordinates = async (
         },
       },
     );
-    
+
     const data = await response.json();
-    
+
     if (!data.address) {
       throw new Error('Location not found');
     }
@@ -34,4 +34,4 @@ export const getLocationFromCoordinates = async (
     console.error('Error getting location:', error);
     return 'Location unavailable';
   }
-}; 
+};

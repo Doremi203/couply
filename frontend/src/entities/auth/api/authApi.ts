@@ -39,7 +39,7 @@ export const authApi = baseApi.injectEndpoints({
           method: 'POST',
           body: credentials,
           headers: {
-            'Authorization': `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         };
       },

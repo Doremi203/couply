@@ -10,7 +10,6 @@ import {
   GetUsersRequest,
 } from './types';
 
-
 const basicData = {
   bio: 'bio',
   education: Education.unspecified,

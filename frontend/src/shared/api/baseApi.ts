@@ -8,7 +8,12 @@ import {
   QueryReturnValue,
 } from '@reduxjs/toolkit/query/react';
 
-import { getRefreshToken, getToken, clearTokens, isTokenExpired } from '../lib/services/TokenService';
+import {
+  getRefreshToken,
+  getToken,
+  clearTokens,
+  isTokenExpired,
+} from '../lib/services/TokenService';
 
 import { refreshToken as refreshTokenFunction } from './refreshToken';
 
@@ -37,7 +42,7 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
 
   // We'll use a simple flag to prevent concurrent refresh attempts
   let isRefreshInProgress = false;
-  
+
   const refreshTokenFn = async (_api: any, _extraOptions: object) => {
     try {
       // If a refresh is already in progress, don't start another one
@@ -45,10 +50,10 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
         console.log('Token refresh already in progress, skipping');
         return false;
       }
-      
+
       // Set the flag to prevent concurrent refreshes
       isRefreshInProgress = true;
-      
+
       const token = getToken();
       const refreshToken = getRefreshToken();
 
@@ -60,7 +65,7 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
 
       // Use our standalone refresh token function
       const success = await refreshTokenFunction();
-      
+
       if (!success) {
         console.warn('Token refresh failed');
         // Only redirect if we're not already on the auth page
@@ -69,7 +74,7 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
           window.location.href = '/auth';
         }
       }
-      
+
       // Always reset the flag
       isRefreshInProgress = false;
       return success;
@@ -85,10 +90,10 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
     if (isTokenExpired() && !isRefreshing) {
       // Prevent concurrent refresh attempts
       isRefreshing = true;
-      
+
       try {
         const refreshSuccess = await refreshTokenFn(api, extraOptions);
-        
+
         if (!refreshSuccess) {
           console.warn('Proactive token refresh failed, proceeding with original request');
         } else {
@@ -101,7 +106,7 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
         isRefreshing = false;
       }
     }
-    
+
     const result = await baseQuery(args, api, extraOptions);
 
     if (result.error?.status === 401) {
@@ -109,7 +114,7 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
         isRefreshing = true;
 
         const refreshSuccess = await refreshTokenFn(api, extraOptions);
-        
+
         if (refreshSuccess) {
           const promises = pendingRequests.map(async request => {
             const result = await baseQuery(request.args, request.api, request.extraOptions);
@@ -119,7 +124,7 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
 
           await Promise.all(promises);
         }
-        
+
         isRefreshing = false;
         pendingRequests = [];
       }
