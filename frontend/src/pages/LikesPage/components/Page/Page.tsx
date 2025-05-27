@@ -20,7 +20,16 @@ export const LikesPage = () => {
     likesUsers,
     likes,
     handleDislike,
+    showMatchModal,
   } = useLikesAndMatches();
+
+  // Switch to matches tab when a match is created
+  useEffect(() => {
+    if (showMatchModal) {
+      // Immediately switch to matches tab
+      setActiveTab('мэтчи');
+    }
+  }, [showMatchModal]);
 
   const { selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile } =
     useProfileView();

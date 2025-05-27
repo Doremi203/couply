@@ -173,19 +173,25 @@ export const useLikesAndMatches = () => {
     async (id: string) => {
       const likedProfile = likes.find(like => like.senderId === id);
 
+      console.log('handleLike called with id:', id);
+      console.log('likedProfile found:', likedProfile);
+
       if (likedProfile) {
         try {
+          // Immediately remove the like from the UI to provide instant feedback
+          dispatch(removeLike(id));
+          
           const response = await likeUser({
             targetUserId: likedProfile.senderId,
             message: '',
           }).unwrap();
 
           if (response.isMatch) {
-            dispatch(setShowMatchModal(true));
-
+            // Get user data for the match
             const userResponse = await getUsers({ userIds: [likedProfile.senderId] }).unwrap();
             const userData = userResponse.users[0].user;
 
+            // Create the profile object for the match modal
             const likeProfile = {
               name: userData.name,
               age: userData.age,
@@ -199,25 +205,36 @@ export const useLikesAndMatches = () => {
               photos: userData.photos,
             } as any;
 
-            dispatch(setMatchedProfile(likeProfile));
+            // First add the match to the matches list
             dispatch(addMatch(userData));
-            dispatch(removeLike(id));
+            
+            // Then reload the matches list to ensure it's fully updated
+            await loadMatches(0);
+            
+            // Finally show the match modal
+            dispatch(setMatchedProfile(likeProfile));
+            dispatch(setShowMatchModal(true));
           }
         } catch (error) {
           console.error('Error creating match:', error);
+          // If there was an error, add the like back
+          await loadLikes(0);
         }
       }
     },
-    [dispatch, likeUser, likes, getUsers],
+    [dispatch, likeUser, likes, getUsers, loadMatches, loadLikes],
   );
 
   const handleSendMessage = useCallback(() => {
     dispatch(setShowMatchModal(false));
   }, [dispatch]);
 
-  const handleKeepSwiping = useCallback(() => {
+  const handleKeepSwiping = useCallback(async () => {
     dispatch(setShowMatchModal(false));
-  }, [dispatch]);
+    
+    // Reload both likes and matches lists to ensure UI is up-to-date
+    await Promise.all([loadMatches(0), loadLikes(0)]);
+  }, [dispatch, loadMatches, loadLikes]);
 
   const handleSocialClick = useCallback(
     (matchId: number) => {

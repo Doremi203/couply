@@ -1,8 +1,5 @@
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
-
-import { addMatch, removeLike } from '../../../entities/matches/model/matchesSlice';
 import { Like } from '../../../entities/matches/types';
 import { useGetUserMutation } from '../../../entities/user';
 import { UserData } from '../../../entities/user/types';
@@ -27,8 +24,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   onLike,
   className,
 }) => {
-  const dispatch = useDispatch();
-
   const [messageModalOpen, setMessageModalOpen] = useState(false);
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
@@ -50,30 +45,34 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
     fetchData();
   }, [getUser]);
 
-  if (!like) return;
-
-  const message = like.message;
+  // Don't return early if like is undefined, just set message to undefined
+  const message = like?.message;
 
   const handleLikeClick = async (e: React.MouseEvent) => {
+    console.log('like');
     e.stopPropagation();
     e.preventDefault();
-    setIsLiked(true);
 
     const userId = profile.id;
+    console.log('userId', userId);
 
     if (userId) {
       try {
+        // Set local state for immediate feedback
+        setIsLiked(true);
         setShowMatchModal(true);
         document.body.style.overflow = 'hidden';
-        dispatch(removeLike(userId));
-        dispatch(addMatch(profile));
 
+        // Call the onLike function from useLikesAndMatches
         if (onLike) {
+          console.log('onLike', userId);
           onLike(userId);
         }
       } catch (error) {
         console.error('Error liking user:', error);
         setIsLiked(false);
+        setShowMatchModal(false);
+        document.body.style.overflow = '';
       }
     }
   };
@@ -96,23 +95,30 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   };
 
   const handleKeepSwiping = () => {
-    setShowMatchModal(false);
+    setIsLiked(false);
     document.body.style.overflow = '';
+
+    // Call onLike's handleKeepSwiping to ensure lists are reloaded
+    if (onLike) {
+      // This is a bit of a hack, but it ensures the lists are reloaded
+      setTimeout(() => {
+        onLike(profile.id);
+      }, 100);
+    }
   };
 
-  if (isLiked) {
+  console.log('State:', { isLiked, showMatchModal, myData });
+
+  // If the match modal should be shown
+  if (showMatchModal && myData) {
     return (
-      <>
-        {showMatchModal && (
-          <MatchModal
-            //@ts-ignore
-            userImage={myData.photos?.[0].url}
-            matchImage={profile.photos?.[0]?.url}
-            matchName={profile.name}
-            onKeepSwiping={handleKeepSwiping}
-          />
-        )}
-      </>
+      <MatchModal
+        //@ts-ignore
+        userImage={myData.photos?.[0].url}
+        matchImage={profile.photos?.[0]?.url}
+        matchName={profile.name}
+        onKeepSwiping={handleKeepSwiping}
+      />
     );
   }
 
@@ -147,24 +153,24 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             {profile.name}, {profile.age}
           </div>
         </div>
-        {onLike && (
-          <div
-            onClick={e => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            onMouseDown={e => {
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-          >
-            <LikeButton
-              onClick={handleLikeClick}
-              className={styles.likeButton}
-              likeClassName={styles.like}
-            />
-          </div>
-        )}
+
+        <div
+          onClick={e => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          onMouseDown={e => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
+          <LikeButton
+            onClick={handleLikeClick}
+            className={styles.likeButton}
+            likeClassName={styles.like}
+          />
+        </div>
+
         <MessageModal
           isOpen={messageModalOpen}
           onClose={handleMessageModalClose}
@@ -173,15 +179,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         />
       </div>
 
-      {showMatchModal && (
-        <MatchModal
-          //@ts-ignore
-          userImage={myData.photos?.[0].url}
-          matchImage={profile.photos?.[0]?.url}
-          matchName={profile.name}
-          onKeepSwiping={handleKeepSwiping}
-        />
-      )}
+      {/* Match modal is now only rendered in the conditional above */}
     </>
   );
 };
