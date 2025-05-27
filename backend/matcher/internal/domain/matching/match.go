@@ -11,9 +11,10 @@ import (
 )
 
 var (
-	ErrMatchAlreadyExists = errors.Error("match already exists")
-	ErrMatchesNotFound    = errors.Error("matches not found")
-	ErrMatchNotFound      = errors.Error("match not found")
+	ErrMatchAlreadyExists           = errors.Error("match already exists")
+	ErrMatchesNotFound              = errors.Error("matches not found")
+	ErrMatchNotFound                = errors.Error("match not found")
+	ErrMatchExistsBetweenTheseUsers = errors.Error("match exists between these users")
 )
 
 type Match struct {
