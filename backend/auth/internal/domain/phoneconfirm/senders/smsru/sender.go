@@ -57,7 +57,7 @@ func (s *sender) Send(ctx context.Context, logger log.Logger, code phoneconfirm.
 		query["test"] = "1"
 		logger.Infof(
 			"Sending %v to %v",
-			errors.Token("code", code),
+			errors.Token("code", code.Value()),
 			errors.Token("phone", phoneE164),
 		)
 	}
