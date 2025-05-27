@@ -20,6 +20,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import RegistrationPage from './pages/RegistrationPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { SplashPage } from './pages/SplashPage';
+import VerificationPage from './pages/VerificationPage/VerificationPage';
 import { ThemeProvider } from './shared/lib/context/ThemeContext';
 
 const router = createBrowserRouter([
@@ -74,6 +75,10 @@ const router = createBrowserRouter([
   {
     path: '/oauth-callback',
     element: <OAuthCallback />,
+  },
+  {
+    path: 'verification',
+    element: <VerificationPage />,
   },
   {
     path: '*',
