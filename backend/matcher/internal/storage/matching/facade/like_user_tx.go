@@ -10,15 +10,22 @@ import (
 
 func (f *StorageFacadeMatching) LikeUserTx(ctx context.Context, like *matching.Like) error {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
-		if _, err := f.storage.GetLike(ctx, postgres.GetLikeOptions{
+		gottenLike, err := f.storage.GetLike(ctxTx, postgres.GetLikeOptions{
 			SenderID:   like.SenderID,
 			ReceiverID: like.ReceiverID,
 			IsWaiting:  true,
-		}); err != nil {
-			return errors.Wrap(matching.ErrWaitingLikeAlreadyExists, "storage.GetLike")
+		})
+		if err != nil {
+			if !errors.Is(err, matching.ErrLikeNotFound) {
+				return errors.Wrap(err, "storage.GetLike")
+			}
 		}
 
-		if err := f.storage.CreateLike(ctx, like); err != nil {
+		if gottenLike != nil {
+			return matching.ErrWaitingLikeAlreadyExists
+		}
+
+		if err = f.storage.CreateLike(ctxTx, like); err != nil {
 			return errors.Wrap(err, "storage.CreateLike")
 		}
 
