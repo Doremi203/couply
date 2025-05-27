@@ -216,7 +216,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
       //@ts-ignore
       await updateFilter(filterData).unwrap();
       await searchUsers({
-        ...filterData,
         offset: 0,
         limit: 20,
       }).unwrap();
