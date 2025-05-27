@@ -588,16 +588,18 @@ export const ProfileSlider = () => {
             )}
           </div>
 
-          <div className={styles.controls}>
-            <UndoButton onClick={handlePrevUser} />
-            <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
-            <LikeButton
-              onClick={handleLikeUser}
-              className={styles.likeButton}
-              likeClassName={styles.like}
-            />
-            <MessageButton onClick={handleMessageOpen} />
-          </div>
+          {!isAd && (
+            <div className={styles.controls}>
+              <UndoButton onClick={handlePrevUser} />
+              <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
+              <LikeButton
+                onClick={handleLikeUser}
+                className={styles.likeButton}
+                likeClassName={styles.like}
+              />
+              <MessageButton onClick={handleMessageOpen} />
+            </div>
+          )}
         </>
       )}
 
