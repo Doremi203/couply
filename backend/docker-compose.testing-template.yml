@@ -1,5 +1,5 @@
 services:
-  service:
+  {{SERVICE_NAME}}:
     image: cr.yandex/crpe9kgeql1v6b7gujfj/{{SERVICE_NAME}}-testing:{{SERVICE_VERSION}}
     restart: always
     environment:
