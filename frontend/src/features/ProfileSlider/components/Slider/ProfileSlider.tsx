@@ -141,7 +141,7 @@ export const ProfileSlider = () => {
   };
 
   useEffect(() => {
-    if (profiles.length > 0 && currentIndex >= profiles.length - 3 && hasMore) {
+    if (profiles.length > 0 && currentIndex >= profiles.length - PAGE_SIZE && hasMore) {
       loadMoreProfiles();
     }
   }, [currentIndex, profiles.length, hasMore, loadMoreProfiles]);
