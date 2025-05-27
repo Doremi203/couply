@@ -92,8 +92,10 @@ export const ProfileSlider = () => {
           setLoading(false);
 
           const sub = await getSubscription({}).unwrap();
-          setIsPremium(sub.status === 'SUBSCRIPTION_STATUS_ACTIVE');
-          if (isPremium) setMAX_UNDO_PER_DAY(10000);
+          const premiumStatus = sub.status === 'SUBSCRIPTION_STATUS_ACTIVE';
+          setIsPremium(premiumStatus);
+
+          setMAX_UNDO_PER_DAY(premiumStatus ? 10000 : 3);
         } else {
           setHasMore(false);
           setLoading(false);
@@ -262,30 +264,74 @@ export const ProfileSlider = () => {
     setCurrentPhotoIndex(0);
   };
 
+  // const handlePrevUser = () => {
+  //   const currentDate = new Date().toDateString();
+
+  //   if (currentDate !== lastUndoDate) {
+  //     setUndoCount(0);
+  //     setLastUndoDate(currentDate);
+  //     localStorage.setItem('undoDate', currentDate);
+  //   }
+
+  //   if (currentIndex === 0) return;
+
+  //   const newCount = undoCount + 1;
+
+  //   if (newCount >= MAX_UNDO_PER_DAY) {
+  //     if (!isPremium) {
+  //       setPremiumOpen(true);
+  //     }
+  //     if (isPremium || newCount <= MAX_UNDO_PER_DAY) {
+  //       setUndoCount(newCount);
+  //       localStorage.setItem('undoCount', newCount.toString());
+  //       setCurrentIndex(prev => prev - 1);
+  //       setCurrentPhotoIndex(0);
+  //     }
+  //     return;
+  //   }
+
+  //   setUndoCount(newCount);
+  //   localStorage.setItem('undoCount', newCount.toString());
+  //   setCurrentIndex(prev => prev - 1);
+  //   setCurrentPhotoIndex(0);
+  // };
+
   const handlePrevUser = () => {
     const currentDate = new Date().toDateString();
 
+    // Сбрасываем счетчик при смене дня и синхронизируем с localStorage
     if (currentDate !== lastUndoDate) {
       setUndoCount(0);
       setLastUndoDate(currentDate);
       localStorage.setItem('undoDate', currentDate);
-    }
-
-    if (undoCount >= MAX_UNDO_PER_DAY) {
-      setPremiumOpen(true);
-      return;
+      localStorage.setItem('undoCount', '0'); // Явный сброс счетчика
     }
 
     if (currentIndex === 0) return;
 
-    setUndoCount(prev => {
-      const newCount = prev + 1;
-      localStorage.setItem('undoCount', newCount.toString());
-      return newCount;
-    });
+    const newCount = undoCount + 1;
 
-    setCurrentIndex(prev => prev - 1);
-    setCurrentPhotoIndex(0);
+    if (isPremium) {
+      setUndoCount(newCount);
+      localStorage.setItem('undoCount', newCount.toString());
+      setCurrentIndex(prev => prev - 1);
+      setCurrentPhotoIndex(0);
+      return;
+    }
+
+    console.log(newCount);
+
+    if (newCount > MAX_UNDO_PER_DAY) {
+      setPremiumOpen(true);
+      return;
+    }
+
+    if (newCount <= MAX_UNDO_PER_DAY) {
+      setUndoCount(newCount);
+      localStorage.setItem('undoCount', newCount.toString());
+      setCurrentIndex(prev => prev - 1);
+      setCurrentPhotoIndex(0);
+    }
   };
 
   const handleNextPhoto = () => {
