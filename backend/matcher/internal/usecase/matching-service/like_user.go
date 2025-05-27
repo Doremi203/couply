@@ -61,10 +61,8 @@ func (p *likeProcess) handleNewLike(ctx context.Context, userID, targetUserID uu
 	if err := p.sqs.SendMessage(ctx, &messages.MatcherEvent{
 		Type:       messages.MatcherEvent_LIKE,
 		ReceiverId: targetUserID.String(),
-		Data: &messages.MatcherEvent_Like{
-			Like: &messages.Like{
-				MsgText: message,
-			},
+		Like: &messages.Like{
+			MsgText: message,
 		},
 	}); err != nil {
 		return nil, errors.Wrap(err, "sqs.SendMessageToMatchingQueue")
@@ -85,9 +83,7 @@ func (p *likeProcess) handleMutualLike(ctx context.Context, userID, targetUserID
 	if err = p.sqs.SendMessage(ctx, &messages.MatcherEvent{
 		Type:       messages.MatcherEvent_MATCH,
 		ReceiverId: targetUserID.String(),
-		Data: &messages.MatcherEvent_Match{
-			Match: &messages.Match{},
-		},
+		Match:      &messages.Match{},
 	}); err != nil {
 		return nil, errors.Wrap(err, "sqs.SendMessageToMatchingQueue")
 	}

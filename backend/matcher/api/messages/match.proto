@@ -12,10 +12,8 @@ message MatcherEvent {
   }
   Type type = 1;
   string receiver_id = 2;
-  oneof data {
-    Match match = 3;
-    Like like = 4;
-  }
+  Match match = 3;
+  Like like = 4;
 }
 
 message Match {}
