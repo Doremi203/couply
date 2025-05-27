@@ -18,6 +18,7 @@ type ClientWriter[T any] interface {
 
 type ClientReader[T any] interface {
 	ReadMessages(ctx context.Context, logger log.Logger, maxCount int) ([]Message[T], error)
+	DeleteMessage(msg Message[T]) error
 }
 
 func New[T any](cfg Config) (*client[T], error) {
@@ -93,6 +94,18 @@ func (c *client[T]) ReadMessages(ctx context.Context, logger log.Logger, maxCoun
 	}
 
 	return ret, nil
+}
+
+func (c *client[T]) DeleteMessage(msg Message[T]) error {
+	_, err := c.client.DeleteMessage(&sqs.DeleteMessageInput{
+		QueueUrl:      aws.String(c.config.QueueURL),
+		ReceiptHandle: aws.String(msg.ReceiptHandle),
+	})
+	if err != nil {
+		return errors.WrapFailf(err, "delete message %v", errors.Token("message_id", msg.ID))
+	}
+
+	return nil
 }
 
 type Message[T any] struct {

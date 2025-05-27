@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"encoding/json"
 	"io"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -29,9 +30,18 @@ type PushSender struct {
 }
 
 func (u PushSender) Send(ctx context.Context, r push.Recipient, p push.Push) error {
+	pushJson, err := json.Marshal(p)
+	if err != nil {
+		return errors.WrapFailf(
+			err,
+			"marshal %v",
+			errors.Token("push", p),
+		)
+	}
+
 	for _, sub := range r.Subscriptions {
 		var body []byte
-		resp, err := webpush.SendNotificationWithContext(ctx, []byte(p.Text), &webpush.Subscription{
+		resp, err := webpush.SendNotificationWithContext(ctx, pushJson, &webpush.Subscription{
 			Endpoint: string(sub.Endpoint),
 			Keys: webpush.Keys{
 				Auth:   sub.Credentials.AuthKey,
