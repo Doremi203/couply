@@ -66,6 +66,22 @@ func TestUseCase_GetUserByID(t *testing.T) {
 			},
 		},
 		{
+			name: "tx error",
+			setup: func(m mocks) {
+				m.userStorageFacade.EXPECT().GetUserTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111")).
+					Return(nil, user.ErrUserNotFound)
+			},
+			args: args{
+				in: &dto.GetUserByIDV1Request{
+					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+				},
+			},
+			want: nil,
+			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
+				return assert.ErrorIs(t, err, user.ErrUserNotFound)
+			},
+		},
+		{
 			name: "success",
 			setup: func(m mocks) {
 				m.userStorageFacade.EXPECT().GetUserTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111")).

@@ -1,3 +1,5 @@
+//go:generate mockgen -source=usecase.go -destination=../../mocks/usecase/search/facade_mock.go -typed
+
 package search_service
 
 import (
@@ -24,7 +26,7 @@ type searchStorageSetterFacade interface {
 
 type searchStorageGetterFacade interface {
 	GetFilterTx(ctx context.Context, userID uuid.UUID) (*search.Filter, error)
-	SearchUsersTx(ctx context.Context, userID uuid.UUID, page, limit uint64) ([]*user.User, map[uuid.UUID]float64, error)
+	SearchUsersTx(ctx context.Context, userID uuid.UUID, offset, limit uint64) ([]*user.User, map[uuid.UUID]float64, error)
 }
 
 type UseCase struct {

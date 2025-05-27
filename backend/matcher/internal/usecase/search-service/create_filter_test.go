@@ -3,8 +3,11 @@ package search_service
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
 	mock_search_service "github.com/Doremi203/couply/backend/matcher/internal/mocks/usecase/search"
@@ -14,16 +17,10 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-type Logger struct{}
-
-func (l *Logger) Infof(_ string, _ ...any) {}
-
-func (l *Logger) Error(_ error) {}
-
-func (l *Logger) Warn(_ error) {}
-
-func TestUseCase_AddView(t *testing.T) {
+func TestUseCase_CreateFilter(t *testing.T) {
 	t.Parallel()
+
+	now := time.Now()
 
 	type mocks struct {
 		searchStorageFacade *mock_search_service.MocksearchStorageFacade
@@ -31,14 +28,14 @@ func TestUseCase_AddView(t *testing.T) {
 	}
 	type args struct {
 		token token.Token
-		in    *dto.AddViewV1Request
+		in    *dto.CreateFilterV1Request
 	}
 	tests := []struct {
 		name     string
 		setup    func(mocks)
 		args     args
 		tokenErr bool
-		want     *dto.AddViewV1Response
+		want     *dto.CreateFilterV1Response
 		wantErr  assert.ErrorAssertionFunc
 	}{
 		{
@@ -51,16 +48,21 @@ func TestUseCase_AddView(t *testing.T) {
 		{
 			name: "tx error",
 			setup: func(m mocks) {
-				m.searchStorageFacade.EXPECT().CreateViewTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					uuid.MustParse("11111111-1111-1111-1111-111111111112")).
-					Return(user.ErrUserDoesntExist)
+				m.searchStorageFacade.EXPECT().CreateFilterTx(gomock.Any(), &search.Filter{
+					UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Goal:      common.GoalDating,
+					CreatedAt: now,
+					UpdatedAt: now,
+				}).Return(user.ErrUserDoesntExist)
 			},
 			args: args{
 				token: token.Token{
 					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				},
-				in: &dto.AddViewV1Request{
-					ViewedID: uuid.MustParse("11111111-1111-1111-1111-111111111112"),
+				in: &dto.CreateFilterV1Request{
+					Goal:      common.GoalDating,
+					CreatedAt: now,
+					UpdatedAt: now,
 				},
 			},
 			tokenErr: false,
@@ -72,21 +74,34 @@ func TestUseCase_AddView(t *testing.T) {
 		{
 			name: "success",
 			setup: func(m mocks) {
-				m.searchStorageFacade.EXPECT().CreateViewTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					uuid.MustParse("11111111-1111-1111-1111-111111111112")).
+				m.searchStorageFacade.EXPECT().CreateFilterTx(gomock.Any(), &search.Filter{
+					UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Goal:      common.GoalDating,
+					CreatedAt: now,
+					UpdatedAt: now,
+				}).
 					Return(nil)
 			},
 			args: args{
 				token: token.Token{
 					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				},
-				in: &dto.AddViewV1Request{
-					ViewedID: uuid.MustParse("11111111-1111-1111-1111-111111111112"),
+				in: &dto.CreateFilterV1Request{
+					Goal:      common.GoalDating,
+					CreatedAt: now,
+					UpdatedAt: now,
 				},
 			},
 			tokenErr: false,
-			want:     &dto.AddViewV1Response{},
-			wantErr:  assert.NoError,
+			want: &dto.CreateFilterV1Response{
+				Filter: &search.Filter{
+					UserID:    uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					Goal:      common.GoalDating,
+					CreatedAt: now,
+					UpdatedAt: now,
+				},
+			},
+			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -112,7 +127,7 @@ func TestUseCase_AddView(t *testing.T) {
 			if tt.tokenErr {
 				ctx = context.Background()
 			}
-			got, err := usecase.AddView(ctx, tt.args.in)
+			got, err := usecase.CreateFilter(ctx, tt.args.in)
 
 			tt.wantErr(t, err)
 			assert.Equal(t, tt.want, got)

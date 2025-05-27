@@ -28,6 +28,7 @@ type UpdateFilterV1Request struct {
 	Interest       *interest.Interest
 	OnlyVerified   bool
 	OnlyPremium    bool
+	UpdatedAt      time.Time
 }
 
 type UpdateFilterV1Response struct {
@@ -52,6 +53,7 @@ func PBToUpdateFilterRequest(req *desc.UpdateFilterV1Request) *UpdateFilterV1Req
 		Interest:       interest.PBToInterest(req.GetInterest()),
 		OnlyVerified:   req.GetOnlyVerified(),
 		OnlyPremium:    req.GetOnlyPremium(),
+		UpdatedAt:      time.Now(),
 	}
 }
 
@@ -80,6 +82,6 @@ func UpdateFilterRequestToFilter(req *UpdateFilterV1Request, userID uuid.UUID) *
 		Interest:       req.Interest,
 		OnlyVerified:   req.OnlyVerified,
 		OnlyPremium:    req.OnlyPremium,
-		UpdatedAt:      time.Now(),
+		UpdatedAt:      req.UpdatedAt,
 	}
 }

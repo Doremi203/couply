@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
-	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/search"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/search-service"
 	mock_search_service "github.com/Doremi203/couply/backend/matcher/internal/mocks/usecase/search"
 	mock_user "github.com/Doremi203/couply/backend/matcher/internal/mocks/user"
@@ -14,15 +14,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-type Logger struct{}
-
-func (l *Logger) Infof(_ string, _ ...any) {}
-
-func (l *Logger) Error(_ error) {}
-
-func (l *Logger) Warn(_ error) {}
-
-func TestUseCase_AddView(t *testing.T) {
+func TestUseCase_GetFilter(t *testing.T) {
 	t.Parallel()
 
 	type mocks struct {
@@ -31,14 +23,14 @@ func TestUseCase_AddView(t *testing.T) {
 	}
 	type args struct {
 		token token.Token
-		in    *dto.AddViewV1Request
+		in    *dto.GetFilterV1Request
 	}
 	tests := []struct {
 		name     string
 		setup    func(mocks)
 		args     args
 		tokenErr bool
-		want     *dto.AddViewV1Response
+		want     *dto.GetFilterV1Response
 		wantErr  assert.ErrorAssertionFunc
 	}{
 		{
@@ -51,42 +43,44 @@ func TestUseCase_AddView(t *testing.T) {
 		{
 			name: "tx error",
 			setup: func(m mocks) {
-				m.searchStorageFacade.EXPECT().CreateViewTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					uuid.MustParse("11111111-1111-1111-1111-111111111112")).
-					Return(user.ErrUserDoesntExist)
+				m.searchStorageFacade.EXPECT().GetFilterTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111")).
+					Return(&search.Filter{
+						UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					}, search.ErrFilterNotFound)
 			},
 			args: args{
 				token: token.Token{
 					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				},
-				in: &dto.AddViewV1Request{
-					ViewedID: uuid.MustParse("11111111-1111-1111-1111-111111111112"),
-				},
+				in: &dto.GetFilterV1Request{},
 			},
 			tokenErr: false,
 			want:     nil,
 			wantErr: func(t assert.TestingT, err error, i ...interface{}) bool {
-				return assert.ErrorIs(t, err, user.ErrUserDoesntExist)
+				return assert.ErrorIs(t, err, search.ErrFilterNotFound)
 			},
 		},
 		{
 			name: "success",
 			setup: func(m mocks) {
-				m.searchStorageFacade.EXPECT().CreateViewTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111"),
-					uuid.MustParse("11111111-1111-1111-1111-111111111112")).
-					Return(nil)
+				m.searchStorageFacade.EXPECT().GetFilterTx(gomock.Any(), uuid.MustParse("11111111-1111-1111-1111-111111111111")).
+					Return(&search.Filter{
+						UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+					}, nil)
 			},
 			args: args{
 				token: token.Token{
 					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 				},
-				in: &dto.AddViewV1Request{
-					ViewedID: uuid.MustParse("11111111-1111-1111-1111-111111111112"),
-				},
+				in: &dto.GetFilterV1Request{},
 			},
 			tokenErr: false,
-			want:     &dto.AddViewV1Response{},
-			wantErr:  assert.NoError,
+			want: &dto.GetFilterV1Response{
+				Filter: &search.Filter{
+					UserID: uuid.MustParse("11111111-1111-1111-1111-111111111111"),
+				},
+			},
+			wantErr: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -112,7 +106,7 @@ func TestUseCase_AddView(t *testing.T) {
 			if tt.tokenErr {
 				ctx = context.Background()
 			}
-			got, err := usecase.AddView(ctx, tt.args.in)
+			got, err := usecase.GetFilter(ctx, tt.args.in)
 
 			tt.wantErr(t, err)
 			assert.Equal(t, tt.want, got)

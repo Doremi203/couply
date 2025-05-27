@@ -28,6 +28,8 @@ type CreateFilterV1Request struct {
 	Interest       *interest.Interest
 	OnlyVerified   bool
 	OnlyPremium    bool
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }
 
 type CreateFilterV1Response struct {
@@ -35,6 +37,8 @@ type CreateFilterV1Response struct {
 }
 
 func PBToCreateFilterRequest(req *desc.CreateFilterV1Request) *CreateFilterV1Request {
+	now := time.Now()
+
 	return &CreateFilterV1Request{
 		GenderPriority: search.PBToGenderPriority(req.GetGenderPriority()),
 		MinAge:         req.GetMinAge(),
@@ -52,6 +56,8 @@ func PBToCreateFilterRequest(req *desc.CreateFilterV1Request) *CreateFilterV1Req
 		Interest:       interest.PBToInterest(req.GetInterest()),
 		OnlyVerified:   req.GetOnlyVerified(),
 		OnlyPremium:    req.GetOnlyPremium(),
+		CreatedAt:      now,
+		UpdatedAt:      now,
 	}
 }
 
@@ -80,7 +86,7 @@ func CreateFilterRequestToFilter(req *CreateFilterV1Request, userID uuid.UUID) *
 		Interest:       req.Interest,
 		OnlyVerified:   req.OnlyVerified,
 		OnlyPremium:    req.OnlyPremium,
-		CreatedAt:      time.Now(),
-		UpdatedAt:      time.Now(),
+		CreatedAt:      req.CreatedAt,
+		UpdatedAt:      req.UpdatedAt,
 	}
 }
