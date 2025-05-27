@@ -220,6 +220,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
         limit: 20,
       }).unwrap();
       onClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error updating filters:', error);
     }
