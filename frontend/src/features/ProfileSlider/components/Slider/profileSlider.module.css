@@ -63,7 +63,9 @@
   height: 100%;
   width: 100%;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.7) 0%, transparent 100%);
+  transition: opacity 0.3s ease;
 }
+
 
 .controls button {
   padding: 0.625rem 1.25rem;
@@ -531,4 +533,22 @@
     height: 100%;
     align-items: stretch;
   }
+}
+
+.adImage {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 2.188rem;
+  margin-top: 10%;
+  background: none;
+  opacity: 1;
+}
+
+.adCard {
+  max-height: 90%;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: -0px;
 }

@@ -76,6 +76,70 @@ export const ProfileSlider = () => {
 
   const [MAX_UNDO_PER_DAY, setMAX_UNDO_PER_DAY] = useState(3);
 
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set());
+
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [translateX, setTranslateX] = useState(0);
+  const [opacity, setOpacity] = useState(1);
+
+  // Move currentProfile here, before useEffect and before preloadNextImages
+  const currentProfile = showingAd
+    ? adProfiles[adIndex % adProfiles.length]
+    : currentIndex >= 0 && currentIndex <= profiles.length - 1
+      ? profiles[currentIndex]
+      : null;
+
+  // Move preloadImage and preloadNextImages below currentProfile
+  const preloadImage = (url: string) => {
+    if (loadedImages.has(url) || loadingImages.has(url)) return;
+
+    setLoadingImages(prev => new Set(prev).add(url));
+    const img = new Image();
+    img.src = url;
+    img.onload = () => {
+      setLoadedImages(prev => new Set(prev).add(url));
+      setLoadingImages(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(url);
+        return newSet;
+      });
+    };
+  };
+
+  const preloadNextImages = () => {
+    if (!currentProfile || showingAd) return;
+
+    // Preload current profile's next photos
+    //@ts-ignore
+    const photos = currentProfile.user?.photos || [];
+    const nextPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+    if (photos[nextPhotoIndex]) {
+      preloadImage(photos[nextPhotoIndex].url);
+    }
+
+    // Preload next profile's first photo
+    const nextProfileIndex = currentIndex + 1;
+    if (nextProfileIndex < profiles.length) {
+      //@ts-ignore
+      const nextProfilePhotos = profiles[nextProfileIndex]?.user?.photos || [];
+      if (nextProfilePhotos[0]) {
+        preloadImage(nextProfilePhotos[0].url);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (currentProfile && !showingAd) {
+      //@ts-ignore
+      const currentPhotoUrl = currentProfile.user?.photos?.[currentPhotoIndex]?.url;
+      if (currentPhotoUrl) {
+        preloadImage(currentPhotoUrl);
+      }
+      preloadNextImages();
+    }
+  }, [currentProfile, currentPhotoIndex, currentIndex, showingAd, preloadNextImages, preloadImage]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -364,10 +428,6 @@ export const ProfileSlider = () => {
     );
   };
 
-  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
-  const [translateX, setTranslateX] = useState(0);
-  const [opacity, setOpacity] = useState(1);
-
   const handlers = useSwipeable({
     onSwiping: e => {
       if (showingAd && timerActive) return;
@@ -413,12 +473,6 @@ export const ProfileSlider = () => {
       }
     };
   }, []);
-
-  const currentProfile = showingAd
-    ? adProfiles[adIndex % adProfiles.length]
-    : currentIndex >= 0 && currentIndex <= profiles.length - 1
-      ? profiles[currentIndex]
-      : null;
 
   useEffect(() => {
     if (!currentProfile && !showingAd && !loading && hasMore) {
@@ -571,7 +625,7 @@ export const ProfileSlider = () => {
       {currentProfile && (
         <>
           <div
-            className={styles.profileCard}
+            className={`${styles.profileCard} ${isAd ? styles.adCard : ''}`}
             {...handlers}
             onClick={handleProfileClick}
             style={{
@@ -588,10 +642,18 @@ export const ProfileSlider = () => {
             <img
               //@ts-ignore
               src={currentProfile.user?.photos?.[currentPhotoIndex]?.url || ''}
-              // src="man1.jpg"
               //@ts-ignore
               alt={currentProfile.name}
-              className={styles.profileImage}
+              className={
+                isAd
+                  ? styles.adImage
+                  : `${styles.profileImage} ${
+                      //@ts-ignore
+                      !loadedImages.has(currentProfile.user?.photos?.[currentPhotoIndex]?.url)
+                        ? styles.loading
+                        : ''
+                    }`
+              }
               draggable="false"
             />
 

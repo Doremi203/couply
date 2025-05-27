@@ -6,7 +6,6 @@ import { useConfirmPhotoMutation } from '../../entities/user';
 
 const VerificationPage: React.FC = () => {
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [uploadUrl, setUploadUrl] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +42,6 @@ const VerificationPage: React.FC = () => {
       if (!getUrlResponse.ok) throw new Error('Ошибка получения URL загрузки');
 
       const { url } = await getUrlResponse.json();
-      setUploadUrl(url);
 
       // 2. Загружаем файл напрямую в S3
       await uploadFile({
@@ -53,12 +51,14 @@ const VerificationPage: React.FC = () => {
 
       // 3. Подтверждаем загрузку фото
       await confirmPhoto({
+        //@ts-ignore
         photoUrls: [url.split('?')[0]], // Убираем параметры из URL
         isVerificationPhoto: true,
       }).unwrap();
 
       setStatus('Фото успешно отправлено на верификацию!');
       setTimeout(() => navigate('/profile'), 2000);
+      //@ts-ignore
     } catch (error) {
       // console.error('Upload failed:', error);
       // setStatus('Ошибка при загрузке фото');
