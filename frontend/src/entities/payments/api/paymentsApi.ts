@@ -1,5 +1,4 @@
 import { paymentsApi } from '../../../shared/api/baseApi';
-import { blockerApiExtended } from '../../blocker';
 
 import {
   CreatePaymentResponse,

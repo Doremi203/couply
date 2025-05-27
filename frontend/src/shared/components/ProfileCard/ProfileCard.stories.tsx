@@ -79,6 +79,7 @@ const mockLike = {
 
 export const Default: Story = {
   args: {
+    //@ts-ignore
     profile: mockUserData,
     like: mockLike,
     onClick: () => console.log('Card clicked'),
@@ -88,6 +89,7 @@ export const Default: Story = {
 
 export const WithoutMessage: Story = {
   args: {
+    //@ts-ignore
     profile: mockUserData,
     like: {
       ...mockLike,
@@ -100,6 +102,7 @@ export const WithoutMessage: Story = {
 
 export const WithoutLikeButton: Story = {
   args: {
+    //@ts-ignore
     profile: mockUserData,
     like: mockLike,
     onClick: () => console.log('Card clicked'),
@@ -108,6 +111,7 @@ export const WithoutLikeButton: Story = {
 
 export const WithCustomClassName: Story = {
   args: {
+    //@ts-ignore
     profile: mockUserData,
     like: mockLike,
     onClick: () => console.log('Card clicked'),

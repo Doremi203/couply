@@ -1,5 +1,5 @@
 import { paymentsApi } from '../../../shared/api/baseApi';
-import { blockerApiExtended } from '../../blocker';
+
 import { CancelRequest, CreateSubRequst, GetSubscriptionResponse } from '../types';
 
 export const subscriptionApi = paymentsApi.injectEndpoints({

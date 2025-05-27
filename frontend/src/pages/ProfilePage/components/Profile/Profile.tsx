@@ -28,7 +28,6 @@ export const Profile: React.FC<ProfileViewProps> = ({
   onVisibilityToggle,
   onActivityClick,
   onPreviewClick,
-  onVerificationRequest,
   isPremium,
 }) => {
   const navigate = useNavigate();
@@ -51,7 +50,6 @@ export const Profile: React.FC<ProfileViewProps> = ({
         <ProfileInfo
           profileData={profileData}
           isVerified={isVerified}
-          onVerificationRequest={onVerificationRequest}
           onPreviewClick={onPreviewClick}
           isPremium={isPremium}
         />

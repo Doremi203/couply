@@ -1,7 +1,7 @@
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useSwipeable } from 'react-swipeable';
 
 import { useLikeUserMutation } from '../../../../entities/matches';
@@ -391,6 +391,7 @@ export const ProfileSlider = () => {
   const handleProfileClick = (e: React.MouseEvent<HTMLDivElement>) => {
     //@ts-ignore
     if (showingAd) {
+      //@ts-ignore
       window.open(currentProfile.user.adLink, '_blank');
       return;
     }
@@ -542,6 +543,7 @@ export const ProfileSlider = () => {
               //@ts-ignore
               src={currentProfile.user?.photos?.[currentPhotoIndex]?.url || ''}
               // src="man1.jpg"
+              //@ts-ignore
               alt={currentProfile.name}
               className={styles.profileImage}
               draggable="false"

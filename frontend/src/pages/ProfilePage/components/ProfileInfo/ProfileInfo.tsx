@@ -9,7 +9,6 @@ import styles from './profileInfo.module.css';
 interface ProfileInfoProps {
   profileData: ProfileData;
   isVerified: boolean;
-  _onVerificationRequest: () => void;
   onPreviewClick: () => void;
   isPremium: boolean;
 }
