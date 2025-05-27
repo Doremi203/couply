@@ -40,3 +40,19 @@ func (s PushSubscription) Unsubscribe(ctx context.Context, subscription push.Sub
 
 	return nil
 }
+
+func (s PushSubscription) GetRecipient(ctx context.Context, recipientID push.RecipientID) (push.Recipient, error) {
+	subs, err := s.pushRepo.GetSubscriptionsByRecipientID(ctx, recipientID)
+	if err != nil {
+		return push.Recipient{}, errors.WrapFailf(
+			err,
+			"delete push subscription for recipient with %v",
+			errors.Token("id", recipientID),
+		)
+	}
+
+	return push.Recipient{
+		ID:            recipientID,
+		Subscriptions: subs,
+	}, nil
+}

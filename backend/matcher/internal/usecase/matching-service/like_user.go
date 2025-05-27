@@ -4,6 +4,8 @@ import (
 	"context"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
+	"github.com/Doremi203/couply/backend/common/libs/sqs"
+	"github.com/Doremi203/couply/backend/matcher/gen/api/messages"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
@@ -17,10 +19,10 @@ type likeProcessor interface {
 
 type likeProcess struct {
 	storage matchingStorageFacade
-	sqs     sqsClient
+	sqs     sqs.ClientWriter[*messages.MatcherEvent]
 }
 
-func newLikeProcessor(storage matchingStorageFacade, client sqsClient) likeProcessor {
+func newLikeProcessor(storage matchingStorageFacade, client sqs.ClientWriter[*messages.MatcherEvent]) likeProcessor {
 	return &likeProcess{storage: storage, sqs: client}
 }
 
@@ -56,9 +58,14 @@ func (p *likeProcess) handleNewLike(ctx context.Context, userID, targetUserID uu
 		return nil, errors.Wrap(err, "storage.LikeUserTx")
 	}
 
-	if _, err := p.sqs.SendMessageToMatchingQueue(&matching.LikeMessage{
-		ReceiverID: targetUserID,
-		Message:    message,
+	if err := p.sqs.SendMessage(ctx, &messages.MatcherEvent{
+		Type:       messages.MatcherEvent_LIKE,
+		ReceiverId: targetUserID.String(),
+		Data: &messages.MatcherEvent_Like{
+			Like: &messages.Like{
+				MsgText: message,
+			},
+		},
 	}); err != nil {
 		return nil, errors.Wrap(err, "sqs.SendMessageToMatchingQueue")
 	}
@@ -75,16 +82,12 @@ func (p *likeProcess) handleMutualLike(ctx context.Context, userID, targetUserID
 		return nil, errors.Wrap(err, "storage.HandleMutualLikeTx")
 	}
 
-	if _, err = p.sqs.SendMessageToMatchingQueue(&matching.LikeMessage{
-		ReceiverID: targetUserID,
-		Message:    message,
-	}); err != nil {
-		return nil, errors.Wrap(err, "sqs.SendMessageToMatchingQueue")
-	}
-
-	if _, err = p.sqs.SendMessageToMatchingQueue(&matching.MatchMessage{
-		FirstUserID:  userID,
-		SecondUserID: targetUserID,
+	if err = p.sqs.SendMessage(ctx, &messages.MatcherEvent{
+		Type:       messages.MatcherEvent_MATCH,
+		ReceiverId: targetUserID.String(),
+		Data: &messages.MatcherEvent_Match{
+			Match: &messages.Match{},
+		},
 	}); err != nil {
 		return nil, errors.Wrap(err, "sqs.SendMessageToMatchingQueue")
 	}

@@ -56,7 +56,9 @@ func (s *adminService) SendPushV1(
 
 	for _, recipient := range recipients {
 		err = s.pushSender.Send(ctx, recipient, push.Push{
-			Text: req.GetText(),
+			Title: "Couply",
+			Body:  req.GetText(),
+			Icon:  "/logo.png",
 		})
 		if err != nil {
 			s.logger.Error(errors.Errorf(

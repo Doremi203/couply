@@ -1,5 +1,8 @@
 package push
 
 type Push struct {
-	Text string
+	Title string `json:"title"`
+	Body  string `json:"body"`
+	Url   string `json:"url"`
+	Icon  string `json:"icon"`
 }
