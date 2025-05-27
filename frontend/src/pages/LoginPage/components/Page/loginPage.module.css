@@ -80,7 +80,11 @@
 .regLink {
   text-align: center;
   font-size: 14px;
-  margin-top: 100px;
+  margin-top: 10px;
+  width: 70%;
+  background-color: rgb(194, 194, 194);
+  font-weight: 400;
+  height: 70%;
 }
 
 /**/
