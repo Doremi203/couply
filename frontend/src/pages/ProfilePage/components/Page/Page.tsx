@@ -26,7 +26,7 @@ interface ProfilePageProps {
 interface PhotoItem {
   file: File;
   url: string;
-  orderNumber: number;
+  order_number: number;
 }
 
 export const ProfilePage: React.FC<ProfilePageProps> = ({
@@ -103,13 +103,13 @@ export const ProfilePage: React.FC<ProfilePageProps> = ({
     const currentPhotos = [...(profileData.photos || [])];
 
     // Get the next order number
-    const orderNumber = newPhotoFiles.length;
+    const order_number = newPhotoFiles.length;
 
     // Add to newPhotoFiles for later upload
     const newPhotoItem = {
       file,
       url: fileUrl,
-      orderNumber,
+      order_number,
     };
     setNewPhotoFiles(prev => [...prev, newPhotoItem]);
 

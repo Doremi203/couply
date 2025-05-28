@@ -34,11 +34,51 @@ const VerificationPage: React.FC = () => {
         bucket: 'couply-verification-photos',
       };
 
-      const getUrlResponse = await fetch('https://functions.yandexcloud.net/d4efh4n0sevvo2f928ri', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+      // Функция для выполнения запроса с ретраем
+      const fetchWithRetry = async (url: string, options: RequestInit, maxRetries = 3) => {
+        let retries = 0;
+
+        while (retries < maxRetries) {
+          try {
+            const response = await fetch(url, options);
+
+            // Если ответ 500, пробуем снова
+            if (response.status === 500 || response.status === 504) {
+              retries++;
+              console.log(`Получен статус 500, попытка ${retries} из ${maxRetries}`);
+
+              // Экспоненциальная задержка между попытками (1s, 2s, 4s...)
+              const delay = 1000 * Math.pow(2, retries - 1);
+              await new Promise(resolve => setTimeout(resolve, delay));
+              continue;
+            }
+
+            return response;
+          } catch (error) {
+            retries++;
+            console.error(`Ошибка запроса, попытка ${retries} из ${maxRetries}:`, error);
+
+            if (retries >= maxRetries) {
+              throw error;
+            }
+
+            // Задержка перед следующей попыткой
+            const delay = 1000 * Math.pow(2, retries - 1);
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+        }
+
+        throw new Error('Превышено максимальное количество попыток');
+      };
+
+      const getUrlResponse = await fetchWithRetry(
+        'https://functions.yandexcloud.net/d4efh4n0sevvo2f928ri',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        },
+      );
 
       if (!getUrlResponse.ok) throw new Error('Ошибка получения URL загрузки');
 
