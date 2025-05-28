@@ -8,12 +8,7 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 )
 
-const (
-	idData       = "id"
-	usernameData = "username"
-)
-
-func (u UseCase) SetTelegramData(ctx context.Context, authData map[string]string) (telegram.Data, error) {
+func (u UseCase) SetTelegramData(ctx context.Context, _ int64, _ string, _ string, id int64, _ string, username string) (telegram.Data, error) {
 	userID, err := token.GetUserIDFromContext(ctx)
 	if err != nil {
 		return telegram.Data{}, errors.Wrap(err, "token.GetUserIDFromContext")
@@ -21,8 +16,8 @@ func (u UseCase) SetTelegramData(ctx context.Context, authData map[string]string
 
 	tgData := telegram.Data{
 		UserID:           userID,
-		TelegramID:       authData[idData],
-		TelegramUsername: authData[usernameData],
+		TelegramID:       id,
+		TelegramUsername: username,
 	}
 
 	err = u.telegramRepo.UpsertTelegramData(ctx, tgData)

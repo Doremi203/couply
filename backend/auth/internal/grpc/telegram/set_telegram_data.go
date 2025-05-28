@@ -19,7 +19,7 @@ func (s *grpcService) SetTelegramDataV1(
 		return nil, status.Error(codes.Unauthenticated, "missing token")
 	}
 
-	code, err := s.useCase.SetTelegramData(ctx, req.GetAuthData())
+	code, err := s.useCase.SetTelegramData(ctx, req.GetAuthDate(), req.GetFirstName(), req.GetHash(), req.GetId(), req.GetPhotoUrl(), req.GetUsername())
 	switch {
 	case err != nil:
 		s.logger.Error(errors.Wrap(err, "set telegram data v1 failed"))
