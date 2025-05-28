@@ -4,6 +4,11 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import { CircularProgress, Switch } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
+import {
+  useGetSubscriptionMutation,
+  useCancelSubscriptionMutation,
+} from '../../../../entities/subscription/api/subscriptionApi.ts';
+import ConfirmModal from '../../../../shared/components/ConfirmModal';
 import { useTheme } from '../../../../shared/lib/context/ThemeContext';
 import { usePushNotificationPermission } from '../../../../shared/lib/hooks/usePushNotificationPermission';
 import { usePushSubscription } from '../../../../shared/lib/hooks/usePushSubscription';
@@ -11,13 +16,9 @@ import {
   sendSubscriptionToServer,
   unsubscribeFromPushNotifications,
 } from '../../../../shared/lib/services/PushNotificationService.ts';
-import ConfirmModal from '../../../../shared/components/ConfirmModal';
 
 import styles from './notificationSettings.module.css';
-import {
-  useGetSubscriptionMutation,
-  useCancelSubscriptionMutation,
-} from '../../../../entities/subscription/api/subscriptionApi.ts';
+
 
 interface NotificationOption {
   id: string;

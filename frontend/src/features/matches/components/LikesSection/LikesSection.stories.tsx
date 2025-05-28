@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { LikesSection } from './LikesSection';
+
 import {
   Gender,
   Goal,
@@ -17,6 +17,8 @@ import {
   PersonalityTraits,
   Pets,
 } from '../../../../entities/user/api/constants';
+
+import { LikesSection } from './LikesSection';
 
 const meta = {
   title: 'Features/Matches/LikesSection',

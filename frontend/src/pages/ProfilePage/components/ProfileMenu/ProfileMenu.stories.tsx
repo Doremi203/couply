@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
+
+import * as userHooks from '../../../../entities/user';
+
 import { ProfileMenu } from './ProfileMenu';
 
 // Mock the useDeleteUserMutation hook
-import * as userHooks from '../../../../entities/user';
 // Override the hook implementation for Storybook
 (userHooks as any).useDeleteUserMutation = () => [() => Promise.resolve(), { isLoading: false }];
 

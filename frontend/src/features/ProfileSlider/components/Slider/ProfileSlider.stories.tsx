@@ -1,13 +1,15 @@
+import { configureStore } from '@reduxjs/toolkit';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import { ProfileSlider } from './ProfileSlider';
+
 
 // Mock the required hooks and APIs
 import * as matchesApi from '../../../../entities/matches';
 import * as searchApi from '../../../../entities/search/api/searchApi';
 import * as subscriptionApi from '../../../../entities/subscription/api/subscriptionApi';
 import * as userActions from '../../../../entities/user';
+
+import { ProfileSlider } from './ProfileSlider';
 
 // Mock Redux store
 const mockStore = configureStore({

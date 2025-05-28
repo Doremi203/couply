@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { ProfileCard } from './ProfileCard';
+
 import {
   Gender,
   Goal,
@@ -9,6 +9,8 @@ import {
   Alcohol,
   Smoking,
 } from '../../../entities/user/api/constants';
+
+import { ProfileCard } from './ProfileCard';
 
 const meta = {
   title: 'Shared/ProfileCard',

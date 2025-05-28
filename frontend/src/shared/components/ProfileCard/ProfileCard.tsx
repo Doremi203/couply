@@ -1,5 +1,11 @@
 import SmsOutlinedIcon from '@mui/icons-material/SmsOutlined';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import {
+  selectShowMatchModal,
+  setShowMatchModal,
+} from '../../../entities/matches/model/matchesSlice';
 import { Like } from '../../../entities/matches/types';
 import { useGetUserMutation } from '../../../entities/user';
 import { UserData } from '../../../entities/user/types';
@@ -8,11 +14,6 @@ import { LikeButton } from '../LikeButton';
 import { MessageModal } from '../MessageModal/MessageModal';
 
 import styles from './profileCard.module.css';
-import {
-  selectShowMatchModal,
-  setShowMatchModal,
-} from '../../../entities/matches/model/matchesSlice';
-import { useDispatch, useSelector } from 'react-redux';
 
 export interface ProfileCardProps {
   profile: UserData;

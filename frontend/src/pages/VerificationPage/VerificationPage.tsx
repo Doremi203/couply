@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageHeader from '../../shared/components/PageHeader';
+
 import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
 import { useConfirmPhotoMutation } from '../../entities/user';
+import PageHeader from '../../shared/components/PageHeader';
 
 const VerificationPage: React.FC = () => {
   const [photoFile, setPhotoFile] = useState<File | null>(null);

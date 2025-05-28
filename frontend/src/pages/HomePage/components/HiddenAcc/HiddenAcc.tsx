@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useEffect, useState } from 'react';
+
 import { useGetUserMutation, useUpdateUserMutation } from '../../../../entities/user';
 import { CustomButton } from '../../../../shared/components/CustomButton';
 
