@@ -6,7 +6,7 @@ export const telegramApi = baseApi.injectEndpoints({
       query: user => ({
         url: '/v1/telegram/data/set',
         method: 'POST',
-        body: JSON.stringify(user),
+        body: user,
       }),
       // invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
