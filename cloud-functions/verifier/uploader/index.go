@@ -66,9 +66,25 @@ var AllowedBuckets = []string{
 
 func Handler(ctx context.Context, req Request) (Response, error) {
 	fmt.Println("request: ", req)
+
+	corsHeaders := map[string]string{
+		"Access-Control-Allow-Origin":  "*",
+		"Access-Control-Allow-Methods": "*",
+		"Access-Control-Allow-Headers": "*",
+	}
+
+	if req.HttpMethod == "OPTIONS" {
+		return Response{
+			StatusCode: 200,
+			Headers:    corsHeaders,
+			Body:       "",
+		}, nil
+	}
+
 	if req.HttpMethod != "POST" {
 		return Response{
 			StatusCode: 405,
+			Headers:    corsHeaders,
 			Body:       errBody("method Not Allowed"),
 		}, nil
 	}
@@ -78,6 +94,7 @@ func Handler(ctx context.Context, req Request) (Response, error) {
 		fmt.Println("failed to unmarshal request body:", err)
 		return Response{
 			StatusCode: 400,
+			Headers:    corsHeaders,
 			Body:       errBody("bad request"),
 		}, nil
 	}
@@ -85,6 +102,7 @@ func Handler(ctx context.Context, req Request) (Response, error) {
 		fmt.Println("bucket not allowed:", body.Bucket)
 		return Response{
 			StatusCode: 403,
+			Headers:    corsHeaders,
 			Body:       errBody("forbidden: bucket not allowed"),
 		}, nil
 	}
@@ -104,6 +122,7 @@ func Handler(ctx context.Context, req Request) (Response, error) {
 	if err != nil {
 		fmt.Println(err)
 		return Response{
+			Headers:    corsHeaders,
 			StatusCode: 401,
 		}, nil
 	}
@@ -132,6 +151,7 @@ func Handler(ctx context.Context, req Request) (Response, error) {
 
 	return Response{
 		StatusCode: 200,
+		Headers:    corsHeaders,
 		Body:       string(respBody),
 	}, nil
 }
