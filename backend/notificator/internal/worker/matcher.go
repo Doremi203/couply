@@ -42,7 +42,6 @@ func (p *MatcherEventProcessor) ProcessMessages(ctx context.Context) error {
 			p.logger.Error(errors.WrapFail(err, "read messages batch from sqs"))
 			continue
 		}
-		p.logger.Infof("read %d messages from sqs", len(batch))
 
 		for _, msg := range batch {
 			err := p.processMessage(ctx, msg)
