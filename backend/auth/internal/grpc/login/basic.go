@@ -19,7 +19,7 @@ func (s *grpcService) BasicLoginV1(
 ) (*logingprc.BasicLoginResponseV1, error) {
 	if err := req.Validate(); err != nil {
 		s.logger.Warn(errors.Wrap(err, "invalid request"))
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	pair, err := s.loginUseCase.BasicV1(ctx, user.Email(req.GetEmail()), pswrd.Password(req.GetPassword()))

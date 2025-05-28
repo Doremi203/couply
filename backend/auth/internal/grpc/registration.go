@@ -59,7 +59,7 @@ func (s *registrationService) BasicRegisterV1(
 ) (*registration.BasicRegisterResponseV1, error) {
 	if err := req.Validate(); err != nil {
 		s.log.Warn(errors.Wrap(err, "invalid request"))
-		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	pass, err := pswrd.NewPassword(req.GetPassword())
