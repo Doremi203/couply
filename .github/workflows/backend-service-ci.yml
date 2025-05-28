@@ -19,7 +19,7 @@ permissions:
 jobs:
   codegen:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/codegen
