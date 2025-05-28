@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package couply;
+package user_service.v1;
 
 service UserService {
   rpc SetUserVerificationStatusByIDV1(SetUserVerificationStatusByIDV1Request)

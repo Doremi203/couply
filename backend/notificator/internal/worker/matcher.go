@@ -118,6 +118,7 @@ func (p *MatcherEventProcessor) processMessage(
 		Title: "Couply",
 		Body:  text,
 		Icon:  "/logo.png",
+		Url:   "/likes",
 	})
 	if err != nil {
 		return errors.WrapFailf(

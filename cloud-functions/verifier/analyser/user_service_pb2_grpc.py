@@ -15,7 +15,7 @@ class UserServiceStub(object):
             channel: A grpc.Channel.
         """
         self.SetUserVerificationStatusByIDV1 = channel.unary_unary(
-                '/couply.UserService/SetUserVerificationStatusByIDV1',
+                '/user_service.v1.UserService/SetUserVerificationStatusByIDV1',
                 request_serializer=user__service__pb2.SetUserVerificationStatusByIDV1Request.SerializeToString,
                 response_deserializer=user__service__pb2.SetUserVerificationStatusByIDV1Response.FromString,
                 )
@@ -40,7 +40,7 @@ def add_UserServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'couply.UserService', rpc_method_handlers)
+            'user_service.v1.UserService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -59,7 +59,7 @@ class UserService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/couply.UserService/SetUserVerificationStatusByIDV1',
+        return grpc.experimental.unary_unary(request, target, '/user_service.v1.UserService/SetUserVerificationStatusByIDV1',
             user__service__pb2.SetUserVerificationStatusByIDV1Request.SerializeToString,
             user__service__pb2.SetUserVerificationStatusByIDV1Response.FromString,
             options, channel_credentials,
