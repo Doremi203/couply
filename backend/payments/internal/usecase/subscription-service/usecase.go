@@ -1,3 +1,5 @@
+//go:generate mockgen -source=usecase.go -destination=../../mocks/usecase/subscription/facade_mock.go -typed
+
 package subscription_service
 
 import (

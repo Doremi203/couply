@@ -1,3 +1,5 @@
+//go:generate mockgen -source=usecase.go -destination=../../mocks/usecase/payment/facade_mock.go -typed
+
 package payment_service
 
 import (

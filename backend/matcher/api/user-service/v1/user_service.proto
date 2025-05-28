@@ -236,7 +236,8 @@ message CreateUserV1Request {
   ];
   int32 height = 10 [
     (google.api.field_behavior) = REQUIRED,
-    (validate.rules).int32.gt = 0
+    (validate.rules).int32.gte = 100,
+    (validate.rules).int32.lte = 250
   ];
   common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
@@ -289,7 +290,8 @@ message UpdateUserV1Request {
     (validate.rules).enum.defined_only = true
   ];
   int32 height = 10 [
-    (validate.rules).int32.gt = 0
+    (validate.rules).int32.gte = 100,
+    (validate.rules).int32.lte = 250
   ];
   common.v1.Education education = 11 [
     (validate.rules).enum.defined_only = true
@@ -345,7 +347,8 @@ message UpdateUserByIDV1Request {
     (validate.rules).enum.defined_only = true
   ];
   int32 height = 11 [
-    (validate.rules).int32.gt = 0
+    (validate.rules).int32.gte = 100,
+    (validate.rules).int32.lte = 250
   ];
   common.v1.Education education = 12 [
     (validate.rules).enum.defined_only = true

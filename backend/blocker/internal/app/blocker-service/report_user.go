@@ -17,7 +17,12 @@ func (i *Implementation) ReportUserV1(ctx context.Context, in *desc.ReportUserV1
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	response, err := i.usecase.ReportUser(ctx, dto.PBToReportUserRequest(in))
+	req, err := dto.PBToReportUserRequest(in)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	response, err := i.usecase.ReportUser(ctx, req)
 	switch {
 	case errors.Is(err, blocker.ErrDuplicateUserBlock):
 		return nil, status.Error(codes.FailedPrecondition, err.Error())
