@@ -61,3 +61,17 @@
   height: 10px;
   background-color: blue;
 }
+
+.navBarContainer,
+.navBarContainer * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navItem:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.navItem:active {
+  background: none;
+}
