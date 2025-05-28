@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react';
+
 import { NotificationSettings } from './NotificationSettings';
 
 // Mock the required hooks and context
+import * as SubscriptionApi from '../../../../entities/subscription/api/subscriptionApi';
 import * as ThemeContext from '../../../../shared/lib/context/ThemeContext';
 import * as PushNotificationHook from '../../../../shared/lib/hooks/usePushNotificationPermission';
 import * as PushSubscriptionHook from '../../../../shared/lib/hooks/usePushSubscription';
-import * as SubscriptionApi from '../../../../entities/subscription/api/subscriptionApi';
 
 // Mock ThemeContext
 (ThemeContext as any).useTheme = () => ({

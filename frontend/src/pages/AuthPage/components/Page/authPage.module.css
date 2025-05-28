@@ -10,9 +10,8 @@
 .page {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
-  margin-top: 200px;
   background-color: var(--primary-color);
   min-width: 100%;
   min-height: 100%;
@@ -20,14 +19,24 @@
   padding: 0;
   width: 100vw;
   height: 100vh;
+  position: relative;
+}
+
+.logo {
+  margin-top: 15vh;
+  width: 200px;
+  height: 150px;
+  object-fit: contain;
 }
 
 .text {
   color: var(--header-text-color);
   text-align: center;
   font-size: 18px;
-  margin-top: 30px;
-  width: 280px;
+  /* margin-top: 30px; */
+  width: 90%;
+  max-width: 280px;
+  padding: 0 20px;
 }
 
 .loginButton {
@@ -43,12 +52,6 @@
   color: #333;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.logo {
-  position: absolute;
-  /* top: 170px; */
-  top: 17%;
 }
 
 .vkIcon {

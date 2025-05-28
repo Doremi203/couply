@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
+
 import { LikesPage } from './Page';
 
 // Mock the required hooks and components
-import * as matchesHooks from '../../../../features/matches';
 import * as profileViewHooks from '../../hooks/useProfileView';
 import {
   Gender,
@@ -22,6 +22,7 @@ import {
   PersonalityTraits,
   Pets,
 } from '../../../../entities/user/api/constants';
+import * as matchesHooks from '../../../../features/matches';
 
 // Mock the useLikesAndMatches hook
 (matchesHooks as any).useLikesAndMatches = () => ({

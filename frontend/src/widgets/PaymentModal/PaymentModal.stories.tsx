@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { PaymentModal } from './PaymentModal';
+
 import { Plan } from '../../entities/subscription/types';
+
+import { PaymentModal } from './PaymentModal';
 
 const meta = {
   title: 'Widgets/PaymentModal',

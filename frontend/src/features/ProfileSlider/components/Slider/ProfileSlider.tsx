@@ -76,6 +76,70 @@ export const ProfileSlider = () => {
 
   const [MAX_UNDO_PER_DAY, setMAX_UNDO_PER_DAY] = useState(3);
 
+  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set());
+  const [loadingImages, setLoadingImages] = useState<Set<string>>(new Set());
+
+  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
+  const [translateX, setTranslateX] = useState(0);
+  const [opacity, setOpacity] = useState(1);
+
+  // Move currentProfile here, before useEffect and before preloadNextImages
+  const currentProfile = showingAd
+    ? adProfiles[adIndex % adProfiles.length]
+    : currentIndex >= 0 && currentIndex <= profiles.length - 1
+      ? profiles[currentIndex]
+      : null;
+
+  // Move preloadImage and preloadNextImages below currentProfile
+  const preloadImage = (url: string) => {
+    if (loadedImages.has(url) || loadingImages.has(url)) return;
+
+    setLoadingImages(prev => new Set(prev).add(url));
+    const img = new Image();
+    img.src = url;
+    img.onload = () => {
+      setLoadedImages(prev => new Set(prev).add(url));
+      setLoadingImages(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(url);
+        return newSet;
+      });
+    };
+  };
+
+  const preloadNextImages = () => {
+    if (!currentProfile || showingAd) return;
+
+    // Preload current profile's next photos
+    //@ts-ignore
+    const photos = currentProfile.user?.photos || [];
+    const nextPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+    if (photos[nextPhotoIndex]) {
+      preloadImage(photos[nextPhotoIndex].url);
+    }
+
+    // Preload next profile's first photo
+    const nextProfileIndex = currentIndex + 1;
+    if (nextProfileIndex < profiles.length) {
+      //@ts-ignore
+      const nextProfilePhotos = profiles[nextProfileIndex]?.user?.photos || [];
+      if (nextProfilePhotos[0]) {
+        preloadImage(nextProfilePhotos[0].url);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (currentProfile && !showingAd) {
+      //@ts-ignore
+      const currentPhotoUrl = currentProfile.user?.photos?.[currentPhotoIndex]?.url;
+      if (currentPhotoUrl) {
+        preloadImage(currentPhotoUrl);
+      }
+      preloadNextImages();
+    }
+  }, [currentProfile, currentPhotoIndex, currentIndex, showingAd, preloadNextImages, preloadImage]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -92,8 +156,10 @@ export const ProfileSlider = () => {
           setLoading(false);
 
           const sub = await getSubscription({}).unwrap();
-          setIsPremium(sub.status === 'SUBSCRIPTION_STATUS_ACTIVE');
-          if (isPremium) setMAX_UNDO_PER_DAY(10000);
+          const premiumStatus = sub.status === 'SUBSCRIPTION_STATUS_ACTIVE';
+          setIsPremium(premiumStatus);
+
+          setMAX_UNDO_PER_DAY(premiumStatus ? 10000 : 3);
         } else {
           setHasMore(false);
           setLoading(false);
@@ -141,7 +207,7 @@ export const ProfileSlider = () => {
   };
 
   useEffect(() => {
-    if (profiles.length > 0 && currentIndex >= profiles.length - 3 && hasMore) {
+    if (profiles.length > 0 && currentIndex >= profiles.length - PAGE_SIZE && hasMore) {
       loadMoreProfiles();
     }
   }, [currentIndex, profiles.length, hasMore, loadMoreProfiles]);
@@ -262,30 +328,74 @@ export const ProfileSlider = () => {
     setCurrentPhotoIndex(0);
   };
 
+  // const handlePrevUser = () => {
+  //   const currentDate = new Date().toDateString();
+
+  //   if (currentDate !== lastUndoDate) {
+  //     setUndoCount(0);
+  //     setLastUndoDate(currentDate);
+  //     localStorage.setItem('undoDate', currentDate);
+  //   }
+
+  //   if (currentIndex === 0) return;
+
+  //   const newCount = undoCount + 1;
+
+  //   if (newCount >= MAX_UNDO_PER_DAY) {
+  //     if (!isPremium) {
+  //       setPremiumOpen(true);
+  //     }
+  //     if (isPremium || newCount <= MAX_UNDO_PER_DAY) {
+  //       setUndoCount(newCount);
+  //       localStorage.setItem('undoCount', newCount.toString());
+  //       setCurrentIndex(prev => prev - 1);
+  //       setCurrentPhotoIndex(0);
+  //     }
+  //     return;
+  //   }
+
+  //   setUndoCount(newCount);
+  //   localStorage.setItem('undoCount', newCount.toString());
+  //   setCurrentIndex(prev => prev - 1);
+  //   setCurrentPhotoIndex(0);
+  // };
+
   const handlePrevUser = () => {
     const currentDate = new Date().toDateString();
 
+    // Сбрасываем счетчик при смене дня и синхронизируем с localStorage
     if (currentDate !== lastUndoDate) {
       setUndoCount(0);
       setLastUndoDate(currentDate);
       localStorage.setItem('undoDate', currentDate);
-    }
-
-    if (undoCount >= MAX_UNDO_PER_DAY) {
-      setPremiumOpen(true);
-      return;
+      localStorage.setItem('undoCount', '0'); // Явный сброс счетчика
     }
 
     if (currentIndex === 0) return;
 
-    setUndoCount(prev => {
-      const newCount = prev + 1;
-      localStorage.setItem('undoCount', newCount.toString());
-      return newCount;
-    });
+    const newCount = undoCount + 1;
 
-    setCurrentIndex(prev => prev - 1);
-    setCurrentPhotoIndex(0);
+    if (isPremium) {
+      setUndoCount(newCount);
+      localStorage.setItem('undoCount', newCount.toString());
+      setCurrentIndex(prev => prev - 1);
+      setCurrentPhotoIndex(0);
+      return;
+    }
+
+    console.log(newCount);
+
+    if (newCount > MAX_UNDO_PER_DAY) {
+      setPremiumOpen(true);
+      return;
+    }
+
+    if (newCount <= MAX_UNDO_PER_DAY) {
+      setUndoCount(newCount);
+      localStorage.setItem('undoCount', newCount.toString());
+      setCurrentIndex(prev => prev - 1);
+      setCurrentPhotoIndex(0);
+    }
   };
 
   const handleNextPhoto = () => {
@@ -317,10 +427,6 @@ export const ProfileSlider = () => {
         (prevIndex - 1 + currentUser.user.photos.length) % currentUser.user.photos.length,
     );
   };
-
-  const [swipeDirection, setSwipeDirection] = useState<'left' | 'right' | null>(null);
-  const [translateX, setTranslateX] = useState(0);
-  const [opacity, setOpacity] = useState(1);
 
   const handlers = useSwipeable({
     onSwiping: e => {
@@ -367,12 +473,6 @@ export const ProfileSlider = () => {
       }
     };
   }, []);
-
-  const currentProfile = showingAd
-    ? adProfiles[adIndex % adProfiles.length]
-    : currentIndex >= 0 && currentIndex <= profiles.length - 1
-      ? profiles[currentIndex]
-      : null;
 
   useEffect(() => {
     if (!currentProfile && !showingAd && !loading && hasMore) {
@@ -525,7 +625,7 @@ export const ProfileSlider = () => {
       {currentProfile && (
         <>
           <div
-            className={styles.profileCard}
+            className={`${styles.profileCard} ${isAd ? styles.adCard : ''}`}
             {...handlers}
             onClick={handleProfileClick}
             style={{
@@ -542,10 +642,18 @@ export const ProfileSlider = () => {
             <img
               //@ts-ignore
               src={currentProfile.user?.photos?.[currentPhotoIndex]?.url || ''}
-              // src="man1.jpg"
               //@ts-ignore
               alt={currentProfile.name}
-              className={styles.profileImage}
+              className={
+                isAd
+                  ? styles.adImage
+                  : `${styles.profileImage} ${
+                      //@ts-ignore
+                      !loadedImages.has(currentProfile.user?.photos?.[currentPhotoIndex]?.url)
+                        ? styles.loading
+                        : ''
+                    }`
+              }
               draggable="false"
             />
 
@@ -588,16 +696,18 @@ export const ProfileSlider = () => {
             )}
           </div>
 
-          <div className={styles.controls}>
-            <UndoButton onClick={handlePrevUser} />
-            <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
-            <LikeButton
-              onClick={handleLikeUser}
-              className={styles.likeButton}
-              likeClassName={styles.like}
-            />
-            <MessageButton onClick={handleMessageOpen} />
-          </div>
+          {!isAd && (
+            <div className={styles.controls}>
+              <UndoButton onClick={handlePrevUser} />
+              <DislikeButton onClick={handleNextUser} className={styles.dislikeButton} />
+              <LikeButton
+                onClick={handleLikeUser}
+                className={styles.likeButton}
+                likeClassName={styles.like}
+              />
+              <MessageButton onClick={handleMessageOpen} />
+            </div>
+          )}
         </>
       )}
 

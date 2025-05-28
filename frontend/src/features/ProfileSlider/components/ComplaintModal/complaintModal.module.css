@@ -1,0 +1,193 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modalContent {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+  border-radius: 20px;
+  padding: 25px 20px;
+  color: white;
+  box-shadow: 0 10px 25px var(--shadow-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.closeButton {
+  position: absolute;
+  top: 5px;
+  right: -20px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  z-index: 2;
+  transition: transform 0.2s ease;
+}
+
+.closeButton:hover {
+  transform: scale(1.1);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 20px;
+  text-align: center;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.content {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  margin: 10px 0;
+}
+
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.radioLabel {
+  color: white !important;
+  font-family: 'Jost', sans-serif !important;
+}
+
+.divider {
+  margin: 20px 0 !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.textField {
+  width: 100%;
+}
+
+.textField :global(.MuiOutlinedInput-root) {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: white;
+  font-family: 'Jost', sans-serif;
+}
+
+.textField :global(.MuiOutlinedInput-root fieldset) {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.textField :global(.MuiOutlinedInput-root:hover fieldset) {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.textField :global(.MuiOutlinedInput-root.Mui-focused fieldset) {
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.textField :global(.MuiInputBase-input) {
+  color: white;
+}
+
+.textField :global(.MuiInputLabel-root) {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.decorations {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star1 {
+  position: absolute;
+  top: 17%;
+  right: 20%;
+  width: 15px;
+  height: 15px;
+  background-color: rgba(255, 255, 255, 0.7);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.star2 {
+  position: absolute;
+  top: 42%;
+  left: 30%;
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
+}
+
+.circle {
+  position: absolute;
+  top: 10%;
+  left: 13%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.wave1 {
+  position: absolute;
+  top: 25%;
+  right: 10%;
+  width: 30px;
+  height: 8px;
+  background: none;
+  border-top: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+}

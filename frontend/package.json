@@ -22,7 +22,6 @@
     "test-storybook:coverage": "test-storybook --coverage"
   },
   "dependencies": {
-    "@vkid/sdk": "<3.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
@@ -31,9 +30,11 @@
     "@mui/material": "^6.3.1",
     "@reduxjs/toolkit": "^2.6.1",
     "@types/uuid": "^10.0.0",
+    "@vkid/sdk": "<3.0.0",
     "autoprefixer": "^10.4.20",
     "classnames": "^2.5.1",
     "keep-react": "^1.6.1",
+    "lodash": "^4.17.21",
     "phosphor-react": "^1.4.1",
     "postcss": "^8.4.49",
     "react": "^18.3.1",
@@ -60,6 +61,7 @@
     "@swc/core": "^1.11.9",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@types/lodash": "^4.17.17",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
     "@types/serviceworker": "^0.0.135",

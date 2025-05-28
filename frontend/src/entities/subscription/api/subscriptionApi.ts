@@ -1,5 +1,4 @@
 import { paymentsApi } from '../../../shared/api/baseApi';
-
 import { CancelRequest, CreateSubRequst, GetSubscriptionResponse } from '../types';
 
 export const subscriptionApi = paymentsApi.injectEndpoints({

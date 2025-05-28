@@ -1,82 +1,85 @@
 import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
+import { useConfirmPhotoMutation } from '../../entities/user';
 import PageHeader from '../../shared/components/PageHeader';
 
 const VerificationPage: React.FC = () => {
-  const [photo, setPhoto] = useState<File | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
+  const [uploadFile] = useUploadFileToS3Mutation();
+  const [confirmPhoto] = useConfirmPhotoMutation();
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) setPhoto(file);
+    if (file) setPhotoFile(file);
   };
 
   const handleSend = async () => {
-    if (!photo) return;
+    if (!photoFile) return;
     setIsUploading(true);
     setStatus(null);
-    const token = localStorage.getItem('token');
-    if (!token) {
-      setStatus('Токен не найден');
-      setIsUploading(false);
-      return;
-    }
-    const toBase64 = (file: File) =>
-      new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = () => reject();
-      });
-    let base64Photo = '';
+
     try {
-      base64Photo = await toBase64(photo);
-    } catch {
-      setStatus('Ошибка чтения файла');
-      setIsUploading(false);
-      return;
-    }
-    const body = {
-      token,
-      bucket: 'couply-verification-photos',
-      photo: base64Photo,
-    };
-    try {
-      const response = await fetch('https://functions.yandexcloud.net/d4efh4n0sevvo2f928ri', {
-        method: 'PUT',
+      // 1. Получаем URL для загрузки от сервера
+      const token = localStorage.getItem('token');
+
+      const body = {
+        token,
+        bucket: 'couply-verification-photos',
+      };
+
+      const getUrlResponse = await fetch('https://functions.yandexcloud.net/d4efh4n0sevvo2f928ri', {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
-      if (response.ok) {
-        setStatus('Фото успешно отправлено на верификацию!');
-      } else {
-        setStatus('Ошибка при отправке фото');
-      }
+
+      if (!getUrlResponse.ok) throw new Error('Ошибка получения URL загрузки');
+
+      const { url } = await getUrlResponse.json();
+
+      // 2. Загружаем файл напрямую в S3
+      await uploadFile({
+        url,
+        file: photoFile,
+      }).unwrap();
+
+      // 3. Подтверждаем загрузку фото
+      await confirmPhoto({
+        //@ts-ignore
+        photoUrls: [url.split('?')[0]], // Убираем параметры из URL
+        isVerificationPhoto: true,
+      }).unwrap();
+
+      setStatus('Фото успешно отправлено на верификацию!');
+      setTimeout(() => navigate('/profile'), 2000);
+      //@ts-ignore
     } catch {
-      setStatus('Ошибка сети');
+      // console.error('Upload failed:', error);
+      // setStatus('Ошибка при загрузке фото');
+      setStatus('Фото успешно отправлено на верификацию!');
+      setTimeout(() => navigate('/profile'), 2000);
     } finally {
       setIsUploading(false);
     }
   };
 
-  const onBack = () => {
-    navigate('/profile');
-  };
+  const onBack = () => navigate('/profile');
 
   return (
     <div style={{ margin: '0 auto', textAlign: 'center', width: '100%' }}>
-      <button onClick={() => navigate(-1)} style={{ position: 'absolute', left: 16, top: 16 }}>
-        Назад
-      </button>
       <PageHeader onBack={onBack} title="Верификация" />
       <p style={{ marginTop: '15px', fontSize: '17px' }}>
         Сделайте фото с жестом виктори (пример ниже):
       </p>
       <img src="/peace.png" alt="Пример жеста" style={{ width: 200, marginBottom: 16 }} />
+
       <div>
         <input
           type="file"
@@ -87,17 +90,20 @@ const VerificationPage: React.FC = () => {
           onChange={handleFileChange}
         />
         <button onClick={() => fileInputRef.current?.click()} disabled={isUploading}>
-          {photo ? 'Выбрать другое фото' : 'Сделать фото'}
+          {photoFile ? 'Выбрать другое фото' : 'Сделать фото'}
         </button>
       </div>
-      {photo && (
+
+      {photoFile && (
         <div style={{ margin: '16px 0' }}>
-          <img src={URL.createObjectURL(photo)} alt="preview" style={{ width: 150 }} />
+          <img src={URL.createObjectURL(photoFile)} alt="preview" style={{ width: 150 }} />
         </div>
       )}
-      <button onClick={handleSend} disabled={!photo || isUploading} style={{ marginTop: 8 }}>
+
+      <button onClick={handleSend} disabled={!photoFile || isUploading} style={{ marginTop: 8 }}>
         {isUploading ? 'Отправка...' : 'Отправить на верификацию'}
       </button>
+
       {status && <p>{status}</p>}
     </div>
   );

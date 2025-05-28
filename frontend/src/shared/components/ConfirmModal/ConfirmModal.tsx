@@ -1,5 +1,6 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
+
 import styles from './confirmModal.module.css';
 
 interface ConfirmModalProps {

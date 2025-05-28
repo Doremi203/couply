@@ -1,5 +1,5 @@
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Dialog, Link } from '@mui/material';
+import { Dialog } from '@mui/material';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -185,9 +185,12 @@ export const LoginPage = () => {
         className={styles.submitButton}
         disabled={isLoading}
       />
-      <Link onClick={onRegister} className={styles.regLink}>
-        Зарегистрироваться
-      </Link>
+      <CustomButton
+        onClick={onRegister}
+        text="Зарегистрироваться"
+        className={styles.regLink}
+        disabled={isLoading}
+      />
 
       <Dialog open={showRegistrationModal} onClose={handleCloseModal}>
         <div className={styles.notificationPrompt}>

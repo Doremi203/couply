@@ -26,9 +26,6 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   const [createPayment] = useCreatePaymentMutation();
   const [createSubscription] = useCreateSubscriptionMutation();
 
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [cvv, setCvv] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -74,58 +71,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
         <p className={styles.subtitle}>Сумма к оплате: {price}</p>
 
         <form onSubmit={handleSubmit} className={styles.paymentForm}>
-          <div className={styles.formGroup}>
-            <label htmlFor="cardNumber">Номер карты</label>
-            <input
-              type="text"
-              id="cardNumber"
-              value={cardNumber}
-              onChange={e => setCardNumber(e.target.value)}
-              placeholder="1234 5678 9012 3456"
-              maxLength={19}
-              required
-              disabled
-            />
-          </div>
-
-          <div className={styles.formRow}>
-            <div className={styles.formGroup}>
-              <label htmlFor="expiryDate">Срок действия</label>
-              <input
-                type="text"
-                id="expiryDate"
-                value={expiryDate}
-                onChange={e => setExpiryDate(e.target.value)}
-                placeholder="MM/YY"
-                maxLength={5}
-                required
-                disabled
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label htmlFor="cvv">CVV</label>
-              <input
-                type="text"
-                id="cvv"
-                value={cvv}
-                onChange={e => setCvv(e.target.value)}
-                placeholder="123"
-                maxLength={3}
-                required
-                disabled
-              />
-            </div>
-          </div>
-
           <button type="submit" className={styles.submitButton} disabled={isProcessing}>
             {isProcessing ? 'Обработка...' : 'Оплатить'}
           </button>
         </form>
-
-        <div className={styles.securityNote}>
-          <p>Ваши данные защищены и не будут переданы третьим лицам</p>
-        </div>
       </div>
     </div>,
     document.body,
