@@ -37,8 +37,9 @@ type Request struct {
 }
 
 type RequestBody struct {
-	Token  string `json:"token"`
-	Bucket string `json:"bucket"`
+	Token       string `json:"token"`
+	Bucket      string `json:"bucket"`
+	OrderNumber int    `json:"order_number"` // available only for profile photos
 }
 
 type Response struct {
@@ -53,9 +54,14 @@ type ResponseBody struct {
 	URL string `json:"url"`
 }
 
+const (
+	verificationPhotosBucket = "couply-verification-photos"
+	profilePhotosBucket      = "testing-couply-profile-photos"
+)
+
 var AllowedBuckets = []string{
-	"couply-verification-photos",
-	"testing-couply-profile-photos",
+	verificationPhotosBucket,
+	profilePhotosBucket,
 }
 
 func Handler(ctx context.Context, req Request) (Response, error) {
@@ -104,7 +110,13 @@ func Handler(ctx context.Context, req Request) (Response, error) {
 
 	photoURLGenerator := newObjectStoragePhotoURLGenerator(s3Client)
 
-	uploadURL, err := photoURLGenerator.GenerateUpload(ctx, generateKey(userToken.GetUserID()), body.Bucket)
+	objectKey, err := generateKey(userToken.GetUserID(), body.Bucket, body.OrderNumber)
+	if err != nil {
+		fmt.Println(err)
+		return Response{}, errors.New("internal server error")
+	}
+
+	uploadURL, err := photoURLGenerator.GenerateUpload(ctx, objectKey, body.Bucket)
 	if err != nil {
 		fmt.Println(err)
 		return Response{}, errors.New("internal server error")
@@ -153,8 +165,17 @@ func configureMinioClient() (*minio.Client, error) {
 	return client, nil
 }
 
-func generateKey(userID uuid.UUID) string {
-	return fmt.Sprintf("%s/%s.jpg", userID.String(), uuid.New().String())
+func generateKey(userID uuid.UUID, bucket string, orderNumber int) (string, error) {
+	switch bucket {
+	case profilePhotosBucket:
+		photoID, err := uuid.NewRandom()
+		if err != nil {
+			return "", fmt.Errorf("failed to generate photo id: %w", err)
+		}
+		return fmt.Sprintf("users/%s/slot/%d/%s.jpg", userID.String(), orderNumber, photoID), nil
+	default:
+		return fmt.Sprintf("%s/%s.jpg", userID.String(), uuid.New().String()), nil
+	}
 }
 
 func newObjectStoragePhotoURLGenerator(

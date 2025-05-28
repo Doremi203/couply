@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5"
-	ycsdk "github.com/yandex-cloud/go-sdk"
 )
 
 type Request struct {
@@ -65,11 +64,10 @@ func Handler(ctx context.Context, req Request) (Response, error) {
 
 	parts := strings.Split(req.Messages[0].Details.ObjectId, "/")
 	userID := parts[1]
-	photoParts := strings.Split(parts[3], ".")
-	photoName := photoParts[0]
+	photoParts := strings.Split(parts[4], ".")
 	photoExtension := photoParts[1]
 	mimeType := mime.TypeByExtension("." + photoExtension)
-	orderNumber, err := strconv.Atoi(photoName)
+	orderNumber, err := strconv.Atoi(parts[3])
 	if err != nil {
 		return Response{}, fmt.Errorf("parse order number: %w", err)
 	}
@@ -95,12 +93,4 @@ func Handler(ctx context.Context, req Request) (Response, error) {
 	return Response{
 		StatusCode: 200,
 	}, nil
-}
-
-func getToken(ctx context.Context) string {
-	resp, err := ycsdk.InstanceServiceAccount().IAMToken(ctx)
-	if err != nil {
-		panic(err)
-	}
-	return resp.IamToken
 }
