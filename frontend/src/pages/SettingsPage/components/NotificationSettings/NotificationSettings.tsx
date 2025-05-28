@@ -19,7 +19,6 @@ import {
 
 import styles from './notificationSettings.module.css';
 
-
 interface NotificationOption {
   id: string;
   label: string;

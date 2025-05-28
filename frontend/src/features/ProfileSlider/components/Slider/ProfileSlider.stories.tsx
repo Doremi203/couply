@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import type { Meta, StoryObj } from '@storybook/react';
 import { Provider } from 'react-redux';
 
-
 // Mock the required hooks and APIs
 import * as matchesApi from '../../../../entities/matches';
 import * as searchApi from '../../../../entities/search/api/searchApi';
