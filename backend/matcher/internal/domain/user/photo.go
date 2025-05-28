@@ -63,6 +63,8 @@ func (g *objectStoragePhotoURLGenerator) GenerateDownload(ctx context.Context, k
 		)
 	}
 
+	downloadURL.Host = "photos.testing.couply.ru"
+
 	return downloadURL.String(), nil
 }
 
