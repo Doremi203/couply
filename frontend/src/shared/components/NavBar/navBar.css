@@ -41,6 +41,15 @@
   color: var(--primary-color);
 }
 
+.navItem.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.navBarContainer.disabled {
+  pointer-events: none;
+}
+
 .navItem,
 .navItem svg,
 .navItem.active,
@@ -51,4 +60,18 @@
 .whiteCont {
   height: 10px;
   background-color: blue;
+}
+
+.navBarContainer,
+.navBarContainer * {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.navItem:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.navItem:active {
+  background: none;
 }

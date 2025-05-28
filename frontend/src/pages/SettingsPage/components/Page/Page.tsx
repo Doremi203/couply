@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 
 import PageHeader from '../../../../shared/components/PageHeader';
 import NotificationSettings from '../NotificationSettings';
+import SubscriptionSettings from '../SubscriptionSettings';
 
 import styles from './settings.module.css';
 
@@ -18,6 +19,7 @@ export const SettingsPage = () => {
 
       <div className={styles.cont}>
         <NotificationSettings />
+        <SubscriptionSettings />
       </div>
     </div>
   );

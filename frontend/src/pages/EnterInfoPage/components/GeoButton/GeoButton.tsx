@@ -17,9 +17,9 @@ const GeoLocationRequest = () => {
     detectPlatform();
 
     navigator.geolocation.getCurrentPosition(
-      position => {
+      () => {
         // Обработка успешного получения координат
-        console.log(position.coords);
+        // console.log(position.coords);
       },
       error => {
         if (error.code === error.PERMISSION_DENIED) {

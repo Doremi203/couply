@@ -235,6 +235,7 @@ export const ProfileSlider = () => {
 
       if (newSwipeCount % AD === 0) {
         setShowingAd(true);
+        dispatch({ type: 'profile/setShowingAd', payload: true }); // Dispatch action to update global state
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
         setTimer(5);
@@ -251,6 +252,8 @@ export const ProfileSlider = () => {
                 timerRef.current = null;
               }
               setTimerActive(false);
+              // Only re-enable NavBar when timer ends, but keep ad visible
+              dispatch({ type: 'profile/setShowingAd', payload: false });
               return 0;
             }
             return prevTimer - 1;
@@ -261,6 +264,7 @@ export const ProfileSlider = () => {
       }
     } else {
       setShowingAd(false);
+      dispatch({ type: 'profile/setShowingAd', payload: false }); // Dispatch action to update global state
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -292,6 +296,7 @@ export const ProfileSlider = () => {
 
       if (newSwipeCount % AD === 0) {
         setShowingAd(true);
+        dispatch({ type: 'profile/setShowingAd', payload: true }); // Dispatch action to update global state
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
         setTimer(5);
@@ -308,6 +313,8 @@ export const ProfileSlider = () => {
                 timerRef.current = null;
               }
               setTimerActive(false);
+              // Only re-enable NavBar when timer ends, but keep ad visible
+              dispatch({ type: 'profile/setShowingAd', payload: false });
               return 0;
             }
             return prevTimer - 1;
@@ -318,6 +325,7 @@ export const ProfileSlider = () => {
       }
     } else {
       setShowingAd(false);
+      dispatch({ type: 'profile/setShowingAd', payload: false }); // Dispatch action to update global state
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -382,8 +390,6 @@ export const ProfileSlider = () => {
       setCurrentPhotoIndex(0);
       return;
     }
-
-    console.log(newCount);
 
     if (newCount > MAX_UNDO_PER_DAY) {
       setPremiumOpen(true);
@@ -471,8 +477,10 @@ export const ProfileSlider = () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      // Make sure to reset the global state when component unmounts
+      dispatch({ type: 'profile/setShowingAd', payload: false });
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!currentProfile && !showingAd && !loading && hasMore) {
@@ -530,7 +538,7 @@ export const ProfileSlider = () => {
         {/** @ts-ignore */}
         {currentProfile.user.name}, {currentProfile.user.age}
         {/* @ts-ignore */}
-        {currentProfile.user.verified && (
+        {currentProfile.user.isVerified && (
           <div className={styles.verifiedBadge}>
             <VerifiedIcon />
           </div>
@@ -543,8 +551,6 @@ export const ProfileSlider = () => {
     switch (currentPhotoIndex) {
       case 0: {
         let bioLines = 0;
-
-        console.log(currentProfile);
 
         //@ts-ignore
         if (currentProfile.user.bio?.length > 0 && currentProfile.user.bio?.length <= 50) {
@@ -610,7 +616,6 @@ export const ProfileSlider = () => {
 
   const handleMessageOpen = () => {
     if (isPremium) {
-      console.log('here');
       setMessageOpen(true);
     } else {
       setPremiumOpen(true);
@@ -619,7 +624,6 @@ export const ProfileSlider = () => {
 
   const isAd = showingAd;
 
-  console.log(currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (

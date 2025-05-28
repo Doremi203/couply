@@ -22,7 +22,6 @@ export const MatchesSection: React.FC<MatchesSectionProps> = ({
   showChatMessage,
 }) => {
   const matches = useSelector(selectMatches);
-  console.log(matches);
 
   //@ts-ignore
   if (matches.length === 0) {

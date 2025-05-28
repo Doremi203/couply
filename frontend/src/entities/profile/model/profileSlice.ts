@@ -39,6 +39,7 @@ export interface ProfileState {
   };
   isLoading: boolean;
   error: string | null;
+  isShowingAd: boolean; // Track when an advertisement is being shown
 }
 
 const initialState: ProfileState = {
@@ -53,6 +54,7 @@ const initialState: ProfileState = {
   },
   isLoading: false,
   error: null,
+  isShowingAd: false, // Default to not showing an ad
 };
 
 const profileSlice = createSlice({
@@ -76,10 +78,14 @@ const profileSlice = createSlice({
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
     },
+    setShowingAd: (state, action: PayloadAction<boolean>) => {
+      state.isShowingAd = action.payload;
+    },
     resetProfile: state => {
       state.data = initialState.data;
       state.isLoading = false;
       state.error = null;
+      state.isShowingAd = false;
     },
   },
 });
@@ -88,9 +94,16 @@ const profileSlice = createSlice({
 export const selectProfileData = (state: RootState) => state.profile.data;
 export const selectProfileLoading = (state: RootState) => state.profile.isLoading;
 export const selectProfileError = (state: RootState) => state.profile.error;
+export const selectIsShowingAd = (state: RootState) => state.profile.isShowingAd;
 
 // Actions
-export const { setProfileData, updateProfileField, setLoading, setError, resetProfile } =
-  profileSlice.actions;
+export const {
+  setProfileData,
+  updateProfileField,
+  setLoading,
+  setError,
+  setShowingAd,
+  resetProfile,
+} = profileSlice.actions;
 
 export default profileSlice.reducer;

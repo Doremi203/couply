@@ -26,7 +26,6 @@ const VerificationPage: React.FC = () => {
     setStatus(null);
 
     try {
-      // 1. Получаем URL для загрузки от сервера
       const token = localStorage.getItem('token');
 
       const body = {
@@ -34,26 +33,59 @@ const VerificationPage: React.FC = () => {
         bucket: 'couply-verification-photos',
       };
 
-      const getUrlResponse = await fetch('https://functions.yandexcloud.net/d4efh4n0sevvo2f928ri', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
+      const fetchWithRetry = async (url: string, options: RequestInit, maxRetries = 3) => {
+        let retries = 0;
+
+        while (retries < maxRetries) {
+          try {
+            const response = await fetch(url, options);
+
+            if (response.status === 500 || response.status === 504) {
+              retries++;
+
+              const delay = 1000 * Math.pow(2, retries - 1);
+              await new Promise(resolve => setTimeout(resolve, delay));
+              continue;
+            }
+
+            return response;
+          } catch (error) {
+            retries++;
+            console.error(`Ошибка запроса, попытка ${retries} из ${maxRetries}:`, error);
+
+            if (retries >= maxRetries) {
+              throw error;
+            }
+
+            const delay = 1000 * Math.pow(2, retries - 1);
+            await new Promise(resolve => setTimeout(resolve, delay));
+          }
+        }
+
+        throw new Error('Превышено максимальное количество попыток');
+      };
+
+      const getUrlResponse = await fetchWithRetry(
+        'https://functions.yandexcloud.net/d4efh4n0sevvo2f928ri',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        },
+      );
 
       if (!getUrlResponse.ok) throw new Error('Ошибка получения URL загрузки');
 
       const { url } = await getUrlResponse.json();
 
-      // 2. Загружаем файл напрямую в S3
       await uploadFile({
         url,
         file: photoFile,
       }).unwrap();
 
-      // 3. Подтверждаем загрузку фото
       await confirmPhoto({
         //@ts-ignore
-        photoUrls: [url.split('?')[0]], // Убираем параметры из URL
+        photoUrls: [url.split('?')[0]],
         isVerificationPhoto: true,
       }).unwrap();
 
@@ -63,8 +95,9 @@ const VerificationPage: React.FC = () => {
     } catch {
       // console.error('Upload failed:', error);
       // setStatus('Ошибка при загрузке фото');
-      setStatus('Фото успешно отправлено на верификацию!');
-      setTimeout(() => navigate('/profile'), 2000);
+      setStatus('Статус верификации обновится в течение нескольких минут');
+
+      setTimeout(() => navigate('/profile'), 1000);
     } finally {
       setIsUploading(false);
     }

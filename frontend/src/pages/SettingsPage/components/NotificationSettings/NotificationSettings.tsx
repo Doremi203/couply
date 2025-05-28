@@ -1,14 +1,8 @@
 import BedtimeIcon from '@mui/icons-material/Bedtime';
-import CreditCardOffOutlinedIcon from '@mui/icons-material/CreditCardOffOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { CircularProgress, Switch } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import {
-  useGetSubscriptionMutation,
-  useCancelSubscriptionMutation,
-} from '../../../../entities/subscription/api/subscriptionApi.ts';
-import ConfirmModal from '../../../../shared/components/ConfirmModal';
 import { useTheme } from '../../../../shared/lib/context/ThemeContext';
 import { usePushNotificationPermission } from '../../../../shared/lib/hooks/usePushNotificationPermission';
 import { usePushSubscription } from '../../../../shared/lib/hooks/usePushSubscription';
@@ -38,25 +32,6 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
   const { subscription, subscribe, unsubscribe } = usePushSubscription();
   const { requestPermission } = usePushNotificationPermission();
   const isPushEnabled = Boolean(subscription);
-  const [getSubscription] = useGetSubscriptionMutation();
-  const [cancelSubscription] = useCancelSubscriptionMutation();
-  const [isPremium, setIsPremium] = useState(false);
-  const [showUnsubscribeModal, setShowUnsubscribeModal] = useState(false);
-  const [subscriptionId, setSubscriptionId] = useState<string>('');
-
-  useEffect(() => {
-    const fetchSubscription = async () => {
-      try {
-        const subscription = await getSubscription({}).unwrap();
-        setIsPremium(subscription.status === 'SUBSCRIPTION_STATUS_ACTIVE');
-        setSubscriptionId(subscription.subscriptionId);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchSubscription();
-  }, [getSubscription]);
 
   useEffect(() => {
     setNotifications([
@@ -72,14 +47,8 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
         icon: <BedtimeIcon />,
         enabled: theme === 'dark',
       },
-      {
-        id: 'unsubscribe',
-        label: 'Отменить подписку',
-        icon: <CreditCardOffOutlinedIcon />,
-        enabled: isPremium,
-      },
     ]);
-  }, [theme, isPushEnabled, isPremium]);
+  }, [theme, isPushEnabled]);
 
   const handleToggle = async (id: string) => {
     if (isLoading) return;
@@ -101,8 +70,6 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
           await unsubscribeFromPushNotifications(subscription);
           await unsubscribe();
         }
-      } else if (id === 'unsubscribe') {
-        setShowUnsubscribeModal(true);
       }
     } catch (error) {
       console.error('Error toggling:', error);
@@ -110,22 +77,6 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
     } finally {
       setIsLoading(false);
       setActiveId(null);
-    }
-  };
-
-  const handleUnsubscribe = async () => {
-    try {
-      await cancelSubscription({ subscriptionId }).unwrap();
-      setIsPremium(false);
-      setShowUnsubscribeModal(false);
-      setNotifications(prev =>
-        prev.map(notification =>
-          notification.id === 'unsubscribe' ? { ...notification, enabled: false } : notification,
-        ),
-      );
-    } catch (error) {
-      console.error('Error canceling subscription:', error);
-      alert('Произошла ошибка при отмене подписки');
     }
   };
 
@@ -157,16 +108,6 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({ clas
           </div>
         </div>
       ))}
-
-      <ConfirmModal
-        isOpen={showUnsubscribeModal}
-        onClose={() => setShowUnsubscribeModal(false)}
-        onConfirm={handleUnsubscribe}
-        title="Отмена подписки"
-        message="Вы уверены, что хотите отменить подписку? После отмены вы потеряете доступ к премиум-функциям."
-        confirmText="Отменить подписку"
-        cancelText="Вернуться"
-      />
     </div>
   );
 };

@@ -68,7 +68,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
         document.body.style.overflow = 'hidden';
 
         if (onLike) {
-          console.log('ProfileCard: calling onLike with userId:', userId);
           onLike(userId);
         }
       } catch (error) {
@@ -102,21 +101,19 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 
   // Log state changes for debugging
   useEffect(() => {
-    console.log('ProfileCard state changed:', {
-      showModal: show,
-      profileId: profile.id,
-      profileName: profile.name,
-      myData: myData?.name,
-    });
+    // console.log('ProfileCard state changed:', {
+    //   showModal: show,
+    //   profileId: profile.id,
+    //   profileName: profile.name,
+    //   myData: myData?.name,
+    // });
 
     if (show) {
-      console.log('ProfileCard: Modal should be visible now');
       document.body.style.overflow = 'hidden';
     }
   }, [show, profile.id, profile.name, myData]);
 
   if (show) {
-    console.log('ProfileCard: Rendering MatchModal component');
     return (
       <MatchModal
         userImage={myData?.photos?.[0]?.url || ''}
@@ -133,27 +130,28 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
       <div className={`${styles.profileCard} ${className || ''}`} onClick={handleCardClick}>
         <div className={styles.imageCont}>
           <img src={profile.photos?.[0]?.url} alt={profile.name} className={styles.profileImage} />
-          {message !== undefined && message !== '' && (
-            <div
-              onClick={e => e.stopPropagation()}
-              style={{
-                position: 'absolute',
-                zIndex: 10,
-                top: '10px',
-                right: '10px',
-              }}
-            >
-              <SmsOutlinedIcon
-                className={styles.iconOverlay}
-                sx={{
-                  fontSize: 30,
-                  animation: `${styles.messageNotification} 1s infinite`,
-                }}
-                onClick={handleMessageClick}
-              />
-            </div>
-          )}
         </div>
+        {message !== undefined && message !== '' && (
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              position: 'absolute',
+              zIndex: 10,
+              top: '10px',
+              right: '10px',
+            }}
+          >
+            <SmsOutlinedIcon
+              className={styles.iconOverlay}
+              sx={{
+                fontSize: 30,
+                animation: `${styles.messageNotification} 1s infinite`,
+              }}
+              onClick={handleMessageClick}
+            />
+          </div>
+        )}
+
         <div className={styles.profileInfo}>
           <div className={styles.profileName}>
             {profile.name}, {profile.age}
@@ -176,30 +174,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             likeClassName={styles.like}
           />
         </div>
-
-        {/* Test button to directly trigger modal - for debugging only */}
-        {/* <div
-          style={{
-            position: 'absolute',
-            bottom: '10px',
-            right: '10px',
-            background: 'red',
-            color: 'white',
-            padding: '5px',
-            borderRadius: '5px',
-            fontSize: '10px',
-            cursor: 'pointer',
-            zIndex: 100,
-          }}
-          onClick={e => {
-            e.stopPropagation();
-            e.preventDefault();
-            console.log('Test button clicked, setting modal state to true');
-            dispatch(setShowMatchModal(true));
-          }}
-        >
-          Test Modal
-        </div> */}
 
         <MessageModal
           isOpen={messageModalOpen}

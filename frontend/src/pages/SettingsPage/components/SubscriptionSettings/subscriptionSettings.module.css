@@ -1,0 +1,99 @@
+.container {
+  width: 100%;
+  background-color: var(--section-background);
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  margin-top: 15px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin: 0;
+  margin-left: 12px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color, #6366f1);
+}
+
+.planInfo {
+  margin-bottom: 20px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+}
+
+.planName {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 4px;
+}
+
+.planDetails {
+  font-size: 14px;
+  color: var(--secondary-text-color, #6b7280);
+}
+
+.cancelButton {
+  width: 100%;
+  padding: 10px;
+  /* background-color: var(--primary-color); */
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: white;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.cancelButton:hover {
+  /* background-color: var(--primary-color); */
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: white;
+}
+
+.cancelButton:disabled {
+  background-color: var(--disabled-color, #9ca3af);
+  cursor: not-allowed;
+}
+
+.noSubscription {
+  font-size: 16px;
+  color: var(--secondary-text-color, #6b7280);
+  margin-bottom: 15px;
+}
+
+.subscribeButton {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  /* background-color: var(--primary-color, #6366f1); */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.subscribeButton:hover {
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  /* background-color: var(--primary-hover-color, #4f46e5); */
+}

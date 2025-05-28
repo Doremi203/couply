@@ -103,7 +103,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
       setSelectedGender([genderFromApi[filter.genderPriority]]);
       //@ts-ignore
 
-      console.log(filter);
       //@ts-ignore
       setDistance(filter.distanceKmRange.max);
       setAgeRange([filter.ageRange.min, filter.ageRange.max]);
@@ -223,8 +222,8 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
       getOrDefault(filter.ageRange?.max, 100),
     ];
     const initialHeightRange = [
-      getOrDefault(filter.heightRange?.min, 150),
-      getOrDefault(filter.heightRange?.max, 240),
+      getOrDefault(filter.heightRange?.min, 100),
+      getOrDefault(filter.heightRange?.max, 250),
     ];
     const initialVerified = getOrDefault(filter.onlyVerified, false);
     const initialPremium = getOrDefault(filter.onlyPremium, false);
@@ -260,8 +259,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
       JSON.stringify(selectedChildren) !== JSON.stringify(initialChildren) ||
       JSON.stringify(selectedAlcohol) !== JSON.stringify(initialAlcohol) ||
       JSON.stringify(selectedSmoking) !== JSON.stringify(initialSmoking);
-
-    console.log(hasChanges);
 
     return hasChanges;
   };
@@ -382,8 +379,8 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
             <SliderFilter
               title="Рост"
               value={heightRange}
-              min={150}
-              max={240}
+              min={100}
+              max={250}
               onChange={handleHeightRangeChange}
               valueLabelDisplay="auto"
             />
@@ -526,7 +523,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
               fontFamily: 'Jost',
             }}
           >
-            Выйти без сохранения
+            Выйти
           </Button>
           <Button
             onClick={handleSaveAndClose}
@@ -544,7 +541,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
               fontFamily: 'Jost',
             }}
           >
-            Сохранить и выйти
+            Сохранить
           </Button>
         </DialogActions>
       </Dialog>

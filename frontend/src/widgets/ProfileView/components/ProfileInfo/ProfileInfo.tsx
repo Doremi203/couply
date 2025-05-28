@@ -96,6 +96,8 @@ export const ProfileInfo: React.FC<ProfileInfoProps> = ({
     profile.zodiac && zodiacFromApi[profile.zodiac as keyof typeof zodiacFromApi]
       ? { key: 'Знак зодиака', value: zodiacFromApi[profile.zodiac as keyof typeof zodiacFromApi] }
       : null,
+    //@ts-ignore
+    profile.height ? { key: 'Рост', value: profile.height } : null,
   ].filter(Boolean) as { key: string; value: string }[];
 
   const hasBio = !!profile.bio;

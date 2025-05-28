@@ -10,7 +10,6 @@ import styles from './profile.module.css';
 
 interface ProfileViewProps {
   profileData: ProfileData;
-  isVerified: boolean;
   isProfileHidden: boolean;
   onEditToggle: () => void;
   onVisibilityToggle: () => void;
@@ -22,7 +21,6 @@ interface ProfileViewProps {
 
 export const Profile: React.FC<ProfileViewProps> = ({
   profileData,
-  isVerified,
   isProfileHidden,
   onEditToggle,
   onVisibilityToggle,
@@ -49,7 +47,8 @@ export const Profile: React.FC<ProfileViewProps> = ({
       <div className={styles.profileContent}>
         <ProfileInfo
           profileData={profileData}
-          isVerified={isVerified}
+          //@ts-ignore
+          isVerified={profileData.isVerified}
           onPreviewClick={onPreviewClick}
           isPremium={isPremium}
         />
