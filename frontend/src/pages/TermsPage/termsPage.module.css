@@ -1,0 +1,82 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--primary-color);
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.page::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--primary-color);
+  z-index: -1;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: var(--header-text-color);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 10px 0;
+  align-self: flex-start;
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.content h1 {
+  color: var(--header-text-color);
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.content h2 {
+  color: var(--header-text-color);
+  margin: 30px 0 20px;
+  font-size: 1.5em;
+}
+
+.content h3 {
+  color: var(--header-text-color);
+  margin: 25px 0 15px;
+  font-size: 1.2em;
+}
+
+.text {
+  color: var(--header-text-color);
+  line-height: 1.6;
+}
+
+.text p {
+  margin-bottom: 15px;
+}
+
+.text ul {
+  margin: 15px 0;
+  padding-left: 20px;
+}
+
+.text li {
+  margin-bottom: 10px;
+}
+
+.revision {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 30px;
+  color: var(--header-text-color);
+  opacity: 0.8;
+} 

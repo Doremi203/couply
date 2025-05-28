@@ -13,6 +13,14 @@ export const SettingsPage = () => {
     navigate('/profile');
   };
 
+  const openTermsOfService = () => {
+    navigate('/terms');
+  };
+
+  const openPrivacyPolicy = () => {
+    navigate('/privacy');
+  };
+
   return (
     <div className={styles.page}>
       <PageHeader onBack={onBack} title="Настройки" />
@@ -20,6 +28,16 @@ export const SettingsPage = () => {
       <div className={styles.cont}>
         <NotificationSettings />
         <SubscriptionSettings />
+        <div className={styles.terms}>
+          <div className={styles.link1} onClick={openPrivacyPolicy}>
+            {' '}
+            Политика конфиденциальности
+          </div>
+          <div className={styles.link2} onClick={openTermsOfService}>
+            {' '}
+            Пользовательское соглашение
+          </div>
+        </div>
       </div>
     </div>
   );

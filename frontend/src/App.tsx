@@ -22,6 +22,8 @@ import { SettingsPage } from './pages/SettingsPage';
 import { SplashPage } from './pages/SplashPage';
 import VerificationPage from './pages/VerificationPage/VerificationPage';
 import { ThemeProvider } from './shared/lib/context/ThemeContext';
+import TermsPage from './pages/TermsPage/index.tsx';
+import PrivacyPage from './pages/PrivacyPage/index.tsx';
 
 const router = createBrowserRouter([
   {
@@ -79,6 +81,14 @@ const router = createBrowserRouter([
   {
     path: 'verification',
     element: <VerificationPage />,
+  },
+  {
+    path: 'terms',
+    element: <TermsPage />,
+  },
+  {
+    path: 'privacy',
+    element: <PrivacyPage />,
   },
   {
     path: '*',
