@@ -49,13 +49,9 @@ export const AuthPage = () => {
 
   const handleVKIDError = (error: any) => {
     console.error('VK ID login error:', error);
-    // Handle errors appropriately
   };
 
   const handleOAuthSuccess = (result: OAuthLoginV1Response) => {
-    console.log('OAuth login success:', result);
-
-    // Store the token in localStorage or sessionStorage
     localStorage.setItem('token', result.accessToken.token);
     localStorage.setItem('refreshToken', result.refreshToken.token);
     if (result.firstLogin) {
@@ -67,10 +63,6 @@ export const AuthPage = () => {
 
   const handleVKIDAuthError = (error: Error) => {
     console.error('VK ID authentication error:', error);
-
-    // You can show an error notification to the user
-    // For example, if you have a notification system
-    // showNotification({ type: 'error', message: 'Failed to authenticate with VK ID. Please try again.' });
   };
 
   return (

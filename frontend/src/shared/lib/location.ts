@@ -30,8 +30,7 @@ export const getLocationFromCoordinates = async (
     const countryName = country || '';
 
     return cityName && countryName ? `${cityName}, ${countryName}` : data.display_name;
-  } catch (error) {
-    console.error('Error getting location:', error);
+  } catch  {
     return 'Location unavailable';
   }
 };

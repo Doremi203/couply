@@ -227,12 +227,9 @@ export const EnterInfoPage = () => {
     try {
       const result = await requestPermission();
       if (result === 'granted') {
-        console.log('User granted permission, sending subscription to server');
         if (subscription) {
-          console.log('Subscription already exists, sending to server');
           await sendSubscriptionToServer(subscription);
         } else {
-          console.log('No subscription found, creating a new one');
           const sub = await subscribe();
           await sendSubscriptionToServer(sub);
         }

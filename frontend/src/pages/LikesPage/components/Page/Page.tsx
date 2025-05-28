@@ -20,21 +20,7 @@ export const LikesPage = () => {
     likesUsers,
     likes,
     handleDislike,
-    showMatchModal,
   } = useLikesAndMatches();
-
-  // Log modal state changes for debugging
-  useEffect(() => {
-    console.log('LikesPage: showMatchModal state changed:', showMatchModal);
-  }, [showMatchModal]);
-
-  // Comment out the automatic tab switching for now to fix the modal issue
-  // useEffect(() => {
-  //   if (showMatchModal) {
-  //     // Immediately switch to matches tab
-  //     setActiveTab('мэтчи');
-  //   }
-  // }, [showMatchModal]);
 
   const { selectedProfile, handleProfileClick, handleMatchClick, handleCloseProfile } =
     useProfileView();
@@ -57,8 +43,6 @@ export const LikesPage = () => {
       }
     };
   }, [handleCloseProfile, selectedProfile]);
-
-  console.log(selectedProfile);
 
   return (
     <div className={styles.container} id="likes-page-container">

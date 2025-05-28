@@ -40,18 +40,14 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
     extraOptions: object;
   }> = [];
 
-  // We'll use a simple flag to prevent concurrent refresh attempts
   let isRefreshInProgress = false;
 
   const refreshTokenFn = async (_api: any, _extraOptions: object) => {
     try {
-      // If a refresh is already in progress, don't start another one
       if (isRefreshInProgress) {
-        console.log('Token refresh already in progress, skipping');
         return false;
       }
 
-      // Set the flag to prevent concurrent refreshes
       isRefreshInProgress = true;
 
       const token = getToken();
@@ -63,19 +59,15 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
         return false;
       }
 
-      // Use our standalone refresh token function
       const success = await refreshTokenFunction();
 
       if (!success) {
-        console.warn('Token refresh failed');
-        // Only redirect if we're not already on the auth page
         if (!window.location.pathname.includes('/auth')) {
           clearTokens();
           window.location.href = '/auth';
         }
       }
 
-      // Always reset the flag
       isRefreshInProgress = false;
       return success;
     } catch (error) {
@@ -86,19 +78,17 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
   };
 
   return async (args: string | FetchArgs, api: any, extraOptions: object) => {
-    // Check if token is about to expire and we're not already refreshing
     if (isTokenExpired() && !isRefreshing) {
-      // Prevent concurrent refresh attempts
       isRefreshing = true;
 
       try {
-        const refreshSuccess = await refreshTokenFn(api, extraOptions);
+        // const refreshSuccess = await refreshTokenFn(api, extraOptions);
 
-        if (!refreshSuccess) {
-          console.warn('Proactive token refresh failed, proceeding with original request');
-        } else {
-          console.log('Proactive token refresh succeeded');
-        }
+        // if (!refreshSuccess) {
+        //   console.warn('Proactive token refresh failed, proceeding with original request');
+        // } else {
+        //   console.log('Proactive token refresh succeeded');
+        // }
       } catch (error) {
         console.error('Error during proactive token refresh:', error);
       } finally {

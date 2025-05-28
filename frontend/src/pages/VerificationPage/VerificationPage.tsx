@@ -26,7 +26,6 @@ const VerificationPage: React.FC = () => {
     setStatus(null);
 
     try {
-      // 1. Получаем URL для загрузки от сервера
       const token = localStorage.getItem('token');
 
       const body = {
@@ -34,7 +33,6 @@ const VerificationPage: React.FC = () => {
         bucket: 'couply-verification-photos',
       };
 
-      // Функция для выполнения запроса с ретраем
       const fetchWithRetry = async (url: string, options: RequestInit, maxRetries = 3) => {
         let retries = 0;
 
@@ -42,12 +40,9 @@ const VerificationPage: React.FC = () => {
           try {
             const response = await fetch(url, options);
 
-            // Если ответ 500, пробуем снова
             if (response.status === 500 || response.status === 504) {
               retries++;
-              console.log(`Получен статус 500, попытка ${retries} из ${maxRetries}`);
 
-              // Экспоненциальная задержка между попытками (1s, 2s, 4s...)
               const delay = 1000 * Math.pow(2, retries - 1);
               await new Promise(resolve => setTimeout(resolve, delay));
               continue;
@@ -62,7 +57,6 @@ const VerificationPage: React.FC = () => {
               throw error;
             }
 
-            // Задержка перед следующей попыткой
             const delay = 1000 * Math.pow(2, retries - 1);
             await new Promise(resolve => setTimeout(resolve, delay));
           }
@@ -84,16 +78,14 @@ const VerificationPage: React.FC = () => {
 
       const { url } = await getUrlResponse.json();
 
-      // 2. Загружаем файл напрямую в S3
       await uploadFile({
         url,
         file: photoFile,
       }).unwrap();
 
-      // 3. Подтверждаем загрузку фото
       await confirmPhoto({
         //@ts-ignore
-        photoUrls: [url.split('?')[0]], // Убираем параметры из URL
+        photoUrls: [url.split('?')[0]],
         isVerificationPhoto: true,
       }).unwrap();
 

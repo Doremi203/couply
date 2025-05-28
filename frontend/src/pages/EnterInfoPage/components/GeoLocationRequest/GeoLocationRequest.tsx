@@ -184,8 +184,7 @@ const GeoLocationRequest: React.FC<GeoLocationRequestProps> = ({ onLocationRecei
         // For desktop, just close the dialog and retry
         setShowHelp(false);
       }
-    } catch (error) {
-      console.error('Failed to open settings:', error);
+    } catch {
       // Show manual instructions if automatic opening fails
       alert('Пожалуйста, откройте настройки геолокации вручную, следуя инструкциям на экране.');
     }

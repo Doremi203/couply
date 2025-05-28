@@ -17,8 +17,6 @@ export const HiddenAcc = () => {
       try {
         const res = await getUser({}).unwrap();
 
-        console.log(res);
-
         setUsersData(res.user);
 
         // setUsersData(results.filter(user => user !== null));

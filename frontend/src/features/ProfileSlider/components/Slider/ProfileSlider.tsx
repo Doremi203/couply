@@ -391,8 +391,6 @@ export const ProfileSlider = () => {
       return;
     }
 
-    console.log(newCount);
-
     if (newCount > MAX_UNDO_PER_DAY) {
       setPremiumOpen(true);
       return;
@@ -554,8 +552,6 @@ export const ProfileSlider = () => {
       case 0: {
         let bioLines = 0;
 
-        console.log(currentProfile);
-
         //@ts-ignore
         if (currentProfile.user.bio?.length > 0 && currentProfile.user.bio?.length <= 50) {
           bioLines = 1;
@@ -620,7 +616,6 @@ export const ProfileSlider = () => {
 
   const handleMessageOpen = () => {
     if (isPremium) {
-      console.log('here');
       setMessageOpen(true);
     } else {
       setPremiumOpen(true);
@@ -629,7 +624,6 @@ export const ProfileSlider = () => {
 
   const isAd = showingAd;
 
-  console.log(currentProfile);
   return (
     <div className={styles.slider}>
       {currentProfile && (

@@ -11,9 +11,7 @@ export const useTokenRefresh = () => {
     if (isTokenExpired()) {
       try {
         setIsRefreshing(true);
-        console.log('Attempting to refresh token from hook');
         const success = await refreshToken();
-        console.log('Token refresh result:', success);
         return success;
       } catch (error) {
         console.error('Failed to refresh token:', error);
@@ -39,10 +37,6 @@ export const useTokenRefresh = () => {
       }
 
       const timeUntilExpiry = Math.max(0, expiryTime - Date.now());
-
-      console.log(
-        `Setting up token refresh timer for ${Math.floor(timeUntilExpiry / 1000)}s from now`,
-      );
 
       timerRef.current = window.setTimeout(() => {
         checkAndRefreshToken().then(() => {

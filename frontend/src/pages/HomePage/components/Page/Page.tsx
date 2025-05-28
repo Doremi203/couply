@@ -49,7 +49,7 @@ export const HomePage = () => {
       updateUserLocation()
         .then(success => {
           if (success) {
-            console.log('Location updated successfully on HomePage');
+            // console.log('Location updated successfully on HomePage');
           }
         })
         .catch(err => {

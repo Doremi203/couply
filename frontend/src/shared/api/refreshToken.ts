@@ -6,11 +6,9 @@ export const refreshToken = async () => {
     const refreshToken = getRefreshToken();
 
     if (!token || !refreshToken) {
-      console.warn('No token or refresh token found');
+      // console.warn('No token or refresh token found');
       return false;
     }
-
-    console.log('Attempting to refresh token with refreshToken');
 
     const response = await fetch('https://auth.testing.couply.ru/v1/token/refresh', {
       method: 'POST',
@@ -22,12 +20,11 @@ export const refreshToken = async () => {
     });
 
     if (!response.ok) {
-      console.warn('Token refresh failed - server returned', response.status);
+      // console.warn('Token refresh failed - server returned', response.status);
       return false;
     }
 
     const data = await response.json();
-    console.log('Refresh token response:', data);
 
     if (data.accessToken && data.refreshToken) {
       setTokens(data.accessToken.token, data.refreshToken.token, data.accessToken.expiresIn);

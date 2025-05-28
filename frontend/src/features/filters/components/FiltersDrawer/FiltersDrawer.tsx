@@ -103,7 +103,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
       setSelectedGender([genderFromApi[filter.genderPriority]]);
       //@ts-ignore
 
-      console.log(filter);
       //@ts-ignore
       setDistance(filter.distanceKmRange.max);
       setAgeRange([filter.ageRange.min, filter.ageRange.max]);
@@ -260,8 +259,6 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
       JSON.stringify(selectedChildren) !== JSON.stringify(initialChildren) ||
       JSON.stringify(selectedAlcohol) !== JSON.stringify(initialAlcohol) ||
       JSON.stringify(selectedSmoking) !== JSON.stringify(initialSmoking);
-
-    console.log(hasChanges);
 
     return hasChanges;
   };

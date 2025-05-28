@@ -26,8 +26,6 @@ export const MatchModal: React.FC<MatchModalProps> = ({
   };
 
   useEffect(() => {
-    console.log('MatchModal: mounted with isOpen =', isOpen);
-
     document.body.style.overflow = 'hidden';
     document.addEventListener('mousedown', handleClickOutside);
 
@@ -36,7 +34,6 @@ export const MatchModal: React.FC<MatchModalProps> = ({
     }
 
     return () => {
-      console.log('MatchModal: unmounting');
       document.removeEventListener('mousedown', handleClickOutside);
       document.body.style.overflow = '';
     };
@@ -47,11 +44,8 @@ export const MatchModal: React.FC<MatchModalProps> = ({
   };
 
   if (!isOpen) {
-    console.log('MatchModal: Not rendering because isOpen is false');
     return null;
   }
-
-  console.log('MatchModal: Rendering modal content');
 
   return (
     <div className={styles.darkOverlay} onClick={handleModalClick}>
