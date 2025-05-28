@@ -4,6 +4,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"time"
 
@@ -49,23 +50,16 @@ func (g *objectStoragePhotoURLGenerator) GenerateUpload(ctx context.Context, key
 	return uploadURL.String(), nil
 }
 
-func (g *objectStoragePhotoURLGenerator) GenerateDownload(ctx context.Context, key string) (string, error) {
-	reqParams := make(url.Values)
-	reqParams.Set("response-cache-control", "max-age=604800, immutable")
-
-	downloadURL, err := g.client.PresignedGetObject(ctx, g.bucket, key, downloadURLLiveTime, reqParams)
-	if err != nil {
-		return "", errors.WrapFailf(
-			err,
-			"generate signed download url %v %v",
-			errors.Token("bucket", g.bucket),
-			errors.Token("key", key),
-		)
+func (g *objectStoragePhotoURLGenerator) GenerateDownload(_ context.Context, key string) (string, error) {
+	u := &url.URL{
+		Scheme: "https",
+		Host:   "photos.testing.couply.ru",
+		Path:   fmt.Sprintf("/%s/%s", g.bucket, key),
 	}
-
-	downloadURL.Host = "photos.testing.couply.ru"
-
-	return downloadURL.String(), nil
+	q := u.Query()
+	q.Set("response-cache-control", "public, max-age=604800, immutable")
+	u.RawQuery = q.Encode()
+	return u.String(), nil
 }
 
 type PhotoURLGenerator interface {
