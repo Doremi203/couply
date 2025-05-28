@@ -60,7 +60,7 @@ const VerificationPage: React.FC = () => {
       setStatus('Фото успешно отправлено на верификацию!');
       setTimeout(() => navigate('/profile'), 2000);
       //@ts-ignore
-    } catch (error) {
+    } catch {
       // console.error('Upload failed:', error);
       // setStatus('Ошибка при загрузке фото');
       setStatus('Фото успешно отправлено на верификацию!');
