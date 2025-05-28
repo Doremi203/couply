@@ -223,8 +223,8 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
       getOrDefault(filter.ageRange?.max, 100),
     ];
     const initialHeightRange = [
-      getOrDefault(filter.heightRange?.min, 150),
-      getOrDefault(filter.heightRange?.max, 240),
+      getOrDefault(filter.heightRange?.min, 100),
+      getOrDefault(filter.heightRange?.max, 250),
     ];
     const initialVerified = getOrDefault(filter.onlyVerified, false);
     const initialPremium = getOrDefault(filter.onlyPremium, false);
@@ -382,8 +382,8 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
             <SliderFilter
               title="Рост"
               value={heightRange}
-              min={150}
-              max={240}
+              min={100}
+              max={250}
               onChange={handleHeightRangeChange}
               valueLabelDisplay="auto"
             />
