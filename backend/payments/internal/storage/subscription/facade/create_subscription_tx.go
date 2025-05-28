@@ -35,9 +35,6 @@ func (f *StorageFacadeSubscription) subscriptionExists(ctx context.Context, newS
 		UserID:                      newSubscription.UserID,
 		ActiveOrPendingSubscription: true,
 	})
-	if err != nil {
-		return false
-	}
 
-	return true
+	return err == nil
 }

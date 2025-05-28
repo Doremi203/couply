@@ -59,7 +59,7 @@ define CLONE_PROTO_REPO
 	@rm -rf tmp
 endef
 
-generate: auth/generate matcher/generate blocker/generate notificator/generate
+generate: auth/generate matcher/generate blocker/generate notificator/generate payments/generate
 
 services/deploy:
 	docker compose up
