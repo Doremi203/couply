@@ -4,6 +4,11 @@ import (
 	"context"
 	"time"
 
+	telegram5 "github.com/Doremi203/couply/backend/auth/gen/api/telegram"
+	telegram4 "github.com/Doremi203/couply/backend/auth/internal/grpc/telegram"
+	telegram2 "github.com/Doremi203/couply/backend/auth/internal/repo/telegram"
+	telegram3 "github.com/Doremi203/couply/backend/auth/internal/usecase/telegram"
+
 	phoneconfirmgrpc "github.com/Doremi203/couply/backend/auth/gen/api/phone-confirm"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/hash"
 	"github.com/Doremi203/couply/backend/auth/internal/domain/oauth"
@@ -104,6 +109,7 @@ func main() { //nolint:gocognit
 		userRepo := userpostgres.NewRepo(dbClient)
 		oauthAccountRepo := userpostgres.NewOAuthAccountRepo(dbClient)
 		tokenRepo := tokenpostgres.NewRepo(dbClient)
+		telegramRepo := telegram2.NewRepo(dbClient)
 
 		hashProvider := hash.NewDefaultProvider(
 			salt.DefaultProvider{},
@@ -168,6 +174,9 @@ func main() { //nolint:gocognit
 			app.Log,
 		)
 
+		telegramUseCase := telegram3.NewUseCase(telegramRepo, txProvider)
+		telegramService := telegram4.NewGRPCService(app.Log, telegramUseCase)
+
 		tokenProvider := tokenpkg.NewJWTProvider(pkgTokenConfig)
 
 		tokenUseCase := tokenUC.NewUseCase(tokenRepo, tokenIssuer, timeProvider)
@@ -186,6 +195,8 @@ func main() { //nolint:gocognit
 				app.Log,
 				phoneconfirmgrpc.PhoneConfirmation_SendCodeV1_FullMethodName,
 				phoneconfirmgrpc.PhoneConfirmation_ConfirmV1_FullMethodName,
+				telegram5.TelegramData_SetTelegramDataV1_FullMethodName,
+				telegram5.TelegramData_GetTelegramDataV1_FullMethodName,
 			),
 		)
 		app.RegisterGRPCServices(
@@ -193,12 +204,14 @@ func main() { //nolint:gocognit
 			loginService,
 			phoneConfirmationService,
 			tokenService,
+			telegramService,
 		)
 		app.AddGatewayHandlers(
 			registrationService,
 			loginService,
 			phoneConfirmationService,
 			tokenService,
+			telegramService,
 		)
 
 		return nil

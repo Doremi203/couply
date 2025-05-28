@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package telegram;
+
+option go_package = "github.com/Doremi203/couply/backend/auth/api/telegram";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service TelegramData {
+  rpc SetTelegramDataV1(SetTelegramDataV1Request) returns (SetTelegramDataV1Response) {
+    option (google.api.http) = {
+      post: "/v1/telegram/data/set"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Установка данных о телеграмме пользователя";
+      description: "Устанавливает данные о телеграмме пользователя";
+      parameters: {
+        headers: {
+          name: "User-Token"
+          description: "Токен пользователя полученный в /login"
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
+  rpc GetTelegramDataV1(GetTelegramDataV1Request) returns (GetTelegramDataV1Response) {
+    option (google.api.http) = {
+      post: "/v1/telegram/data/get"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Получение данных о телеграмме пользователя";
+      description: "Получает данные о телеграмме пользователя";
+      parameters: {
+        headers: {
+          name: "User-Token"
+          description: "Токен пользователя полученный в /login"
+          type: STRING
+          required: true
+        }
+      }
+    };
+  }
+}
+
+message SetTelegramDataV1Request {
+  map<string, string> auth_data = 1;
+}
+
+message SetTelegramDataV1Response {
+  string id = 1;
+  string username = 2;
+}
+
+message GetTelegramDataV1Request {}
+
+message GetTelegramDataV1Response {
+  string telegram_url = 1;
+}
