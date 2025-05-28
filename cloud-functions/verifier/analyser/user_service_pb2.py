@@ -14,19 +14,19 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12user_service.proto\x12\x06\x63ouply\"c\n$SetUserVerificationStatusByIDRequest\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12*\n\x06status\x18\x02 \x01(\x0e\x32\x1a.couply.VerificationStatus\"8\n%SetUserVerificationStatusByIDResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08*A\n\x12VerificationStatus\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04PASS\x10\x01\x12\x08\n\x04\x46\x41IL\x10\x02\x12\n\n\x06MANUAL\x10\x03\x32\x8b\x01\n\x0bUserService\x12|\n\x1dSetUserVerificationStatusByID\x12,.couply.SetUserVerificationStatusByIDRequest\x1a-.couply.SetUserVerificationStatusByIDResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12user_service.proto\x12\x06\x63ouply\"e\n&SetUserVerificationStatusByIDV1Request\x12\x0f\n\x07user_id\x18\x01 \x01(\t\x12*\n\x06status\x18\x02 \x01(\x0e\x32\x1a.couply.VerificationStatus\":\n\'SetUserVerificationStatusByIDV1Response\x12\x0f\n\x07success\x18\x01 \x01(\x08*A\n\x12VerificationStatus\x12\x0b\n\x07UNKNOWN\x10\x00\x12\x08\n\x04PASS\x10\x01\x12\x08\n\x04\x46\x41IL\x10\x02\x12\n\n\x06MANUAL\x10\x03\x32\x92\x01\n\x0bUserService\x12\x82\x01\n\x1fSetUserVerificationStatusByIDV1\x12..couply.SetUserVerificationStatusByIDV1Request\x1a/.couply.SetUserVerificationStatusByIDV1Responseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'user_service_pb2', _globals)
 if _descriptor._USE_C_DESCRIPTORS == False:
   DESCRIPTOR._options = None
-  _globals['_VERIFICATIONSTATUS']._serialized_start=189
-  _globals['_VERIFICATIONSTATUS']._serialized_end=254
-  _globals['_SETUSERVERIFICATIONSTATUSBYIDREQUEST']._serialized_start=30
-  _globals['_SETUSERVERIFICATIONSTATUSBYIDREQUEST']._serialized_end=129
-  _globals['_SETUSERVERIFICATIONSTATUSBYIDRESPONSE']._serialized_start=131
-  _globals['_SETUSERVERIFICATIONSTATUSBYIDRESPONSE']._serialized_end=187
-  _globals['_USERSERVICE']._serialized_start=257
-  _globals['_USERSERVICE']._serialized_end=396
+  _globals['_VERIFICATIONSTATUS']._serialized_start=193
+  _globals['_VERIFICATIONSTATUS']._serialized_end=258
+  _globals['_SETUSERVERIFICATIONSTATUSBYIDV1REQUEST']._serialized_start=30
+  _globals['_SETUSERVERIFICATIONSTATUSBYIDV1REQUEST']._serialized_end=131
+  _globals['_SETUSERVERIFICATIONSTATUSBYIDV1RESPONSE']._serialized_start=133
+  _globals['_SETUSERVERIFICATIONSTATUSBYIDV1RESPONSE']._serialized_end=191
+  _globals['_USERSERVICE']._serialized_start=261
+  _globals['_USERSERVICE']._serialized_end=407
 # @@protoc_insertion_point(module_scope)

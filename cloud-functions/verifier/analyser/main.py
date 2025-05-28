@@ -119,12 +119,14 @@ def download_object(bucket: str, key: str, token: str) -> bytes:
 def send_verification_status(user_id: str, status) -> bool:
     channel = grpc.insecure_channel("matcher.testing.couply.ru:5051")
     stub = user_service_pb2_grpc.UserServiceStub(channel)
+    api_key = os.environ["X_API_KEY"]
+    metadata = [("x-api-key", api_key)]
 
-    req = user_service_pb2.SetUserVerificationStatusByIDRequest(
+    req = user_service_pb2.SetUserVerificationStatusByIDV1Request(
         user_id=user_id,
         status=status
     )
-    resp = stub.SetUserVerificationStatusByID(req, timeout=5)  # таймаут 5 с
+    resp = stub.SetUserVerificationStatusByIDV1(req, timeout=5, metadata=metadata)  # таймаут 5 с
     return resp.success
 
 def fetch_iam_token():
