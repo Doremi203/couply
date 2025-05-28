@@ -30,3 +30,15 @@
   padding: 0 16px;
   margin-top: 20px;
 }
+
+.link1 {
+  color: grey;
+  margin-right: 150px;
+  /* margin-top: 10px; */
+}
+
+.link2 {
+  color: grey;
+  margin-right: 150px;
+  margin-top: 10px;
+}

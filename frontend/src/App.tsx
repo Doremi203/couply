@@ -16,10 +16,12 @@ import { LikesPage } from './pages/LikesPage';
 import LoginPage from './pages/LoginPage';
 import OAuthCallback from './pages/OAuthCallback/OAuthCallback.tsx';
 import { PremiumPage } from './pages/PremiumPage';
+import PrivacyPage from './pages/PrivacyPage/index.tsx';
 import { ProfilePage } from './pages/ProfilePage';
 import RegistrationPage from './pages/RegistrationPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { SplashPage } from './pages/SplashPage';
+import TermsPage from './pages/TermsPage/index.tsx';
 import VerificationPage from './pages/VerificationPage/VerificationPage';
 import { ThemeProvider } from './shared/lib/context/ThemeContext';
 
@@ -79,6 +81,14 @@ const router = createBrowserRouter([
   {
     path: 'verification',
     element: <VerificationPage />,
+  },
+  {
+    path: 'terms',
+    element: <TermsPage />,
+  },
+  {
+    path: 'privacy',
+    element: <PrivacyPage />,
   },
   {
     path: '*',

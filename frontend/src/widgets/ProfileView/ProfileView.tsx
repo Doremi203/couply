@@ -51,16 +51,42 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
   const [likeUser] = useLikeUserMutation();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPremiumModalOpen, setIsPremiumModalOpen] = useState(false);
+  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const profileData = profile.user || profile;
 
-  const getProfilePhoto = () => {
-    const firstPhoto = profileData.photos[0];
-    if (typeof firstPhoto === 'string') {
-      return firstPhoto;
-    } else if (firstPhoto && typeof firstPhoto === 'object') {
-      return firstPhoto.url;
+  const getProfilePhoto = (index: number) => {
+    const photo = profileData.photos[index];
+    if (typeof photo === 'string') {
+      return photo;
+    } else if (photo && typeof photo === 'object') {
+      return photo.url;
     }
+    return '';
+  };
+
+  const handlePhotoClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickPosition = e.clientX - rect.left;
+    const width = rect.width;
+
+    if (clickPosition > width * 0.75) {
+      handleNextPhoto();
+    } else if (clickPosition < width * 0.25) {
+      handlePrevPhoto();
+    }
+  };
+
+  const handleNextPhoto = () => {
+    if (!profileData.photos || profileData.photos.length <= 1) return;
+    setCurrentPhotoIndex(prevIndex => (prevIndex + 1) % profileData.photos.length);
+  };
+
+  const handlePrevPhoto = () => {
+    if (!profileData.photos || profileData.photos.length <= 1) return;
+    setCurrentPhotoIndex(
+      prevIndex => (prevIndex - 1 + profileData.photos.length) % profileData.photos.length,
+    );
   };
 
   const handleLike = () => {
@@ -114,14 +140,21 @@ export const ProfileView: React.FC<ProfileViewProps> = ({
           }}
         />
 
-        <img
-          src={getProfilePhoto()}
-          alt={profileData.name}
-          className={styles.profileImage}
-          onError={e => {
-            (e.target as HTMLImageElement).src = '/photo1.png';
-          }}
-        />
+        <div className={styles.profileImageWrapper} onClick={handlePhotoClick}>
+          <img
+            src={getProfilePhoto(currentPhotoIndex)}
+            alt={profileData.name}
+            className={styles.profileImage}
+            onError={e => {
+              (e.target as HTMLImageElement).src = '/photo1.png';
+            }}
+          />
+          {profileData.photos && profileData.photos.length > 1 && (
+            <div className={styles.photoCounter}>
+              {currentPhotoIndex + 1}/{profileData.photos.length}
+            </div>
+          )}
+        </div>
         <div className={styles.profileGradient} />
 
         <div className={styles.photoContent}>

@@ -65,6 +65,14 @@ export const AuthPage = () => {
     console.error('VK ID authentication error:', error);
   };
 
+  const openTermsOfService = () => {
+    navigate('/terms');
+  };
+
+  const openPrivacyPolicy = () => {
+    navigate('/privacy');
+  };
+
   return (
     <div className={styles.page}>
       <img src="pv3.jpg" width="200px" height="150px" alt="Logo" className={styles.logo} />
@@ -89,6 +97,19 @@ export const AuthPage = () => {
           onSuccess={handleOAuthSuccess}
           onAuthError={handleVKIDAuthError}
         />
+      </div>
+
+      <div className={styles.terms}>
+        <p>
+          Продолжая, вы принимаете{' '}
+          <button onClick={openTermsOfService} className={styles.link}>
+            пользовательское соглашение
+          </button>{' '}
+          и{' '}
+          <button onClick={openPrivacyPolicy} className={styles.link}>
+            политику конфиденциальности
+          </button>
+        </p>
       </div>
     </div>
   );

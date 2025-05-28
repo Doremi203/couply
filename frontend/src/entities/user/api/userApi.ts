@@ -11,7 +11,7 @@ import {
 } from './types';
 
 const basicData = {
-  bio: 'bio',
+  bio: '',
   education: Education.unspecified,
   children: Children.unspecified,
   alcohol: Alcohol.unspecified,

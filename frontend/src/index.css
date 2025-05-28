@@ -27,6 +27,8 @@
   --icon-color: rgba(255, 255, 255, 0.8);
   --custom-input: #f5f7fa;
   --custom-input-enter: #f0f0f0;
+  --small-button-color: white;
+  --premium: white;
 }
 
 /* Dark theme variables */
@@ -54,6 +56,8 @@ body[data-theme='dark'] {
   --icon-color: #7b7a7a;
   --custom-input: #3b3a3a;
   --custom-input-enter: #3b3a3a;
+  --small-button-color: rgb(66, 65, 65);
+  --premium: rgb(132, 115, 244);
 }
 
 html,
