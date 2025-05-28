@@ -36,6 +36,7 @@ secrets:
     smsru: e6qeb7ef6o0sgb12n3r0
     yandex-id-oauth: e6qqk1qrp2mbbsuamdv5
     telegram-gateway-api-key: e6q3563gp4esqij0qb60
+    valkey: e6q7cfv4omf0tff4mvec
 
 smsru:
   test: true
