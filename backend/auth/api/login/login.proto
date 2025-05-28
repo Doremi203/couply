@@ -7,6 +7,7 @@ option go_package = "github.com/Doremi203/couply/backend/auth/gen/api/login";
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 import "api/token/token.proto";
+import "validate/validate.proto";
 
 service Login {
   rpc BasicLoginV1(BasicLoginRequestV1) returns (BasicLoginResponseV1) {
@@ -33,7 +34,7 @@ service Login {
 }
 
 message BasicLoginRequestV1 {
-  string email = 1;
+  string email = 1 [(validate.rules).string.email = true];
   string password = 2;
 }
 

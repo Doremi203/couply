@@ -17,9 +17,9 @@ func RunGRPCHandler[T any](
 	repo Repo,
 	useCase func(context.Context) (T, error),
 ) (ret T, err error) {
-	key, ok := FromGRPCCtx(ctx)
-	if !ok {
-		return ret, status.Error(codes.InvalidArgument, "idempotency-key header not provided")
+	key, err := FromGRPCCtx(ctx)
+	if err != nil {
+		return ret, status.Error(codes.InvalidArgument, err.Error())
 	}
 
 	ctx, err = txProvider.ContextWithTx(ctx, tx.IsolationReadCommitted)

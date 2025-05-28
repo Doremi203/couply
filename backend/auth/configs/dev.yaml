@@ -4,3 +4,6 @@ jwt:
 
 token:
   secretKey: GBONX7AaWWslx5JVihS3q1xIMLhzqF3R3rD5cyPeygg=
+
+valkey-rate-limiter:
+  disabled: true

@@ -2,12 +2,15 @@ package idempotency
 
 import (
 	"context"
-	"errors"
+
+	"github.com/google/uuid"
+	"github.com/pkg/errors"
 )
 
 func NewKey(s string) (Key, error) {
-	if s == "" {
-		return "", errors.New("idempotency key is empty")
+	_, err := uuid.Parse(s)
+	if err != nil {
+		return "", errors.Wrap(err, "idempotency key should be a valid UUID")
 	}
 
 	return Key(s), nil
