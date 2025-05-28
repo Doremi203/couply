@@ -49,7 +49,7 @@ export const Profile: React.FC<ProfileViewProps> = ({
       <div className={styles.profileContent}>
         <ProfileInfo
           profileData={profileData}
-          isVerified={isVerified}
+          isVerified={profileData.isVerified}
           onPreviewClick={onPreviewClick}
           isPremium={isPremium}
         />

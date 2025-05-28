@@ -538,7 +538,7 @@ export const ProfileSlider = () => {
         {/** @ts-ignore */}
         {currentProfile.user.name}, {currentProfile.user.age}
         {/* @ts-ignore */}
-        {currentProfile.user.verified && (
+        {currentProfile.user.isVerified && (
           <div className={styles.verifiedBadge}>
             <VerifiedIcon />
           </div>
