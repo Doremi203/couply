@@ -21,7 +21,16 @@ type userStorageSetterFacade interface {
 	CreateUserTx(ctx context.Context, user *user.User) error
 	UpdateUserTx(ctx context.Context, user *user.User) error
 	DeleteUserTx(ctx context.Context, userID uuid.UUID) error
-	UpdatePhotosUploadedAtTx(ctx context.Context, orderNumbers []int32, userID uuid.UUID) error
+	UpdatePhotosUploadedAtTx(
+		ctx context.Context,
+		orderNumbers []int32,
+		userID uuid.UUID,
+	) error
+	UpdateVerificationStatusTx(
+		ctx context.Context,
+		userID uuid.UUID,
+		isVerified bool,
+	) error
 }
 
 type userStorageGetterFacade interface {

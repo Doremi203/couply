@@ -201,6 +201,9 @@ service UserService {
       }
     };
   }
+
+  rpc SetUserVerificationStatusByIDV1(SetUserVerificationStatusByIDV1Request)
+      returns (SetUserVerificationStatusByIDV1Response);
 }
 
 message CreateUserV1Request {
@@ -451,4 +454,24 @@ enum Gender {
   GENDER_UNSPECIFIED = 0;
   GENDER_MALE = 1;
   GENDER_FEMALE = 2;
+}
+
+message SetUserVerificationStatusByIDV1Request {
+  string user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+  VerificationStatus status  = 2 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
+
+enum VerificationStatus {
+  UNKNOWN = 0;
+  PASS = 1;
+  FAIL = 2;
+  MANUAL = 3;
+}
+
+message SetUserVerificationStatusByIDV1Response {
+  bool success = 1;
 }

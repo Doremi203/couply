@@ -93,7 +93,7 @@ func main() {
 		pgStorageUser := postgres3.NewPgStorageUser(txManager)
 		storageFacadeUser := user_service_facade.NewStorageFacadeUser(txManager, pgStorageUser)
 		useCaseUserService := user_service_usecase.NewUseCase(photoURLGenerator, storageFacadeUser, uuidProvider)
-		implUserService := user_service.NewImplementation(useCaseUserService)
+		implUserService := user_service.NewImplementation(app.Log, useCaseUserService)
 
 		pgStorageMatching := postgres2.NewPgStorageMatching(txManager)
 		storageFacadeMatching := matching_service_facade.NewStorageFacadeMatching(txManager, pgStorageMatching)
@@ -105,6 +105,9 @@ func main() {
 		useCaseSearchService := search_service_usecase.NewUseCase(storageFacadeSearch, photoURLGenerator, app.Log)
 		implSearchService := search_service.NewImplementation(useCaseSearchService, photoURLGenerator)
 
+		app.AddAPIKeyProtectedEndpoints(
+			userservicegrpc.UserService_SetUserVerificationStatusByIDV1_FullMethodName,
+		)
 		app.AddGRPCUnaryInterceptor(
 			token.NewUnaryTokenInterceptor(
 				token.NewJWTProvider(tokenConfig),

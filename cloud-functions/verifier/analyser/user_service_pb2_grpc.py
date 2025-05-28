@@ -14,17 +14,17 @@ class UserServiceStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.SetUserVerificationStatusByID = channel.unary_unary(
-                '/couply.UserService/SetUserVerificationStatusByID',
-                request_serializer=user__service__pb2.SetUserVerificationStatusByIDRequest.SerializeToString,
-                response_deserializer=user__service__pb2.SetUserVerificationStatusByIDResponse.FromString,
+        self.SetUserVerificationStatusByIDV1 = channel.unary_unary(
+                '/couply.UserService/SetUserVerificationStatusByIDV1',
+                request_serializer=user__service__pb2.SetUserVerificationStatusByIDV1Request.SerializeToString,
+                response_deserializer=user__service__pb2.SetUserVerificationStatusByIDV1Response.FromString,
                 )
 
 
 class UserServiceServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def SetUserVerificationStatusByID(self, request, context):
+    def SetUserVerificationStatusByIDV1(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -33,10 +33,10 @@ class UserServiceServicer(object):
 
 def add_UserServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'SetUserVerificationStatusByID': grpc.unary_unary_rpc_method_handler(
-                    servicer.SetUserVerificationStatusByID,
-                    request_deserializer=user__service__pb2.SetUserVerificationStatusByIDRequest.FromString,
-                    response_serializer=user__service__pb2.SetUserVerificationStatusByIDResponse.SerializeToString,
+            'SetUserVerificationStatusByIDV1': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetUserVerificationStatusByIDV1,
+                    request_deserializer=user__service__pb2.SetUserVerificationStatusByIDV1Request.FromString,
+                    response_serializer=user__service__pb2.SetUserVerificationStatusByIDV1Response.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -49,7 +49,7 @@ class UserService(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
-    def SetUserVerificationStatusByID(request,
+    def SetUserVerificationStatusByIDV1(request,
             target,
             options=(),
             channel_credentials=None,
@@ -59,8 +59,8 @@ class UserService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/couply.UserService/SetUserVerificationStatusByID',
-            user__service__pb2.SetUserVerificationStatusByIDRequest.SerializeToString,
-            user__service__pb2.SetUserVerificationStatusByIDResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/couply.UserService/SetUserVerificationStatusByIDV1',
+            user__service__pb2.SetUserVerificationStatusByIDV1Request.SerializeToString,
+            user__service__pb2.SetUserVerificationStatusByIDV1Response.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

@@ -3,11 +3,11 @@ syntax = "proto3";
 package couply;
 
 service UserService {
-  rpc SetUserVerificationStatusByID(SetUserVerificationStatusByIDRequest)
-    returns (SetUserVerificationStatusByIDResponse);
+  rpc SetUserVerificationStatusByIDV1(SetUserVerificationStatusByIDV1Request)
+    returns (SetUserVerificationStatusByIDV1Response);
 }
 
-message SetUserVerificationStatusByIDRequest {
+message SetUserVerificationStatusByIDV1Request {
   string user_id = 1;
   VerificationStatus status  = 2;
 }
@@ -19,6 +19,6 @@ enum VerificationStatus {
   MANUAL = 3;
 }
 
-message SetUserVerificationStatusByIDResponse {
+message SetUserVerificationStatusByIDV1Response {
   bool success = 1;
 }
