@@ -235,6 +235,7 @@ export const ProfileSlider = () => {
 
       if (newSwipeCount % AD === 0) {
         setShowingAd(true);
+        dispatch({ type: 'profile/setShowingAd', payload: true }); // Dispatch action to update global state
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
         setTimer(5);
@@ -251,6 +252,8 @@ export const ProfileSlider = () => {
                 timerRef.current = null;
               }
               setTimerActive(false);
+              // Only re-enable NavBar when timer ends, but keep ad visible
+              dispatch({ type: 'profile/setShowingAd', payload: false });
               return 0;
             }
             return prevTimer - 1;
@@ -261,6 +264,7 @@ export const ProfileSlider = () => {
       }
     } else {
       setShowingAd(false);
+      dispatch({ type: 'profile/setShowingAd', payload: false }); // Dispatch action to update global state
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -292,6 +296,7 @@ export const ProfileSlider = () => {
 
       if (newSwipeCount % AD === 0) {
         setShowingAd(true);
+        dispatch({ type: 'profile/setShowingAd', payload: true }); // Dispatch action to update global state
         setAdIndex((adIndex + 1) % adProfiles.length);
         setTimerActive(true);
         setTimer(5);
@@ -308,6 +313,8 @@ export const ProfileSlider = () => {
                 timerRef.current = null;
               }
               setTimerActive(false);
+              // Only re-enable NavBar when timer ends, but keep ad visible
+              dispatch({ type: 'profile/setShowingAd', payload: false });
               return 0;
             }
             return prevTimer - 1;
@@ -318,6 +325,7 @@ export const ProfileSlider = () => {
       }
     } else {
       setShowingAd(false);
+      dispatch({ type: 'profile/setShowingAd', payload: false }); // Dispatch action to update global state
       if (timerRef.current) {
         clearInterval(timerRef.current);
         timerRef.current = null;
@@ -471,8 +479,10 @@ export const ProfileSlider = () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
+      // Make sure to reset the global state when component unmounts
+      dispatch({ type: 'profile/setShowingAd', payload: false });
     };
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (!currentProfile && !showingAd && !loading && hasMore) {

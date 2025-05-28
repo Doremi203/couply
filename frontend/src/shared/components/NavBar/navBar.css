@@ -41,6 +41,15 @@
   color: var(--primary-color);
 }
 
+.navItem.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+.navBarContainer.disabled {
+  pointer-events: none;
+}
+
 .navItem,
 .navItem svg,
 .navItem.active,
