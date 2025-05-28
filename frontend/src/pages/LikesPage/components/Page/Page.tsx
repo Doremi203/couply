@@ -114,7 +114,6 @@ export const LikesPage = () => {
         isOpen={showTelegramModal}
         onClose={() => {
           setShowTelegramModal(false);
-          ы;
           setIsTelegram(true);
         }}
       />
