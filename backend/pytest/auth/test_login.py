@@ -37,7 +37,7 @@ def test_basic_login_success(login_endpoint, headers):
 
 def test_basic_login_invalid_credentials(login_endpoint, headers):
     """
-    Попытка логина с несуществующими учётными данными: ожидаем 401 Unauthorized.
+    Попытка логина с несуществующими учётными данными: ожидаем 404 Not Found.
     """
     payload = {"email": fake.email(), "password": fake.password()}
     resp = requests.post(login_endpoint, json=payload, headers=headers)
