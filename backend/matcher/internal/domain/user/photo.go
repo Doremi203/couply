@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"net/url"
 	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
@@ -47,7 +48,10 @@ func (g *objectStoragePhotoURLGenerator) GenerateUpload(ctx context.Context, key
 }
 
 func (g *objectStoragePhotoURLGenerator) GenerateDownload(ctx context.Context, key string) (string, error) {
-	downloadURL, err := g.client.PresignedGetObject(ctx, g.bucket, key, downloadURLLiveTime, nil)
+	reqParams := make(url.Values)
+	reqParams.Set("response-cache-control", "max-age=604800, immutable")
+
+	downloadURL, err := g.client.PresignedGetObject(ctx, g.bucket, key, downloadURLLiveTime, reqParams)
 	if err != nil {
 		return "", errors.WrapFailf(
 			err,
