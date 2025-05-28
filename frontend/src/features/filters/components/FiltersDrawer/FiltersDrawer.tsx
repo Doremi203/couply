@@ -1,4 +1,13 @@
-import { Box } from '@mui/material';
+import {
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+} from '@mui/material';
+import _ from 'lodash';
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -85,10 +94,16 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
   const [verificationStatus, setVerificationStatus] = useState<boolean>(false);
   const [premiumStatus, setPremiumStatus] = useState<boolean>(false);
 
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
   useEffect(() => {
     if (initialFilterData?.filter) {
       const filter = initialFilterData.filter;
       setSelectedGender([genderFromApi[filter.genderPriority]]);
+      //@ts-ignore
+
+      console.log(filter);
       //@ts-ignore
       setDistance(filter.distanceKmRange.max);
       setAgeRange([filter.ageRange.min, filter.ageRange.max]);
@@ -190,6 +205,111 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
     setSelectedGoal([]);
   };
 
+  const checkForChanges = () => {
+    if (!initialFilterData?.filter) return false;
+    const filter = initialFilterData.filter;
+
+    // Helper to get value or default
+    function getOrDefault<T>(val: T | undefined | null, def: T): T {
+      return val !== undefined && val !== null ? val : def;
+    }
+
+    const genderKey = getOrDefault(filter.genderPriority, GenderPriority.any);
+    const initialGender = genderFromApi[genderKey as keyof typeof genderFromApi];
+    const initialDistance = getOrDefault(filter.distanceKmRange.max, 100);
+    const initialAgeRange = [
+      getOrDefault(filter.ageRange?.min, 18),
+      getOrDefault(filter.ageRange?.max, 100),
+    ];
+    const initialHeightRange = [
+      getOrDefault(filter.heightRange?.min, 150),
+      getOrDefault(filter.heightRange?.max, 240),
+    ];
+    const initialVerified = getOrDefault(filter.onlyVerified, false);
+    const initialPremium = getOrDefault(filter.onlyPremium, false);
+    const emptyInterests = {} as Parameters<typeof mapInterestsFromApiFormat>[0];
+    const initialInterests = mapInterestsFromApiFormat(
+      getOrDefault(filter.interest, emptyInterests),
+    );
+    const initialGoal = filter.goal && goalFromApi[filter.goal] ? [goalFromApi[filter.goal]] : [];
+    const initialZodiac =
+      filter.zodiac && zodiacFromApi[filter.zodiac] ? [zodiacFromApi[filter.zodiac]] : [];
+    const initialEducation =
+      filter.education && educationFromApi[filter.education]
+        ? [educationFromApi[filter.education]]
+        : [];
+    const initialChildren =
+      filter.children && childrenFromApi[filter.children] ? [childrenFromApi[filter.children]] : [];
+    const initialAlcohol =
+      filter.alcohol && alcoholFromApi[filter.alcohol] ? [alcoholFromApi[filter.alcohol]] : [];
+    const initialSmoking =
+      filter.smoking && smokingFromApi[filter.smoking] ? [smokingFromApi[filter.smoking]] : [];
+
+    const hasChanges =
+      JSON.stringify(selectedGender) !== JSON.stringify([initialGender]) ||
+      distance !== initialDistance ||
+      JSON.stringify(ageRange) !== JSON.stringify(initialAgeRange) ||
+      JSON.stringify(heightRange) !== JSON.stringify(initialHeightRange) ||
+      verificationStatus !== initialVerified ||
+      premiumStatus !== initialPremium ||
+      JSON.stringify(selectedInterests) !== JSON.stringify(initialInterests) ||
+      JSON.stringify(selectedGoal) !== JSON.stringify(initialGoal) ||
+      JSON.stringify(selectedZodiac) !== JSON.stringify(initialZodiac) ||
+      JSON.stringify(selectedEducation) !== JSON.stringify(initialEducation) ||
+      JSON.stringify(selectedChildren) !== JSON.stringify(initialChildren) ||
+      JSON.stringify(selectedAlcohol) !== JSON.stringify(initialAlcohol) ||
+      JSON.stringify(selectedSmoking) !== JSON.stringify(initialSmoking);
+
+    console.log(hasChanges);
+
+    return hasChanges;
+  };
+
+  const handleClose = () => {
+    if (hasUnsavedChanges) {
+      setShowConfirmModal(true);
+    } else {
+      onClose();
+    }
+  };
+
+  const handleConfirmClose = () => {
+    setShowConfirmModal(false);
+    onClose();
+  };
+
+  const handleSaveAndClose = async () => {
+    await handleApplyFilters();
+    setShowConfirmModal(false);
+  };
+
+  // Reset hasUnsavedChanges when modal is closed without saving
+  useEffect(() => {
+    if (!showConfirmModal) {
+      setHasUnsavedChanges(checkForChanges());
+    }
+  }, [showConfirmModal]);
+
+  // Update hasUnsavedChanges whenever any filter changes
+  useEffect(() => {
+    const changes = checkForChanges();
+    setHasUnsavedChanges(changes);
+  }, [
+    selectedGender,
+    distance,
+    ageRange,
+    heightRange,
+    selectedInterests,
+    verificationStatus,
+    premiumStatus,
+    selectedEducation,
+    selectedAlcohol,
+    selectedChildren,
+    selectedSmoking,
+    selectedZodiac,
+    selectedGoal,
+  ]);
+
   if (!open) return null;
 
   const handleApplyFilters = async () => {
@@ -227,110 +347,207 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
   };
 
   return (
-    <div className={styles.modalOverlay}>
-      <div className={styles.modalContainer}>
-        <Box className={styles.content}>
-          <FilterHeader onBack={onClose} onClear={handleClearFilters} />
+    <>
+      <div className={styles.modalOverlay}>
+        <div className={styles.modalContainer}>
+          <Box className={styles.content}>
+            <FilterHeader onBack={handleClose} onClear={handleClearFilters} />
 
-          <GenderFilter
-            title="Пол"
-            options={Object.values(genderOptions)}
-            selectedOptions={selectedGender}
-            onToggle={handleGenderToggle}
-          />
+            <GenderFilter
+              title="Пол"
+              options={Object.values(genderOptions)}
+              selectedOptions={selectedGender}
+              onToggle={handleGenderToggle}
+            />
 
-          <SliderFilter
-            title="Дистанция"
-            value={distance}
-            min={1}
-            max={100}
-            onChange={handleDistanceChange}
-            unit="km"
-          />
+            <SliderFilter
+              title="Дистанция"
+              value={distance}
+              min={1}
+              max={100}
+              onChange={handleDistanceChange}
+              unit="km"
+            />
 
-          <SliderFilter
-            title="Возраст"
-            value={ageRange}
-            min={18}
-            max={99}
-            onChange={handleAgeRangeChange}
-            valueLabelDisplay="auto"
-          />
+            <SliderFilter
+              title="Возраст"
+              value={ageRange}
+              min={18}
+              max={99}
+              onChange={handleAgeRangeChange}
+              valueLabelDisplay="auto"
+            />
 
-          <SliderFilter
-            title="Рост"
-            value={heightRange}
-            min={150}
-            max={240}
-            onChange={handleHeightRangeChange}
-            valueLabelDisplay="auto"
-          />
+            <SliderFilter
+              title="Рост"
+              value={heightRange}
+              min={150}
+              max={240}
+              onChange={handleHeightRangeChange}
+              valueLabelDisplay="auto"
+            />
 
-          <ChipFilter
-            title="Цель"
-            options={Object.values(goalOptions)}
-            selectedOptions={selectedGoal}
-            onToggle={handleGoalToggle}
-          />
+            <ChipFilter
+              title="Цель"
+              options={Object.values(goalOptions)}
+              selectedOptions={selectedGoal}
+              onToggle={handleGoalToggle}
+            />
 
-          <InterestFilter
-            title="Интересы"
-            selectedOptions={selectedInterests}
-            onSelect={selected => setSelectedInterests(selected)}
-          />
+            <InterestFilter
+              title="Интересы"
+              selectedOptions={selectedInterests}
+              onSelect={selected => setSelectedInterests(selected)}
+            />
 
-          <ChipFilter
-            title="Знаки зодиака"
-            options={Object.values(zodiacOptions)}
-            selectedOptions={selectedZodiac}
-            onToggle={handleZodiacToggle}
-          />
+            <ChipFilter
+              title="Знаки зодиака"
+              options={Object.values(zodiacOptions)}
+              selectedOptions={selectedZodiac}
+              onToggle={handleZodiacToggle}
+            />
 
-          <ChipFilter
-            title="Образование"
-            options={Object.values(educationOptions)}
-            selectedOptions={selectedEducation}
-            onToggle={handleEducationToggle}
-          />
+            <ChipFilter
+              title="Образование"
+              options={Object.values(educationOptions)}
+              selectedOptions={selectedEducation}
+              onToggle={handleEducationToggle}
+            />
 
-          <ChipFilter
-            title="Дети"
-            options={Object.values(childrenOptions)}
-            selectedOptions={selectedChildren}
-            onToggle={handleChildrenToggle}
-          />
+            <ChipFilter
+              title="Дети"
+              options={Object.values(childrenOptions)}
+              selectedOptions={selectedChildren}
+              onToggle={handleChildrenToggle}
+            />
 
-          <ChipFilter
-            title="Алкоголь"
-            options={Object.values(alcoholOptions)}
-            selectedOptions={selectedAlcohol}
-            onToggle={handleAlcoholToggle}
-          />
+            <ChipFilter
+              title="Алкоголь"
+              options={Object.values(alcoholOptions)}
+              selectedOptions={selectedAlcohol}
+              onToggle={handleAlcoholToggle}
+            />
 
-          <ChipFilter
-            title="Курение"
-            options={Object.values(smokingOptions)}
-            selectedOptions={selectedSmoking}
-            onToggle={handleSmokingToggle}
-          />
+            <ChipFilter
+              title="Курение"
+              options={Object.values(smokingOptions)}
+              selectedOptions={selectedSmoking}
+              onToggle={handleSmokingToggle}
+            />
 
-          <ToggleFilter
-            title="Только верифицированные"
-            description="Показывать только верифицированных пользователей"
-            value={verificationStatus}
-            onChange={handleVerificationToggle}
-          />
+            <ToggleFilter
+              title="Только верифицированные"
+              description="Показывать только верифицированных пользователей"
+              value={verificationStatus}
+              onChange={handleVerificationToggle}
+            />
 
-          <ToggleFilter
-            title="Только премиум"
-            description="Показывать только премиум пользователей"
-            value={premiumStatus}
-            onChange={handlePremiumToggle}
-          />
-          <FilterActions onContinue={handleApplyFilters} />
-        </Box>
+            <ToggleFilter
+              title="Только премиум"
+              description="Показывать только премиум пользователей"
+              value={premiumStatus}
+              onChange={handlePremiumToggle}
+            />
+            <FilterActions onContinue={handleApplyFilters} />
+          </Box>
+        </div>
       </div>
-    </div>
+
+      <Dialog
+        open={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: '16px',
+            padding: '24px',
+            maxWidth: '400px',
+            width: '100%',
+            // boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+            fontFamily: 'Jost',
+            boxShadow: '0px 4px 10px var(--shadow-color)',
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            padding: 0,
+            marginBottom: '16px',
+            '& .MuiTypography-root': {
+              fontSize: '20px',
+              fontWeight: 600,
+              color: '#1A1A1A',
+              // fontFamily: 'Jost',
+            },
+            fontFamily: 'Jost',
+            // boxShadow: '0px 4px 10px var(--shadow-color)',
+          }}
+        >
+          Есть несохраненные изменения
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            padding: 0,
+            marginBottom: '24px',
+            fontFamily: 'Jost',
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '16px',
+              color: '#666666',
+              lineHeight: '24px',
+              fontFamily: 'Jost',
+            }}
+          >
+            Вы хотите сохранить изменения перед выходом?
+          </Typography>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            padding: 0,
+            gap: '12px',
+            justifyContent: 'flex-end',
+            fontFamily: 'Jost',
+          }}
+        >
+          <Button
+            onClick={handleConfirmClose}
+            sx={{
+              padding: '12px 24px',
+              borderRadius: '12px',
+              textTransform: 'none',
+              fontSize: '16px',
+              fontWeight: 500,
+              color: '#666666',
+              '&:hover': {
+                backgroundColor: '#F5F5F5',
+              },
+              fontFamily: 'Jost',
+            }}
+          >
+            Выйти без сохранения
+          </Button>
+          <Button
+            onClick={handleSaveAndClose}
+            variant="contained"
+            sx={{
+              padding: '12px 24px',
+              borderRadius: '12px',
+              textTransform: 'none',
+              fontSize: '16px',
+              fontWeight: 500,
+              backgroundColor: '#3b5eda',
+              '&:hover': {
+                backgroundColor: '#3b5eda',
+              },
+              fontFamily: 'Jost',
+            }}
+          >
+            Сохранить и выйти
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
