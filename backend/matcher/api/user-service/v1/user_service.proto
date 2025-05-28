@@ -224,9 +224,7 @@ message CreateUserV1Request {
     (validate.rules).double = {gte: -180.0, lte: 180.0},
     (google.api.field_behavior) = REQUIRED
   ];
-  string bio = 6 [
-    (validate.rules).string.min_len = 2
-  ];
+  string bio = 6;
   common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
@@ -279,9 +277,7 @@ message UpdateUserV1Request {
   double longitude = 5 [
     (validate.rules).double = {gte: -180.0, lte: 180.0}
   ];
-  string bio = 6 [
-    (validate.rules).string.min_len = 2
-  ];
+  string bio = 6;
   common.v1.Goal goal = 7 [
     (validate.rules).enum.defined_only = true
   ];
@@ -336,9 +332,7 @@ message UpdateUserByIDV1Request {
   double longitude = 6 [
     (validate.rules).double = {gte: -180.0, lte: 180.0}
   ];
-  string bio = 7 [
-    (validate.rules).string.min_len = 2
-  ];
+  string bio = 7;
   common.v1.Goal goal = 8 [
     (validate.rules).enum.defined_only = true
   ];

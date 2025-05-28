@@ -117,7 +117,9 @@ func TestUseCase_GetUserByID(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			usecase := NewUseCase(mocks.photoURLGenerator, mocks.userStorageFacade)
+			uuidProvider := &providerStub{}
+
+			usecase := NewUseCase(mocks.photoURLGenerator, mocks.userStorageFacade, uuidProvider)
 
 			got, err := usecase.GetUserByID(context.Background(), tt.args.in)
 

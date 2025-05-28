@@ -41,7 +41,7 @@ type CreateUserV1Response struct {
 }
 
 func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
-	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(req.Latitude, req.Longitude)
+	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(req.GetLatitude(), req.GetLongitude())
 	now := time.Now()
 
 	return &CreateUserV1Request{

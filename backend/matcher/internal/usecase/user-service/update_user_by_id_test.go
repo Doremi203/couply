@@ -37,7 +37,7 @@ func TestUseCase_UpdateUserByID(t *testing.T) {
 		{
 			name: "create photos error",
 			setup: func(m mocks) {
-				m.photoURLGenerator.EXPECT().GenerateUpload(gomock.Any(), "users/11111111-1111-1111-1111-111111111111/slot/0.jpg", ".jpg").Return("", errors.Error("error"))
+				m.photoURLGenerator.EXPECT().GenerateUpload(gomock.Any(), "users/11111111-1111-1111-1111-111111111111/slot/0/11111111-1111-1111-1111-111111111111.jpg", ".jpg").Return("", errors.Error("error"))
 			},
 			args: args{
 				in: &dto.UpdateUserByIDV1Request{
@@ -135,7 +135,7 @@ func TestUseCase_UpdateUserByID(t *testing.T) {
 		{
 			name: "success",
 			setup: func(m mocks) {
-				m.photoURLGenerator.EXPECT().GenerateUpload(gomock.Any(), "users/11111111-1111-1111-1111-111111111111/slot/0.jpg", ".jpg").Return("uploadURL", nil)
+				m.photoURLGenerator.EXPECT().GenerateUpload(gomock.Any(), "users/11111111-1111-1111-1111-111111111111/slot/0/11111111-1111-1111-1111-111111111111.jpg", ".jpg").Return("uploadURL", nil)
 				m.userStorageFacade.EXPECT().UpdateUserTx(gomock.Any(), &user.User{
 					ID:         uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 					Name:       "user",
@@ -160,7 +160,7 @@ func TestUseCase_UpdateUserByID(t *testing.T) {
 						{
 							UserID:      uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 							OrderNumber: 0,
-							ObjectKey:   "users/11111111-1111-1111-1111-111111111111/slot/0.jpg",
+							ObjectKey:   "users/11111111-1111-1111-1111-111111111111/slot/0/11111111-1111-1111-1111-111111111111.jpg",
 							MimeType:    ".jpg",
 							UploadedAt:  nil,
 							UploadURL:   func(s string) *string { return &s }("uploadURL"),
@@ -226,7 +226,7 @@ func TestUseCase_UpdateUserByID(t *testing.T) {
 						{
 							UserID:      uuid.MustParse("11111111-1111-1111-1111-111111111111"),
 							OrderNumber: 0,
-							ObjectKey:   "users/11111111-1111-1111-1111-111111111111/slot/0.jpg",
+							ObjectKey:   "users/11111111-1111-1111-1111-111111111111/slot/0/11111111-1111-1111-1111-111111111111.jpg",
 							MimeType:    ".jpg",
 							UploadedAt:  nil,
 							UploadURL:   func(s string) *string { return &s }("uploadURL"),
@@ -255,7 +255,9 @@ func TestUseCase_UpdateUserByID(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			usecase := NewUseCase(mocks.photoURLGenerator, mocks.userStorageFacade)
+			uuidProvider := &providerStub{}
+
+			usecase := NewUseCase(mocks.photoURLGenerator, mocks.userStorageFacade, uuidProvider)
 
 			got, err := usecase.UpdateUserByID(context.Background(), tt.args.in)
 

@@ -23,7 +23,7 @@ func (s *PgStorageSearch) UpdateFilter(ctx context.Context, filter *search.Filte
 	}
 
 	if result.RowsAffected() == 0 {
-		return ErrFilterNotFound
+		return search.ErrFilterNotFound
 	}
 
 	return nil

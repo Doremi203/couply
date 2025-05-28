@@ -90,7 +90,9 @@ func TestUseCase_DeleteUser(t *testing.T) {
 				tt.setup(mocks)
 			}
 
-			usecase := NewUseCase(mocks.photoURLGenerator, mocks.userStorageFacade)
+			uuidProvider := &providerStub{}
+
+			usecase := NewUseCase(mocks.photoURLGenerator, mocks.userStorageFacade, uuidProvider)
 
 			ctx := token.ContextWithToken(context.Background(), tt.args.token)
 			if tt.tokenErr {

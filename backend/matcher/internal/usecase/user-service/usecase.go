@@ -5,6 +5,8 @@ package user_service
 import (
 	"context"
 
+	uuidgen "github.com/Doremi203/couply/backend/auth/pkg/uuid"
+
 	"github.com/google/uuid"
 
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -30,14 +32,17 @@ type userStorageGetterFacade interface {
 type UseCase struct {
 	photoURLGenerator user.PhotoURLGenerator
 	userStorageFacade userStorageFacade
+	uuidProvider      uuidgen.Provider
 }
 
 func NewUseCase(
 	photoURLGenerator user.PhotoURLGenerator,
 	userStorageFacade userStorageFacade,
+	uuidProvider uuidgen.Provider,
 ) *UseCase {
 	return &UseCase{
 		photoURLGenerator: photoURLGenerator,
 		userStorageFacade: userStorageFacade,
+		uuidProvider:      uuidProvider,
 	}
 }

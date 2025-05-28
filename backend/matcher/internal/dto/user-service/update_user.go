@@ -39,7 +39,7 @@ type UpdateUserV1Response struct {
 }
 
 func PBToUpdateUserRequest(req *desc.UpdateUserV1Request) *UpdateUserV1Request {
-	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(req.Latitude, req.Longitude)
+	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(req.GetLatitude(), req.GetLongitude())
 	now := time.Now()
 
 	return &UpdateUserV1Request{
