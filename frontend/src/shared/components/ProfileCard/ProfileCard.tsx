@@ -130,27 +130,28 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
       <div className={`${styles.profileCard} ${className || ''}`} onClick={handleCardClick}>
         <div className={styles.imageCont}>
           <img src={profile.photos?.[0]?.url} alt={profile.name} className={styles.profileImage} />
-          {message !== undefined && message !== '' && (
-            <div
-              onClick={e => e.stopPropagation()}
-              style={{
-                position: 'absolute',
-                zIndex: 10,
-                top: '10px',
-                right: '10px',
-              }}
-            >
-              <SmsOutlinedIcon
-                className={styles.iconOverlay}
-                sx={{
-                  fontSize: 30,
-                  animation: `${styles.messageNotification} 1s infinite`,
-                }}
-                onClick={handleMessageClick}
-              />
-            </div>
-          )}
         </div>
+        {message !== undefined && message !== '' && (
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              position: 'absolute',
+              zIndex: 10,
+              top: '10px',
+              right: '10px',
+            }}
+          >
+            <SmsOutlinedIcon
+              className={styles.iconOverlay}
+              sx={{
+                fontSize: 30,
+                animation: `${styles.messageNotification} 1s infinite`,
+              }}
+              onClick={handleMessageClick}
+            />
+          </div>
+        )}
+
         <div className={styles.profileInfo}>
           <div className={styles.profileName}>
             {profile.name}, {profile.age}
