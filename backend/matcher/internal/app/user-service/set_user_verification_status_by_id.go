@@ -30,6 +30,7 @@ func (i *Implementation) SetUserVerificationStatusByIDV1(
 	userID, err := uuid.Parse(req.GetUserId())
 	if err != nil {
 		i.logger.Error(errors.WrapFail(err, "parse user id"))
+		return nil, status.Error(codes.InvalidArgument, "invalid user ID format")
 	}
 
 	err = i.usecase.SetUserVerificationStatusByID(ctx, userID, verificationStatus)
