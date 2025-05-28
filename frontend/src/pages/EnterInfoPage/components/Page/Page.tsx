@@ -36,7 +36,6 @@ export const EnterInfoPage = () => {
   const [createFilter] = useCreateFilterMutation();
 
   const [name, setName] = useState('');
-  const [telegram, setTelegram] = useState('');
   const [birthDate, setBirthDate] = useState('');
   const [height, setHeight] = useState('');
   const [userGender, setUserGender] = useState('');
@@ -115,7 +114,6 @@ export const EnterInfoPage = () => {
 
         const userData = {
           name,
-          telegram,
           age: ageValue,
           gender: genderEnum,
           height: Number(height),
@@ -250,7 +248,7 @@ export const EnterInfoPage = () => {
   const isCurrentStepValid = () => {
     switch (currentStep) {
       case 0:
-        return name.trim() !== '' && telegram.trim() !== '';
+        return name.trim() !== '';
       case 1: {
         const calculatedAge = getAge(birthDate);
         return (
@@ -330,14 +328,6 @@ export const EnterInfoPage = () => {
         type="text"
         value={name}
         onChange={e => setName(e.target.value)}
-        className={styles.input}
-      />
-      <h2 className={styles.genderLabel}>Ваш Telegram</h2>
-      <CustomInput
-        placeholder="@username"
-        type="text"
-        value={telegram}
-        onChange={e => setTelegram(e.target.value)}
         className={styles.input}
       />
     </div>,
