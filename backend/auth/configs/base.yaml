@@ -42,7 +42,7 @@ smsru:
   test: true
 
 valkey-rate-limiter:
-  address: rc1a-pi1hru1ucks0jq68.mdb.yandexcloud.net:26379
+  address: c-c9q16tmk8i9lk9gjkl2m.rw.mdb.yandexcloud.net:6379
   limit: 5
   window: 5s
   keyPrefix: auth_rate_limit
