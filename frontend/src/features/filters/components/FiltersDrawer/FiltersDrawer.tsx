@@ -526,7 +526,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
               fontFamily: 'Jost',
             }}
           >
-            Выйти без сохранения
+            Выйти
           </Button>
           <Button
             onClick={handleSaveAndClose}
@@ -544,7 +544,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
               fontFamily: 'Jost',
             }}
           >
-            Сохранить и выйти
+            Сохранить
           </Button>
         </DialogActions>
       </Dialog>

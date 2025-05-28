@@ -1,10 +1,17 @@
-import React, { useRef, useState } from 'react';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  Typography,
+} from '@mui/material';
+import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useUploadFileToS3Mutation } from '../../entities/photo/api/photoApi';
 import { setProfileData } from '../../entities/profile/model/profileSlice';
 import { useUpdateUserMutation } from '../../entities/user';
-import { useConfirmPhotoMutation } from '../../entities/user/api/userApi';
 import {
   alcoholFromApi,
   alcoholOptions,
@@ -92,6 +99,8 @@ export const EditProfile: React.FC<EditProfileProps> = ({
   const [isHidden, setIsHidden] = useState(profileData.isHidden || false);
 
   const [photoFiles, setPhotoFiles] = useState<PhotoItem[]>([]);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const MAX_PHOTOS = 6;
 
@@ -289,6 +298,65 @@ export const EditProfile: React.FC<EditProfileProps> = ({
     }
   };
 
+  const checkForChanges = () => {
+    const initialEducation = profileData.education ? educationFromApi[profileData.education] : '';
+    const initialChildren = profileData.children ? childrenFromApi[profileData.children] : '';
+    const initialAlcohol = profileData.alcohol ? alcoholFromApi[profileData.alcohol] : '';
+    const initialSmoking = profileData.smoking ? smokingFromApi[profileData.smoking] : '';
+    const initialGoal = profileData.goal ? goalFromApi[profileData.goal] : '';
+    const initialInterests = profileData.interest
+      ? mapInterestsFromApiFormat(profileData.interest)
+      : [];
+    const initialBio = profileData.bio || '';
+    const initialIsHidden = profileData.isHidden || false;
+
+    return (
+      JSON.stringify(selectedEducation) !== JSON.stringify([initialEducation]) ||
+      JSON.stringify(selectedChildren) !== JSON.stringify([initialChildren]) ||
+      JSON.stringify(selectedAlcohol) !== JSON.stringify([initialAlcohol]) ||
+      JSON.stringify(selectedSmoking) !== JSON.stringify([initialSmoking]) ||
+      JSON.stringify(selectedGoal) !== JSON.stringify([initialGoal]) ||
+      JSON.stringify(selectedInterests) !== JSON.stringify(initialInterests) ||
+      bio !== initialBio ||
+      isHidden !== initialIsHidden ||
+      photoFiles.length > 0
+    );
+  };
+
+  const handleBack = () => {
+    if (hasUnsavedChanges) {
+      setShowConfirmModal(true);
+    } else {
+      onBack();
+    }
+  };
+
+  const handleConfirmClose = () => {
+    setShowConfirmModal(false);
+    onBack();
+  };
+
+  const handleSaveAndClose = async () => {
+    await handleSave();
+    setShowConfirmModal(false);
+    onBack();
+  };
+
+  useEffect(() => {
+    const changes = checkForChanges();
+    setHasUnsavedChanges(changes);
+  }, [
+    selectedEducation,
+    selectedChildren,
+    selectedAlcohol,
+    selectedSmoking,
+    selectedGoal,
+    selectedInterests,
+    bio,
+    isHidden,
+    photoFiles,
+  ]);
+
   return (
     <div>
       <input
@@ -299,7 +367,7 @@ export const EditProfile: React.FC<EditProfileProps> = ({
         onChange={handleFileChange}
       />
 
-      <PageHeader onBack={onBack} title="Редактирование" />
+      <PageHeader onBack={handleBack} title="Редактирование" />
 
       <div className={styles.editContent}>
         <ProfilePhotoEdit
@@ -367,6 +435,99 @@ export const EditProfile: React.FC<EditProfileProps> = ({
 
         <div className={styles.bottom} />
       </div>
+
+      <Dialog
+        open={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: '16px',
+            padding: '24px',
+            maxWidth: '400px',
+            width: '100%',
+            fontFamily: 'Jost',
+            boxShadow: '0px 4px 10px var(--shadow-color)',
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            padding: 0,
+            marginBottom: '16px',
+            '& .MuiTypography-root': {
+              fontSize: '20px',
+              fontWeight: 600,
+              color: '#1A1A1A',
+            },
+            fontFamily: 'Jost',
+          }}
+        >
+          Есть несохраненные изменения
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            padding: 0,
+            marginBottom: '24px',
+            fontFamily: 'Jost',
+          }}
+        >
+          <Typography
+            sx={{
+              fontSize: '16px',
+              color: '#666666',
+              lineHeight: '24px',
+              fontFamily: 'Jost',
+            }}
+          >
+            Вы хотите сохранить изменения перед выходом?
+          </Typography>
+        </DialogContent>
+        <DialogActions
+          sx={{
+            padding: 0,
+            gap: '12px',
+            justifyContent: 'flex-end',
+            fontFamily: 'Jost',
+          }}
+        >
+          <Button
+            onClick={handleConfirmClose}
+            sx={{
+              padding: '12px 24px',
+              borderRadius: '12px',
+              textTransform: 'none',
+              fontSize: '16px',
+              fontWeight: 500,
+              color: '#666666',
+              // backgroundColor: 'grey',
+              '&:hover': {
+                backgroundColor: '#F5F5F5',
+              },
+              fontFamily: 'Jost',
+            }}
+          >
+            Выйти
+          </Button>
+          <Button
+            onClick={handleSaveAndClose}
+            variant="contained"
+            sx={{
+              padding: '12px 24px',
+              borderRadius: '12px',
+              textTransform: 'none',
+              fontSize: '16px',
+              fontWeight: 500,
+              backgroundColor: '#3b5eda',
+              '&:hover': {
+                backgroundColor: '#3b5eda',
+              },
+              fontFamily: 'Jost',
+            }}
+          >
+            Сохранить
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
