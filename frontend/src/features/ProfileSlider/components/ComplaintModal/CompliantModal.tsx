@@ -1,6 +1,6 @@
 import CloseIcon from '@mui/icons-material/Close';
 import { ReportOutlined } from '@mui/icons-material';
-import { Box, Button, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material';
+import { Button, FormControlLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 

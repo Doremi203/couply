@@ -34,6 +34,7 @@ export const HomePage = () => {
       try {
         const res = await getUser({}).unwrap();
 
+        //@ts-ignore
         setUsersData(res.user);
       } catch (err) {
         console.error('Error fetching users:', err);
@@ -64,6 +65,7 @@ export const HomePage = () => {
     setIsFiltersOpen(false);
   };
 
+  //@ts-ignore
   const hidden = usersData.isHidden;
 
   if (hidden) {

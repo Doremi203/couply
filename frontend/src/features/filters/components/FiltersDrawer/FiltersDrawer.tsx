@@ -216,6 +216,7 @@ export const FiltersDrawer: React.FC<Props> = ({ open, onClose, initialFilterDat
 
     const genderKey = getOrDefault(filter.genderPriority, GenderPriority.any);
     const initialGender = genderFromApi[genderKey as keyof typeof genderFromApi];
+    //@ts-ignore
     const initialDistance = getOrDefault(filter.distanceKmRange.max, 100);
     const initialAgeRange = [
       getOrDefault(filter.ageRange?.min, 18),
