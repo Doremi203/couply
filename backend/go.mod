@@ -23,6 +23,8 @@ require (
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.37.0
+	github.com/valkey-io/valkey-go v1.0.60
+	github.com/valkey-io/valkey-go/valkeylimiter v1.0.60
 	github.com/yandex-cloud/go-genproto v0.2.0
 	github.com/yandex-cloud/go-sdk v0.3.0
 	go.uber.org/mock v0.5.2

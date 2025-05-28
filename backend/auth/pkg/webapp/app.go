@@ -60,6 +60,7 @@ type App struct {
 	livenessCheckFunc func() bool
 
 	protectedEndpoints []string
+	rateLimiter        rateLimiter
 
 	grpcUnaryInterceptors []grpc.UnaryServerInterceptor
 	gatewayOptions        []runtime.ServeMuxOption
@@ -258,6 +259,10 @@ func run(a *App, setupFunc func(ctx context.Context, app *App) error) (err error
 	return nil
 }
 
+func (a *App) SetRateLimiter(rateLimiter rateLimiter) {
+	a.rateLimiter = rateLimiter
+}
+
 func (a *App) AddAPIKeyProtectedEndpoints(endpointNames ...string) {
 	a.protectedEndpoints = append(a.protectedEndpoints, endpointNames...)
 }
@@ -338,12 +343,19 @@ func (a *App) initGRPCServer(grpcMux *runtime.ServeMux) (*grpc.Server, error) {
 		return nil, errors.WrapFail(err, "read x-api-key config")
 	}
 
+	defaultInerceptors := []grpc.UnaryServerInterceptor{
+		NewUnaryPanicInterceptor(a.Log),
+		NewUnaryInternalErrorLogInterceptor(a.Log),
+	}
+	if a.rateLimiter != nil {
+		defaultInerceptors = append(defaultInerceptors, newUnaryRateLimiterInterceptor(a.rateLimiter))
+	}
+	if xApiCfg.SecretAPIKey != "" {
+		defaultInerceptors = append(defaultInerceptors, newUnaryAPIKeyInterceptor(xApiCfg.SecretAPIKey, a.protectedEndpoints...))
+	}
+
 	grpcServer := grpc.NewServer(
-		grpc.ChainUnaryInterceptor(
-			NewUnaryPanicInterceptor(a.Log),
-			NewUnaryInternalErrorLogInterceptor(a.Log),
-			newUnaryAPIKeyInterceptor(xApiCfg.SecretAPIKey, a.protectedEndpoints...),
-		),
+		grpc.ChainUnaryInterceptor(defaultInerceptors...),
 		grpc.ChainUnaryInterceptor(a.grpcUnaryInterceptors...),
 	)
 	reflection.Register(grpcServer)

@@ -30,12 +30,19 @@ import (
 	tokenpkg "github.com/Doremi203/couply/backend/auth/pkg/token"
 	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
 	"github.com/Doremi203/couply/backend/auth/pkg/webapp"
+	"github.com/Doremi203/couply/backend/common/valkey"
 )
 
 func main() {
 	webapp.Run(func(ctx context.Context, app *webapp.App) error {
+		valkeyRateLimiterConfig := valkey.RateLimiterConfig{}
+		err := app.Config.ReadSection("valkey-rate-limiter", &valkeyRateLimiterConfig)
+		if err != nil {
+			return err
+		}
+
 		dbConfig := postgres.Config{}
-		err := app.Config.ReadSection("database", &dbConfig)
+		err = app.Config.ReadSection("database", &dbConfig)
 		if err != nil {
 			return err
 		}
@@ -165,6 +172,13 @@ func main() {
 
 		tokenUseCase := tokenUC.NewUseCase(tokenRepo, tokenIssuer, timeProvider)
 		tokenService := tokengrpc.NewGRPCService(app.Log, tokenUseCase)
+
+		valkeyRateLimiter, err := valkey.NewValkeyRateLimiter(valkeyRateLimiterConfig)
+		if err != nil {
+			return errors.WrapFail(err, "create valkey rate limiter")
+		}
+
+		app.SetRateLimiter(valkeyRateLimiter)
 
 		app.AddGRPCUnaryInterceptor(
 			tokenpkg.NewUnaryTokenInterceptor(
