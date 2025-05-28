@@ -548,8 +548,10 @@ export const ProfileSlider = () => {
     );
   };
 
+  //@ts-ignore
   const interests = currentProfile?.user.interest
-    ? mapInterestsFromApiFormat(currentProfile.user.interest)
+    ? //@ts-ignore
+      mapInterestsFromApiFormat(currentProfile.user.interest)
     : undefined;
 
   const renderProfileInfo = () => {

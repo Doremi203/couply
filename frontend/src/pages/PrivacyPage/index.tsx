@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+
 import styles from './privacyPage.module.css';
 
 export const PrivacyPage = () => {

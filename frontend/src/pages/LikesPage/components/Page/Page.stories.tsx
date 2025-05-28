@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 import { LikesPage } from './Page';
 
 // Mock the required hooks and components
-import * as profileViewHooks from '../../hooks/useProfileView';
 import {
   Gender,
   Goal,
@@ -124,12 +123,12 @@ import * as matchesHooks from '../../../../features/matches';
 });
 
 // Mock the useProfileView hook
-(profileViewHooks as any).useProfileView = () => ({
-  selectedProfile: null,
-  handleProfileClick: (profile: any) => console.log('Profile clicked:', profile),
-  handleMatchClick: (match: any) => console.log('Match clicked:', match),
-  handleCloseProfile: () => console.log('Close profile'),
-});
+// (profileViewHooks as any).useProfileView = () => ({
+//   selectedProfile: null,
+//   handleProfileClick: (profile: any) => console.log('Profile clicked:', profile),
+//   handleMatchClick: (match: any) => console.log('Match clicked:', match),
+//   handleCloseProfile: () => console.log('Close profile'),
+// });
 
 // Mock NavBar component
 import * as NavBarModule from '../../../../shared/components/NavBar';
@@ -165,62 +164,62 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 
 // With selected profile
-export const WithSelectedProfile: Story = {
-  decorators: [
-    Story => {
-      // Override the useProfileView mock for this story
-      (profileViewHooks as any).useProfileView = () => ({
-        selectedProfile: {
-          user: {
-            id: '456',
-            name: 'Мария',
-            age: 25,
-            gender: Gender.female,
-            location: 'Санкт-Петербург',
-            bio: 'Обожаю музыку и искусство. Ищу интересного собеседника.',
-            goal: Goal.friendship,
-            interest: {
-              sport: [Sport.dancing] as [Sport],
-              selfDevelopment: [Selfdevelopment.reading] as [Selfdevelopment],
-              hobby: [Hobby.painting] as [Hobby],
-              music: [Music.classical] as [Music],
-              moviesTv: [MoviesTV.drama] as [MoviesTV],
-              foodDrink: [FoodDrink.wine] as [FoodDrink],
-              personalityTraits: [PersonalityTraits.creative] as [PersonalityTraits],
-              pets: [Pets.dogs] as [Pets],
-            },
-            zodiac: Zodiac.gemini,
-            height: 165,
-            education: Education.higher,
-            children: Children.no,
-            alcohol: Alcohol.positively,
-            smoking: Smoking.negatively,
-            isPremium: true,
-            isBlocked: false,
-            isVerified: false,
-            isHidden: false,
-            photos: [
-              {
-                orderNumber: 1,
-                url: '/cactus.jpg',
-              },
-            ],
-          },
-        },
-        handleProfileClick: (profile: any) => console.log('Profile clicked:', profile),
-        handleMatchClick: (match: any) => console.log('Match clicked:', match),
-        handleCloseProfile: () => console.log('Close profile'),
-      });
-      return (
-        <BrowserRouter>
-          <div style={{ width: '375px', height: '700px', marginTop: '40px' }}>
-            <Story />
-          </div>
-        </BrowserRouter>
-      );
-    },
-  ],
-};
+// export const WithSelectedProfile: Story = {
+//   decorators: [
+//     Story => {
+//       // Override the useProfileView mock for this story
+//       (profileViewHooks as any).useProfileView = () => ({
+//         selectedProfile: {
+//           user: {
+//             id: '456',
+//             name: 'Мария',
+//             age: 25,
+//             gender: Gender.female,
+//             location: 'Санкт-Петербург',
+//             bio: 'Обожаю музыку и искусство. Ищу интересного собеседника.',
+//             goal: Goal.friendship,
+//             interest: {
+//               sport: [Sport.dancing] as [Sport],
+//               selfDevelopment: [Selfdevelopment.reading] as [Selfdevelopment],
+//               hobby: [Hobby.painting] as [Hobby],
+//               music: [Music.classical] as [Music],
+//               moviesTv: [MoviesTV.drama] as [MoviesTV],
+//               foodDrink: [FoodDrink.wine] as [FoodDrink],
+//               personalityTraits: [PersonalityTraits.creative] as [PersonalityTraits],
+//               pets: [Pets.dogs] as [Pets],
+//             },
+//             zodiac: Zodiac.gemini,
+//             height: 165,
+//             education: Education.higher,
+//             children: Children.no,
+//             alcohol: Alcohol.positively,
+//             smoking: Smoking.negatively,
+//             isPremium: true,
+//             isBlocked: false,
+//             isVerified: false,
+//             isHidden: false,
+//             photos: [
+//               {
+//                 orderNumber: 1,
+//                 url: '/cactus.jpg',
+//               },
+//             ],
+//           },
+//         },
+//         handleProfileClick: (profile: any) => console.log('Profile clicked:', profile),
+//         handleMatchClick: (match: any) => console.log('Match clicked:', match),
+//         handleCloseProfile: () => console.log('Close profile'),
+//       });
+//       return (
+//         <BrowserRouter>
+//           <div style={{ width: '375px', height: '700px', marginTop: '40px' }}>
+//             <Story />
+//           </div>
+//         </BrowserRouter>
+//       );
+//     },
+//   ],
+// };
 
 // We can't easily mock the useState hook for the MatchesTab story in Storybook
 // without using jest, so we'll create a simpler version that just shows
