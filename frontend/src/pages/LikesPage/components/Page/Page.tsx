@@ -5,12 +5,15 @@ import { NavBar } from '../../../../shared/components/NavBar';
 import TabsSection from '../../../../shared/components/TabsSection';
 import { ProfileView } from '../../../../widgets/ProfileView';
 import MatchesSection from '../MatchesSection';
+import TelegramModal from '../TelegramModal';
 
 import styles from './likesPage.module.css';
 
 export const LikesPage = () => {
   const [activeTab, setActiveTab] = useState<'лайки' | 'мэтчи'>('лайки');
   const [selectedProfile, setSelectedProfile] = useState<any>(null);
+  const [isTelegram, setIsTelegram] = useState<boolean>(false); // Temporary variable for Telegram connection status
+  const [showTelegramModal, setShowTelegramModal] = useState<boolean>(false);
 
   const {
     showChatMessage,
@@ -39,6 +42,12 @@ export const LikesPage = () => {
   }, []);
 
   const firstRender = useRef(true);
+
+  useEffect(() => {
+    if (!isTelegram) {
+      setShowTelegramModal(true);
+    }
+  }, [isTelegram]);
 
   useEffect(() => {
     if (firstRender.current) {
@@ -100,6 +109,15 @@ export const LikesPage = () => {
       <div style={{ position: 'relative', zIndex: 1010 }}>
         <NavBar />
       </div>
+
+      <TelegramModal
+        isOpen={showTelegramModal}
+        onClose={() => {
+          setShowTelegramModal(false);
+          ы;
+          setIsTelegram(true);
+        }}
+      />
     </div>
   );
 };
