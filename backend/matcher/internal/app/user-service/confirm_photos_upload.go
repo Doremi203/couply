@@ -13,10 +13,5 @@ func (i *Implementation) ConfirmPhotosUploadV1(ctx context.Context, in *desc.Con
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
 
-	err := i.usecase.ConfirmPhotosUpload(ctx, in.GetOrderNumbers())
-	if err != nil {
-		return nil, err
-	}
-
 	return &desc.ConfirmPhotosUploadV1Response{}, nil
 }

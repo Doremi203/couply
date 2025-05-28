@@ -18,7 +18,7 @@ runs:
       uses: actions/setup-go@v5.1.0
       with:
         go-version-file: backend/go.mod
-        cache-dependency-path: backend/go.sum
+        cache: false
 
     - name: Setup Buf
       uses: bufbuild/buf-setup-action@v1
