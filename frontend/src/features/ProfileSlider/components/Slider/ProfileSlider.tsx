@@ -19,6 +19,7 @@ import MessageButton from '../../../../shared/components/MessageButton/MessageBu
 import UndoButton from '../../../../shared/components/UndoButton/UndoButton';
 import { PremiumModal } from '../../../../widgets/PremiumModal';
 import { ProfileView } from '../../../../widgets/ProfileView';
+import { mapInterestsFromApiFormat } from '../../../filters/helpers/mapInterestsFromApiFormat';
 import { ComplaintModal } from '../ComplaintModal/CompliantModal';
 
 import styles from './profileSlider.module.css';
@@ -233,7 +234,7 @@ export const ProfileSlider = () => {
       const newSwipeCount = swipeCount + 1;
       setSwipeCount(newSwipeCount);
 
-      if (newSwipeCount % AD === 0) {
+      if (newSwipeCount % AD === 0 && !isPremium) {
         setShowingAd(true);
         dispatch({ type: 'profile/setShowingAd', payload: true }); // Dispatch action to update global state
         setAdIndex((adIndex + 1) % adProfiles.length);
@@ -547,6 +548,10 @@ export const ProfileSlider = () => {
     );
   };
 
+  const interests = currentProfile?.user.interest
+    ? mapInterestsFromApiFormat(currentProfile.user.interest)
+    : undefined;
+
   const renderProfileInfo = () => {
     switch (currentPhotoIndex) {
       case 0: {
@@ -595,7 +600,7 @@ export const ProfileSlider = () => {
             <div className={styles.interests}>
               <div className={styles.interestsList}>
                 {/** @ts-ignore */}
-                {currentProfile.user.interests?.slice?.(0, 3)?.map?.((interest, index) => (
+                {interests?.slice?.(0, 3)?.map?.((interest, index) => (
                   <span key={index} className={styles.interestTag}>
                     {interest}
                   </span>
