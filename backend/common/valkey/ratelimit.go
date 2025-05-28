@@ -10,6 +10,7 @@ import (
 )
 
 type RateLimiterConfig struct {
+	Disabled  bool
 	Address   string
 	Limit     int
 	Window    time.Duration

@@ -182,12 +182,13 @@ func main() { //nolint:gocognit
 		tokenUseCase := tokenUC.NewUseCase(tokenRepo, tokenIssuer, timeProvider)
 		tokenService := tokengrpc.NewGRPCService(app.Log, tokenUseCase)
 
-		valkeyRateLimiter, err := valkey.NewValkeyRateLimiter(valkeyRateLimiterConfig)
-		if err != nil {
-			return errors.WrapFail(err, "create valkey rate limiter")
+		if !valkeyRateLimiterConfig.Disabled {
+			valkeyRateLimiter, err := valkey.NewValkeyRateLimiter(valkeyRateLimiterConfig)
+			if err != nil {
+				return errors.WrapFail(err, "create valkey rate limiter")
+			}
+			app.SetRateLimiter(valkeyRateLimiter)
 		}
-
-		app.SetRateLimiter(valkeyRateLimiter)
 
 		app.AddGRPCUnaryInterceptor(
 			tokenpkg.NewUnaryTokenInterceptor(

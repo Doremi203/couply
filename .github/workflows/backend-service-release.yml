@@ -55,27 +55,52 @@ jobs:
       - name: Run tests
         run: BASE_MIGRATIONS_PATH=${{ github.workspace }}/backend go test ./... -race
 
-#  test-functional:
-#    needs: codegen
-#    runs-on: ubuntu-latest
-#    timeout-minutes: 10
-#    defaults:
-#      run:
-#        working-directory: backend/${{ inputs.service_name }}
-#    steps:
-#      - uses: actions/checkout@v4
-#
-#      - name: Download codegen results
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: codegen-output
-#          path: backend
-#
-#      - name: Docker compose
-#        run: cd .. && docker compose -f docker-compose.tests.yml up -d
-#
-#      - name: Run functional tests
-#        run: echo "Running functional tests"
+  test-functional:
+    needs: codegen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/pytest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
+      - name: Docker compose
+        run: cd .. && docker compose -f docker-compose.tests.yml up -d
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+          pip install allure-pytest allure-commandline
+
+      - name: Run functional tests with Allure
+        run: |
+          source .venv/bin/activate
+          pytest ${{ inputs.service_name }} --alluredir=allure-results
+
+      - name: Generate Allure report
+        run: |
+          source .venv/bin/activate
+          allure generate allure-results -o allure-report --clean
+
+      - name: Upload Allure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: backend/pytest/allure-report
 
   build-testing:
     needs:

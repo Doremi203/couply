@@ -57,13 +57,24 @@ func (s *registrationService) BasicRegisterV1(
 	ctx context.Context,
 	req *registration.BasicRegisterRequestV1,
 ) (*registration.BasicRegisterResponseV1, error) {
+	if err := req.Validate(); err != nil {
+		s.log.Warn(errors.Wrap(err, "invalid request"))
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	pass, err := pswrd.NewPassword(req.GetPassword())
+	if err != nil {
+		s.log.Warn(errors.Wrap(err, "invalid password"))
+		return nil, status.Errorf(codes.InvalidArgument, "invalid password: %v", err.Error())
+	}
+
 	resp, err := idempotency.RunGRPCHandler(
 		ctx,
 		s.log,
 		s.txProvider,
 		s.idempotencyRepo,
 		func(ctx context.Context) (*registration.BasicRegisterResponseV1, error) {
-			err := s.registrationUseCase.BasicV1(ctx, user.Email(req.GetEmail()), pswrd.Password(req.GetPassword()))
+			err := s.registrationUseCase.BasicV1(ctx, user.Email(req.GetEmail()), pass)
 			if err != nil {
 				return nil, err
 			}

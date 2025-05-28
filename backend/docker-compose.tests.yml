@@ -72,10 +72,23 @@ services:
         condition: service_healthy
 
   migrate:
-    image: migrate/migrate
-    entrypoint: ["migrate", "-source", "file://migrations", "-database", "postgres://user:pass@db:5432/auth?sslmode=disable", "up"]
+    image: golang
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        go install github.com/pressly/goose/v3/cmd/goose@latest
+        goose -dir /auth/migrations postgres 'postgres://user:pass@db:5432/auth?sslmode=disable' up
+        goose -dir /notificator/migrations postgres 'postgres://user:pass@db:5432/notificator?sslmode=disable' up
+        goose -dir /payments/migrations postgres 'postgres://user:pass@db:5432/payments?sslmode=disable' up
+        goose -dir /matcher/migrations postgres 'postgres://user:pass@db:5432/matcher?sslmode=disable' up
+        goose -dir /blocker/migrations postgres 'postgres://user:pass@db:5432/blocker?sslmode=disable' up
     volumes:
-      - ./migrations:/migrations
+      - ./auth/migrations:/auth/migrations
+      - ./notificator/migrations:/notificator/migrations
+      - ./payments/migrations:/payments/migrations
+      - ./matcher/migrations:/matcher/migrations
+      - ./blocker/migrations:/blocker/migrations
     depends_on:
       db:
         condition: service_healthy
