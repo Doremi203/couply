@@ -12,10 +12,15 @@ import (
 func (c *UseCase) createPhotos(ctx context.Context, userID uuid.UUID, requests []user.PhotoUploadRequest) ([]user.Photo, error) {
 	photos := make([]user.Photo, 0, len(requests))
 	for _, req := range requests {
+		photoID, err := uuid.NewRandom()
+		if err != nil {
+			return nil, errors.WrapFail(err, "generate photo id")
+		}
+
 		photo := user.Photo{
 			UserID:      userID,
 			OrderNumber: req.OrderNumber,
-			ObjectKey:   fmt.Sprintf("users/%s/slot/%d.jpg", userID, req.OrderNumber),
+			ObjectKey:   fmt.Sprintf("users/%s/slot/%d/%s.jpg", userID.String(), req.OrderNumber, photoID),
 			MimeType:    req.MimeType,
 		}
 
