@@ -33,7 +33,7 @@ import (
 	"github.com/Doremi203/couply/backend/common/valkey"
 )
 
-func main() {
+func main() { //nolint:gocognit
 	webapp.Run(func(ctx context.Context, app *webapp.App) error {
 		valkeyRateLimiterConfig := valkey.RateLimiterConfig{}
 		err := app.Config.ReadSection("valkey-rate-limiter", &valkeyRateLimiterConfig)
