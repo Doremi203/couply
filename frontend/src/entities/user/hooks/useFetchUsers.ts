@@ -15,7 +15,7 @@ const useFetchUsers = (incomingMatches = []) => {
         const results = await Promise.all(
           incomingMatches.map(async id => {
             try {
-              const res = await getUser({ id }).unwrap();
+              const res = await getUser({}).unwrap();
               return res;
             } catch (err) {
               console.error(`Error fetching user ${id}:`, err);

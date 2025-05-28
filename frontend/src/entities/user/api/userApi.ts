@@ -34,19 +34,19 @@ export const userApiExtended = matcherApi.injectEndpoints({
     }),
 
     getUser: builder.mutation<UserResponse, object>({
-      query: id => ({
+      query: () => ({
         url: '/v1/users/get/me',
         method: 'POST',
-        body: id,
+        body: {},
       }),
       // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),
 
     getUserById: builder.mutation<UserResponse, object>({
-      query: () => ({
+      query: id => ({
         url: '/v1/users/get/by-id',
         method: 'POST',
-        // body: id,
+        body: id,
       }),
       // invalidatesTags: (_result, _error, { id }) => [{ type: 'User', id }],
     }),

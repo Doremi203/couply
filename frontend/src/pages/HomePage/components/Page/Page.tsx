@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import { useGetFilterQuery } from '../../../../entities/search';
+import { useGetUserMutation, UserResponse } from '../../../../entities/user';
 import { getUserId } from '../../../../entities/user/model/userSlice';
 import FiltersDrawer from '../../../../features/filters/components/FiltersDrawer';
 import { ProfileSlider } from '../../../../features/ProfileSlider';
@@ -25,6 +26,23 @@ export const HomePage = () => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
   const { data: filterData } = useGetFilterQuery({});
 
+  const [getUser] = useGetUserMutation();
+  const [usersData, setUsersData] = useState<UserResponse[]>([]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await getUser({}).unwrap();
+
+        setUsersData(res.user);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+      }
+    };
+
+    fetchUsers();
+  }, [getUser, userId]);
+
   useEffect(() => {
     if (userId) {
       updateUserLocation()
@@ -46,8 +64,7 @@ export const HomePage = () => {
     setIsFiltersOpen(false);
   };
 
-  //TODO
-  const hidden = false;
+  const hidden = usersData.isHidden;
 
   if (hidden) {
     return (
