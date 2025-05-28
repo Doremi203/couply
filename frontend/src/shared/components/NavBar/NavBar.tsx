@@ -1,8 +1,8 @@
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import PermIdentityOutlinedIcon from '@mui/icons-material/PermIdentityOutlined';
-import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router-dom';
 
 import { selectIsShowingAd } from '../../../entities/profile/model/profileSlice';
 import './navBar.css';

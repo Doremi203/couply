@@ -1,3 +1,4 @@
+//@ts-nocheck
 import type { Meta, StoryObj } from '@storybook/react';
 import { BrowserRouter } from 'react-router-dom';
 
@@ -79,6 +80,7 @@ export const Hidden: Story = {
 export const NotVerified: Story = {
   args: {
     profileData: mockProfileData,
+    //
     isVerified: false,
     isProfileHidden: false,
     onEditToggle: () => console.log('Edit toggled'),

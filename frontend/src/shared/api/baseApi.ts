@@ -83,7 +83,6 @@ const baseQueryWithReauth = (baseQuery: BaseQueryType): BaseQueryType => {
 
       try {
         // const refreshSuccess = await refreshTokenFn(api, extraOptions);
-
         // if (!refreshSuccess) {
         //   console.warn('Proactive token refresh failed, proceeding with original request');
         // } else {
