@@ -14,11 +14,12 @@ export const TelegramModal: React.FC<TelegramModalProps> = ({ isOpen, onClose })
   const [setTelegram] = useSetTelegramMutation();
 
   const onTelegramAuth = (user: any) => {
+    console.log('user', user);
     setTelegram(user)
       .unwrap()
       .then(data => {
         console.log('Success:', data);
-        window.location.href = '/profile';
+        // window.location.href = '/profile';
       })
       .catch(error => {
         console.error('Error:', error);
