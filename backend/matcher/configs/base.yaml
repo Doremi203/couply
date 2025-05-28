@@ -29,3 +29,4 @@ s3:
 secrets:
   ids:
     sqs: e6q11avjgsnllkss9nqr
+    x-api-key: e6qrit49b41qnhsrfa8u

@@ -3,7 +3,10 @@ package user_service
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/log"
+	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 	dto "github.com/Doremi203/couply/backend/matcher/internal/dto/user-service"
+	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
 
@@ -19,17 +22,26 @@ type userServiceUseCase interface {
 	GetUserByID(ctx context.Context, req *dto.GetUserByIDV1Request) (*dto.GetUserByIDV1Response, error)
 	GetUsers(ctx context.Context, in *dto.GetUsersV1Request) (*dto.GetUsersV1Response, error)
 	ConfirmPhotosUpload(ctx context.Context, orderNumbers []int32) error
+	SetUserVerificationStatusByID(
+		ctx context.Context,
+		id uuid.UUID,
+		status user.VerificationStatus,
+	) error
 }
 
 type Implementation struct {
 	desc.UnimplementedUserServiceServer
 	usecase userServiceUseCase
+
+	logger log.Logger
 }
 
 func NewImplementation(
+	logger log.Logger,
 	usecase userServiceUseCase,
 ) *Implementation {
 	return &Implementation{
+		logger:  logger,
 		usecase: usecase,
 	}
 }

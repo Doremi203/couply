@@ -213,3 +213,12 @@ func UserToPB(user *User) *desc.User {
 		UpdatedAt: timestamppb.New(user.UpdatedAt),
 	}
 }
+
+type VerificationStatus int
+
+const (
+	VerificationStatusUnknown VerificationStatus = iota
+	VerificationStatusPass
+	VerificationStatusFail
+	VerificationStatusManual
+)
