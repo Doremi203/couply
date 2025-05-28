@@ -34,7 +34,7 @@ func NewUnaryTokenInterceptor(
 			logger.Error(errors.WrapFail(err, "extract user token from context"))
 			return nil, status.Error(codes.Unauthenticated, "valid user token is not provided")
 		}
-		return handler(contextWithToken(ctx, token), req)
+		return handler(ContextWithToken(ctx, token), req)
 	}
 }
 

@@ -45,7 +45,7 @@ func (p *jwtProvider) Parse(tokenString string) (Token, error) {
 	}
 
 	return Token{
-		userID: claims.UserID,
+		UserID: claims.UserID,
 	}, nil
 }
 

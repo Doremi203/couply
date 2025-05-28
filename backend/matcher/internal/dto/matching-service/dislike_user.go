@@ -1,6 +1,8 @@
 package matching_service
 
 import (
+	"time"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/matching-service/v1"
 	"github.com/google/uuid"
@@ -8,6 +10,7 @@ import (
 
 type DislikeUserV1Request struct {
 	TargetUserID uuid.UUID
+	UpdatedAt    time.Time
 }
 
 type DislikeUserV1Response struct{}

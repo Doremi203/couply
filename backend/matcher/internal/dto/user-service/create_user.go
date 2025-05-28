@@ -1,9 +1,12 @@
 package user_service
 
 import (
+	"time"
+
 	"github.com/Doremi203/couply/backend/common/libs/slices"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/common/interest"
+	"github.com/Doremi203/couply/backend/matcher/utils"
 
 	desc "github.com/Doremi203/couply/backend/matcher/gen/api/user-service/v1"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -28,6 +31,8 @@ type CreateUserV1Request struct {
 	IsVerified          bool
 	IsPremium           bool
 	IsBlocked           bool
+	CreatedAt           time.Time
+	UpdatedAt           time.Time
 	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
@@ -36,12 +41,15 @@ type CreateUserV1Response struct {
 }
 
 func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
+	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(req.GetLatitude(), req.GetLongitude())
+	now := time.Now()
+
 	return &CreateUserV1Request{
 		Name:       req.GetName(),
 		Age:        req.GetAge(),
 		Gender:     user.PBToGender(req.GetGender()),
-		Latitude:   req.GetLatitude(),
-		Longitude:  req.GetLongitude(),
+		Latitude:   latitudeWithNoise,
+		Longitude:  longitudeWithNoise,
 		Bio:        req.GetBio(),
 		Goal:       common.PBToGoal(req.GetGoal()),
 		Interest:   interest.PBToInterest(req.GetInterest()),
@@ -55,6 +63,8 @@ func PBToCreateUserRequest(req *desc.CreateUserV1Request) *CreateUserV1Request {
 		IsVerified: req.GetIsVerified(),
 		IsPremium:  req.GetIsPremium(),
 		IsBlocked:  req.GetIsBlocked(),
+		CreatedAt:  now,
+		UpdatedAt:  now,
 		PhotoUploadRequests: slices.Map(req.GetPhotoUploadRequests(), func(from *desc.PhotoUploadRequest) user.PhotoUploadRequest {
 			return user.PhotoUploadRequest{
 				OrderNumber: from.GetOrderNumber(),

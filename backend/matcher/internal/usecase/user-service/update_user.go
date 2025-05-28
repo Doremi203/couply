@@ -2,9 +2,6 @@ package user_service
 
 import (
 	"context"
-	"time"
-
-	"github.com/Doremi203/couply/backend/matcher/utils"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/token"
 
@@ -24,15 +21,13 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		return nil, errors.Wrap(err, "createPhotos")
 	}
 
-	latitudeWithNoise, longitudeWithNoise := utils.AddNoise(in.Latitude, in.Longitude)
-
 	user := user.NewUserBuilder().
 		SetID(userID).
 		SetName(in.Name).
 		SetAge(in.Age).
 		SetGender(in.Gender).
-		SetLatitude(latitudeWithNoise).
-		SetLongitude(longitudeWithNoise).
+		SetLatitude(in.Latitude).
+		SetLongitude(in.Longitude).
 		SetBIO(in.Bio).
 		SetGoal(in.Goal).
 		SetInterest(in.Interest).
@@ -47,13 +42,12 @@ func (c *UseCase) UpdateUser(ctx context.Context, in *dto.UpdateUserV1Request) (
 		SetIsPremium(in.IsPremium).
 		SetIsBlocked(in.IsBlocked).
 		SetPhotos(photos).
-		SetUpdatedAt(time.Now()).
+		SetUpdatedAt(in.UpdatedAt).
 		Build()
 
-	updatedUser, err := c.userStorageFacade.UpdateUserTx(ctx, user)
-	if err != nil {
+	if err = c.userStorageFacade.UpdateUserTx(ctx, user); err != nil {
 		return nil, errors.Wrap(err, "userStorageFacade.UpdateUserTx")
 	}
 
-	return &dto.UpdateUserV1Response{User: updatedUser}, nil
+	return &dto.UpdateUserV1Response{User: user}, nil
 }

@@ -2,7 +2,6 @@ package user_service
 
 import (
 	"context"
-	"time"
 
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
@@ -36,13 +35,12 @@ func (c *UseCase) UpdateUserByID(ctx context.Context, in *dto.UpdateUserByIDV1Re
 		SetIsPremium(in.IsPremium).
 		SetIsBlocked(in.IsBlocked).
 		SetPhotos(photos).
-		SetUpdatedAt(time.Now()).
+		SetUpdatedAt(in.UpdatedAt).
 		Build()
 
-	updatedUser, err := c.userStorageFacade.UpdateUserTx(ctx, user)
-	if err != nil {
+	if err = c.userStorageFacade.UpdateUserTx(ctx, user); err != nil {
 		return nil, errors.Wrap(err, "userStorageFacade.UpdateUserByID")
 	}
 
-	return &dto.UpdateUserByIDV1Response{User: updatedUser}, nil
+	return &dto.UpdateUserByIDV1Response{User: user}, nil
 }

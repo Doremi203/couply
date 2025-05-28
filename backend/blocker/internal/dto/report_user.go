@@ -10,44 +10,48 @@ import (
 )
 
 type ReportUserV1Request struct {
+	BlockID       uuid.UUID
 	TargetUserID  string
 	ReportReasons []blocker.ReportReason
 	Message       string
+	CreatedAt     time.Time
 }
 
 type ReportUserV1Response struct{}
 
 func ReportUserRequestToBlock(req *ReportUserV1Request) (*blocker.UserBlock, error) {
-	blockID, err := uuid.NewV7()
-	if err != nil {
-		return nil, errors.Wrap(err, "uuid.NewV7")
-	}
-
 	blockedID, err := uuid.Parse(req.TargetUserID)
 	if err != nil {
 		return nil, errors.Wrap(err, "uuid.Parse")
 	}
 	return &blocker.UserBlock{
-		ID:        blockID,
+		ID:        req.BlockID,
 		BlockedID: blockedID,
 		Message:   req.Message,
 		Reasons:   req.ReportReasons,
 		Status:    blocker.BlockStatusPending,
-		CreatedAt: time.Now(),
+		CreatedAt: req.CreatedAt,
 	}, nil
 }
 
-func PBToReportUserRequest(req *desc.ReportUserV1Request) *ReportUserV1Request {
+func PBToReportUserRequest(req *desc.ReportUserV1Request) (*ReportUserV1Request, error) {
 	reportReasons := make([]blocker.ReportReason, len(req.GetReasons()))
 	for i, reason := range req.GetReasons() {
 		reportReasons[i] = blocker.ReportReason(reason)
 	}
 
+	blockID, err := uuid.NewV7()
+	if err != nil {
+		return nil, errors.Wrap(err, "uuid.NewV7")
+	}
+
 	return &ReportUserV1Request{
+		BlockID:       blockID,
 		TargetUserID:  req.GetTargetUserId(),
 		ReportReasons: reportReasons,
 		Message:       req.GetMessage(),
-	}
+		CreatedAt:     time.Now(),
+	}, nil
 }
 
 func ReportUserResponseToPB(_ *ReportUserV1Response) *desc.ReportUserV1Response {

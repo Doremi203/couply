@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 
+	"github.com/Doremi203/couply/backend/auth/pkg/uuid"
+
 	"github.com/Doremi203/couply/backend/common/libs/sqs"
 	"github.com/Doremi203/couply/backend/matcher/gen/api/messages"
 	"github.com/Doremi203/couply/backend/matcher/internal/storage"
@@ -85,10 +87,12 @@ func main() {
 			return errors.WrapFail(err, "create sqs client")
 		}
 
+		uuidProvider := uuid.DefaultProvider{}
+
 		txManager := storage.NewTxManager(dbClient)
 		pgStorageUser := postgres3.NewPgStorageUser(txManager)
 		storageFacadeUser := user_service_facade.NewStorageFacadeUser(txManager, pgStorageUser)
-		useCaseUserService := user_service_usecase.NewUseCase(photoURLGenerator, storageFacadeUser)
+		useCaseUserService := user_service_usecase.NewUseCase(photoURLGenerator, storageFacadeUser, uuidProvider)
 		implUserService := user_service.NewImplementation(useCaseUserService)
 
 		pgStorageMatching := postgres2.NewPgStorageMatching(txManager)

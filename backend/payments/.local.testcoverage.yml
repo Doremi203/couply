@@ -1,0 +1,9 @@
+profile: cover.out
+
+exclude:
+  # Exclude files or packages matching their paths
+  paths:
+    - \.pb\.go$
+    - \.pb\.gw\.go$
+    - \.pb\.validate\.go$
+    - _mock\.go$

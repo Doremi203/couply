@@ -1,6 +1,8 @@
 package user_service
 
 import (
+	"time"
+
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 
 	"github.com/Doremi203/couply/backend/common/libs/slices"
@@ -31,6 +33,7 @@ type UpdateUserByIDV1Request struct {
 	IsVerified          bool
 	IsPremium           bool
 	IsBlocked           bool
+	UpdatedAt           time.Time
 	PhotoUploadRequests []user.PhotoUploadRequest
 }
 
@@ -43,6 +46,8 @@ func PBToUpdateUserByIDRequest(req *desc.UpdateUserByIDV1Request) (*UpdateUserBy
 	if err != nil {
 		return nil, errors.Wrap(err, "uuid.Parse")
 	}
+
+	now := time.Now()
 	return &UpdateUserByIDV1Request{
 		ID:         id,
 		Name:       req.GetName(),
@@ -63,6 +68,7 @@ func PBToUpdateUserByIDRequest(req *desc.UpdateUserByIDV1Request) (*UpdateUserBy
 		IsVerified: req.GetIsVerified(),
 		IsPremium:  req.GetIsPremium(),
 		IsBlocked:  req.GetIsBlocked(),
+		UpdatedAt:  now,
 		PhotoUploadRequests: slices.Map(req.GetPhotoUploadRequests(), func(from *desc.PhotoUploadRequest) user.PhotoUploadRequest {
 			return user.PhotoUploadRequest{
 				OrderNumber: from.GetOrderNumber(),

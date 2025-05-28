@@ -1,3 +1,5 @@
+//go:generate mockgen -source=updater.go -destination=../../mocks/usecase/updater/updater_mock.go -typed
+
 package updater
 
 import (

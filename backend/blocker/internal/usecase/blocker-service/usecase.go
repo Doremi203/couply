@@ -1,3 +1,5 @@
+//go:generate mockgen -source=usecase.go -destination=../../mocks/usecase/blocker/facade_mock.go -typed
+
 package blocker_service
 
 import (

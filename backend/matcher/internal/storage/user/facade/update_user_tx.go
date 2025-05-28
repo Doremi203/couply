@@ -7,7 +7,7 @@ import (
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/user"
 )
 
-func (f *StorageFacadeUser) UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error) {
+func (f *StorageFacadeUser) UpdateUserTx(ctx context.Context, user *user.User) error {
 	err := f.txManager.RunRepeatableRead(ctx, func(ctxTx context.Context) error {
 		if err := f.storage.UpdateUser(ctxTx, user); err != nil {
 			return errors.Wrap(err, "storage.UpdateUser")
@@ -31,8 +31,8 @@ func (f *StorageFacadeUser) UpdateUserTx(ctx context.Context, user *user.User) (
 	})
 
 	if err != nil {
-		return nil, errors.Wrap(err, "txManager.RunRepeatableRead")
+		return errors.Wrap(err, "txManager.RunRepeatableRead")
 	}
 
-	return user, nil
+	return nil
 }

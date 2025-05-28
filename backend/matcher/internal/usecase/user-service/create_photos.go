@@ -12,7 +12,7 @@ import (
 func (c *UseCase) createPhotos(ctx context.Context, userID uuid.UUID, requests []user.PhotoUploadRequest) ([]user.Photo, error) {
 	photos := make([]user.Photo, 0, len(requests))
 	for _, req := range requests {
-		photoID, err := uuid.NewRandom()
+		photoID, err := c.uuidProvider.GenerateV7()
 		if err != nil {
 			return nil, errors.WrapFail(err, "generate photo id")
 		}

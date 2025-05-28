@@ -9,20 +9,20 @@ import (
 )
 
 var (
-	errTokenNotFound = errors.Error("token not found")
+	ErrTokenNotFound = errors.Error("token not found")
 )
 
 type Token struct {
-	userID uuid.UUID
+	UserID uuid.UUID
 }
 
 func (t Token) GetUserID() uuid.UUID {
-	return t.userID
+	return t.UserID
 }
 
 type tokenKey struct{}
 
-func contextWithToken(ctx context.Context, token Token) context.Context {
+func ContextWithToken(ctx context.Context, token Token) context.Context {
 	return context.WithValue(ctx, tokenKey{}, token)
 }
 func FromContext(ctx context.Context) (Token, bool) {
@@ -33,7 +33,7 @@ func FromContext(ctx context.Context) (Token, bool) {
 func GetUserIDFromContext(ctx context.Context) (uuid.UUID, error) {
 	userToken, ok := FromContext(ctx)
 	if !ok {
-		return uuid.Nil, errors.Wrap(errTokenNotFound, "GetUserIDFromContext")
+		return uuid.Nil, errors.Wrap(ErrTokenNotFound, "GetUserIDFromContext")
 	}
 	return userToken.GetUserID(), nil
 }

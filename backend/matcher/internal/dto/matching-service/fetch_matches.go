@@ -11,7 +11,7 @@ type FetchMatchesUserIDsV1Request struct {
 }
 
 type FetchMatchesUserIDsV1Response struct {
-	UserIDs []*uuid.UUID
+	UserIDs []uuid.UUID
 }
 
 func PBToFetchMatchesUserIDsRequest(req *desc.FetchMatchesUserIDsV1Request) *FetchMatchesUserIDsV1Request {

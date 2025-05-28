@@ -1,7 +1,11 @@
+//go:generate mockgen -source=usecase.go -destination=../../mocks/usecase/user/facade_mock.go -typed
+
 package user_service
 
 import (
 	"context"
+
+	uuidgen "github.com/Doremi203/couply/backend/auth/pkg/uuid"
 
 	"github.com/google/uuid"
 
@@ -15,7 +19,7 @@ type userStorageFacade interface {
 
 type userStorageSetterFacade interface {
 	CreateUserTx(ctx context.Context, user *user.User) error
-	UpdateUserTx(ctx context.Context, user *user.User) (*user.User, error)
+	UpdateUserTx(ctx context.Context, user *user.User) error
 	DeleteUserTx(ctx context.Context, userID uuid.UUID) error
 	UpdatePhotosUploadedAtTx(ctx context.Context, orderNumbers []int32, userID uuid.UUID) error
 }
@@ -28,14 +32,17 @@ type userStorageGetterFacade interface {
 type UseCase struct {
 	photoURLGenerator user.PhotoURLGenerator
 	userStorageFacade userStorageFacade
+	uuidProvider      uuidgen.Provider
 }
 
 func NewUseCase(
 	photoURLGenerator user.PhotoURLGenerator,
 	userStorageFacade userStorageFacade,
+	uuidProvider uuidgen.Provider,
 ) *UseCase {
 	return &UseCase{
 		photoURLGenerator: photoURLGenerator,
 		userStorageFacade: userStorageFacade,
+		uuidProvider:      uuidProvider,
 	}
 }
