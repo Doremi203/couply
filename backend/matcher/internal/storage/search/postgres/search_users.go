@@ -223,20 +223,6 @@ func extractInterestPairs(interests *interest.Interest) []struct {
 	return pairs
 }
 
-func buildInterestConditions(pairs []struct {
-	Type  string
-	Value int
-}) sq.Sqlizer {
-	var conditions []sq.Sqlizer
-	for _, p := range pairs {
-		conditions = append(conditions, sq.And{
-			sq.Eq{"type": p.Type},
-			sq.Eq{"value": p.Value},
-		})
-	}
-	return sq.Or(conditions)
-}
-
 func applyPagination(qb sq.SelectBuilder, offset, limit uint64) sq.SelectBuilder {
 	if limit > 0 {
 		qb = qb.Limit(limit)

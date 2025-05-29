@@ -25,7 +25,7 @@ func (f *StorageFacadeMatching) LikeUserTx(ctx context.Context, like *matching.L
 			return matching.ErrWaitingLikeAlreadyExists
 		}
 
-		match, err := f.storage.GetMatch(ctx, postgres.GetMatchOptions{UserID: like.SenderID})
+		match, err := f.storage.GetMatch(ctx, postgres.GetMatchOptions{FirstUserID: like.SenderID, SecondUserID: like.ReceiverID})
 		if err != nil {
 			if !errors.Is(err, matching.ErrMatchNotFound) {
 				return errors.Wrap(err, "storage.GetMatch")

@@ -6,39 +6,27 @@ import (
 	"github.com/Doremi203/couply/backend/auth/pkg/errors"
 	"github.com/Doremi203/couply/backend/matcher/internal/domain/matching"
 	"github.com/Doremi203/couply/backend/matcher/internal/storage"
-	sq "github.com/Masterminds/squirrel"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 )
 
 type GetMatchOptions struct {
-	UserID uuid.UUID
+	FirstUserID  uuid.UUID
+	SecondUserID uuid.UUID
 }
 
 func (s *PgStorageMatching) GetMatch(ctx context.Context, opts GetMatchOptions) (*matching.Match, error) {
-	query, args, err := buildGetMatchQuery(opts)
-	if err != nil {
-		return nil, errors.Wrapf(err, "buildGetMatchQuery with %v", errors.Token("options", opts))
-	}
+	const query = `
+		SELECT * FROM matches
+		WHERE (first_user_id = $1 AND second_user_id = $2) OR (first_user_id = $2 AND second_user_id = $1)
+	`
 
-	like, err := executeGetMatchQuery(ctx, s.txManager.GetQueryEngine(ctx), query, args)
+	like, err := executeGetMatchQuery(ctx, s.txManager.GetQueryEngine(ctx), query, []any{opts.FirstUserID, opts.SecondUserID})
 	if err != nil {
 		return nil, errors.Wrapf(err, "executeGetMatchQuery with %v", errors.Token("options", opts))
 	}
 
 	return like, nil
-}
-
-func buildGetMatchQuery(opts GetMatchOptions) (string, []any, error) {
-	query, args, err := sq.Select(matchesColumns...).
-		From(matchesTableName).
-		Where(sq.Or{
-			sq.Eq{firstUserIDColumnName: opts.UserID},
-			sq.Eq{secondUserIDColumnName: opts.UserID},
-		}).PlaceholderFormat(sq.Dollar).
-		ToSql()
-
-	return query, args, err
 }
 
 func executeGetMatchQuery(ctx context.Context, queryEngine storage.QueryEngine, query string, args []any) (*matching.Match, error) {
