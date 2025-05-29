@@ -189,14 +189,13 @@ func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) sq.
 		return qb
 	}
 
-	sub := sq.Select("i.user_id").
-		From("interests i").
-		Where(buildInterestConditions(filterInterests)).
-		GroupBy("i.user_id").
-		Having(sq.Eq{"COUNT(DISTINCT (i.type, i.value))": len(filterInterests)})
-
-	qb = qb.Where(sq.Expr("EXISTS (?)", sub))
-
+	for _, pair := range filterInterests {
+		qb = qb.Where(sq.Expr(
+			"EXISTS (SELECT 1 FROM interests i WHERE i.user_id = u.id AND i.type = ? AND i.value = ?)",
+			pair.Type,
+			pair.Value,
+		))
+	}
 	return qb
 }
 
