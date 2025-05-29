@@ -98,6 +98,14 @@ jobs:
       - name: Docker compose
         run: cd .. && docker compose -f docker-compose.tests.yml up -d
 
+      - name: Wait for auth service
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:9090/health; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
