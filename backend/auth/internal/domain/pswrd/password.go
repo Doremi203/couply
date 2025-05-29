@@ -9,7 +9,7 @@ func NewPassword(s string) (Password, error) {
 	if len(s) < 6 {
 		return "", errors.New("password must be at least 6 characters long")
 	}
-	if len(s) > 16 {
+	if len(s) > 32 {
 		return "", errors.New("password must be at most 16 characters long")
 	}
 	if !strings.ContainsAny(s, "_-!@#?") {
