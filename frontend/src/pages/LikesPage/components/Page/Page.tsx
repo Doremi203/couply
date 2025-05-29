@@ -19,6 +19,7 @@ export const LikesPage = () => {
   const [getUser] = useGetUserMutation();
 
   const [telegram, setTelegram] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const {
     showChatMessage,
@@ -50,6 +51,7 @@ export const LikesPage = () => {
 
   useEffect(() => {
     const fetchTg = async () => {
+      setIsLoading(true);
       try {
         const profile = await getUser({}).unwrap();
 
@@ -66,6 +68,8 @@ export const LikesPage = () => {
         setTelegram(tg.telegramUrl);
       } catch (err) {
         console.error('Error fetching users:', err);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -73,10 +77,12 @@ export const LikesPage = () => {
   }, [getTelegram, getUser]);
 
   useEffect(() => {
-    if (telegram === '') {
+    if (!isLoading && telegram === '') {
       setShowTelegramModal(true);
+    } else {
+      setShowTelegramModal(false);
     }
-  }, [telegram]);
+  }, [telegram, isLoading]);
 
   useEffect(() => {
     if (firstRender.current) {
