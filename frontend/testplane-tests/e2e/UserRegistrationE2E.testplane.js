@@ -6,10 +6,9 @@ describe('Registration', () => {
 
     await browser.pause(1000);
 
+    const emailButton = await browser.$('[data-testid="email-button"]');
 
-  const emailButton = await browser.$('[data-testid="email-button"]');
-
-  await emailButton.waitForDisplayed();
+    await emailButton.waitForDisplayed();
 
     await emailButton.click();
 
@@ -23,9 +22,10 @@ describe('Registration', () => {
 
     const inputs = await browser.$$('input');
 
-
     if (inputs.length >= 1) {
-      const emailInput = await browser.$('input[type="email"], input[placeholder*="email"], input[placeholder*="Email"]');
+      const emailInput = await browser.$(
+        'input[type="email"], input[placeholder*="email"], input[placeholder*="Email"]',
+      );
       if (emailInput) {
         await emailInput.setValue('test@example.com');
       } else if (inputs.length >= 1) {
@@ -47,7 +47,6 @@ describe('Registration', () => {
     }
 
     await browser.pause(3000);
-
   });
 
   it('should show validation errors for invalid registration data', async ({ browser }) => {
@@ -85,7 +84,9 @@ describe('Registration', () => {
     // Fill in invalid data
     if (inputs.length >= 1) {
       // Find email input by type, placeholder, or position
-      const emailInput = await browser.$('input[type="email"], input[placeholder*="email"], input[placeholder*="Email"]');
+      const emailInput = await browser.$(
+        'input[type="email"], input[placeholder*="email"], input[placeholder*="Email"]',
+      );
       if (emailInput) {
         await emailInput.setValue('invalid-email');
       } else if (inputs.length >= 1) {

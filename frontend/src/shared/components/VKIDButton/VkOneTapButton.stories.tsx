@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import React from 'react';
 
 // Create a mock component for Storybook that visually represents the VK button
 // This avoids issues with the actual SDK in the Storybook environment
