@@ -196,6 +196,7 @@ func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) sq.
 			pair.Value,
 		))
 	}
+
 	return qb
 }
 
