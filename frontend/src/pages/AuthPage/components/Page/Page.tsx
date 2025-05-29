@@ -79,11 +79,13 @@ export const AuthPage = () => {
       <span className={styles.text}>Найди того, кто будет похож на тебя, как капля воды.</span>
 
       <div className={styles.buttons}>
-        <ButtonWithIcon
-          onClick={onLogin}
-          icon={<img src="email2.png" width="26px" height="26px" alt="email" />}
-          text="Войти по почте"
-        />
+        <div data-testid="email-button">
+          <ButtonWithIcon
+            onClick={onLogin}
+            icon={<img src="email2.png" width="26px" height="26px" alt="email" />}
+            text="Войти по почте"
+          />
+        </div>
 
         <ButtonWithIcon
           onClick={onYandexClick}

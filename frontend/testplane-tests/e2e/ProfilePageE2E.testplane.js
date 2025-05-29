@@ -5,7 +5,7 @@ describe('Profile Page Functionality', () => {
 
     // Navigate to the profile page (assuming user is already logged in)
     // In a real test, you might need to go through login first
-    await browser.url('https://rainbow-souffle-ece639.netlify.app/profile');
+    await browser.url('https://testing.couply.ru/profile');
 
     // Wait for the page to load completely
     await browser.pause(3000);
@@ -49,7 +49,7 @@ describe('Profile Page Functionality', () => {
     await browser.setWindowSize(1920, 1080);
 
     // Navigate to the profile page
-    await browser.url('https://moonlit-valkyrie-fdbfc4.netlify.app/profile');
+    await browser.url('https://testing.couply.ru/profile');
 
     // Wait for the page to load completely
     await browser.pause(3000);
@@ -134,7 +134,7 @@ describe('Profile Page Functionality', () => {
     await browser.setWindowSize(1920, 1080);
 
     // Navigate to the profile page
-    await browser.url('https://moonlit-valkyrie-fdbfc4.netlify.app/profile');
+    await browser.url('https://testing.couply.ru/profile');
 
     // Wait for the page to load completely
     await browser.pause(3000);
