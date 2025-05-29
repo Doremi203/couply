@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+import { useGetTelegramMutation } from '../../../../entities/telegram/api/telegramApi';
+import { useGetUserMutation } from '../../../../entities/user';
 import { LikesSection, useLikesAndMatches } from '../../../../features/matches';
 import { NavBar } from '../../../../shared/components/NavBar';
 import TabsSection from '../../../../shared/components/TabsSection';
@@ -12,8 +14,11 @@ import styles from './likesPage.module.css';
 export const LikesPage = () => {
   const [activeTab, setActiveTab] = useState<'лайки' | 'мэтчи'>('лайки');
   const [selectedProfile, setSelectedProfile] = useState<any>(null);
-  const [isTelegram, setIsTelegram] = useState<boolean>(false); // Temporary variable for Telegram connection status
   const [showTelegramModal, setShowTelegramModal] = useState<boolean>(false);
+  const [getTelegram] = useGetTelegramMutation();
+  const [getUser] = useGetUserMutation();
+
+  const [telegram, setTelegram] = useState<string>('');
 
   const {
     showChatMessage,
@@ -44,10 +49,34 @@ export const LikesPage = () => {
   const firstRender = useRef(true);
 
   useEffect(() => {
-    if (!isTelegram) {
+    const fetchTg = async () => {
+      try {
+        const profile = await getUser({}).unwrap();
+
+        console.log('profile', profile);
+        //@ts-ignore
+        console.log('profile.id', profile.id);
+
+        //@ts-ignore
+        const tg = await getTelegram(profile.id).unwrap();
+
+        console.log('tg', tg);
+
+        //@ts-ignore
+        setTelegram(tg);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+      }
+    };
+
+    fetchTg();
+  }, [getTelegram, getUser]);
+
+  useEffect(() => {
+    if (telegram === '') {
       setShowTelegramModal(true);
     }
-  }, [isTelegram]);
+  }, [telegram]);
 
   useEffect(() => {
     if (firstRender.current) {
@@ -114,7 +143,7 @@ export const LikesPage = () => {
         isOpen={showTelegramModal}
         onClose={() => {
           setShowTelegramModal(false);
-          setIsTelegram(true);
+          // setIsTelegram(true);
         }}
       />
     </div>

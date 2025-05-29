@@ -12,10 +12,10 @@ export const telegramApi = baseApi.injectEndpoints({
     }),
 
     getTelegram: builder.mutation<object, object>({
-      query: () => ({
+      query: userId => ({
         url: '/v1/telegram/data/get',
         method: 'POST',
-        body: {},
+        body: { user_id: userId },
       }),
       // invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
