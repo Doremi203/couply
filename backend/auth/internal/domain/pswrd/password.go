@@ -13,7 +13,7 @@ func NewPassword(s string) (Password, error) {
 		return "", errors.New("password must be at most 16 characters long")
 	}
 	if !strings.ContainsAny(s, "_-!@#?") {
-		return "", errors.New("password must contain at least one special character (_!@#?)")
+		return "", errors.New("password must contain at least one special character (_-!@#?)")
 	}
 	if strings.ToLower(s) == s {
 		return "", errors.New("password must contain at least one uppercase letter")
