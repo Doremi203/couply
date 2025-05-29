@@ -6,6 +6,7 @@ option go_package = "github.com/Doremi203/couply/backend/auth/api/telegram";
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
+import "google/api/field_behavior.proto";
 
 service TelegramData {
   rpc SetTelegramDataV1(SetTelegramDataV1Request) returns (SetTelegramDataV1Response) {
@@ -60,7 +61,11 @@ message SetTelegramDataV1Response {
   string username = 2;
 }
 
-message GetTelegramDataV1Request {}
+message GetTelegramDataV1Request {
+  string user_id = 1 [
+    (google.api.field_behavior) = REQUIRED
+  ];
+}
 
 message GetTelegramDataV1Response {
   string telegram_url = 1;
