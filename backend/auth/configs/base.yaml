@@ -46,3 +46,4 @@ valkey-rate-limiter:
   limit: 20
   window: 10s
   keyPrefix: auth_rate_limit
+  disabled: true

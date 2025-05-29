@@ -348,7 +348,7 @@ func (a *App) initGRPCServer(grpcMux *runtime.ServeMux) (*grpc.Server, error) {
 		NewUnaryInternalErrorLogInterceptor(a.Log),
 	}
 	if a.rateLimiter != nil {
-		defaultInerceptors = append(defaultInerceptors, newUnaryRateLimiterInterceptor(a.rateLimiter))
+		defaultInerceptors = append(defaultInerceptors, newUnaryRateLimiterInterceptor(a.rateLimiter, a.Log))
 	}
 	if xApiCfg.SecretAPIKey != "" {
 		defaultInerceptors = append(defaultInerceptors, newUnaryAPIKeyInterceptor(xApiCfg.SecretAPIKey, a.protectedEndpoints...))
