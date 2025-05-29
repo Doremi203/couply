@@ -195,7 +195,7 @@ func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) sq.
 		GroupBy("i.user_id").
 		Having("COUNT(DISTINCT i.type, i.value) = ?", len(filterInterests))
 
-	qb.Where(sq.Expr("EXISTS (?)", sub))
+	qb = qb.Where(sq.Expr("EXISTS (?)", sub))
 
 	return qb
 }
