@@ -63,7 +63,7 @@ export const LikesPage = () => {
         console.log('tg', tg);
 
         //@ts-ignore
-        setTelegram(tg);
+        setTelegram(tg.telegramUrl);
       } catch (err) {
         console.error('Error fetching users:', err);
       }
