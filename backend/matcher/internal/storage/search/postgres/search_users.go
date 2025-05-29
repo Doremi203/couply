@@ -193,7 +193,7 @@ func applyInterestFilters(qb sq.SelectBuilder, interests *interest.Interest) sq.
 		From("interests i").
 		Where(buildInterestConditions(filterInterests)).
 		GroupBy("i.user_id").
-		Having("COUNT(DISTINCT i.type, i.value) = ?", len(filterInterests))
+		Having(sq.Eq{"COUNT(DISTINCT (i.type, i.value))": len(filterInterests)})
 
 	qb = qb.Where(sq.Expr("EXISTS (?)", sub))
 
