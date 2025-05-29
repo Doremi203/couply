@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useDeleteMatchMutation } from '../../../../entities/matches';
 import { removeMatch } from '../../../../entities/matches/model/matchesSlice';
+import { useGetTelegramMutation } from '../../../../entities/telegram/api/telegramApi';
 import { DislikeButton } from '../../../../shared/components/DislikeButton';
 import { TelegramIcon } from '../../../../shared/components/TelegramIcon';
 
@@ -32,6 +33,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({
   showChatMessage,
 }) => {
   const dispatch = useDispatch();
+  const [getTelegram] = useGetTelegramMutation();
+  const [telegram, setTelegram] = useState<string>('');
 
   const [deleteMatch] = useDeleteMatchMutation();
   const handleDeleteMatch = async () => {
@@ -43,6 +46,25 @@ export const MatchCard: React.FC<MatchCardProps> = ({
       console.error('Error deleting match:', error);
     }
   };
+
+  useEffect(() => {
+    const fetchTg = async () => {
+      try {
+        //@ts-ignore
+        console.log('match.id', match.id);
+
+        //@ts-ignore
+        const tg = await getTelegram(match.id).unwrap();
+
+        //@ts-ignore
+        setTelegram(tg.telegramUrl);
+      } catch (err) {
+        console.error('Error fetching users:', err);
+      }
+    };
+
+    fetchTg();
+  }, [getTelegram, match.id]);
 
   return (
     <div className={styles.matchCard} onClick={() => onClick(match)}>
@@ -56,7 +78,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({
         )}
       </div>
       <div onClick={e => e.stopPropagation()} className={styles.buttons}>
-        <div className={styles.telegram}>
+        <div className={styles.telegram} onClick={() => (window.location.href = telegram)}>
           <TelegramIcon />
         </div>
         <DislikeButton onClick={handleDeleteMatch} className={styles.dislikeButton} />
