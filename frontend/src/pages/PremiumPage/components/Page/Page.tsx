@@ -36,7 +36,7 @@ export const PremiumPage: React.FC = () => {
     setSelectedPlan(plan);
     setSelectedPrice(price);
     setSelectedToApi(toApi);
-    setIsPaymentModalOpen(true);
+    // setIsPaymentModalOpen(true);
   };
 
   const handleCreateSub = async () => {

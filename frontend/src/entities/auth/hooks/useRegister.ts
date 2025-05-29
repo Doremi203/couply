@@ -29,8 +29,24 @@ export const useRegister = () => {
           // Handle validation errors from the API
           if (error?.data?.message?.includes('email')) {
             return { error: 'Некорректный формат email' };
+          } else if (
+            error?.data?.message?.includes('password must be at least 6 characters long')
+          ) {
+            return { error: 'Пароль должен содержать не менее 6 символов' };
+          } else if (
+            error?.data?.message?.includes('password must be at most 16 characters long')
+          ) {
+            return { error: 'Пароль должен содержать не более 16 символов' };
+          } else if (
+            error?.data?.message?.includes('password must contain at least one special character')
+          ) {
+            return { error: 'Пароль должен содержать хотя бы один специальный символ (_-!@#?)' };
+          } else if (
+            error?.data?.message?.includes('password must contain at least one uppercase letter')
+          ) {
+            return { error: 'Пароль должен содержать хотя бы одну заглавную букву' };
           } else if (error?.data?.message?.includes('password')) {
-            return { error: 'Ненадежный пароль. Пароль должен содержать не менее 6 символов' };
+            return { error: 'Ненадежный пароль' };
           } else if (error?.data?.message) {
             return { error: error.data.message };
           }

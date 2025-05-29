@@ -251,12 +251,15 @@ export const EnterInfoPage = () => {
         return name.trim() !== '';
       case 1: {
         const calculatedAge = getAge(birthDate);
+        const heightValue = Number(height);
         return (
           birthDate !== '' &&
           typeof calculatedAge === 'number' &&
           calculatedAge >= 18 &&
           userGender !== '' &&
-          height.trim() !== ''
+          height.trim() !== '' &&
+          heightValue >= 100 &&
+          heightValue <= 250
         );
       }
       case 2:
@@ -366,6 +369,9 @@ export const EnterInfoPage = () => {
         onChange={e => setHeight(e.target.value)}
         className={styles.input}
       />
+      {height && (Number(height) < 100 || Number(height) > 250) && (
+        <div className={styles.error}>Рост должен быть от 100 до 250 см</div>
+      )}
     </div>,
     <div key="goalSection">
       <h2>Какова ваша цель?</h2>

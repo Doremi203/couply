@@ -52,6 +52,15 @@ export const RegistrationPage = () => {
     } else if (password.length < 6) {
       newErrors.password = 'Пароль должен содержать не менее 6 символов';
       isValid = false;
+    } else if (password.length > 16) {
+      newErrors.password = 'Пароль должен содержать не более 16 символов';
+      isValid = false;
+    } else if (!/[_\-!@#?]/.test(password)) {
+      newErrors.password = 'Пароль должен содержать хотя бы один специальный символ (_-!@#?)';
+      isValid = false;
+    } else if (password === password.toLowerCase()) {
+      newErrors.password = 'Пароль должен содержать хотя бы одну заглавную букву';
+      isValid = false;
     }
 
     if (!confirmPassword) {
@@ -87,6 +96,28 @@ export const RegistrationPage = () => {
             setErrors({
               ...errors,
               contactValue: result.error,
+            });
+          } else if (result.error.includes('password must be at least 6 characters long')) {
+            setErrors({
+              ...errors,
+              password: 'Пароль должен содержать не менее 6 символов',
+            });
+          } else if (result.error.includes('password must be at most 16 characters long')) {
+            setErrors({
+              ...errors,
+              password: 'Пароль должен содержать не более 16 символов',
+            });
+          } else if (
+            result.error.includes('password must contain at least one special character')
+          ) {
+            setErrors({
+              ...errors,
+              password: 'Пароль должен содержать хотя бы один специальный символ (_-!@#?)',
+            });
+          } else if (result.error.includes('password must contain at least one uppercase letter')) {
+            setErrors({
+              ...errors,
+              password: 'Пароль должен содержать хотя бы одну заглавную букву',
             });
           } else if (result.error.includes('пароль') || result.error.includes('password')) {
             setErrors({
