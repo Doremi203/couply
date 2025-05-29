@@ -108,23 +108,11 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install -r requirements.txt
-          pip install allure-pytest allure-commandline
 
       - name: Run functional tests with Allure
         run: |
           source .venv/bin/activate
-          pytest ${{ inputs.service_name }} --alluredir=allure-results
-
-      - name: Generate Allure report
-        run: |
-          source .venv/bin/activate
-          allure generate allure-results -o allure-report --clean
-
-      - name: Upload Allure report
-        uses: actions/upload-artifact@v4
-        with:
-          name: allure-report
-          path: backend/pytest/allure-report
+          pytest ${{ inputs.service_name }}
 
   build:
     needs: codegen
