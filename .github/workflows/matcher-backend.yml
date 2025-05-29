@@ -8,6 +8,7 @@ on:
       - 'backend/auth/pkg/**'
       - 'backend/common/**'
       - '.github/workflows/matcher-backend.yml'
+      - '.github/workflows/backend-service-ci.yml'
       - '.github/actions/codegen/**'
 
 concurrency:
