@@ -19,7 +19,8 @@ export const TelegramModal: React.FC<TelegramModalProps> = ({ isOpen, onClose })
       .unwrap()
       .then(data => {
         console.log('Success:', data);
-        // window.location.href = '/profile';
+        // Close the modal immediately on success
+        onClose();
       })
       .catch(error => {
         console.error('Error:', error);

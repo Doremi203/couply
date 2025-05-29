@@ -77,10 +77,15 @@ export const LikesPage = () => {
   }, [getTelegram, getUser]);
 
   useEffect(() => {
+    // If telegram has a value, immediately close the modal
+    if (telegram) {
+      setShowTelegramModal(false);
+      return;
+    }
+
+    // Only show the modal if we're done loading and there's no telegram value
     if (!isLoading && telegram === '') {
       setShowTelegramModal(true);
-    } else {
-      setShowTelegramModal(false);
     }
   }, [telegram, isLoading]);
 
