@@ -5,8 +5,36 @@ on:
     branches: ["main"]
 
 jobs:
-  success:
-    name: CI success
+  ci-test:
+    name: ci / test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "Stub required check passed!"
+
+  ci-codegen:
+    name: ci / codegen
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "Stub required check passed!"
+
+  ci-lint:
+    name: ci / lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "Stub required check passed!"
+
+  ci-build:
+    name: ci / build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Success
+        run: echo "Stub required check passed!"
+
+  ci-test-functional:
+    name: ci / test-functional
     runs-on: ubuntu-latest
     steps:
       - name: Success

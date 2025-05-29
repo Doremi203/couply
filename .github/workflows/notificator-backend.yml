@@ -8,6 +8,7 @@ on:
       - 'backend/auth/pkg/**'
       - 'backend/common/**'
       - '.github/workflows/notificator-backend.yml'
+      - '.github/workflows/backend-service-ci.yml'
       - '.github/actions/codegen/**'
 
 # Cancel any in-progress job or run for the same branch/PR to save resources

@@ -7,6 +7,7 @@ on:
       - 'backend/auth/**'
       - 'backend/common/**'
       - '.github/workflows/auth-backend.yml'
+      - '.github/workflows/backend-service-ci.yml'
       - '.github/actions/codegen/**'
 
 concurrency:

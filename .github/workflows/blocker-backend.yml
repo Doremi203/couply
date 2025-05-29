@@ -8,6 +8,7 @@ on:
       - 'backend/auth/pkg/**'
       - 'backend/common/**'
       - '.github/workflows/blocker-backend.yml'
+      - '.github/workflows/backend-service-ci.yml'
       - '.github/actions/codegen/**'
 
 concurrency:
@@ -20,12 +21,3 @@ jobs:
     with:
       service_name: blocker
     secrets: inherit
-
-  success:
-    name: CI success
-    needs:
-      - ci
-    runs-on: ubuntu-latest
-    steps:
-      - name: Success
-        run: echo "All required checks passed!"

@@ -8,6 +8,7 @@ on:
       - 'payments/auth/pkg/**'
       - 'payments/common/**'
       - '.github/workflows/payments-backend.yml'
+      - '.github/workflows/backend-service-ci.yml'
       - '.github/actions/codegen/**'
 
 concurrency:

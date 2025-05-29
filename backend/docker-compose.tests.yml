@@ -18,7 +18,9 @@ services:
   payments:
     build:
       context: .
-      dockerfile: payments/prod.Dockerfile
+      dockerfile: prod.Dockerfile
+      args:
+        service: payments
     environment:
       APP_ENV: tests
       CONFIGS_PATH: /app/configs
@@ -32,7 +34,9 @@ services:
   blocker:
     build:
       context: .
-      dockerfile: blocker/prod.Dockerfile
+      dockerfile: prod.Dockerfile
+      args:
+        service: blocker
     environment:
       APP_ENV: tests
       CONFIGS_PATH: /app/configs
@@ -46,7 +50,9 @@ services:
   matcher:
     build:
       context: .
-      dockerfile: matcher/prod.Dockerfile
+      dockerfile: prod.Dockerfile
+      args:
+        service: matcher
     environment:
       APP_ENV: tests
       CONFIGS_PATH: /app/configs
@@ -60,7 +66,9 @@ services:
   auth:
     build:
       context: .
-      dockerfile: auth/prod.Dockerfile
+      dockerfile: prod.Dockerfile
+      args:
+        service: auth
     environment:
       APP_ENV: tests
       CONFIGS_PATH: /app/configs

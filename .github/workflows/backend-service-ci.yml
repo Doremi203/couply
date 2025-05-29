@@ -79,6 +79,49 @@ jobs:
           fail_ci_if_error: false
           verbose: true
 
+  test-functional:
+    needs: codegen
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend/pytest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download codegen results
+        uses: actions/download-artifact@v4
+        with:
+          name: codegen-output
+          path: backend
+
+      - name: Docker compose
+        run: cd .. && docker compose -f docker-compose.tests.yml up -d
+
+      - name: Wait for auth service
+        run: |
+          for i in {1..30}; do
+            if curl -sf http://localhost:9090/health; then exit 0; fi
+            sleep 2
+          done
+          exit 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install test dependencies
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Run functional tests with Allure
+        run: |
+          source .venv/bin/activate
+          pytest ${{ inputs.service_name }}
+
   build:
     needs: codegen
     runs-on: ubuntu-latest
