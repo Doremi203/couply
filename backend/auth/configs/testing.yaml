@@ -14,9 +14,6 @@ database:
   database: auth
   options: sslmode=verify-full&target_session_attrs=read-write&sslrootcert=/root/.postgresql/root.crt
 
-telegram-sender:
-  disabled: true
-
 secrets:
   ids:
     db: e6qoug3fau0c6bhsj20i

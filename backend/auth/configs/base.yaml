@@ -43,6 +43,6 @@ smsru:
 
 valkey-rate-limiter:
   address: c-c9q16tmk8i9lk9gjkl2m.rw.mdb.yandexcloud.net:6379
-  limit: 5
-  window: 5s
+  limit: 20
+  window: 10s
   keyPrefix: auth_rate_limit

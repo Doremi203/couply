@@ -24,7 +24,8 @@ func newUnaryRateLimiterInterceptor(l rateLimiter) grpc.UnaryServerInterceptor {
 	) (any, error) {
 		if p, ok := peer.FromContext(ctx); ok {
 			if ip, _, err := net.SplitHostPort(p.Addr.String()); err == nil {
-				allowed, err := l.Add(ctx, ip)
+				key := info.FullMethod + ":" + ip
+				allowed, err := l.Add(ctx, key)
 				if err != nil {
 					return nil, errors.WrapFail(err, "check rate limit")
 				}
