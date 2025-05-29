@@ -185,12 +185,15 @@ export const LoginPage = () => {
         className={styles.submitButton}
         disabled={isLoading}
       />
-      <CustomButton
-        onClick={onRegister}
-        text="Зарегистрироваться"
-        className={styles.regLink}
-        disabled={isLoading}
-      />
+
+      <div data-testid="register-button">
+        <CustomButton
+          onClick={onRegister}
+          text="Зарегистрироваться"
+          className={styles.regLink}
+          disabled={isLoading}
+        />
+      </div>
 
       <Dialog open={showRegistrationModal} onClose={handleCloseModal}>
         <div className={styles.notificationPrompt}>

@@ -1,94 +1,60 @@
-describe('User Registration Scenario', () => {
-  it('should allow a user to register with email', async ({ browser }) => {
-    // Set window size to ensure consistent behavior
-    await browser.setWindowSize(1920, 1080);
+describe('Registration', () => {
+  it('Register with email and passwords error', async ({ browser }) => {
+    await browser.setWindowSize(390, 840);
 
-    // 1. Navigate to the Auth page
-    await browser.url('https://rainbow-souffle-ece639.netlify.app/');
+    await browser.url('https://testing.couply.ru/auth');
 
-    // Wait for the page to load completely
-    await browser.pause(3000);
+    await browser.pause(1000);
 
-    // Log current URL for debugging
-    const currentUrl = await browser.getUrl();
-    console.log('Current URL:', currentUrl);
+    const emailButton = await browser.$('[data-testid="email-button"]');
 
-    // Find all buttons on the page
-    const buttons = await browser.$$('button');
-    console.log('Number of buttons found:', buttons.length);
+    await emailButton.waitForDisplayed();
 
-    // Click the email login button (usually the 4th button)
-    if (buttons.length >= 4) {
-      await buttons[3].click();
-    } else {
-      console.log('Not enough buttons found, trying to find by text content');
+    await emailButton.click();
 
-      // Try to find button by text content
-      const emailButton = await browser.$('button=login with email');
-      if (emailButton) {
-        await emailButton.click();
-      } else {
-        console.log('Email button not found, navigating directly to registration');
-        await browser.url('https://testing.couply.ru/registration');
-      }
-    }
-
-    // Wait for navigation to registration page
     await browser.pause(2000);
 
-    // Log current URL after navigation
-    const regUrl = await browser.getUrl();
-    console.log('Registration URL:', regUrl);
+    const regButton = await browser.$('[data-testid="register-button"]');
 
-    // Find all inputs on the page
+    await regButton.waitForDisplayed();
+
+    await regButton.click();
+
     const inputs = await browser.$$('input');
-    console.log('Number of inputs found:', inputs.length);
 
-    // Fill in the registration form with email
     if (inputs.length >= 1) {
-      // Find email input by type or placeholder
-      const emailInput = await browser.$('input[type="email"], input[placeholder*="email"]');
+      const emailInput = await browser.$(
+        'input[type="email"], input[placeholder*="email"], input[placeholder*="Email"]',
+      );
       if (emailInput) {
         await emailInput.setValue('test@example.com');
       } else if (inputs.length >= 1) {
-        // If can't find by type, use the first input
         await inputs[0].setValue('test@example.com');
       }
     }
 
-    // Find password inputs
     const passwordInputs = await browser.$$('input[type="password"]');
-    console.log('Number of password inputs found:', passwordInputs.length);
 
-    // Fill in password fields
     if (passwordInputs.length >= 2) {
-      // Fill in the password
-      await passwordInputs[0].setValue('password123');
-
-      // Fill in the confirm password
-      await passwordInputs[1].setValue('password123');
+      await passwordInputs[0].setValue('11111111');
+      await passwordInputs[1].setValue('1165661111');
     }
 
-    // Find and click the submit button
-    const submitButton = await browser.$('button[type="submit"], button');
+    // const submitButton = await browser.$('button[type="submit"], button');
+    const submitButton = await browser.$('[data-testid="submit-button"]');
     if (submitButton) {
       await submitButton.click();
     }
 
-    // Wait for the registration process
     await browser.pause(3000);
-
-    // Log final URL
-    const finalUrl = await browser.getUrl();
-    console.log('Final URL after registration:', finalUrl);
   });
 
   it('should show validation errors for invalid registration data', async ({ browser }) => {
     // Set window size to ensure consistent behavior
     await browser.setWindowSize(1920, 1080);
 
-    // Navigate directly to the registration page
-    await browser.url('https://moonlit-valkyrie-fdbfc4.netlify.app/');
+    // Navigate directly to the auth page
+    await browser.url('https://testing.couply.ru/auth');
 
     // Wait for the page to load completely
     await browser.pause(3000);
@@ -117,12 +83,15 @@ describe('User Registration Scenario', () => {
 
     // Fill in invalid data
     if (inputs.length >= 1) {
-      // Find email input
-      const emailInput = await browser.$('input[type="email"], input[placeholder*="email"]');
+      // Find email input by type, placeholder, or position
+      const emailInput = await browser.$(
+        'input[type="email"], input[placeholder*="email"], input[placeholder*="Email"]',
+      );
       if (emailInput) {
         await emailInput.setValue('invalid-email');
       } else if (inputs.length >= 1) {
-        // If can't find by type, use the first input
+        // If can't find by type or placeholder, use the first input
+        console.log('Email input not found by type or placeholder, using first input');
         await inputs[0].setValue('invalid-email');
       }
     }

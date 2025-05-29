@@ -158,12 +158,14 @@ export const RegistrationPage = () => {
         {errors.general && <div className={styles.generalError}>{errors.general}</div>}
       </div>
 
-      <CustomButton
-        onClick={handleSubmit}
-        text={isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
-        className={styles.submitButton}
-        disabled={isLoading}
-      />
+      <div data-testid="submit-button">
+        <CustomButton
+          onClick={handleSubmit}
+          text={isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
+          className={styles.submitButton}
+          disabled={isLoading}
+        />
+      </div>
     </div>
   );
 };

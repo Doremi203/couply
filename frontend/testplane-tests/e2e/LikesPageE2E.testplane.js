@@ -1,10 +1,10 @@
 describe('Likes Page Functionality', () => {
   it('should display users who liked the current user', async ({ browser }) => {
     // Set window size to ensure consistent behavior
-    await browser.setWindowSize(1920, 1080);
+    await browser.setWindowSize(390, 840);
 
     // Navigate to the likes page (assuming user is already logged in)
-    await browser.url('https://rainbow-souffle-ece639.netlify.app/likes');
+    await browser.url('https://testing.couply.ru/profile');
 
     // Wait for the page to load completely
     await browser.pause(3000);
