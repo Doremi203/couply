@@ -27,6 +27,16 @@ import styles from './profileSlider.module.css';
 const adProfiles = [
   {
     user: {
+      id: 'ad2',
+      isAd: true,
+      adText: 'Лучший помощник для трейдинга!!',
+      adLink: 'https://trade-wise.ru/',
+      photos: [{ url: 'tradeWise.jpg' }],
+      name: 'TradeWise',
+    },
+  },
+  {
+    user: {
       id: 'ad1',
       isAd: true,
       adText: 'Главный платформер 2025 года!!',
@@ -37,7 +47,7 @@ const adProfiles = [
   },
 ];
 
-const AD = 5;
+const AD = 10;
 
 export const ProfileSlider = () => {
   const dispatch = useDispatch();
