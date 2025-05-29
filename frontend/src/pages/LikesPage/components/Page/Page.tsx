@@ -55,10 +55,10 @@ export const LikesPage = () => {
 
         console.log('profile', profile);
         //@ts-ignore
-        console.log('profile.id', profile.id);
+        console.log('profile.id', profile.user.id);
 
         //@ts-ignore
-        const tg = await getTelegram(profile.id).unwrap();
+        const tg = await getTelegram(profile.user.id).unwrap();
 
         console.log('tg', tg);
 
