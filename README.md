@@ -1,4 +1,24 @@
-# Couply Monorepo
+# Couply
+
+Modern PWA dating app with photo verification, matching, blocking, and payments.
+
+### Registration
+![Demo](assets/registration.gif)
+
+### Profile creation
+![Demo](assets/profile_creation.gif)
+
+### Oath Yandex login
+![Demo](assets/yandex_login.gif)
+
+### Feed
+![Demo](assets/feed.gif)
+
+### Filters
+![Demo](assets/filters.gif)
+
+### Moderation
+![Demo](assets/moderation.gif)
 
 Monorepo for a full-stack application with Go microservices, a React + TypeScript + Vite frontend, and auxiliary Go cloud functions.
 
